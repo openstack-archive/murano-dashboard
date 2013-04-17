@@ -1,7 +1,7 @@
-Keero Tabula README
+Glazier Tabula README
 =====================
-Tabula is a project that provides Web UI to Keero Project.
+Tabula is a project that provides Web UI to Glazier Project.
 
 SEE ALSO
 --------
-* `Keero <http://keero.mirantis.com>`__
+* `Glazier  <http://Glazier.mirantis.com>`__
