@@ -27,7 +27,7 @@ from horizon import tables
 from horizon import workflows
 from horizon.forms.views import ModalFormMixin
 
-import api
+from glazierdashboard.tabula import api
 
 from .tables import EnvironmentsTable, ServicesTable
 from .workflows import CreateEnvironment
