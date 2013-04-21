@@ -21,7 +21,7 @@
 
 import setuptools
 
-from glazierdashboard.openstack.common import setup
+from tabula.openstack.common import setup
 
 requires = setup.parse_requirements()
 depend_links = setup.parse_dependency_links()
@@ -32,9 +32,9 @@ setuptools.setup(
     version=setup.get_version(project, '2013.1'),
     description="The OpenStack Dashboard.",
     license='Apache 2.0',
-    author='OpenStack',
-    author_email='horizon@lists.launchpad.net',
-    url='https://github.com/openstack/horizon/',
+    author='Mirantis Inc',
+    author_email='tnurlygayanov@mirantis.com',
+    url='https://github.com/Mirantis/glazier-dashboard',
     packages=setuptools.find_packages(exclude=['bin']),
     cmdclass=setup.get_cmdclass(),
     include_package_data=True,

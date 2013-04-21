@@ -19,7 +19,7 @@ import string
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import re
-from glazierdashboard.tabula import api
+import api
 
 log = logging.getLogger(__name__)
 

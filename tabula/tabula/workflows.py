@@ -24,7 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import workflows
 
-from glazierdashboard.tabula import api
+import api
 
 
 LOG = logging.getLogger(__name__)

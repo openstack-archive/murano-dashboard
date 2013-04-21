@@ -19,7 +19,7 @@ from horizon import exceptions
 from horizon import tabs
 import logging
 
-from glazierdashboard.tabula import api
+import api
 
 
 LOG = logging.getLogger(__name__)

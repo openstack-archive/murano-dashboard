@@ -19,7 +19,7 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from horizon import messages
 from horizon import tables
-from glazierdashboard.tabula import api
+import api
 
 
 LOG = logging.getLogger(__name__)
