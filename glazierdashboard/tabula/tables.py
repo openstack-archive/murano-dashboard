@@ -124,7 +124,7 @@ class UpdateServiceRow(tables.Row):
     def get_data(self, request, service_id):
 
         link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('tabula/(\S+)', link).group(0)[77:-1]
+        environment_id = re.search('tabula/(\S+)', link).group(0)[7:-1]
 
         service = api.service_get(request, environment_id, service_id)
 
