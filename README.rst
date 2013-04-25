@@ -1,7 +1,7 @@
-Glazier Tabula README
+Murano Dashboard README
 =====================
-Tabula is a project that provides Web UI to Glazier Project.
+Dashboard is a conponent that provides Web UI to Murano Project.
 
 SEE ALSO
 --------
-* `Glazier  <http://Glazier.mirantis.com>`__
+* `Murano  <http://Murano.mirantis.com>`__
