@@ -19,7 +19,7 @@ from .views import IndexView, Services, CreateEnvironmentView, DetailServiceView
 from .views import Wizard
 from .forms import WizardFormServiceType, WizardFormConfiguration
 
-VIEW_MOD = 'openstack_dashboard.dashboards.project.tabula.views'
+VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 
 urlpatterns = patterns(VIEW_MOD,
                        url(r'^$', IndexView.as_view(), name='index'),

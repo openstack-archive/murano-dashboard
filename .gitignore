@@ -9,7 +9,7 @@ coverage.xml
 pep8.txt
 pylint.txt
 reports
-tabula/local/local_settings.py
+muranodashboard/local/local_settings.py
 /static/
 docs/build/
 docs/source/sourcecode

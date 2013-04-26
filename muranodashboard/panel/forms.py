@@ -19,7 +19,7 @@ import string
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import re
-from glazierdashboard.tabula import api
+from muranodashboard.panel import api
 
 log = logging.getLogger(__name__)
 
@@ -111,7 +111,7 @@ class WizardFormIISConfiguration(forms.Form):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
 
         link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('tabula/(\S+)', link).group(0)[7:-1]
+        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
 
         domains = api.get_active_directories(request, environment_id)
 

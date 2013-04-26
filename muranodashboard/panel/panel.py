@@ -18,9 +18,9 @@ from django.utils.translation import ugettext_lazy as _
 from openstack_dashboard.dashboards.project import dashboard
 
 
-class tabula(horizon.Panel):
+class Panel(horizon.Panel):
     name = _("Environments")
-    slug = 'tabula'
+    slug = 'murano'
 
 
-dashboard.Project.register(tabula)
+dashboard.Project.register(Panel)

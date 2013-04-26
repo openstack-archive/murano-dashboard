@@ -27,7 +27,7 @@ from horizon import tables
 from horizon import workflows
 from horizon.forms.views import ModalFormMixin
 
-from glazierdashboard.tabula import api
+from muranodashboard.panel import api
 
 from .tables import EnvironmentsTable, ServicesTable
 from .workflows import CreateEnvironment
@@ -46,9 +46,9 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
 
     def done(self, form_list, **kwargs):
         link = self.request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('tabula/(\S+)', link).group(0)[7:-1]
+        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
 
-        url = "/project/tabula/%s/" % environment_id
+        url = "/project/murano/%s/" % environment_id
 
         service_type = form_list[0].data.get('0-service', '')
         parameters = {'service_type': service_type}
@@ -180,7 +180,7 @@ class DetailServiceView(tabs.TabView):
                 service_id = self.kwargs['service_id']
                 service = api.get_service_datails(self.request, service_id)
             except:
-                redirect = reverse('horizon:project:tabula:index')
+                redirect = reverse('horizon:project:murano:index')
                 exceptions.handle(self.request,
                                   _('Unable to retrieve details for '
                                     'service "%s".') % service_id,

@@ -21,20 +21,20 @@
 
 import setuptools
 
-from glazierdashboard.openstack.common import setup
+from muranodashboard.openstack.common import setup
 
 requires = setup.parse_requirements()
 depend_links = setup.parse_dependency_links()
-project = 'glazierdashboard'
+project = 'muranodashboard'
 
 setuptools.setup(
     name=project,
     version=setup.get_version(project, '2013.1'),
-    description="The OpenStack Dashboard.",
+    description="The Murano Dashboard.",
     license='Apache 2.0',
     author='Mirantis Inc',
     author_email='tnurlygayanov@mirantis.com',
-    url='https://github.com/Mirantis/glazier-dashboard',
+    url='https://github.com/Mirantis/murano-dashboard',
     packages=setuptools.find_packages(exclude=['bin']),
     cmdclass=setup.get_cmdclass(),
     include_package_data=True,

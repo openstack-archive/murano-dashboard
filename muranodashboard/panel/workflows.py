@@ -24,7 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import workflows
 
-from glazierdashboard.tabula import api
+from muranodashboard.panel import api
 
 
 LOG = logging.getLogger(__name__)
@@ -80,7 +80,7 @@ class CreateEnvironment(workflows.Workflow):
     finalize_button_name = _("Create")
     success_message = _('Created environment "%s".')
     failure_message = _('Unable to create environment "%s".')
-    success_url = "horizon:project:tabula:index"
+    success_url = "horizon:project:murano:index"
     default_steps = (SelectProjectUser, ConfigureEnvironment)
 
     def format_status_message(self, message):

@@ -19,7 +19,7 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from horizon import messages
 from horizon import tables
-from glazierdashboard.tabula import api
+from muranodashboard.panel import api
 
 LOG = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ LOG = logging.getLogger(__name__)
 class CreateService(tables.LinkAction):
     name = 'CreateService'
     verbose_name = _('Create Service')
-    url = 'horizon:project:tabula:create'
+    url = 'horizon:project:murano:create'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, datum):
@@ -40,7 +40,7 @@ class CreateService(tables.LinkAction):
 class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
     verbose_name = _('Create Environment')
-    url = 'horizon:project:tabula:create_dc'
+    url = 'horizon:project:murano:create_dc'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, datum):
@@ -78,7 +78,7 @@ class DeleteService(tables.BatchAction):
 
     def action(self, request, service_id):
         link = request.__dict__['META']['HTTP_REFERER']
-        datacenter_id = re.search('tabula/(\S+)', link).group(0)[7:-1]
+        datacenter_id = re.search('murano/(\S+)', link).group(0)[7:-1]
 
         try:
             api.service_delete(request, datacenter_id, service_id)
@@ -105,7 +105,7 @@ class DeployEnvironment(tables.BatchAction):
 class ShowEnvironmentServices(tables.LinkAction):
     name = 'edit'
     verbose_name = _('Services')
-    url = 'horizon:project:tabula:services'
+    url = 'horizon:project:murano:services'
 
     def allowed(self, request, instance):
         return True
@@ -124,7 +124,7 @@ class UpdateServiceRow(tables.Row):
     def get_data(self, request, service_id):
 
         link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('tabula/(\S+)', link).group(0)[7:-1]
+        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
 
         service = api.service_get(request, environment_id, service_id)
 
@@ -147,7 +147,7 @@ class EnvironmentsTable(tables.DataTable):
     )
 
     name = tables.Column('name',
-                         link=('horizon:project:tabula:services'),
+                         link=('horizon:project:murano:services'),
                          verbose_name=_('Name'))
 
     status = tables.Column('status', verbose_name=_('Status'),
@@ -156,7 +156,7 @@ class EnvironmentsTable(tables.DataTable):
                            display_choices=STATUS_DISPLAY_CHOICES)
 
     class Meta:
-        name = 'tabula'
+        name = 'murano'
         verbose_name = _('Environments')
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
@@ -173,7 +173,7 @@ class ServicesTable(tables.DataTable):
     )
 
     name = tables.Column('name', verbose_name=_('Name'),
-                         link=('horizon:project:tabula:service_details'))
+                         link=('horizon:project:murano:service_details'))
 
     _type = tables.Column('service_type', verbose_name=_('Type'))
 

@@ -15,50 +15,50 @@
 
 import logging
 
-from glazierclient.v1.client import Client as glazier_client
+from muranoclient.v1.client import Client as murano_client
 
 log = logging.getLogger(__name__)
 
 
-def glazierclient(request):
+def muranoclient(request):
     url = "http://127.0.0.1:8082"
-    log.debug('glazierclient connection created using token "%s" and url "%s"'
+    log.debug('muranoclient connection created using token "%s" and url "%s"'
               % (request.user.token, url))
-    return glazier_client(endpoint=url, token=request.user.token.token['id'])
+    return murano_client(endpoint=url, token=request.user.token.token['id'])
 
 
 def environment_create(request, parameters):
-    env = glazierclient(request).environments.create(parameters.get('name', ''))
+    env = muranoclient(request).environments.create(parameters.get('name', ''))
     log.debug('Environment::Create {0}'.format(env))
     return env
 
 
 def environment_delete(request, environment_id):
-    result = glazierclient(request).environments.delete(environment_id)
+    result = muranoclient(request).environments.delete(environment_id)
     log.debug('Environment::Delete Id:{0}'.format(environment_id))
     return result
 
 
 def environment_get(request, environment_id):
-    env = glazierclient(request).environments.get(environment_id)
+    env = muranoclient(request).environments.get(environment_id)
     log.debug('Environment::Get {0}'.format(env))
     return env
 
 
 def environments_list(request):
     log.debug('Environment::List')
-    return glazierclient(request).environments.list()
+    return muranoclient(request).environments.list()
 
 
 def environment_deploy(request, environment_id):
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
     for session in sessions:
         if session.state == 'open':
             session_id = session.id
     if not session_id:
         return "Sorry, nothing to deploy."
     log.debug('Obtained session with Id: {0}'.format(session_id))
-    result = glazierclient(request).sessions.deploy(environment_id, session_id)
+    result = muranoclient(request).sessions.deploy(environment_id, session_id)
     log.debug('Environment with Id: {0} deployed in session '
               'with Id: {1}'.format(environment_id, session_id))
     return result
@@ -66,23 +66,23 @@ def environment_deploy(request, environment_id):
 
 def service_create(request, environment_id, parameters):
     session_id = None
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
 
     for s in sessions:
         if s.state == 'open':
             session_id = s.id
         else:
-            glazierclient(request).sessions.delete(environment_id, s.id)
+            muranoclient(request).sessions.delete(environment_id, s.id)
 
     if session_id is None:
-        session_id = glazierclient(request).sessions.configure(environment_id).id
+        session_id = muranoclient(request).sessions.configure(environment_id).id
 
     if parameters['service_type'] == 'Active Directory':
-        service = glazierclient(request)\
+        service = muranoclient(request)\
             .activeDirectories\
             .create(environment_id, session_id, parameters)
     else:
-        service = glazierclient(request)\
+        service = muranoclient(request)\
             .webServers.create(environment_id, session_id, parameters)
 
     log.debug('Service::Create {0}'.format(service))
@@ -96,18 +96,18 @@ def get_time(obj):
 def services_list(request, environment_id):
     services = []
     session_id = None
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
     for s in sessions:
         session_id = s.id
 
     if session_id:
-        services = glazierclient(request).activeDirectories.\
+        services = muranoclient(request).activeDirectories.\
                             list(environment_id, session_id)
-        services += glazierclient(request).webServers.\
+        services += muranoclient(request).webServers.\
                             list(environment_id, session_id)
 
         for i in range(len(services)):
-            reports = glazierclient(request).sessions. \
+            reports = muranoclient(request).sessions. \
                 reports(environment_id, session_id,
                         services[i].id)
 
@@ -121,13 +121,13 @@ def services_list(request, environment_id):
 def get_active_directories(request, environment_id):
     services = []
     session_id = None
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
 
     for s in sessions:
         session_id = s.id
 
     if session_id:
-        services = glazierclient(request)\
+        services = muranoclient(request)\
                    .activeDirectories\
                    .list(environment_id, session_id)
 
@@ -168,13 +168,13 @@ def get_service_datails(request, service_id):
 def get_status_message_for_service(request, service_id):
     environment_id = get_data_center_id_for_service(request, service_id)
     session_id = None
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
 
     for s in sessions:
         session_id = s.id
 
     if session_id:
-        reports = glazierclient(request).sessions.\
+        reports = muranoclient(request).sessions.\
                   reports(environment_id, session_id, service_id)
 
     result = 'Initialization.... \n'
@@ -191,7 +191,7 @@ def service_delete(request, environment_id, service_id):
     services = services_list(request, environment_id)
 
     session_id = None
-    sessions = glazierclient(request).sessions.list(environment_id)
+    sessions = muranoclient(request).sessions.list(environment_id)
     for session in sessions:
         if session.state == 'open':
             session_id = session.id
@@ -202,10 +202,10 @@ def service_delete(request, environment_id, service_id):
     for service in services:
         if service.id is service_id:
             if service.type is 'Active Directory':
-                glazierclient(request).activeDirectories.delete(environment_id,
+                muranoclient(request).activeDirectories.delete(environment_id,
                                                                 session_id,
                                                                 service_id)
             elif service.type is 'IIS':
-                glazierclient(request).webServers.delete(environment_id,
+                muranoclient(request).webServers.delete(environment_id,
                                                          session_id,
                                                          service_id)
