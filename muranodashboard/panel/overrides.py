@@ -15,7 +15,7 @@
 
 import horizon
 
-from panel import tabula
+from panel import Panel
 
 project = horizon.get_dashboard('project')
-project.register(tabula)
+project.register(Panel)

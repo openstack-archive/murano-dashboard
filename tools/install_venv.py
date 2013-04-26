@@ -28,12 +28,12 @@ import install_venv_common as install_venv
 
 def print_help():
     help = """
- Tabula development environment setup is complete.
+ Dashboard development environment setup is complete.
 
- Tabula development uses virtualenv to track and manage Python dependencies
+ Dashboard development uses virtualenv to track and manage Python dependencies
  while in development and testing.
 
- To activate the Tabula virtualenv for the extent of your current shell session
+ To activate the Dashboard virtualenv for the extent of your current shell session
  you can run:
 
  $ source .venv/bin/activate
@@ -54,7 +54,7 @@ def main(argv):
     pip_requires = os.path.join(root, 'tools', 'pip-requires')
     test_requires = os.path.join(root, 'tools', 'test-requires')
     py_version = "python%s.%s" % (sys.version_info[0], sys.version_info[1])
-    project = 'tabula'
+    project = 'muranodashboard'
     install = install_venv.InstallVenv(root, venv, pip_requires, test_requires,
                                        py_version, project)
     options = install.parse_args(argv)

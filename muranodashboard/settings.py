@@ -39,7 +39,7 @@ HORIZON_CONFIG = {
     'exceptions': {'recoverable': exceptions.RECOVERABLE,
                    'not_found': exceptions.NOT_FOUND,
                    'unauthorized': exceptions.UNAUTHORIZED},
-    'customization_module': 'tabula.overrides'
+    'customization_module': 'panel.overrides'
 }
 
 
@@ -89,7 +89,7 @@ COMPRESS_CSS_FILTERS = (
 )
 
 COMPRESS_ENABLED = True
-COMPRESS_OUTPUT_DIR = 'tabula'
+COMPRESS_OUTPUT_DIR = 'muranodashboard'
 COMPRESS_CSS_HASHING_METHOD = 'hash'
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 

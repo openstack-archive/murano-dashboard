@@ -52,7 +52,7 @@ class VersionInfo(object):
             # The most likely cause for this is running tests in a tree
             # produced from a tarball where the package itself has not been
             # installed into anything. Revert to setup-time logic.
-            from tabula.openstack.common import setup
+            from muranodashboard.openstack.common import setup
             return setup.get_version(self.package)
 
     def release_string(self):

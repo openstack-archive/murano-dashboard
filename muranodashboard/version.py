@@ -15,6 +15,6 @@
 #    under the License.
 
 
-from tabula.openstack.common import version as common_version
+from muranodashboard.openstack.common import version as common_version
 
-version_info = common_version.VersionInfo('tabula')
+version_info = common_version.VersionInfo('muranodashboard')
