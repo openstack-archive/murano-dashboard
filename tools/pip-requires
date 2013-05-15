@@ -4,3 +4,9 @@ anyjson
 #Fix for bug https://bugs.launchpad.net/python-keystoneclient/+bug/1116740
 backports.ssl_match_hostname
 requests==0.14.2
+python-glanceclient
+python-novaclient
+python-quantumclient
+python-swiftclient
+django_openstack_auth
+

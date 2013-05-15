@@ -5,6 +5,7 @@
 .coverage*
 .noseids
 .venv
+.idea
 coverage.xml
 pep8.txt
 pylint.txt
