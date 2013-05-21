@@ -50,15 +50,11 @@ class CreateEnvironment(tables.LinkAction):
         api.environment_create(request, environment)
 
 
-class DeleteEnvironment(tables.BatchAction):
-    name = 'delete'
-    action_present = _('Delete')
-    action_past = _('Delete')
-    data_type_singular = _('Environment')
-    data_type_plural = _('Environment')
-    classes = ('btn-danger', 'btn-terminate')
+class DeleteEnvironment(tables.DeleteAction):
+    data_type_singular = _("Environment")
+    data_type_plural = _("Environments")
 
-    def allowed(self, request, datum):
+    def allowed(self, request, env=None):
         return True
 
     def action(self, request, environment_id):
@@ -90,9 +86,9 @@ class DeleteService(tables.BatchAction):
 class DeployEnvironment(tables.BatchAction):
     name = 'deploy'
     action_present = _('Deploy')
-    action_past = _('Deploy')
+    action_past = _('Deployed')
     data_type_singular = _('Environment')
-    data_type_plural = _('Environment')
+    data_type_plural = _('Environments')
     classes = 'btn-launch'
 
     def allowed(self, request, datum):
@@ -160,7 +156,7 @@ class EnvironmentsTable(tables.DataTable):
         verbose_name = _('Environments')
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
-        table_actions = (CreateEnvironment,)
+        table_actions = (CreateEnvironment, DeleteEnvironment)
         row_actions = (ShowEnvironmentServices, DeleteEnvironment,
                        DeployEnvironment)
 
