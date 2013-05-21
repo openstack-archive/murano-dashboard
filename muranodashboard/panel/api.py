@@ -51,6 +51,7 @@ def environments_list(request):
 
 
 def environment_deploy(request, environment_id):
+    session_id = None
     sessions = muranoclient(request).sessions.list(environment_id)
     for session in sessions:
         if session.state == 'open':
