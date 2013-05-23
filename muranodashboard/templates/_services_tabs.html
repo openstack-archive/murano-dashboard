@@ -32,6 +32,11 @@
             <p>{% trans "Now you can set the parameters for Active Directory Service." %}</p>
             <p>{% trans "You can create few Active Directory instances, in this case will be created one Main Active Directory server and few Secondary Active Directory servers." %}</p>
             <p>{% trans "The DNS service will be automatically created on each Active Directory servers." %}</p>
+        {% elif service_type == 'ASP.NET Application' %}
+            <p>{% trans "Now you can set parameters for ASP.NET Application Service." %}</p>
+            <p>{% trans "ASP.NET applications are installed to IIS Web Server" %}</p>
+            <p>{% trans "Please, set the complex password for local administrator account." %}</p>
+            <p>{% trans "Also, you can add this IIS server to the existing domain and configure credentials for domain user." %}</p>
         {% else %}
             <p>{% trans "Now you can set parameters for IIS Service." %}</p>
             <p>{% trans "The IIS Service - it is the server with complex Internet Information Services infrastructure, which included to the domain infrasructure." %}</p>

@@ -82,9 +82,14 @@ def service_create(request, environment_id, parameters):
         service = muranoclient(request)\
             .activeDirectories\
             .create(environment_id, session_id, parameters)
-    else:
+    elif parameters['service_type'] == 'IIS':
         service = muranoclient(request)\
             .webServers.create(environment_id, session_id, parameters)
+    elif parameters['service_type'] == 'ASP.NET Application':
+        service = muranoclient(request)\
+            .aspNetApps.create(environment_id, session_id, parameters)
+    else:
+        raise NameError('Unknown service type ' + parameters['service_type'])
 
     log.debug('Service::Create {0}'.format(service))
     return service
@@ -105,6 +110,8 @@ def services_list(request, environment_id):
         services = muranoclient(request).activeDirectories.\
                             list(environment_id, session_id)
         services += muranoclient(request).webServers.\
+                            list(environment_id, session_id)
+        services += muranoclient(request).aspNetApps.\
                             list(environment_id, session_id)
 
         for i in range(len(services)):
@@ -202,11 +209,15 @@ def service_delete(request, environment_id, service_id):
 
     for service in services:
         if service.id is service_id:
-            if service.type is 'Active Directory':
+            if service.type == 'Active Directory':
                 muranoclient(request).activeDirectories.delete(environment_id,
                                                                 session_id,
                                                                 service_id)
-            elif service.type is 'IIS':
+            elif service.type == 'IIS':
                 muranoclient(request).webServers.delete(environment_id,
+                                                         session_id,
+                                                         service_id)
+            elif service.type == 'ASP.NET Application':
+                muranoclient(request).aspNetApps.delete(environment_id,
                                                          session_id,
                                                          service_id)

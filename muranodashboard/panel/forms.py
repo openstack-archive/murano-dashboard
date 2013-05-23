@@ -71,7 +71,8 @@ class WizardFormServiceType(forms.Form):
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
                                     ('Active Directory', 'Active Directory'),
-                                    ('IIS', 'Internet Information Services')
+                                    ('IIS', 'Internet Information Services'),
+                                    ('ASP.NET Application', 'ASP.NET Application')
                                 ])
 
 
@@ -118,3 +119,8 @@ class WizardFormIISConfiguration(forms.Form):
         self.fields['iis_domain'].choices = [("", "")] + \
                                             [(domain.name, domain.name)
                                              for domain in domains]
+
+
+class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration):
+    repository = forms.CharField(label=_('Git repository'),
+                               required=True)

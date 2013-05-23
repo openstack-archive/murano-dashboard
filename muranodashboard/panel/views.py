@@ -29,10 +29,12 @@ from horizon.forms.views import ModalFormMixin
 
 from muranodashboard.panel import api
 
-from .tables import EnvironmentsTable, ServicesTable
-from .workflows import CreateEnvironment
-from .tabs import ServicesTabs
-from .forms import (WizardFormADConfiguration, WizardFormIISConfiguration)
+from tables import EnvironmentsTable, ServicesTable
+from workflows import CreateEnvironment
+from tabs import ServicesTabs
+from forms import WizardFormADConfiguration
+from forms import WizardFormIISConfiguration
+from forms import WizardFormAspNetAppConfiguration
 
 from horizon import messages
 
@@ -67,11 +69,11 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             for dc in range(dc_count - 1):
                 parameters['units'].append({
                     'isMaster': False,
-                    'recoveryPassword': recovery_password,
-                    'location': 'west-dc'
+                    'recoveryPassword': recovery_password
+                    #'location': 'west-dc'
                 })
 
-        elif service_type == 'IIS':
+        elif service_type == 'IIS' or service_type == 'ASP.NET Application':
             password = data.get('1-adm_password', '')
             parameters['name'] = str(data.get('1-iis_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
@@ -84,15 +86,18 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             parameters['name'] = str(form_list[1].data.get('1-iis_name',
                                                            'noname'))
             parameters['domain'] = parameters['name']
-            parameters['credentials'] = {'username': 'Administrator',
-                                         'password': password}
+            # parameters['credentials'] = {'username': 'Administrator',
+            #                              'password': password}
+            parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
-            parameters['location'] = 'west-dc'
+            #parameters['location'] = 'west-dc'
 
             parameters['units'] = []
-            parameters['units'].append({'id': '1',
-                                        'endpoint': [{'host': '10.0.0.1'}],
-                                        'location': 'west-dc'})
+            # parameters['units'].append({'id': '1',
+            #                             'endpoint': [{'host': '10.0.0.1'}],
+            #                             'location': 'west-dc'})
+            if service_type == 'ASP.NET Application':
+                parameters['repository'] = form_list[1].data.get('1-repository', '')
 
         service = api.service_create(self.request, environment_id, parameters)
 
@@ -109,6 +114,8 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                 self.form_list['1'] = WizardFormADConfiguration
             elif self.service_type == 'IIS':
                 self.form_list['1'] = WizardFormIISConfiguration
+            elif self.service_type == 'ASP.NET Application':
+                self.form_list['1'] = WizardFormAspNetAppConfiguration
 
         return form
 
