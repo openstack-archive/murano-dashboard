@@ -34,7 +34,7 @@ setuptools.setup(
     license='Apache 2.0',
     author='Mirantis Inc',
     author_email='tnurlygayanov@mirantis.com',
-    url='https://github.com/Mirantis/murano-dashboard',
+    url='https://github.com/stackforge/murano-dashboard',
     packages=setuptools.find_packages(exclude=['bin']),
     cmdclass=setup.get_cmdclass(),
     include_package_data=True,
