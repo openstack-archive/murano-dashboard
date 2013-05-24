@@ -15,13 +15,15 @@
 
 import logging
 
+from openstack_dashboard.api.base import url_for
+
 from muranoclient.v1.client import Client as murano_client
 
 log = logging.getLogger(__name__)
 
 
 def muranoclient(request):
-    url = "http://127.0.0.1:8082"
+    url = url_for(request, 'murano')
     log.debug('muranoclient connection created using token "%s" and url "%s"'
               % (request.user.token, url))
     return murano_client(endpoint=url, token=request.user.token.token['id'])
