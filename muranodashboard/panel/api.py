@@ -54,8 +54,28 @@ def environments_list(request):
     return muranoclient(request).environments.list()
 
 
+def request_session_id(request, environment_id):
+    session_id = None
+    container_name = "murano_session_for_env" + environment_id
+    env_session = request.session.get(container_name, [])
+    if len(env_session) > 0:
+        session_id = env_session.get('id', None)
+    return session_id
+
+
+def get_session_id(request, environment_id):
+    container_name = "murano_session_for_env" + environment_id
+    session_id = request_session_id(request, environment_id)
+
+    if not session_id:
+        session_id = muranoclient(request).sessions\
+                       .configure(environment_id).id
+        request.session[container_name] = {'id': session_id}
+    return session_id
+
+
 def environment_deploy(request, environment_id):
-    session_id = request.session.get('murano_session_id', None)
+    session_id = request_session_id(request, environment_id)
     if not session_id:
         return "Sorry, nothing to deploy."
     log.debug('Obtained session with Id: {0}'.format(session_id))
@@ -66,13 +86,7 @@ def environment_deploy(request, environment_id):
 
 
 def service_create(request, environment_id, parameters):
-    session_id = request.session.get('murano_session_id', None)
-
-    if session_id is None:
-        session_id = muranoclient(request).sessions\
-                       .configure(environment_id).id
-        request.session['murano_session_id'] = session_id
-
+    session_id = get_session_id(request, environment_id)
     if parameters['service_type'] == 'Active Directory':
         service = muranoclient(request)\
             .activeDirectories\
@@ -96,31 +110,31 @@ def get_time(obj):
 
 def services_list(request, environment_id):
     services = []
-    session_id = request.session.get('murano_session_id', None)
+    session_id = request_session_id(request, environment_id)
 
-    services = muranoclient(request).activeDirectories.\
+    if session_id:
+        services = muranoclient(request).activeDirectories.\
                         list(environment_id, session_id)
-    services += muranoclient(request).webServers.\
+        services += muranoclient(request).webServers.\
                         list(environment_id, session_id)
-    services += muranoclient(request).aspNetApps.\
+        services += muranoclient(request).aspNetApps.\
                         list(environment_id, session_id)
 
-    for i in range(len(services)):
-        reports = muranoclient(request).sessions.\
-                      reports(environment_id,
-                              session_id,
-                              services[i].id)
-
-        for report in reports:
-            services[i].operation = report.text
+        for i in range(len(services)):
+            reports = muranoclient(request).sessions.\
+                               reports(environment_id,
+                               session_id,
+                               services[i].id)
+    
+            for report in reports:
+                 services[i].operation = report.text
 
     log.debug('Service::List')
     return services
 
 
 def get_active_directories(request, environment_id):
-    session_id = request.session.get('murano_session_id', None)
-
+    session_id = get_session_id(request, environment_id)
     services = muranoclient(request).activeDirectories\
                       .list(environment_id, session_id)
 
@@ -129,7 +143,7 @@ def get_active_directories(request, environment_id):
 
 
 def service_get(request, service_id):
-    environment_id = get_data_center_id_for_service(service_id)
+    environment_id = get_data_center_id_for_service(request, service_id)
     services = services_list(request, environment_id)
 
     for service in services:
@@ -149,9 +163,8 @@ def get_data_center_id_for_service(request, service_id):
 
 
 def get_status_message_for_service(request, service_id):
-    session_id = request.session.get('murano_session_id', None)
     environment_id = get_data_center_id_for_service(request, service_id)
-
+    session_id = get_session_id(request, environment_id)
     reports = muranoclient(request).sessions.reports(environment_id,
                                                      session_id,
                                                      service_id)
@@ -167,26 +180,18 @@ def service_delete(request, service_id):
     log.debug('Service::Remove '
               'SrvId: {0}'.format(service_id))
     environment_id = get_data_center_id_for_service(request, service_id)
+    service = service_get(request, service_id)
+    session_id = get_session_id(request, environment_id)
 
-    services = services_list(request, environment_id)
-
-    session_id = request.session.get('murano_session_id', None)
-    if session_id is None:
-        session_id = muranoclient(request).sessions\
-                       .configure(environment_id).id
-        request.session['murano_session_id'] = session_id        
-
-    for service in services:
-        if service.id is service_id:
-            if service.type == 'Active Directory':
-                muranoclient(request).activeDirectories.delete(environment_id,
-                                                               session_id,
-                                                               service_id)
-            elif service.type == 'IIS':
-                muranoclient(request).webServers.delete(environment_id,
-                                                        session_id,
-                                                        service_id)
-            elif service.type == 'ASP.NET Application':
-                muranoclient(request).aspNetApps.delete(environment_id,
-                                                        session_id,
-                                                        service_id)
+    if service.service_type == 'Active Directory':
+        muranoclient(request).activeDirectories.delete(environment_id,
+                                                       session_id,
+                                                       service_id)
+    elif service.service_type == 'IIS':
+        muranoclient(request).webServers.delete(environment_id,
+                                                session_id,
+                                                service_id)
+    elif service.service_type == 'ASP.NET Application':
+        muranoclient(request).aspNetApps.delete(environment_id,
+                                                session_id,
+                                                service_id)

@@ -80,9 +80,10 @@ class DeployEnvironment(tables.BatchAction):
     data_type_plural = _('Environments')
     classes = 'btn-launch'
 
-    def allowed(self, request, environment_id):
-        services = api.services_list(request, environment_id)
-        return len(services)
+    def allowed(self, request, environment):
+        services = api.services_list(request, environment.id)
+        if len(services) > 0:
+            return True
 
     def action(self, request, environment_id):
         api.environment_deploy(request, environment_id)
