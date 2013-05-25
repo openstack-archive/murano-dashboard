@@ -68,11 +68,14 @@ class PasswordField(forms.CharField):
 
 
 class WizardFormServiceType(forms.Form):
+    ad_service = ('Active Directory', 'Active Directory')
+    iis_service = ('IIS', 'Internet Information Services')
+    asp_service = ('ASP.NET Application', 'ASP.NET Application')
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
-                                    ('Active Directory', 'Active Directory'),
-                                    ('IIS', 'Internet Information Services'),
-                                    ('ASP.NET Application', 'ASP.NET Application')
+                                    ad_service,
+                                    iis_service,
+                                    asp_service
                                 ])
 
 

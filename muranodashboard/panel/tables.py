@@ -61,26 +61,15 @@ class DeleteEnvironment(tables.DeleteAction):
         api.environment_delete(request, environment_id)
 
 
-class DeleteService(tables.BatchAction):
-    name = 'delete'
-    action_present = _('Delete')
-    action_past = _('Delete')
+class DeleteService(tables.DeleteAction):
     data_type_singular = _('Service')
-    data_type_plural = _('Service')
-    classes = ('btn-danger', 'btn-terminate')
+    data_type_plural = _('Services')
 
     def allowed(self, request, datum):
         return True
 
     def action(self, request, service_id):
-        link = request.__dict__['META']['HTTP_REFERER']
-        datacenter_id = re.search('murano/(\S+)', link).group(0)[7:-1]
-
-        try:
-            api.service_delete(request, datacenter_id, service_id)
-        except:
-            messages.error(request, _('Sorry, you can not delete this '
-                                      'service right now.'))
+        api.service_delete(request, service_id)
 
 
 class DeployEnvironment(tables.BatchAction):
@@ -91,11 +80,12 @@ class DeployEnvironment(tables.BatchAction):
     data_type_plural = _('Environments')
     classes = 'btn-launch'
 
-    def allowed(self, request, datum):
-        return True
+    def allowed(self, request, environment_id):
+        services = api.services_list(request, environment_id)
+        return len(services)
 
     def action(self, request, environment_id):
-        return api.environment_deploy(request, environment_id)
+        api.environment_deploy(request, environment_id)
 
 
 class ShowEnvironmentServices(tables.LinkAction):
@@ -118,13 +108,7 @@ class UpdateServiceRow(tables.Row):
     ajax = True
 
     def get_data(self, request, service_id):
-
-        link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
-
-        service = api.service_get(request, environment_id, service_id)
-
-        return service
+        return api.service_get(request, service_id)
 
 
 STATUS_DISPLAY_CHOICES = (
@@ -185,4 +169,5 @@ class ServicesTable(tables.DataTable):
         verbose_name = _('Services')
         row_class = UpdateServiceRow
         status_columns = ['status']
-        table_actions = (CreateService,)
+        table_actions = (CreateService, DeleteService)
+        row_actions = (DeleteService,)

@@ -70,7 +70,6 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                 parameters['units'].append({
                     'isMaster': False,
                     'recoveryPassword': recovery_password
-                    #'location': 'west-dc'
                 })
 
         elif service_type == 'IIS' or service_type == 'ASP.NET Application':
@@ -86,18 +85,13 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             parameters['name'] = str(form_list[1].data.get('1-iis_name',
                                                            'noname'))
             parameters['domain'] = parameters['name']
-            # parameters['credentials'] = {'username': 'Administrator',
-            #                              'password': password}
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
-            #parameters['location'] = 'west-dc'
 
             parameters['units'] = []
-            # parameters['units'].append({'id': '1',
-            #                             'endpoint': [{'host': '10.0.0.1'}],
-            #                             'location': 'west-dc'})
             if service_type == 'ASP.NET Application':
-                parameters['repository'] = form_list[1].data.get('1-repository', '')
+                parameters['repository'] = form_list[1]\
+                                           .data.get('1-repository', '')
 
         service = api.service_create(self.request, environment_id, parameters)
 
@@ -106,7 +100,6 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
         return HttpResponseRedirect(url)
 
     def get_form(self, step=None, data=None, files=None):
-
         form = super(Wizard, self).get_form(step, data, files)
         if data:
             self.service_type = data.get('0-service', '')
@@ -185,7 +178,7 @@ class DetailServiceView(tabs.TabView):
         if not hasattr(self, "_service"):
             try:
                 service_id = self.kwargs['service_id']
-                service = api.get_service_datails(self.request, service_id)
+                service = api.service_get(self.request, service_id)
             except:
                 redirect = reverse('horizon:project:murano:index')
                 exceptions.handle(self.request,

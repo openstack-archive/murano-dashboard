@@ -45,10 +45,8 @@ class LogsTab(tabs.Tab):
     template_name = '_service_logs.html'
 
     def get_context_data(self, request):
-        data = self.tab_group.kwargs['service']
-
-        reports = api.get_status_message_for_service(request, data.id)
-
+        service = self.tab_group.kwargs['service']
+        reports = api.get_status_message_for_service(request, service.id)
         return {"reports": reports}
 
 
