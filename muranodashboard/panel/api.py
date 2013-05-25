@@ -165,7 +165,7 @@ def get_status_message_for_service(request, service_id):
 
 def service_delete(request, service_id):
     log.debug('Service::Remove '
-              'SrvId: {1}'.format(service_id))
+              'SrvId: {0}'.format(service_id))
     environment_id = get_data_center_id_for_service(request, service_id)
 
     services = services_list(request, environment_id)
