@@ -84,7 +84,7 @@ class WizardFormServiceType(forms.Form):
 
 
 class WizardFormConfiguration(forms.Form):
-    'The functions for this class will dynamically create in views.py'
+    #The functions for this class will dynamically create in views.py
     pass
 
 
@@ -121,31 +121,37 @@ class WizardFormIISConfiguration(forms.Form):
         link = request.__dict__['META']['HTTP_REFERER']
         environment_id = re.search('murano/(\w+)', link).group(0)[7:]
 
-        domains = api.get_active_directories(request, environment_id)
+        ad = 'Active Directory'
+        domains = api.service_list_by_type(request, environment_id, ad)
 
         self.fields['iis_domain'].choices = [("", "")] + \
                                             [(domain.name, domain.name)
                                              for domain in domains]
 
+
 class WebFarmExtension(forms.Form):
     instance_count = forms.IntegerField(label=_('Instance Count'),
-                                  required=True,
-                                  min_value=1,
-                                  max_value=10000,
-                                  initial=1)
+                                        required=True,
+                                        min_value=1,
+                                        max_value=10000,
+                                        initial=1)
     lb_port = forms.IntegerField(label=_('Load Balancer port'),
-                                  required=True,
-                                  min_value=1,
-                                  max_value=65536,
-                                  initial=80)
+                                 required=True,
+                                 min_value=1,
+                                 max_value=65536,
+                                 initial=80)
 
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration):
     repository = forms.CharField(label=_('Git repository'),
-                               required=True)
+                                 required=True)
 
-class WizardFormIISFarmConfiguration(WizardFormIISConfiguration, WebFarmExtension):
+
+class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,
+                                     WebFarmExtension):
     pass
 
-class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration, WebFarmExtension):
+
+class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration,
+                                        WebFarmExtension):
     pass
