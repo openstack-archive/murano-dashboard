@@ -30,13 +30,13 @@ STATUS_ID_DEPLOYING = 'deploying'
 STATUS_CHOICES = (
     (None, True),
     ('Ready to configure', True),
-    ('Ready to deploy', True),
+    ('Active', True),
 )
 
 STATUS_DISPLAY_CHOICES = (
-    (STATUS_ID_READY,      'Ready to deploy'),
-    (STATUS_ID_PENDING,    'Wait for configuration'),
+    (STATUS_ID_READY,      'Active'),
     (STATUS_ID_DEPLOYING, 'Deploy in progress'),
+    (STATUS_ID_PENDING, 'Wait for configuration'),
     ('',                 'Ready to configure'),
 )
 
@@ -113,7 +113,7 @@ class DeployEnvironment(tables.BatchAction):
         return False
 
     def action(self, request, environment_id):
-            api.environment_deploy(request, environment_id)
+        api.environment_deploy(request, environment_id)
 
 
 class ShowEnvironmentServices(tables.LinkAction):
@@ -164,12 +164,6 @@ class EnvironmentsTable(tables.DataTable):
 
 
 class ServicesTable(tables.DataTable):
-    STATUS_CHOICES = (
-        (None, True),
-        ('Ready to deploy', True),
-        ('Ready to configure', True),
-    )
-
     name = tables.Column('name', verbose_name=_('Name'),
                          link=('horizon:project:murano:service_details'))
 
