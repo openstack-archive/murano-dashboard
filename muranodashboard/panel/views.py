@@ -48,9 +48,9 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
 
     def done(self, form_list, **kwargs):
         link = self.request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
+        environment_id = re.search('murano/(\S+)', link).group(0)[7:-9]
 
-        url = "/project/murano/%s/" % environment_id
+        url = "/project/murano/%s/services" % environment_id
 
         service_type = form_list[0].data.get('0-service', '')
         parameters = {'service_type': service_type}
@@ -159,7 +159,7 @@ class Services(tables.DataTableView):
             services = []
             exceptions.handle(self.request,
                               _('Unable to retrieve list of services for '
-                                'environment "%s".') % self.environment_name)
+                                'environment "%s".') % self.environment_id)
         self._services = services
         return self._services
 

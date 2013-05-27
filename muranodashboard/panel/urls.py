@@ -22,15 +22,15 @@ from .forms import WizardFormServiceType, WizardFormConfiguration
 VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 
 urlpatterns = patterns(VIEW_MOD,
-                       url(r'^$', IndexView.as_view(), name='index'),
+                       url(r'^environments$', IndexView.as_view(), name='index'),
                        url(r'^create$',
                            Wizard.as_view([WizardFormServiceType,
                                            WizardFormConfiguration]),
                            name='create'),
-                       url(r'^create_dc$', CreateEnvironmentView.as_view(),
-                           name='create_dc'),
-                       url(r'^(?P<environment_id>[^/]+)/$',
+                       url(r'^create$', CreateEnvironmentView.as_view(),
+                           name='create_environment'),
+                       url(r'^(?P<environment_id>[^/]+)/services$',
                            Services.as_view(), name='services'),
-                       url(r'^(?P<service_id>[^/]+)/details$',
+                       url(r'^(?P<environment_id>[^/]+)/(?P<service_id>[^/]+)$',
                            DetailServiceView.as_view(),
                            name='service_details'))

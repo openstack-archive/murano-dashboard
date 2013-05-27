@@ -40,7 +40,7 @@ class CreateService(tables.LinkAction):
 class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
     verbose_name = _('Create Environment')
-    url = 'horizon:project:murano:create_dc'
+    url = 'horizon:project:murano:create_environment'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, datum):
