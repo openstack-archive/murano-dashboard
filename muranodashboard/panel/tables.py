@@ -23,6 +23,23 @@ from muranodashboard.panel import api
 
 LOG = logging.getLogger(__name__)
 
+STATUS_ID_READY = 'ready'
+STATUS_ID_PENDING = 'pending'
+STATUS_ID_DEPLOYING = 'deploying'
+
+STATUS_CHOICES = (
+    (None, True),
+    ('Ready to configure', True),
+    ('Ready to deploy', True),
+)
+
+STATUS_DISPLAY_CHOICES = (
+    (STATUS_ID_READY,      'Ready to deploy'),
+    (STATUS_ID_PENDING,    'Wait for configuration'),
+    (STATUS_ID_DEPLOYING, 'Deploy in progress'),
+    ('',                 'Ready to configure'),
+)
+
 
 class CreateService(tables.LinkAction):
     name = 'CreateService'
@@ -30,8 +47,11 @@ class CreateService(tables.LinkAction):
     url = 'horizon:project:murano:create'
     classes = ('btn-launch', 'ajax-modal')
 
-    def allowed(self, request, datum):
-        return True
+    def allowed(self, request, environment):
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING]:
+            return True
+        return False
 
     def action(self, request, service):
         api.service_create(request, service)
@@ -54,8 +74,11 @@ class DeleteEnvironment(tables.DeleteAction):
     data_type_singular = _("Environment")
     data_type_plural = _("Environments")
 
-    def allowed(self, request, env=None):
-        return True
+    def allowed(self, request, environment):
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING]:
+            return True
+        return False
 
     def action(self, request, environment_id):
         api.environment_delete(request, environment_id)
@@ -65,8 +88,11 @@ class DeleteService(tables.DeleteAction):
     data_type_singular = _('Service')
     data_type_plural = _('Services')
 
-    def allowed(self, request, datum):
-        return True
+    def allowed(self, request, environment):
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING]:
+            return True
+        return False
 
     def action(self, request, service_id):
         api.service_delete(request, service_id)
@@ -81,12 +107,13 @@ class DeployEnvironment(tables.BatchAction):
     classes = 'btn-launch'
 
     def allowed(self, request, environment):
-        services = api.services_list(request, environment.id)
-        if len(services) > 0:
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING, None]:
             return True
+        return False
 
     def action(self, request, environment_id):
-        api.environment_deploy(request, environment_id)
+            api.environment_deploy(request, environment_id)
 
 
 class ShowEnvironmentServices(tables.LinkAction):
@@ -94,8 +121,12 @@ class ShowEnvironmentServices(tables.LinkAction):
     verbose_name = _('Services')
     url = 'horizon:project:murano:services'
 
-    def allowed(self, request, instance):
-        return True
+    def allowed(self, request, environment):
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING]:
+            return True
+        else:
+            return False
 
 
 class UpdateEnvironmentRow(tables.Row):
@@ -112,21 +143,7 @@ class UpdateServiceRow(tables.Row):
         return api.service_get(request, service_id)
 
 
-STATUS_DISPLAY_CHOICES = (
-    ('draft', 'Ready to deploy'),
-    ('pending', 'Wait for configuration'),
-    ('inprogress', 'Deploy in progress'),
-    ('finished', 'Active')
-)
-
-
 class EnvironmentsTable(tables.DataTable):
-    STATUS_CHOICES = (
-        (None, True),
-        ('Ready to deploy', True),
-        ('Active', True)
-    )
-
     name = tables.Column('name',
                          link=('horizon:project:murano:services'),
                          verbose_name=_('Name'))
@@ -142,15 +159,15 @@ class EnvironmentsTable(tables.DataTable):
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
         table_actions = (CreateEnvironment, DeleteEnvironment)
-        row_actions = (ShowEnvironmentServices, DeleteEnvironment,
-                       DeployEnvironment)
+        row_actions = (ShowEnvironmentServices, DeployEnvironment,\
+                       DeleteEnvironment)
 
 
 class ServicesTable(tables.DataTable):
     STATUS_CHOICES = (
         (None, True),
         ('Ready to deploy', True),
-        ('Active', True)
+        ('Ready to configure', True),
     )
 
     name = tables.Column('name', verbose_name=_('Name'),
