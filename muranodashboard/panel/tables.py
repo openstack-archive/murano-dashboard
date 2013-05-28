@@ -17,7 +17,10 @@ import logging
 import re
 
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 from horizon import messages
+from horizon import exceptions
+
 from horizon import tables
 from muranodashboard.panel import api
 
@@ -30,13 +33,15 @@ STATUS_ID_DEPLOYING = 'deploying'
 STATUS_CHOICES = (
     (None, True),
     ('Ready to configure', True),
-    ('Active', True),
+    ('Ready', True),
+    ('Configuring', False),
+
 )
 
 STATUS_DISPLAY_CHOICES = (
-    (STATUS_ID_READY,      'Active'),
+    (STATUS_ID_READY,      'Ready'),
     (STATUS_ID_DEPLOYING, 'Deploy in progress'),
-    (STATUS_ID_PENDING, 'Wait for configuration'),
+    (STATUS_ID_PENDING, 'Configuring'),
     ('',                 'Ready to configure'),
 )
 
@@ -54,7 +59,12 @@ class CreateService(tables.LinkAction):
         return False
 
     def action(self, request, service):
-        api.service_create(request, service)
+        try:
+            api.service_create(request, service)
+        except:
+            msg = _('Sorry, you can\'t create service right now')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(request, msg, redirect=redirect)
 
 
 class CreateEnvironment(tables.LinkAction):
@@ -81,8 +91,11 @@ class DeleteEnvironment(tables.DeleteAction):
         return False
 
     def action(self, request, environment_id):
-        api.environment_delete(request, environment_id)
-
+        try:
+            api.environment_delete(request, environment_id)
+        except:
+            msg = _('Sorry, you can\'t delete this environment right now')
+            exceptions.handle(request, msg)
 
 class DeleteService(tables.DeleteAction):
     data_type_singular = _('Service')
@@ -95,8 +108,12 @@ class DeleteService(tables.DeleteAction):
         return False
 
     def action(self, request, service_id):
-        api.service_delete(request, service_id)
-
+        try:
+            api.service_delete(request, service_id)
+        except:
+            msg = _('Sorry, you can\'t delete service right now')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(request, msg, redirect=redirect)
 
 class DeployEnvironment(tables.BatchAction):
     name = 'deploy'
@@ -108,12 +125,21 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING, None]:
+        services = api.services_list(request, environment.id)
+
+        if status not in [STATUS_ID_DEPLOYING, None] and services:
             return True
         return False
 
+
     def action(self, request, environment_id):
-        api.environment_deploy(request, environment_id)
+        try:
+            api.environment_deploy(request, environment_id)
+        except:
+            msg = _('Unable to deploy. Maybe this environment \
+            is already deploying by someone else. Try again later')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(request, msg, redirect=redirect)
 
 
 class ShowEnvironmentServices(tables.LinkAction):

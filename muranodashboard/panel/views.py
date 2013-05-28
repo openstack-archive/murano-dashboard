@@ -102,8 +102,13 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             for unit in range(instance_count - 1):
                 parameters['units'].append({})
 
+        try:
+            service = api.service_create(self.request, environment_id, parameters)
 
-        service = api.service_create(self.request, environment_id, parameters)
+        except:
+            msg = _('Sorry, you can\'t create service right now. Try again later')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(self.request, msg, redirect=redirect)
 
         message = "The %s service successfully created." % service_type
         messages.success(self.request, message)
