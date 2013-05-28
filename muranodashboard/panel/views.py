@@ -35,6 +35,8 @@ from tabs import ServicesTabs
 from forms import WizardFormADConfiguration
 from forms import WizardFormIISConfiguration
 from forms import WizardFormAspNetAppConfiguration
+from forms import WizardFormIISFarmConfiguration
+from forms import WizardFormAspNetFarmConfiguration
 
 from horizon import messages
 
@@ -55,24 +57,24 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
         service_type = form_list[0].data.get('0-service', '')
         parameters = {'service_type': service_type}
         data = form_list[1].data
+        parameters['units'] = []
         if service_type == 'Active Directory':
             parameters['configuration'] = 'standalone'
             parameters['name'] = str(data.get('1-dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
             parameters['adminPassword'] = str(data.get('1-adm_password', ''))
-            dc_count = int(data.get('1-dc_count', 1))
             recovery_password = str(data.get('1-recovery_password', ''))
-            parameters['units'] = []
             parameters['units'].append({'isMaster': True,
                                         'recoveryPassword': recovery_password,
                                         'location': 'west-dc'})
+            dc_count = int(data.get('1-dc_count', 1))
             for dc in range(dc_count - 1):
                 parameters['units'].append({
                     'isMaster': False,
                     'recoveryPassword': recovery_password
                 })
 
-        elif service_type == 'IIS' or service_type == 'ASP.NET Application':
+        elif service_type in ['IIS', 'ASP.NET Application', 'IIS Farm', 'ASP.NET Farm']:
             password = data.get('1-adm_password', '')
             parameters['name'] = str(data.get('1-iis_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
@@ -88,10 +90,17 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
 
-            parameters['units'] = []
-            if service_type == 'ASP.NET Application':
+            if service_type == 'ASP.NET Application' or service_type == 'ASP.NET Farm':
                 parameters['repository'] = form_list[1]\
                                            .data.get('1-repository', '')
+            instance_count = 1
+            if service_type == 'IIS Farm' or service_type == 'ASP.NET Farm':
+                instance_count = int(data.get('1-instance_count_count', 1))
+                parameters['loadBalancerPort'] = int(data.get('1-lb_port', 80))
+
+            for unit in range(instance_count - 1):
+                parameters['units'].append({})
+
 
         service = api.service_create(self.request, environment_id, parameters)
 
@@ -109,6 +118,10 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                 self.form_list['1'] = WizardFormIISConfiguration
             elif self.service_type == 'ASP.NET Application':
                 self.form_list['1'] = WizardFormAspNetAppConfiguration
+            elif self.service_type == 'IIS Farm':
+                self.form_list['1'] = WizardFormIISFarmConfiguration
+            elif self.service_type == 'ASP.NET Farm':
+                self.form_list['1'] = WizardFormAspNetFarmConfiguration
 
         return form
 

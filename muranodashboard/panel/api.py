@@ -97,6 +97,12 @@ def service_create(request, environment_id, parameters):
     elif parameters['service_type'] == 'ASP.NET Application':
         service = muranoclient(request)\
             .aspNetApps.create(environment_id, session_id, parameters)
+    elif parameters['service_type'] == 'IIS Farm':
+        service = muranoclient(request)\
+            .webServerFarms.create(environment_id, session_id, parameters)
+    elif parameters['service_type'] == 'ASP.NET Farm':
+        service = muranoclient(request)\
+            .aspNetAppFarms.create(environment_id, session_id, parameters)
     else:
         raise NameError('Unknown service type ' + parameters['service_type'])
 
@@ -118,6 +124,10 @@ def services_list(request, environment_id):
         services += muranoclient(request).webServers.\
                         list(environment_id, session_id)
         services += muranoclient(request).aspNetApps.\
+                        list(environment_id, session_id)
+        services += muranoclient(request).webServerFarms.\
+                        list(environment_id, session_id)
+        services += muranoclient(request).aspNetAppFarms.\
                         list(environment_id, session_id)
 
         for i in range(len(services)):

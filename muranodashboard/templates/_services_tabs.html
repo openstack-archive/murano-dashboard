@@ -37,6 +37,16 @@
             <p>{% trans "ASP.NET applications are installed to IIS Web Server" %}</p>
             <p>{% trans "Please, set the complex password for local administrator account." %}</p>
             <p>{% trans "Also, you can add this IIS server to the existing domain and configure credentials for domain user." %}</p>
+        {% elif service_type == 'ASP.NET Farm' %}
+            <p>{% trans "Now you can set parameters for ASP.NET Application Farm Service." %}</p>
+            <p>{% trans "ASP.NET applications are installed to IIS Web Server" %}</p>
+            <p>{% trans "Please, set the complex password for local administrator account." %}</p>
+            <p>{% trans "Also, you can add this IIS server to the existing domain and configure credentials for domain user." %}</p>
+        {% elif service_type == 'ASP.NET Farm' %}
+            <p>{% trans "Now you can set parameters for IIS Farm Service." %}</p>
+            <p>{% trans "The IIS Service - it is the server with complex Internet Information Services infrastructure, which included to the domain infrasructure." %}</p>
+            <p>{% trans "Please, set the complex password for local administrator account." %}</p>
+            <p>{% trans "Also, you can add this IIS server to the existing domain and configure credentials for domain user." %}</p>
         {% else %}
             <p>{% trans "Now you can set parameters for IIS Service." %}</p>
             <p>{% trans "The IIS Service - it is the server with complex Internet Information Services infrastructure, which included to the domain infrasructure." %}</p>

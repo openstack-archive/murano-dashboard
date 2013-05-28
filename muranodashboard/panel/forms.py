@@ -71,11 +71,15 @@ class WizardFormServiceType(forms.Form):
     ad_service = ('Active Directory', 'Active Directory')
     iis_service = ('IIS', 'Internet Information Services')
     asp_service = ('ASP.NET Application', 'ASP.NET Application')
+    iis_farm_service = ('IIS Farm', 'Internet Information Services Web Farm')
+    asp_farm_service = ('ASP.NET Farm', 'ASP.NET Application Web Farm')
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
                                     ad_service,
                                     iis_service,
-                                    asp_service
+                                    asp_service,
+                                    iis_farm_service,
+                                    asp_farm_service
                                 ])
 
 
@@ -88,7 +92,7 @@ class WizardFormADConfiguration(forms.Form):
     dc_name = forms.CharField(label=_('Domain Name'),
                               required=True)
 
-    dc_count = forms.IntegerField(label=_('Instances Count'),
+    dc_count = forms.IntegerField(label=_('Instance Count'),
                                   required=True,
                                   min_value=1,
                                   max_value=100,
@@ -103,7 +107,7 @@ class WizardFormADConfiguration(forms.Form):
 
 
 class WizardFormIISConfiguration(forms.Form):
-    iis_name = forms.CharField(label=_('IIS Server Name'),
+    iis_name = forms.CharField(label=_('Service Name'),
                                required=True)
 
     adm_password = PasswordField(_('Administrator password'))
@@ -115,7 +119,7 @@ class WizardFormIISConfiguration(forms.Form):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
 
         link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('murano/(\S+)', link).group(0)[7:-1]
+        environment_id = re.search('murano/(\w+)', link).group(0)[7:]
 
         domains = api.get_active_directories(request, environment_id)
 
@@ -123,7 +127,25 @@ class WizardFormIISConfiguration(forms.Form):
                                             [(domain.name, domain.name)
                                              for domain in domains]
 
+class WebFarmExtension(forms.Form):
+    instance_count = forms.IntegerField(label=_('Instance Count'),
+                                  required=True,
+                                  min_value=1,
+                                  max_value=10000,
+                                  initial=1)
+    lb_port = forms.IntegerField(label=_('Load Balancer port'),
+                                  required=True,
+                                  min_value=1,
+                                  max_value=65536,
+                                  initial=80)
+
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration):
     repository = forms.CharField(label=_('Git repository'),
                                required=True)
+
+class WizardFormIISFarmConfiguration(WizardFormIISConfiguration, WebFarmExtension):
+    pass
+
+class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration, WebFarmExtension):
+    pass
