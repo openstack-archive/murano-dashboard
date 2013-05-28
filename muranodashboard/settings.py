@@ -3,6 +3,7 @@ import os
 import sys
 
 from openstack_dashboard import exceptions
+from muranoclient.common import exceptions as muranoclient
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 BIN_DIR = os.path.abspath(os.path.join(ROOT_PATH, '..', 'bin'))
@@ -30,15 +31,25 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 ROOT_URLCONF = 'openstack_dashboard.urls'
 
+RECOVERABLE_EXC = (muranoclient.HTTPException, muranoclient.CommunicationError, muranoclient.Forbidden)
+EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(exceptions.RECOVERABLE + RECOVERABLE_EXC)
+
+NOT_FOUND_EXC = (muranoclient.HTTPNotFound,muranoclient.EndpointNotFound)
+EXTENDED_NOT_FOUND_EXCEPTIONS = tuple(exceptions.NOT_FOUND + NOT_FOUND_EXC)
+
+UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized, )
+EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
+
+
 HORIZON_CONFIG = {
     'dashboards': ('project', 'admin', 'settings',),
     'default_dashboard': 'project',
     'user_home': 'openstack_dashboard.views.get_user_home',
     'ajax_queue_limit': 10,
     'help_url': "http://docs.openstack.org",
-    'exceptions': {'recoverable': exceptions.RECOVERABLE,
-                   'not_found': exceptions.NOT_FOUND,
-                   'unauthorized': exceptions.UNAUTHORIZED},
+    'exceptions': {'recoverable': EXTENDED_RECOVERABLE_EXCEPTIONS,
+                   'not_found': EXTENDED_NOT_FOUND_EXCEPTIONS,
+                   'unauthorized': EXTENDED_UNAUTHORIZED_EXCEPTIONS},
     'customization_module': 'panel.overrides'
 }
 
