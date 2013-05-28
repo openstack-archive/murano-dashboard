@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import logging
+from muranoclient.common.exceptions import CommunicationError
 import re
 
 from django.views import generic
@@ -146,10 +147,10 @@ class IndexView(tables.DataTableView):
     def get_data(self):
         try:
             environments = api.environments_list(self.request)
-        except:
+        except CommunicationError:
             environments = []
-            exceptions.handle(self.request,
-                              _('Unable to retrieve environments list.'))
+            messages.error(self.request, 'Could not connect to Murano API '
+                                         'Service, check connection details.')
         return environments
 
 

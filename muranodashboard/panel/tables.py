@@ -145,7 +145,7 @@ class UpdateServiceRow(tables.Row):
 
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
-                         link=('horizon:project:murano:services'),
+                         link='horizon:project:murano:services',
                          verbose_name=_('Name'))
 
     status = tables.Column('status', verbose_name=_('Status'),
