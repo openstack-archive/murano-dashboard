@@ -189,7 +189,7 @@ class EnvironmentsTable(tables.DataTable):
 
 class ServicesTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Name'),
-                         link=('horizon:project:murano:service_details'))
+                         link='horizon:project:murano:service_details')
 
     _type = tables.Column('service_type', verbose_name=_('Type'))
 

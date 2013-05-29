@@ -13,57 +13,42 @@
 #    under the License.
 
 import logging
-import string
 
 from django import forms
+from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 import re
 from muranodashboard.panel import api
 
 log = logging.getLogger(__name__)
 
+name_re = re.compile(r'^[-\w]+$')
+validate_name = RegexValidator(name_re, _(u'Enter a valid name consisting '
+                                          u'of letters, numbers, \
+                                          underscores or hyphens.'), 'invalid')
+
 
 class PasswordField(forms.CharField):
-    # Setup the Field
+    special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
+    password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
+                             % special_characters)
+    validate_password = RegexValidator(password_re, _('Your password must \
+                                            include at least one letter, \
+                                            at least one number and at least \
+                                            one special character'), 'invalid')
+
     def __init__(self, label, *args, **kwargs):
-        super(PasswordField, self).__init__(min_length=7, required=True,
+        super(PasswordField, self).__init__(min_length=7, max_length=255,
+                                            required=True, validators=
+                                            [self.validate_password],
                                             label=label,
+                                            error_messages={'invalid':
+                                            self.validate_password.message,
+                                            'required':
+                                            'Password is required'},
                                             widget=forms.PasswordInput(
-                                                render_value=False),
+                                            render_value=False),
                                             *args, **kwargs)
-
-    def clean(self, value):
-
-        # Setup Our Lists of Characters and Numbers
-        characters = list(string.letters)
-        special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
-        numbers = [str(i) for i in range(10)]
-
-        # Assume False until Proven Otherwise
-        numCheck = False
-        charCheck = False
-        specCharCheck = False
-
-        # Loop until we Match
-        for char in value:
-            if not charCheck:
-                if char in characters:
-                    charCheck = True
-            if not specCharCheck:
-                if char in special_characters:
-                    specCharCheck = True
-            if not numCheck:
-                if char in numbers:
-                    numCheck = True
-            if numCheck and charCheck and specCharCheck:
-                break
-
-        if not numCheck or not charCheck or not specCharCheck:
-            raise forms.ValidationError(u'Your password must include at least \
-                                          one letter, at least one number and \
-                                          at least one special character.')
-
-        return super(PasswordField, self).clean(value)
 
 
 class WizardFormServiceType(forms.Form):
@@ -96,7 +81,12 @@ class CommonPropertiesExtension(object):
 
 class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
     dc_name = forms.CharField(label=_('Domain Name'),
-                              required=True)
+                              min_length=2,
+                              max_length=64,
+                              required=True,
+                              validators=[validate_name], error_messages=
+                              {'invalid': validate_name.message},
+                              )
 
     dc_count = forms.IntegerField(label=_('Instance Count'),
                                   required=True,
@@ -115,7 +105,9 @@ class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
 
 class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
     iis_name = forms.CharField(label=_('Service Name'),
-                               required=True)
+                               required=True, validators=[validate_name],
+                               error_messages=
+                               {'invalid': validate_name.message})
 
     adm_password = PasswordField(_('Administrator password'))
 
@@ -153,8 +145,18 @@ class WebFarmExtension(forms.Form):
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
                                        WebFarmExtension,
                                        CommonPropertiesExtension):
+
+    git_repo_re = re.compile(r'(\w+://)(.+@)*([\w\d\.]+)(:[\d]+)?/*(.*)',
+                             re.IGNORECASE)
+    validate_git = RegexValidator(git_repo_re,
+                                  _('Input correct git repository url'),
+                                  'invalid')
+
     repository = forms.CharField(label=_('Git repository'),
-                                 required=True)
+                                 required=True,
+                                 validators=[validate_git],
+                                 error_messages=
+                                 {'invalid': validate_git.message})
 
 
 class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,
