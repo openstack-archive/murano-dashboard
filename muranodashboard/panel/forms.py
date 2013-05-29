@@ -1,17 +1,16 @@
-# Copyright (c) 2013 Mirantis Inc.
+#    Copyright (c) 2013 Mirantis, Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
 
 import logging
 import string
@@ -88,7 +87,14 @@ class WizardFormConfiguration(forms.Form):
     pass
 
 
-class WizardFormADConfiguration(forms.Form):
+class CommonPropertiesExtension(object):
+    def __init__(self):
+        self.fields.insert(
+            len(self.fields), 'unit_name_template',
+            forms.CharField(label=_('Hostname template'), required=False))
+
+
+class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
     dc_name = forms.CharField(label=_('Domain Name'),
                               required=True)
 
@@ -104,9 +110,10 @@ class WizardFormADConfiguration(forms.Form):
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormADConfiguration, self).__init__(*args, **kwargs)
+        CommonPropertiesExtension.__init__(self)
 
 
-class WizardFormIISConfiguration(forms.Form):
+class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
     iis_name = forms.CharField(label=_('Service Name'),
                                required=True)
 
@@ -127,6 +134,7 @@ class WizardFormIISConfiguration(forms.Form):
         self.fields['iis_domain'].choices = [("", "")] + \
                                             [(domain.name, domain.name)
                                              for domain in domains]
+        CommonPropertiesExtension.__init__(self)
 
 
 class WebFarmExtension(forms.Form):
@@ -142,16 +150,26 @@ class WebFarmExtension(forms.Form):
                                  initial=80)
 
 
-class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration):
+class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
+                                       WebFarmExtension,
+                                       CommonPropertiesExtension):
     repository = forms.CharField(label=_('Git repository'),
                                  required=True)
 
 
 class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,
-                                     WebFarmExtension):
-    pass
+                                     WebFarmExtension,
+                                     CommonPropertiesExtension):
+    def __init__(self, request, *args, **kwargs):
+        super(WizardFormIISFarmConfiguration, self).__init__(
+            request, *args, **kwargs)
+        CommonPropertiesExtension.__init__(self)
 
 
 class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration,
-                                        WebFarmExtension):
-    pass
+                                        WebFarmExtension,
+                                        CommonPropertiesExtension):
+    def __init__(self, request, *args, **kwargs):
+        super(WizardFormAspNetFarmConfiguration, self).__init__(
+            request, *args, **kwargs)
+        CommonPropertiesExtension.__init__(self)

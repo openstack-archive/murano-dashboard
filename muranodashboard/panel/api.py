@@ -1,17 +1,16 @@
-# Copyright (c) 2013 Mirantis, Inc.
+#    Copyright (c) 2013 Mirantis, Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
 
 import logging
 import bunch
@@ -121,8 +120,9 @@ def environment_delete(request, environment_id):
 
 
 def environment_get(request, environment_id):
+    session_id = Session.get(request, environment_id)
     log.debug('Environment::Get <Id: {0}>'.format(environment_id))
-    env = muranoclient(request).environments.get(environment_id)
+    env = muranoclient(request).environments.get(environment_id, session_id)
     log.debug('Environment::Get {0}'.format(env))
     return env
 

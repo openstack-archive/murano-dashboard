@@ -31,14 +31,18 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 ROOT_URLCONF = 'openstack_dashboard.urls'
 
-RECOVERABLE_EXC = (muranoclient.HTTPException, muranoclient.CommunicationError, muranoclient.Forbidden)
-EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(exceptions.RECOVERABLE + RECOVERABLE_EXC)
+RECOVERABLE_EXC = (muranoclient.HTTPException,
+                   muranoclient.CommunicationError,
+                   muranoclient.Forbidden)
+EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(
+    exceptions.RECOVERABLE + RECOVERABLE_EXC)
 
-NOT_FOUND_EXC = (muranoclient.HTTPNotFound,muranoclient.EndpointNotFound)
+NOT_FOUND_EXC = (muranoclient.HTTPNotFound, muranoclient.EndpointNotFound)
 EXTENDED_NOT_FOUND_EXCEPTIONS = tuple(exceptions.NOT_FOUND + NOT_FOUND_EXC)
 
 UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized, )
-EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
+EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(
+    exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
 
 
 HORIZON_CONFIG = {

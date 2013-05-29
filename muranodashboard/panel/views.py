@@ -1,17 +1,16 @@
-# Copyright (c) 2013 Mirantis Inc.
+#    Copyright (c) 2013 Mirantis, Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
 
 import logging
 from muranoclient.common.exceptions import CommunicationError
@@ -59,6 +58,8 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
         parameters = {'service_type': service_type}
         data = form_list[1].data
         parameters['units'] = []
+        parameters['unitNamingPattern'] = data.get(
+            '1-unit_name_template', None)
         if service_type == 'Active Directory':
             parameters['configuration'] = 'standalone'
             parameters['name'] = str(data.get('1-dc_name', 'noname'))
@@ -75,7 +76,8 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                     'recoveryPassword': recovery_password
                 })
 
-        elif service_type in ['IIS', 'ASP.NET Application', 'IIS Farm', 'ASP.NET Farm']:
+        elif service_type in ['IIS', 'ASP.NET Application',
+                              'IIS Farm', 'ASP.NET Farm']:
             password = data.get('1-adm_password', '')
             parameters['name'] = str(data.get('1-iis_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
@@ -83,17 +85,16 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             parameters['domain'] = str(data.get('1-iis_domain', ''))
             password = form_list[1].data.get('1-adm_password', '')
             domain = form_list[1].data.get('1-iis_domain', '')
-            dc_user = form_list[1].data.get('1-domain_user_name', '')
-            dc_pass = form_list[1].data.get('1-domain_user_password', '')
             parameters['name'] = str(form_list[1].data.get('1-iis_name',
                                                            'noname'))
             parameters['domain'] = parameters['name']
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
 
-            if service_type == 'ASP.NET Application' or service_type == 'ASP.NET Farm':
-                parameters['repository'] = form_list[1]\
-                                           .data.get('1-repository', '')
+            if service_type == 'ASP.NET Application' \
+                    or service_type == 'ASP.NET Farm':
+                parameters['repository'] = \
+                    form_list[1].data.get('1-repository', '')
             instance_count = 1
             if service_type == 'IIS Farm' or service_type == 'ASP.NET Farm':
                 instance_count = int(data.get('1-instance_count', 1))
@@ -103,10 +104,10 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                 parameters['units'].append({})
 
         try:
-            service = api.service_create(self.request, environment_id, parameters)
-
+            api.service_create(self.request, environment_id, parameters)
         except:
-            msg = _('Sorry, you can\'t create service right now. Try again later')
+            msg = _('Sorry, you can\'t create service right now.'
+                    ' Try again later')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
 
@@ -171,7 +172,8 @@ class Services(tables.DataTableView):
     def get_data(self):
         try:
             self.environment_id = self.kwargs['environment_id']
-            environment = api.environment_get(self.request, self.environment_id)
+            environment = api.environment_get(
+                self.request, self.environment_id)
             self.environment_name = environment.name
             services = api.services_list(self.request, self.environment_id)
         except:
