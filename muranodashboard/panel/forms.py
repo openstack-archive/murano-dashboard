@@ -22,11 +22,6 @@ from muranodashboard.panel import api
 
 log = logging.getLogger(__name__)
 
-name_re = re.compile(r'^[-\w]+$')
-validate_name = RegexValidator(name_re, _(u'Enter a valid name consisting '
-                                          u'of letters, numbers, \
-                                          underscores or hyphens.'), 'invalid')
-
 
 class PasswordField(forms.CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
@@ -42,16 +37,16 @@ class PasswordField(forms.CharField):
                                             required=True, validators=
                                             [self.validate_password],
                                             label=label,
-                                            error_messages={'invalid':
-                                            self.validate_password.message,
-                                            'required':
-                                            'Password is required'},
+                                            error_messages={
+                                            'invalid':
+                                            self.validate_password.message},
                                             widget=forms.PasswordInput(
-                                            render_value=False),
+                                                render_value=False),
                                             *args, **kwargs)
 
 
 class WizardFormServiceType(forms.Form):
+
     ad_service = ('Active Directory', 'Active Directory')
     iis_service = ('IIS', 'Internet Information Services')
     asp_service = ('ASP.NET Application', 'ASP.NET Application')
@@ -80,13 +75,19 @@ class CommonPropertiesExtension(object):
 
 
 class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
+    domain_name_re = re.compile(r'^[a-zA-Z0-9-]+$')
+    validate_domain_name = RegexValidator(domain_name_re,
+                                          _(u'Enter a valid            \
+                                             Standard DNS domain name'),
+                                          'invalid')
+
     dc_name = forms.CharField(label=_('Domain Name'),
                               min_length=2,
                               max_length=64,
                               required=True,
-                              validators=[validate_name], error_messages=
-                              {'invalid': validate_name.message},
-                              )
+                              validators=[validate_domain_name],
+                              error_messages=
+                              {'invalid': validate_domain_name.message})
 
     dc_count = forms.IntegerField(label=_('Instance Count'),
                                   required=True,
@@ -104,7 +105,14 @@ class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
 
 
 class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
+    name_re = re.compile(r'^[-\w]+$')
+    validate_name = RegexValidator(name_re,
+                                   _(u'Enter a valid name consisting of     \
+                                     letters, numbers, underscores or       \
+                                     hyphens.'), 'invalid')
+
     iis_name = forms.CharField(label=_('Service Name'),
+                               min_length=2, max_length=64,
                                required=True, validators=[validate_name],
                                error_messages=
                                {'invalid': validate_name.message})
@@ -145,11 +153,10 @@ class WebFarmExtension(forms.Form):
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
                                        WebFarmExtension,
                                        CommonPropertiesExtension):
-
     git_repo_re = re.compile(r'(\w+://)(.+@)*([\w\d\.]+)(:[\d]+)?/*(.*)',
                              re.IGNORECASE)
     validate_git = RegexValidator(git_repo_re,
-                                  _('Input correct git repository url'),
+                                  _('Enter correct git repository url'),
                                   'invalid')
 
     repository = forms.CharField(label=_('Git repository'),
