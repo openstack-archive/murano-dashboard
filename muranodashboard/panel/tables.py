@@ -82,10 +82,7 @@ class DeleteEnvironment(tables.DeleteAction):
     data_type_plural = _("Environments")
 
     def allowed(self, request, environment):
-        status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING]:
-            return True
-        return False
+        return True
 
     def action(self, request, environment_id):
         try:
