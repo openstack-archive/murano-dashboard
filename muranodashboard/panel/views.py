@@ -177,6 +177,7 @@ class Services(tables.DataTableView):
             self.environment_name = environment.name
             services = api.services_list(self.request, self.environment_id)
         except:
+            #TODO: fix this, environment_id can be unavailable
             services = []
             exceptions.handle(self.request,
                               _('Unable to retrieve list of services for '
