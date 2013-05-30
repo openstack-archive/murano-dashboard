@@ -100,7 +100,7 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                 instance_count = int(data.get('1-instance_count', 1))
                 parameters['loadBalancerPort'] = int(data.get('1-lb_port', 80))
 
-            for unit in range(instance_count - 1):
+            for unit in range(instance_count):
                 parameters['units'].append({})
 
         try:

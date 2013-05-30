@@ -152,7 +152,6 @@ class WebFarmExtension(forms.Form):
 
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
-                                       WebFarmExtension,
                                        CommonPropertiesExtension):
     git_repo_re = re.compile(r'(\w+://)(.+@)*([\w\d\.]+)(:[\d]+)?/*(.*)',
                              re.IGNORECASE)
