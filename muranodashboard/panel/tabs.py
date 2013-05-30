@@ -17,6 +17,7 @@ import logging
 from django.utils.translation import ugettext_lazy as _
 from horizon import tabs
 from muranodashboard.panel import api
+from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES
 
 
 LOG = logging.getLogger(__name__)
@@ -28,22 +29,35 @@ class OverviewTab(tabs.Tab):
     template_name = '_services.html'
 
     def get_context_data(self, request):
-        data = self.tab_group.kwargs['service']
+        service_data = self.tab_group.kwargs['service']
 
-        return {"service_name": data.name,
-                "service_status": data.status,
-                "service_type": data.service_type,
-                "service_domain": data.domain}
+        for id, name in STATUS_DISPLAY_CHOICES:
+            if id == service_data.status:
+                status_name = name
+
+        detail_info = {'service_name': service_data.name,
+                       'service_status': status_name,
+                       'service_type': service_data.service_type}
+
+        if not service_data.domain:
+            detail_info['service_domain'] = 'Not in domain'
+
+        if hasattr(service_data, 'uri'):
+            detail_info["uri"] = service_data.uri
+        return detail_info
 
 
 class LogsTab(tabs.Tab):
     name = _("Logs")
     slug = "_logs"
     template_name = '_service_logs.html'
+    preload = False
 
     def get_context_data(self, request):
-        service = self.tab_group.kwargs['service']
-        reports = api.get_status_message_for_service(request, service.id)
+        service_id = self.tab_group.kwargs['service_id']
+        environment_id = self.tab_group.kwargs['environment_id']
+        reports = api.get_status_message_for_service(request, service_id,
+                                                     environment_id)
         return {"reports": reports}
 
 

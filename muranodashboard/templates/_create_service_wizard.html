@@ -1,0 +1,158 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n horizon humanize %}
+
+{% block form_action %}{% url horizon:project:murano:create %}?{{ request.POST.urlencode }}{% endblock %}
+
+{% block modal_id %}create_service{% endblock %}
+{% block modal-header %}{% trans "Create Service" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+<br>
+{% if wizard.steps.next %}
+<br><br><br>
+{% endif %}
+
+<table>
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form }}
+    {% endfor %}
+{% else %}
+    <fieldset>
+        {% include "_horizon_form_fields.html" %}
+    </fieldset>
+{% endif %}
+</table>
+</div>
+<div class="right">
+    {% if wizard.steps.prev %}
+        <h3> {% blocktrans %} {{ service_type }} Service{% endblocktrans %} </h3>
+        {% if service_type == 'Active Directory' %}
+            <p>
+                <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not end with a dash.
+                            DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} You can create several Active Directory instances by setting instance number larger than one. One primary Domain Controller and a few secondary DCs will be created. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Passwords: {% endblocktrans %} </strong>
+                {% blocktrans %}  Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
+            </p>
+
+        {% elif service_type == 'ASP.NET Application' %}
+            {% blocktrans %} ASP.NET application will be installed onto one IISWeb Server {% endblocktrans %}
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Git repository {% endblocktrans %}</strong>
+                {% blocktrans %} URL of a git repository with the application you want to deploy. {% endblocktrans %}
+            </p>
+
+        {% elif service_type == 'ASP.NET Farm' %}
+            <p>
+                {% blocktrans %} The ASP.NET application will be installed on a number of IIS Web Servers, and load balancing will be configured. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} Several instances with ASP.NET Application Service can be created. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
+                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
+            </p>
+
+        {% elif service_type == 'IIS' %}
+            <p>{% blocktrans %} Standalone IIS Server {% endblocktrans %}</p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
+                    Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
+            </p>
+
+        {% elif service_type == 'IIS Farm' %}
+            <p>{% blocktrans %} A load-balanced array of IIS servers {% endblocktrans %}</p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} Several instances with IIS Service can be created at one time. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
+                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
+            </p>
+        {% elif service_type == '' %}
+            <p>{% blocktrans %} Please try again {% endblocktrans %}</p>
+       
+        {% endif %}
+        <p>
+            <strong>{% blocktrans %} Hostname template {% endblocktrans %}</strong>
+            {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for  for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
+        </p>
+
+    {% else %}
+         <h3>{% trans "Description" %}:</h3>
+            <p>{% blocktrans %} <strong> The Active Directory Service </strong> includes one primary and optionally a few secondary Domain Controllers, with DNS service {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The Internet Information Service </strong> sets up an IIS server and joins it into an existing domain {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs custom application onto one IIS Web Server {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The IIS Farm Service </strong> sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} If you want your services to work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+{% if wizard.steps.prev %}
+<input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Create' %}"/>
+{% else %}
+<button name="wizard_goto_step" class="btn btn-small" type="submit" value="{{ wizard.steps.next }}">{% trans "Next >" %}</button>
+{% endif %}
+{% endblock %}
