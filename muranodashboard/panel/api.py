@@ -160,6 +160,17 @@ def services_list(request, environment_id):
     environment = get_environment(environment_id, session_id)
 
     for service, instances in environment.services.iteritems():
+        if instances:
+            reports = muranoclient(request).sessions.reports(
+                environment_id,
+                session_id,
+                instances[0]['id'])
+            if reports:
+                last_operation = str(reports[-1].text)
+            else:
+                last_operation = ''
+            instances[0]['operation'] = last_operation
+
         services += instances
 
     log.debug('Service::List')
