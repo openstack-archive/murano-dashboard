@@ -195,7 +195,7 @@ class ServicesTable(tables.DataTable):
                            status_choices=STATUS_CHOICES,
                            display_choices=STATUS_DISPLAY_CHOICES)
 
-    operation = tables.Column('operation', verbose_name=_('Operation'))
+    operation = tables.Column('operation', verbose_name=_('Last operation'))
 
     class Meta:
         name = 'services'

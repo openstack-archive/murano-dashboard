@@ -17,7 +17,7 @@ from muranoclient.common.exceptions import CommunicationError
 import re
 
 from django.views import generic
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
 
@@ -41,6 +41,7 @@ from forms import WizardFormAspNetFarmConfiguration
 from horizon import messages
 
 from django.http import HttpResponseRedirect
+
 
 LOG = logging.getLogger(__name__)
 
@@ -110,10 +111,10 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
                     ' Try again later')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
-
-        message = "The %s service successfully created." % service_type
-        messages.success(self.request, message)
-        return HttpResponseRedirect(url)
+        else:
+            message = "The %s service successfully created." % service_type
+            messages.success(self.request, message)
+            return HttpResponseRedirect(url)
 
     def get_form(self, step=None, data=None, files=None):
         form = super(Wizard, self).get_form(step, data, files)
@@ -166,23 +167,29 @@ class Services(tables.DataTableView):
 
     def get_context_data(self, **kwargs):
         context = super(Services, self).get_context_data(**kwargs)
-        context['environment_name'] = self.environment_name
+
+        try:
+            context['environment_name'] = self.environment_name
+        except ArithmeticError:
+            msg = _('Sorry, you this environment does\'t exist anymore')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(self.request, msg, redirect=redirect)
         return context
 
     def get_data(self):
-        try:
+        if not hasattr(self, "_services"):
             self.environment_id = self.kwargs['environment_id']
-            environment = api.environment_get(
-                self.request, self.environment_id)
-            self.environment_name = environment.name
-            services = api.services_list(self.request, self.environment_id)
-        except:
-            #TODO: fix this, environment_id can be unavailable
-            services = []
-            exceptions.handle(self.request,
-                              _('Unable to retrieve list of services for '
-                                'environment "%s".') % self.environment_id)
-        self._services = services
+            try:
+                environment = api.environment_get(
+                    self.request, self.environment_id)
+                self.environment_name = environment.name
+                services = api.services_list(self.request, self.environment_id)
+            except:
+                exceptions.handle(self.request,
+                                  _('Unable to retrieve list of services for '
+                                    'environment "%s".') % self.environment_id)
+            else:
+                self._services = services
         return self._services
 
 
@@ -198,16 +205,17 @@ class DetailServiceView(tabs.TabView):
 
     def get_data(self):
         if not hasattr(self, "_service"):
+            service_id = self.kwargs['service_id']
             try:
-                service_id = self.kwargs['service_id']
                 service = api.service_get(self.request, service_id)
-            except:
+            except Exception as e:
                 redirect = reverse('horizon:project:murano:index')
                 exceptions.handle(self.request,
                                   _('Unable to retrieve details for '
-                                    'service "%s".') % service_id,
+                                    'service: %s' % e.message),
                                   redirect=redirect)
-            self._service = service
+            else:
+                self._service = service
         return self._service
 
     def get_tabs(self, request, *args, **kwargs):
