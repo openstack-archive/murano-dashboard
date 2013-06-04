@@ -27,22 +27,18 @@ class PasswordField(forms.CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
-    validate_password = RegexValidator(password_re, _('Your password must \
-                                            include at least one letter, \
-                                            at least one number and at least \
-                                            one special character'), 'invalid')
+    validate_password = RegexValidator(
+        password_re, _('Your password must include at least one letter, one   \
+                       number and one special character'), 'invalid')
 
     def __init__(self, label, *args, **kwargs):
-        super(PasswordField, self).__init__(min_length=7, max_length=255,
-                                            required=True, validators=
-                                            [self.validate_password],
-                                            label=label,
-                                            error_messages={
-                                            'invalid':
-                                            self.validate_password.message},
-                                            widget=forms.PasswordInput(
-                                                render_value=False),
-                                            *args, **kwargs)
+        super(PasswordField, self).__init__(
+            min_length=7,
+            max_length=255,
+            validators=[self.validate_password],
+            label=label,
+            error_messages={'invalid': self.validate_password.message},
+            widget=forms.PasswordInput(render_value=False), *args, **kwargs)
 
 
 class WizardFormServiceType(forms.Form):
@@ -73,28 +69,30 @@ class CommonPropertiesExtension(object):
             len(self.fields), 'unit_name_template',
             forms.CharField(label=_('Hostname template'), required=False))
 
+        for field, instance in self.fields.iteritems():
+            if not instance.required:
+                instance.widget.attrs['placeholder'] = 'Optional'
+
 
 class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
     domain_name_re = re.compile(
         r'^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$')
     validate_domain_name = RegexValidator(domain_name_re,
-                                          _(u'Enter a valid            \
-                                             Standard DNS domain name'),
+                                          _(u'Enter a valid domain name'),
                                           'invalid')
 
-    dc_name = forms.CharField(label=_('Domain Name'),
-                              min_length=2,
-                              max_length=64,
-                              required=True,
-                              validators=[validate_domain_name],
-                              error_messages=
-                              {'invalid': validate_domain_name.message})
+    dc_name = forms.CharField(
+        label=_('Domain Name'),
+        min_length=2,
+        max_length=64,
+        validators=[validate_domain_name],
+        error_messages={'invalid': validate_domain_name.message})
 
-    dc_count = forms.IntegerField(label=_('Instance Count'),
-                                  required=True,
-                                  min_value=1,
-                                  max_value=100,
-                                  initial=1)
+    dc_count = forms.IntegerField(
+        label=_('Instance Count'),
+        min_value=1,
+        max_value=100,
+        initial=1)
 
     adm_password = PasswordField(_('Administrator password'))
 
@@ -108,20 +106,21 @@ class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
 class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
     name_re = re.compile(r'^[-\w]+$')
     validate_name = RegexValidator(name_re,
-                                   _(u'Enter a valid name consisting of     \
-                                     letters, numbers, underscores or       \
-                                     hyphens.'), 'invalid')
+                                   _(u'Just letters, numbers, underscores     \
+                                   or hyphens are allowed.'), 'invalid')
 
-    iis_name = forms.CharField(label=_('Service Name'),
-                               min_length=2, max_length=64,
-                               required=True, validators=[validate_name],
-                               error_messages=
-                               {'invalid': validate_name.message})
+    iis_name = forms.CharField(
+        label=_('Service Name'),
+        min_length=2,
+        max_length=64,
+        validators=[validate_name],
+        error_messages={'invalid': validate_name.message})
 
     adm_password = PasswordField(_('Administrator password'))
 
-    iis_domain = forms.ChoiceField(label=_('Member of the Domain'),
-                                   required=False)
+    iis_domain = forms.ChoiceField(
+        label=_('Domain'),
+        required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
@@ -132,38 +131,37 @@ class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
         ad = 'Active Directory'
         domains = api.service_list_by_type(request, environment_id, ad)
 
-        self.fields['iis_domain'].choices = [("", "")] + \
+        self.fields['iis_domain'].choices = [("", "Not in domain")] + \
                                             [(domain.name, domain.name)
                                              for domain in domains]
         CommonPropertiesExtension.__init__(self)
 
 
 class WebFarmExtension(forms.Form):
-    instance_count = forms.IntegerField(label=_('Instance Count'),
-                                        required=True,
-                                        min_value=1,
-                                        max_value=10000,
-                                        initial=1)
-    lb_port = forms.IntegerField(label=_('Load Balancer port'),
-                                 required=True,
-                                 min_value=1,
-                                 max_value=65536,
-                                 initial=80)
+    instance_count = forms.IntegerField(
+        label=_('Instance Count'),
+        min_value=1,
+        max_value=10000,
+        initial=1)
+
+    lb_port = forms.IntegerField(
+        label=_('Load Balancer port'),
+        min_value=1,
+        max_value=65536,
+        initial=80)
 
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
                                        CommonPropertiesExtension):
     git_repo_re = re.compile(r'(\w+://)(.+@)*([\w\d\.]+)(:[\d]+)?/*(.*)',
                              re.IGNORECASE)
-    validate_git = RegexValidator(git_repo_re,
-                                  _('Enter correct git repository url'),
-                                  'invalid')
+    validate_git = RegexValidator(
+        git_repo_re, _('Enter correct git repository url'), 'invalid')
 
-    repository = forms.CharField(label=_('Git repository'),
-                                 required=True,
-                                 validators=[validate_git],
-                                 error_messages=
-                                 {'invalid': validate_git.message})
+    repository = forms.CharField(
+        label=_('Git repository'),
+        validators=[validate_git],
+        error_messages={'invalid': validate_git.message})
 
 
 class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,
