@@ -136,6 +136,10 @@ def environment_deploy(request, environment_id):
     return env
 
 
+def environment_update(request, environment_id, name):
+    return muranoclient(request).environments.update(environment_id, name)
+
+
 def get_service_client(request, service_type):
     if service_type == 'Active Directory':
         return muranoclient(request).activeDirectories

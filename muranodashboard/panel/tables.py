@@ -14,11 +14,12 @@
 
 import logging
 
-from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from horizon import exceptions
+from django.utils.translation import ugettext_lazy as _
 
+from horizon import exceptions
 from horizon import tables
+
 from muranodashboard.panel import api
 
 LOG = logging.getLogger(__name__)
@@ -78,8 +79,8 @@ class CreateEnvironment(tables.LinkAction):
 
 
 class DeleteEnvironment(tables.DeleteAction):
-    data_type_singular = _("Environment")
-    data_type_plural = _("Environments")
+    data_type_singular = _('Environment')
+    data_type_plural = _('Environments')
 
     def allowed(self, request, environment):
         return True
@@ -92,13 +93,28 @@ class DeleteEnvironment(tables.DeleteAction):
             exceptions.handle(request, msg)
 
 
+class EditEnvironment(tables.LinkAction):
+    name = 'edit'
+    verbose_name = _('Edit Environment')
+    url = 'horizon:project:murano:update_environment'
+    classes = ('ajax-modal', 'btn-edit')
+
+    def allowed(self, request, environment):
+        status = getattr(environment, 'status', None)
+        if status not in [STATUS_ID_DEPLOYING]:
+            return True
+        else:
+            return False
+
+
 class DeleteService(tables.DeleteAction):
     data_type_singular = _('Service')
     data_type_plural = _('Services')
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING]:
+        #TODO: Change this when services deletion on deployed env fixed
+        if status in [STATUS_ID_PENDING]:
             return True
         return False
 
@@ -132,13 +148,13 @@ class DeployEnvironment(tables.BatchAction):
             api.environment_deploy(request, environment_id)
         except:
             msg = _('Unable to deploy. Maybe this environment \
-            is already deploying by someone else. Try again later')
+            is already deploying. Try again later')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(request, msg, redirect=redirect)
 
 
 class ShowEnvironmentServices(tables.LinkAction):
-    name = 'edit'
+    name = 'show'
     verbose_name = _('Services')
     url = 'horizon:project:murano:services'
 
@@ -181,7 +197,7 @@ class EnvironmentsTable(tables.DataTable):
         status_columns = ['status']
         table_actions = (CreateEnvironment, DeleteEnvironment)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       DeleteEnvironment)
+                       EditEnvironment, DeleteEnvironment)
 
 
 class ServicesTable(tables.DataTable):
