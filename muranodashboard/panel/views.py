@@ -17,7 +17,7 @@ from muranoclient.common.exceptions import CommunicationError
 import re
 
 from django.views import generic
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
 
@@ -30,7 +30,7 @@ from horizon.forms.views import ModalFormMixin
 from muranodashboard.panel import api
 
 from tables import EnvironmentsTable, ServicesTable
-from workflows import CreateEnvironment
+from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs
 from forms import WizardFormADConfiguration
 from forms import WizardFormIISConfiguration
@@ -223,4 +223,33 @@ class CreateEnvironmentView(workflows.WorkflowView):
         initial = super(CreateEnvironmentView, self).get_initial()
         initial['project_id'] = self.request.user.tenant_id
         initial['user_id'] = self.request.user.id
+        return initial
+
+
+class EditEnvironmentView(workflows.WorkflowView):
+    workflow_class = UpdateEnvironment
+    template_name = 'update_env.html'
+    success_url = reverse_lazy("horizon:project:murano:index")
+
+    def get_context_data(self, **kwargs):
+        context = super(EditEnvironmentView, self).get_context_data(**kwargs)
+        context["environment_id"] = self.kwargs['environment_id']
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not hasattr(self, "_object"):
+            environment_id = self.kwargs['environment_id']
+            try:
+                self._object =                                              \
+                    api.environment_get(self.request, environment_id)
+            except:
+                redirect = reverse("horizon:project:murano:index")
+                msg = _('Unable to retrieve environment details.')
+                exceptions.handle(self.request, msg, redirect=redirect)
+        return self._object
+
+    def get_initial(self):
+        initial = super(EditEnvironmentView, self).get_initial()
+        initial.update({'environment_id': self.kwargs['environment_id'],
+                        'name': getattr(self.get_object(), 'name', '')})
         return initial

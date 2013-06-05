@@ -62,7 +62,7 @@ class ConfigureEnvironmentAction(workflows.Action):
 
 class ConfigureEnvironment(workflows.Step):
     action_class = ConfigureEnvironmentAction
-    contibutes = ('name',)
+    contributes = ('name',)
 
     def contribute(self, data, context):
         if data:
@@ -90,3 +90,47 @@ class CreateEnvironment(workflows.Workflow):
         except:
             exceptions.handle(request)
             return False
+
+
+class UpdateEnvironmentInfoAction(workflows.Action):
+    name = forms.CharField(required=True)
+
+    def handle(self, request, data):
+        try:
+            api.environment_update(request,
+                                   data['environment_id'],
+                                   data['name'])
+
+        except:
+            exceptions.handle(request, ignore=True)
+            return False
+        return True
+
+    class Meta:
+        name = _("Environment Info")
+        slug = 'environment_info'
+        help_text = _("From here you can edit the environment details.")
+
+
+class UpdateEnvironmentInfo(workflows.Step):
+    action_class = UpdateEnvironmentInfoAction
+    depends_on = ('environment_id',)
+    contributes = ('name',)
+
+    def contribute(self, data, context):
+        if data:
+            context['name'] = data.get('name', '')
+        return context
+
+
+class UpdateEnvironment(workflows.Workflow):
+    slug = "update_environment"
+    name = _("Edit Environment")
+    finalize_button_name = _("Save")
+    success_message = _('Modified environment "%s".')
+    failure_message = _('Unable to modify environment "%s".')
+    success_url = "horizon:project:murano:index"
+    default_steps = (UpdateEnvironmentInfo,)
+
+    def format_status_message(self, message):
+        return message % self.context.get('name', 'unknown environment')
