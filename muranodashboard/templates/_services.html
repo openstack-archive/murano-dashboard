@@ -12,9 +12,9 @@
     <dd>{{ service_domain }}</dd><br>
     <dt>{% trans "Status" %}</dt>
     <dd>{{ service_status }}</dd><br>
-    {% if loadBalancerIP %}
-        <dt>{% trans "Load Balancer IP" %}</dt>
-        <dd>{{ loadBalancerIP }}</dd>
+    {% if uri %}
+        <dt>{% trans "URI" %}</dt>
+        <dd>{{ uri }}</dd>
     {% endif %}
   </dl>
 </div>

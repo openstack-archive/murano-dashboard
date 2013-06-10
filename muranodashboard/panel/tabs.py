@@ -41,8 +41,8 @@ class OverviewTab(tabs.Tab):
                        "service_domain": service_data.domain}
 
         # service_data is a bunch obj
-        if hasattr(service_data, 'loadBalancerIP'):
-            detail_info["loadBalancerIP"] = service_data.loadBalancerIP
+        if hasattr(service_data, 'uri'):
+            detail_info["uri"] = service_data.uri
 
         return detail_info
 
