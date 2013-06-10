@@ -167,10 +167,9 @@ class Services(tables.DataTableView):
 
     def get_context_data(self, **kwargs):
         context = super(Services, self).get_context_data(**kwargs)
-
         try:
             context['environment_name'] = self.environment_name
-        except ArithmeticError:
+        except:
             msg = _('Sorry, you this environment does\'t exist anymore')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
@@ -208,11 +207,11 @@ class DetailServiceView(tabs.TabView):
             service_id = self.kwargs['service_id']
             try:
                 service = api.service_get(self.request, service_id)
-            except Exception as e:
+            except:
                 redirect = reverse('horizon:project:murano:index')
                 exceptions.handle(self.request,
                                   _('Unable to retrieve details for '
-                                    'service: %s' % e.message),
+                                    'service'),
                                   redirect=redirect)
             else:
                 self._service = service

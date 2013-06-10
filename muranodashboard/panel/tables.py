@@ -86,11 +86,7 @@ class DeleteEnvironment(tables.DeleteAction):
         return True
 
     def action(self, request, environment_id):
-        try:
-            api.environment_delete(request, environment_id)
-        except:
-            msg = _('Sorry, you can\'t delete this environment right now')
-            exceptions.handle(request, msg)
+        api.environment_delete(request, environment_id)
 
 
 class EditEnvironment(tables.LinkAction):

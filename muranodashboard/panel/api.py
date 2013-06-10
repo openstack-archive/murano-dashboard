@@ -158,7 +158,7 @@ def get_service_client(request, service_type):
 def services_list(request, environment_id):
     services = []
 
-    session_id = Session.get(request, environment_id)
+    session_id = Session.get_or_create(request, environment_id)
     get_environment = muranoclient(request).environments.get
 
     environment = get_environment(environment_id, session_id)
