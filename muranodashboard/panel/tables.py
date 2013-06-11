@@ -56,14 +56,6 @@ class CreateService(tables.LinkAction):
             return True
         return False
 
-    def action(self, request, service):
-        try:
-            api.service_create(request, service)
-        except:
-            msg = _('Sorry, you can\'t create service right now')
-            redirect = reverse("horizon:project:murano:index")
-            exceptions.handle(request, msg, redirect=redirect)
-
 
 class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
@@ -116,7 +108,9 @@ class DeleteService(tables.DeleteAction):
 
     def action(self, request, service_id):
         try:
-            api.service_delete(request, service_id)
+            env_id = self.table.kwargs.get('environment_id')
+            service_type = self.table.data[0]['service_type']
+            api.service_delete(request, service_id, env_id, service_type)
         except:
             msg = _('Sorry, you can\'t delete service right now')
             redirect = reverse("horizon:project:murano:index")
@@ -133,18 +127,19 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        services = api.services_list(request, environment.id)
 
-        if status not in [STATUS_ID_DEPLOYING, None] and services:
-            return True
-        return False
+        if status not in [STATUS_ID_DEPLOYING]:
+            services_presence = api.check_for_services(request, environment.id)
+            if services_presence:
+                return True
+        else:
+            return False
 
     def action(self, request, environment_id):
         try:
             api.environment_deploy(request, environment_id)
         except:
-            msg = _('Unable to deploy. Maybe this environment \
-            is already deploying. Try again later')
+            msg = _('Unable to deploy. Try again later')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(request, msg, redirect=redirect)
 
@@ -173,7 +168,8 @@ class UpdateServiceRow(tables.Row):
     ajax = True
 
     def get_data(self, request, service_id):
-        return api.service_get(request, service_id)
+        environment_id = self.table.kwargs['environment_id']
+        return api.service_get(request, service_id, environment_id)
 
 
 class EnvironmentsTable(tables.DataTable):
@@ -196,9 +192,14 @@ class EnvironmentsTable(tables.DataTable):
                        EditEnvironment, DeleteEnvironment)
 
 
+def get_service_details_link(service):
+    return reverse('horizon:project:murano:service_details',
+                   args=(service.environment_id, service.id))
+
+
 class ServicesTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Name'),
-                         link='horizon:project:murano:service_details')
+                         link=get_service_details_link)
 
     _type = tables.Column('service_type', verbose_name=_('Type'))
 
