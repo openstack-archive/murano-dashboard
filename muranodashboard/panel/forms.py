@@ -28,8 +28,8 @@ class PasswordField(forms.CharField):
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
     validate_password = RegexValidator(
-        password_re, _('Your password must include at least one letter, one   \
-                       number and one special character'), 'invalid')
+        password_re, _('The password must contain at least one letter, one   \
+                               number and one special character'), 'invalid')
 
     def __init__(self, label, *args, **kwargs):
         super(PasswordField, self).__init__(
@@ -76,10 +76,11 @@ class CommonPropertiesExtension(object):
 
 class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
     domain_name_re = re.compile(
-        r'^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$')
+        r'^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](\.[a-zA-Z]{2,})?$')
     validate_domain_name = RegexValidator(domain_name_re,
-                                          _(u'Enter a valid domain name'),
-                                          'invalid')
+                                          _(u'Enter a valid domain name:    \
+                                            just letters, numbers, dashes and \
+                                            one dot are allowed'), 'invalid')
 
     dc_name = forms.CharField(
         label=_('Domain Name'),
