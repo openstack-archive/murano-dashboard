@@ -32,17 +32,19 @@ class OverviewTab(tabs.Tab):
         service_data = self.tab_group.kwargs['service']
 
         for id, name in STATUS_DISPLAY_CHOICES:
-            if id == service_data.status:
+            if id == service_data[u'status']:
                 status_name = name
 
-        detail_info = {"service_name": service_data.name,
-                       "service_status": status_name,
-                       "service_type": service_data.service_type,
-                       "service_domain": service_data.domain}
+        detail_info = {'service_name': service_data[u'name'],
+                       'service_status': status_name,
+                       'service_type': service_data[u'service_type']}
 
-        # service_data is a bunch obj
-        if hasattr(service_data, 'uri'):
-            detail_info["uri"] = service_data.uri
+        if not service_data[u'domain']:
+            detail_info['service_domain'] = 'Not in domain'
+
+        uri = service_data.get(u'uri')
+        if uri:
+            detail_info[u'uri'] = service_data[u'uri']
 
         return detail_info
 
@@ -51,10 +53,13 @@ class LogsTab(tabs.Tab):
     name = _("Logs")
     slug = "_logs"
     template_name = '_service_logs.html'
+    preload = False
 
     def get_context_data(self, request):
-        service = self.tab_group.kwargs['service']
-        reports = api.get_status_message_for_service(request, service.id)
+        service_id = self.tab_group.kwargs['service_id']
+        environment_id = self.tab_group.kwargs['environment_id']
+        reports = api.get_status_message_for_service(request, service_id,
+                                                     environment_id)
         return {"reports": reports}
 
 
