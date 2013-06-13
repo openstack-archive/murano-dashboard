@@ -169,7 +169,7 @@ class UpdateServiceRow(tables.Row):
 
     def get_data(self, request, service_id):
         environment_id = self.table.kwargs['environment_id']
-        return api.service_get(request, service_id, environment_id)
+        return api.service_get(request, environment_id, service_id)
 
 
 class EnvironmentsTable(tables.DataTable):
