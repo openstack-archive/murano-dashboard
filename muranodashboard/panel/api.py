@@ -90,6 +90,17 @@ def environments_list(request):
     log.debug('Environment::List')
     environments = muranoclient(request).environments.list()
 
+    for index, env in enumerate(environments):
+        environments[index].has_services = False
+        environment = environment_get(request, env.id)
+        for service_name, instance in environment.services.iteritems():
+            if instance:
+                environments[index].has_services = True
+                break
+        if not environments[index].has_services:
+            if environments[index].status == u'ready':
+                environments[index].status = u'new'
+
     log.debug('Environment::List {0}'.format(environments))
     return environments
 

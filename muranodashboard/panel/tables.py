@@ -27,6 +27,7 @@ LOG = logging.getLogger(__name__)
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'
 STATUS_ID_DEPLOYING = 'deploying'
+STATUS_ID_NEW = 'new'
 
 STATUS_CHOICES = (
     (None, True),
@@ -40,6 +41,7 @@ STATUS_DISPLAY_CHOICES = (
     (STATUS_ID_READY, 'Ready'),
     (STATUS_ID_DEPLOYING, 'Deploy in progress'),
     (STATUS_ID_PENDING, 'Configuring'),
+    (STATUS_ID_NEW, 'Ready to configure'),
     ('', 'Ready to configure'),
 )
 
@@ -128,10 +130,8 @@ class DeployEnvironment(tables.BatchAction):
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
 
-        if status not in [STATUS_ID_DEPLOYING]:
-            services_presence = api.check_for_services(request, environment.id)
-            if services_presence:
-                return True
+        if status not in [STATUS_ID_DEPLOYING] and environment.has_services:
+            return True
         else:
             return False
 
