@@ -13,18 +13,21 @@
 #    under the License.
 
 import logging
-from muranoclient.common.exceptions import CommunicationError
+from muranoclient.common.exceptions import \
+    CommunicationError, HTTPInternalServerError
 import re
 
 from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
+from django.http import HttpResponseRedirect
 
 from horizon import exceptions
 from horizon import tabs
 from horizon import tables
 from horizon import workflows
+from horizon import messages
 from horizon.forms.views import ModalFormMixin
 
 from muranodashboard.panel import api
@@ -37,11 +40,6 @@ from forms import WizardFormIISConfiguration
 from forms import WizardFormAspNetAppConfiguration
 from forms import WizardFormIISFarmConfiguration
 from forms import WizardFormAspNetFarmConfiguration
-
-from horizon import messages
-
-from django.http import HttpResponseRedirect
-
 
 LOG = logging.getLogger(__name__)
 
@@ -158,6 +156,10 @@ class IndexView(tables.DataTableView):
             environments = []
             messages.error(self.request, 'Could not connect to Murano API '
                                          'Service, check connection details.')
+        except HTTPInternalServerError:
+            environments = []
+            messages.error(self.request, 'Environment doesn\'t exist')
+
         return environments
 
 
@@ -185,16 +187,20 @@ class Services(tables.DataTableView):
         try:
             services = api.services_list(self.request, self.environment_id)
         except:
-            env_status = api.get_environment_status(self.request,
-                                                    self.environment_id)
             msg_text = 'Unable to retrieve list of services.'
             msg = _(msg_text)
+            try:
+                env_status = api.get_environment_status(self.request,
+                                                        self.environment_id)
+            except:
+                exceptions.handle(self.request, ignore=False)
 
-            if env_status == 'deploying':
-                msg = _(msg_text + ' This environment is deploying right now')
+            else:
+                if env_status == 'deploying':
+                    msg = _(msg_text +
+                            'This environment is deploying right now')
 
-            exceptions.handle(self.request, msg)
-
+                exceptions.handle(self.request, msg)
         return services
 
 

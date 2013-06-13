@@ -89,6 +89,7 @@ class Session(object):
 def environments_list(request):
     log.debug('Environment::List')
     environments = muranoclient(request).environments.list()
+
     log.debug('Environment::List {0}'.format(environments))
     return environments
 
