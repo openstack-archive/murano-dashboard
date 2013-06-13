@@ -187,10 +187,11 @@ class Services(tables.DataTableView):
         except:
             env_status = api.get_environment_status(self.request,
                                                     self.environment_id)
-            msg = _('Unable to retrieve list of services.')
+            msg_text = 'Unable to retrieve list of services.'
+            msg = _(msg_text)
 
             if env_status == 'deploying':
-                msg += _('This environment is deploying right now')
+                msg = _(msg_text + ' This environment is deploying right now')
 
             exceptions.handle(self.request, msg)
 
