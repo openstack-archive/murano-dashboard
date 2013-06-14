@@ -32,20 +32,18 @@ class OverviewTab(tabs.Tab):
         service_data = self.tab_group.kwargs['service']
 
         for id, name in STATUS_DISPLAY_CHOICES:
-            if id == service_data[u'status']:
+            if id == service_data.status:
                 status_name = name
 
-        detail_info = {'service_name': service_data[u'name'],
+        detail_info = {'service_name': service_data.name,
                        'service_status': status_name,
-                       'service_type': service_data[u'service_type']}
+                       'service_type': service_data.service_type}
 
-        if not service_data[u'domain']:
+        if not service_data.domain:
             detail_info['service_domain'] = 'Not in domain'
 
-        uri = service_data.get(u'uri')
-        if uri:
-            detail_info[u'uri'] = service_data[u'uri']
-
+        if hasattr(service_data, 'uri'):
+            detail_info["uri"] = service_data.uri
         return detail_info
 
 

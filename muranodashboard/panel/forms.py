@@ -76,7 +76,7 @@ class CommonPropertiesExtension(object):
 
 class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
     domain_name_re = re.compile(
-        r'^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$')
+        r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
     validate_domain_name = RegexValidator(domain_name_re,
                                           _(u'Enter a valid domain name:    \
                                             just letters, numbers, dashes and \

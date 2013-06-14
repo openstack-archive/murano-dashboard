@@ -227,7 +227,7 @@ def service_get(request, environment_id, service_id):
         if instance:
             service_data = instance[0]
             if service_data['id'] == service_id:
-                return service_data
+                return bunch.bunchify(service_data)
 
 
 def check_for_services(request, environment_id):

@@ -211,7 +211,7 @@ class DetailServiceView(tabs.TabView):
     def get_context_data(self, **kwargs):
         context = super(DetailServiceView, self).get_context_data(**kwargs)
         context["service"] = self.get_data()
-        context["service_name"] = self.service.get(u'name')
+        context["service_name"] = self.service.name
         return context
 
     def get_data(self):
