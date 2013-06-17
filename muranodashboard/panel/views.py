@@ -64,7 +64,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         if service_type == 'Active Directory':
             parameters['configuration'] = 'standalone'
-            parameters['name'] = str(step1_data.get('1-dc_name', 'noname'))
+            parameters['name'] = str(step1_data.get('dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
             parameters['adminPassword'] = \
                 str(step1_data.get('adm_password', ''))
