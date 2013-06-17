@@ -44,7 +44,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Wizard(ModalFormMixin, SessionWizardView):
-    template_name = 'services_tabs.html'
+    template_name = 'create_service_wizard.html'
 
     def done(self, form_list, **kwargs):
         link = self.request.__dict__['META']['HTTP_REFERER']
@@ -151,14 +151,13 @@ class IndexView(tables.DataTableView):
     template_name = 'index.html'
 
     def get_data(self):
+        environments = []
         try:
             environments = api.environments_list(self.request)
         except CommunicationError:
-            environments = []
             messages.error(self.request, 'Could not connect to Murano API '
                                          'Service, check connection details.')
         except HTTPInternalServerError:
-            environments = []
             messages.error(self.request, 'Environment doesn\'t exist')
 
         return environments

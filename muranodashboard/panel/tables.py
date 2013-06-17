@@ -129,7 +129,6 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-
         if status not in [STATUS_ID_DEPLOYING] and environment.has_services:
             return True
         else:

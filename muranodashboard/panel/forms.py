@@ -14,10 +14,11 @@
 
 import logging
 
+import re
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-import re
+
 from muranodashboard.panel import api
 
 log = logging.getLogger(__name__)
@@ -33,17 +34,29 @@ class PasswordField(forms.CharField):
                                number and one special character'), 'invalid')
 
     def __init__(self, label, *args, **kwargs):
+        help_text = kwargs.get('help_text')
+        if not help_text:
+            help_text = _('Enter a complex password with at least one letter, \
+                one number and one special character')
+
+        error_messages = {
+            'invalid': self.validate_password.message}
+        err_msg = kwargs.get('error_messages')
+        if err_msg:
+            if err_msg.get('required'):
+                error_messages['required'] = err_msg.get('required')
+
         super(PasswordField, self).__init__(
             min_length=7,
             max_length=255,
             validators=[self.validate_password],
             label=label,
-            error_messages={'invalid': self.validate_password.message},
+            error_messages=error_messages,
+            help_text=help_text,
             widget=forms.PasswordInput(render_value=False))
 
 
 class WizardFormServiceType(forms.Form):
-
     ad_service = ('Active Directory', 'Active Directory')
     iis_service = ('IIS', 'Internet Information Services')
     asp_service = ('ASP.NET Application', 'ASP.NET Application')
@@ -66,20 +79,23 @@ class WizardFormConfiguration(forms.Form):
 
 class ServiceConfigurationForm(forms.Form):
     def clean(self):
+        def compare(pwd1, pwd2, admin=True):
+            if pwd1 != pwd2:
+                pwd_type = 'Administrator'
+                if not admin:
+                    pwd_type = 'Recovery'
+                raise forms.ValidationError(
+                    _(' %s passwords don\'t match' % pwd_type))
+
         form_data = self.cleaned_data
         admin_pwd1 = form_data.get('adm_password')
         admin_pwd2 = form_data.get('adm_password2')
-
-        if admin_pwd1 != admin_pwd2:
-            raise forms.ValidationError(
-                _('Administrator passwords don\'t match'))
+        compare(admin_pwd1, admin_pwd2)
 
         recovery_pwd1 = form_data.get('recovery_password')
         if recovery_pwd1:
             recovery_pwd2 = form_data.get('recovery_password2')
-            if recovery_pwd1 != recovery_pwd2:
-                raise forms.ValidationError(
-                    _('Recovery passwords don\'t match'))
+            compare(recovery_pwd1, recovery_pwd2, admin=False)
 
         return self.cleaned_data
 
@@ -88,7 +104,13 @@ class CommonPropertiesExtension(object):
     def __init__(self):
         self.fields.insert(
             len(self.fields), 'unit_name_template',
-            forms.CharField(label=_('Hostname template'), required=False))
+            forms.CharField(
+                label=_('Hostname template'),
+                required=False,
+                help_text='You can set a template for machine hostname.    \
+                Use # for incrementation: host# would be host1, host2, etc. \
+                Note: We do not have validation for this field.\
+                 Enter valid symbols'))
 
         for field, instance in self.fields.iteritems():
             if not instance.required:
@@ -100,30 +122,45 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
     domain_name_re = re.compile(
         r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
     validate_domain_name = RegexValidator(domain_name_re,
-                                          _(u'Enter a valid domain name:    \
-                                            just letters, numbers, dashes and \
-                                            one dot are allowed'), 'invalid')
+                                          _(u'Name should not contain anything\
+                                            but letters, numbers and dashes \
+                                            and should not start with a dash'),
+                                          'invalid')
 
     dc_name = forms.CharField(
         label=_('Domain Name'),
         min_length=2,
         max_length=64,
         validators=[validate_domain_name],
-        error_messages={'invalid': validate_domain_name.message})
+        error_messages={'invalid': validate_domain_name.message},
+        help_text=_('Just letters, numbers and dashes are allowed.          \
+        A dot can be used to create subdomains'))
 
     dc_count = forms.IntegerField(
         label=_('Instance Count'),
         min_value=1,
         max_value=100,
-        initial=1)
+        initial=1,
+        help_text=_('Enter an integer value between 1 and 100'))
 
-    adm_password = PasswordField(_('Administrator password'))
-    adm_password2 = \
-        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
+    adm_password = PasswordField(
+        _('Administrator password'))
 
-    recovery_password = PasswordField(_('Recovery password'))
-    recovery_password2 = \
-        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
+    adm_password2 = PasswordField(
+        _('Confirm password'),
+        help_text=_('Retype your password'),
+        error_messages=CONFIRM_ERR_DICT)
+
+    recovery_password = PasswordField(
+        _('Recovery password'),
+        help_text=_('Enter a complex password with at least one letter, one   \
+                    number and one special character. It\'s better to set a   \
+                    password different from Administrator password'))
+
+    recovery_password2 = PasswordField(
+        _('Confirm password'),
+        error_messages=CONFIRM_ERR_DICT,
+        help_text=_('Retype your password'))
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormADConfiguration, self).__init__(*args, **kwargs)
@@ -135,22 +172,30 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
     name_re = re.compile(r'^[-\w]+$')
     validate_name = RegexValidator(name_re,
                                    _(u'Just letters, numbers, underscores     \
-                                   or hyphens are allowed.'), 'invalid')
+                                   and hyphens are allowed.'), 'invalid')
 
     iis_name = forms.CharField(
         label=_('Service Name'),
         min_length=2,
         max_length=64,
         validators=[validate_name],
-        error_messages={'invalid': validate_name.message})
+        error_messages={'invalid': validate_name.message},
+        help_text=_('Just letters, numbers, underscores     \
+                                   and hyphens are allowed'))
 
-    adm_password = PasswordField(_('Administrator password'))
-    adm_password2 = \
-        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
+    adm_password = PasswordField(
+        _('Administrator password'),
+        help_text=_('Enter a complex password with at least one letter, one   \
+                                       number and one special character'))
+    adm_password2 = PasswordField(
+        _('Confirm password'),
+        error_messages=CONFIRM_ERR_DICT,
+        help_text=_('Retype your password'))
 
     iis_domain = forms.ChoiceField(
         label=_('Domain'),
-        required=False)
+        required=False,
+        help_text=_('You can create service inside existing domain'))
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
@@ -171,14 +216,17 @@ class WebFarmExtension(ServiceConfigurationForm):
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
         min_value=1,
-        max_value=10000,
-        initial=1)
+        max_value=100,
+        initial=1,
+        help_text=_('Enter an integer value between 1 and 100'))
 
     lb_port = forms.IntegerField(
         label=_('Load Balancer port'),
         min_value=1,
         max_value=65536,
-        initial=80)
+        initial=80,
+        help_text=_('Enter an integer value. It should be non used port number\
+        from 1 to 65536'))
 
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
@@ -191,7 +239,8 @@ class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
     repository = forms.CharField(
         label=_('Git repository'),
         validators=[validate_git],
-        error_messages={'invalid': validate_git.message})
+        error_messages={'invalid': validate_git.message},
+        help_text='Enter a valid git repository URL')
 
 
 class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,

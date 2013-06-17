@@ -1,0 +1,73 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n horizon humanize %}
+
+{% block form_action %}{% url horizon:project:murano:create %}?{{ request.POST.urlencode }}{% endblock %}
+
+{% block modal_id %}create_service{% endblock %}
+{% block modal-header %}{% trans "Create Service" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+<br>
+{% if wizard.steps.next %}
+<br><br><br>
+{% endif %}
+
+<table>
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form }}
+    {% endfor %}
+{% else %}
+    <fieldset>
+        {% include "_horizon_form_fields.html" %}
+    </fieldset>
+{% endif %}
+</table>
+</div>
+<div class="right">
+    {% if wizard.steps.prev %}
+        <h3>{{ service_type }} Service</h3>
+        <p>{% blocktrans %} Specify parameters for the {{ service_type }} Service.{% endblocktrans %}</p>
+        {% if service_type == 'Active Directory' %}
+            <p>{% blocktrans %} You can create several Active Directory instances by setting instance number larger than one.
+                In this case will be created one primary Domain Controller and a few secondary DCs. {% endblocktrans %}</p>
+            <p>{% blocktrans %} DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}</p>
+
+        {% elif service_type == 'ASP.NET Application' %}
+            <p>{% blocktrans %} ASP.NET application is installed onto one IIS Web Server. {% endblocktrans %}</p>
+            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+
+        {% elif service_type == 'ASP.NET Farm' %}
+            <p>{% blocktrans %} ASP.NET application is installed on a number IIS Web Servers, and load balancing is configured. {% endblocktrans %}</p>
+            <p>{% blocktrans %}This service can be added to an existing domain. {% endblocktrans %}</p>
+
+        {% elif service_type == 'ISS Farm' %}
+            <p>{% blocktrans %} A load-balanced array of IIS servers. {% endblocktrans %}</p>
+            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+
+        {% else %}
+            <p>{% blocktrans %} One IIS Server. {% endblocktrans %}</p>
+            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+        {% endif %}
+
+    {% else %}
+         <h3>{% trans "Description" %}:</h3>
+            <p>{% blocktrans %} The Active Directory Service includes one primary and optionally a few secondary Domain Controllers, with DNS service {% endblocktrans %}</p>
+            <p>{% blocktrans %} The Internet Information Service sets up an IIS server and joins it into an existing domain {% endblocktrans %}</p>
+            <p>{% blocktrans %} The ASP.NET Application Service installs custom application onto one IIS Web Server {% endblocktrans %}</p>
+            <p>{% blocktrans %} The IIS Farm Service sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} The ASP.NET Application Service installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+{% if wizard.steps.prev %}
+<input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Create' %}"/>
+{% else %}
+<button name="wizard_goto_step" class="btn btn-small" type="submit" value="{{ wizard.steps.next }}">{% trans "Next >" %}</button>
+{% endif %}
+{% endblock %}
