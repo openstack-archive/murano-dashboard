@@ -21,6 +21,7 @@ import re
 from muranodashboard.panel import api
 
 log = logging.getLogger(__name__)
+CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}
 
 
 class PasswordField(forms.CharField):
@@ -38,7 +39,7 @@ class PasswordField(forms.CharField):
             validators=[self.validate_password],
             label=label,
             error_messages={'invalid': self.validate_password.message},
-            widget=forms.PasswordInput(render_value=False), *args, **kwargs)
+            widget=forms.PasswordInput(render_value=False))
 
 
 class WizardFormServiceType(forms.Form):
@@ -63,6 +64,26 @@ class WizardFormConfiguration(forms.Form):
     pass
 
 
+class ServiceConfigurationForm(forms.Form):
+    def clean(self):
+        form_data = self.cleaned_data
+        admin_pwd1 = form_data.get('adm_password')
+        admin_pwd2 = form_data.get('adm_password2')
+
+        if admin_pwd1 != admin_pwd2:
+            raise forms.ValidationError(
+                _('Administrator passwords don\'t match'))
+
+        recovery_pwd1 = form_data.get('recovery_password')
+        if recovery_pwd1:
+            recovery_pwd2 = form_data.get('recovery_password2')
+            if recovery_pwd1 != recovery_pwd2:
+                raise forms.ValidationError(
+                    _('Recovery passwords don\'t match'))
+
+        return self.cleaned_data
+
+
 class CommonPropertiesExtension(object):
     def __init__(self):
         self.fields.insert(
@@ -74,7 +95,8 @@ class CommonPropertiesExtension(object):
                 instance.widget.attrs['placeholder'] = 'Optional'
 
 
-class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
+class WizardFormADConfiguration(ServiceConfigurationForm,
+                                CommonPropertiesExtension):
     domain_name_re = re.compile(
         r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
     validate_domain_name = RegexValidator(domain_name_re,
@@ -96,15 +118,20 @@ class WizardFormADConfiguration(forms.Form, CommonPropertiesExtension):
         initial=1)
 
     adm_password = PasswordField(_('Administrator password'))
+    adm_password2 = \
+        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
 
     recovery_password = PasswordField(_('Recovery password'))
+    recovery_password2 = \
+        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormADConfiguration, self).__init__(*args, **kwargs)
         CommonPropertiesExtension.__init__(self)
 
 
-class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
+class WizardFormIISConfiguration(ServiceConfigurationForm,
+                                 CommonPropertiesExtension):
     name_re = re.compile(r'^[-\w]+$')
     validate_name = RegexValidator(name_re,
                                    _(u'Just letters, numbers, underscores     \
@@ -118,6 +145,8 @@ class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
         error_messages={'invalid': validate_name.message})
 
     adm_password = PasswordField(_('Administrator password'))
+    adm_password2 = \
+        PasswordField(_('Confirm password'), error_messages=CONFIRM_ERR_DICT)
 
     iis_domain = forms.ChoiceField(
         label=_('Domain'),
@@ -138,7 +167,7 @@ class WizardFormIISConfiguration(forms.Form, CommonPropertiesExtension):
         CommonPropertiesExtension.__init__(self)
 
 
-class WebFarmExtension(forms.Form):
+class WebFarmExtension(ServiceConfigurationForm):
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
         min_value=1,

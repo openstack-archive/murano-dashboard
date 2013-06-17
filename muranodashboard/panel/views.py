@@ -17,7 +17,6 @@ from muranoclient.common.exceptions import \
     CommunicationError, HTTPInternalServerError
 import re
 
-from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -44,7 +43,7 @@ from forms import WizardFormAspNetFarmConfiguration
 LOG = logging.getLogger(__name__)
 
 
-class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
+class Wizard(ModalFormMixin, SessionWizardView):
     template_name = 'services_tabs.html'
 
     def done(self, form_list, **kwargs):
@@ -52,23 +51,28 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
         environment_id = re.search('murano/(\S+)', link).group(0)[7:-9]
 
         url = "/project/murano/%s/services" % environment_id
+        step0_data = form_list[0].cleaned_data
+        step1_data = form_list[1].cleaned_data
 
-        service_type = form_list[0].data.get('0-service', '')
+        service_type = step0_data.get('service', '')
+
         parameters = {'service_type': service_type}
-        data = form_list[1].data
+
         parameters['units'] = []
-        parameters['unitNamingPattern'] = data.get(
-            '1-unit_name_template', None)
+        parameters['unitNamingPattern'] = step1_data.get(
+            'unit_name_template', None)
+
         if service_type == 'Active Directory':
             parameters['configuration'] = 'standalone'
-            parameters['name'] = str(data.get('1-dc_name', 'noname'))
+            parameters['name'] = str(step1_data.get('1-dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
-            parameters['adminPassword'] = str(data.get('1-adm_password', ''))
-            recovery_password = str(data.get('1-recovery_password', ''))
+            parameters['adminPassword'] = \
+                str(step1_data.get('adm_password', ''))
+            recovery_password = str(step1_data.get('recovery_password', ''))
             parameters['units'].append({'isMaster': True,
                                         'recoveryPassword': recovery_password,
                                         'location': 'west-dc'})
-            dc_count = int(data.get('1-dc_count', 1))
+            dc_count = int(step1_data.get('dc_count', 1))
             for dc in range(dc_count - 1):
                 parameters['units'].append({
                     'isMaster': False,
@@ -77,15 +81,15 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
 
         elif service_type in ['IIS', 'ASP.NET Application',
                               'IIS Farm', 'ASP.NET Farm']:
-            password = data.get('1-adm_password', '')
-            parameters['name'] = str(data.get('1-iis_name', 'noname'))
+            password = step1_data.get('adm_password', '')
+            parameters['name'] = str(step1_data.get('iis_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
                                          'password': password}
-            parameters['domain'] = str(data.get('1-iis_domain', ''))
-            password = form_list[1].data.get('1-adm_password', '')
-            domain = form_list[1].data.get('1-iis_domain', '')
-            parameters['name'] = str(form_list[1].data.get('1-iis_name',
-                                                           'noname'))
+
+            parameters['domain'] = str(step1_data.get('iis_domain', ''))
+            password = step1_data.get('adm_password', '')
+            domain = step1_data.get('iis_domain', '')
+            parameters['name'] = str(step1_data.get('iis_name', 'noname'))
             parameters['domain'] = parameters['name']
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
@@ -93,11 +97,12 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
             if service_type == 'ASP.NET Application' \
                     or service_type == 'ASP.NET Farm':
                 parameters['repository'] = \
-                    form_list[1].data.get('1-repository', '')
+                    step1_data.get('repository', '')
             instance_count = 1
             if service_type == 'IIS Farm' or service_type == 'ASP.NET Farm':
-                instance_count = int(data.get('1-instance_count', 1))
-                parameters['loadBalancerPort'] = int(data.get('1-lb_port', 80))
+                instance_count = int(step1_data.get('instance_count', 1))
+                parameters['loadBalancerPort'] =\
+                    int(step1_data.get('lb_port', 80))
 
             for unit in range(instance_count):
                 parameters['units'].append({})
@@ -133,10 +138,6 @@ class Wizard(ModalFormMixin, SessionWizardView, generic.FormView):
 
     def get_form_kwargs(self, step=None):
         return {'request': self.request} if step == u'1' else {}
-
-    def get_form_step_data(self, form):
-        LOG.debug(form.data)
-        return form.data
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
