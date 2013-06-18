@@ -227,6 +227,16 @@ def service_get(request, environment_id, service_id):
         if instance:
             service_data = instance[0]
             if service_data['id'] == service_id:
+                reports = muranoclient(request).sessions.reports(
+                    environment_id, Session.get(request, environment_id),
+                    service_data['id'])
+                if reports:
+                    last_operation = str(reports[-1].text)
+                else:
+                    last_operation = ''
+
+                service_data['operation'] = last_operation
+                service_data['environment_id'] = environment_id
                 return bunch.bunchify(service_data)
 
 
