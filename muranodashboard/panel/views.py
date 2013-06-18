@@ -159,7 +159,6 @@ class IndexView(tables.DataTableView):
                                          'Service, check connection details.')
         except HTTPInternalServerError:
             messages.error(self.request, 'Environment doesn\'t exist')
-
         return environments
 
 
