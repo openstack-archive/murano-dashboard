@@ -101,12 +101,18 @@ class ServiceConfigurationForm(forms.Form):
 
 
 class CommonPropertiesExtension(object):
+    hostname_re = re.compile(
+        r'^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)'
+        r'*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$')
+    validate_hostname = RegexValidator(hostname_re, _('text'))
+
     def __init__(self):
         self.fields.insert(
             len(self.fields), 'unit_name_template',
             forms.CharField(
                 label=_('Hostname template'),
                 required=False,
+                validators=[self.validate_hostname],
                 help_text='You can set a template for machine hostname.    \
                 Use # for incrementation: host# would be host1, host2, etc. \
                 Note: We do not have validation for this field.\
