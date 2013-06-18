@@ -15,22 +15,35 @@
 import logging
 import bunch
 
+from django.conf import settings
+from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
-from muranodashboard import settings
 from muranoclient.v1.client import Client
 
 log = logging.getLogger(__name__)
 
 
+def get_endpoint(request):
+    #prefer location specified in settings for dev purposes
+    endpoint = getattr(settings, 'MURANO_API_URL', None)
+    if not endpoint:
+        try:
+            endpoint = url_for(request, 'murano')
+        except ServiceCatalogException:
+            endpoint = 'http://localhost:8082'
+            log.warning('Murano API location could not be found in Service '
+                        'Catalog, using default: {0}'.format(endpoint))
+    return endpoint
+
+
 def muranoclient(request):
-    url = getattr(settings, 'MURANO_API_URL')
-    if not url:
-        url = url_for(request, 'murano')
+    endpoint = get_endpoint(request)
 
     token_id = request.user.token.token['id']
-    log.debug('Murano::Client <Url: {0}, TokenId: {1}>'.format(url, token_id))
+    log.debug('Murano::Client <Url: {0}, '
+              'TokenId: {1}>'.format(endpoint, token_id))
 
-    return Client(endpoint=url, token=token_id)
+    return Client(endpoint=endpoint, token=token_id)
 
 
 def get_status_message_for_service(request, service_id, environment_id):
