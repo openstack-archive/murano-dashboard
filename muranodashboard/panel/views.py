@@ -101,8 +101,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
             instance_count = 1
             if service_type == 'IIS Farm' or service_type == 'ASP.NET Farm':
                 instance_count = int(step1_data.get('instance_count', 1))
-                parameters['loadBalancerPort'] =\
-                    int(step1_data.get('lb_port', 80))
+                parameters['loadBalancerPort'] = \
+                    step1_data.get('lb_port', '80')
 
             for unit in range(instance_count):
                 parameters['units'].append({})
