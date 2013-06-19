@@ -33,17 +33,17 @@
         {% if service_type == 'Active Directory' %}
             <p>
                 <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a new domain. This name should fits in standard Windows domain name requirements: should contain only A-Z, a-z, 0-9, and (-) and not end with a dash.
+                {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not end with a dash.
                             DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} You can create several Active Directory instances by setting instance number larger than one. In this case will be created one primary Domain Controller and a few secondary DCs. {% endblocktrans %}
+                {% blocktrans %} You can create several Active Directory instances by setting instance number larger than one. One primary Domain Controller and a few secondary DCs will be created. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Passwords: {% endblocktrans %} </strong>
-                {% blocktrans %}  Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate with the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
+                {% blocktrans %}  Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
             </p>
 
         {% elif service_type == 'ASP.NET Application' %}
@@ -54,16 +54,16 @@
             </p>
             <p>
                 <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} You can create service inside the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Git repository {% endblocktrans %}</strong>
-                {% blocktrans %} Point git repository with application you want to deploy. {% endblocktrans %}
+                {% blocktrans %} URL of a git repository with the application you want to deploy. {% endblocktrans %}
             </p>
 
         {% elif service_type == 'ASP.NET Farm' %}
@@ -76,8 +76,8 @@
             </p>
             <p>
                 <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
-                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
@@ -96,13 +96,13 @@
             </p>
             <p>
                 <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
                     Password length should be a minimum of 8 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
 
         {% elif service_type == 'IIS Farm' %}
@@ -113,12 +113,12 @@
             </p>
             <p>
                 <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
-                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
@@ -144,7 +144,7 @@
             <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs custom application onto one IIS Web Server {% endblocktrans %}</p>
             <p>{% blocktrans %} <strong> The IIS Farm Service </strong> sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
             <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
-            <p>{% blocktrans %} If you want services work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
+            <p>{% blocktrans %} If you want your services to work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
     {% endif %}
 </div>
 {% endblock %}
