@@ -29,37 +29,122 @@
 </div>
 <div class="right">
     {% if wizard.steps.prev %}
-        <h3>{{ service_type }} Service</h3>
-        <p>{% blocktrans %} Specify parameters for the {{ service_type }} Service.{% endblocktrans %}</p>
+        <h3> {% blocktrans %} {{ service_type }} Service{% endblocktrans %} </h3>
         {% if service_type == 'Active Directory' %}
-            <p>{% blocktrans %} You can create several Active Directory instances by setting instance number larger than one.
-                In this case will be created one primary Domain Controller and a few secondary DCs. {% endblocktrans %}</p>
-            <p>{% blocktrans %} DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}</p>
+            <p>
+                <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a new domain. This name should fits in standard Windows domain name requirements: should contain only A-Z, a-z, 0-9, and (-) and not end with a dash.
+                            DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} You can create several Active Directory instances by setting instance number larger than one. In this case will be created one primary Domain Controller and a few secondary DCs. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Passwords: {% endblocktrans %} </strong>
+                {% blocktrans %}  Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate with the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
+            </p>
 
         {% elif service_type == 'ASP.NET Application' %}
-            <p>{% blocktrans %} ASP.NET application is installed onto one IIS Web Server. {% endblocktrans %}</p>
-            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+            {% blocktrans %} ASP.NET application will be installed onto one IISWeb Server {% endblocktrans %}
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character. Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} You can create service inside the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Git repository {% endblocktrans %}</strong>
+                {% blocktrans %} Point git repository with application you want to deploy. {% endblocktrans %}
+            </p>
 
         {% elif service_type == 'ASP.NET Farm' %}
-            <p>{% blocktrans %} ASP.NET application is installed on a number IIS Web Servers, and load balancing is configured. {% endblocktrans %}</p>
-            <p>{% blocktrans %}This service can be added to an existing domain. {% endblocktrans %}</p>
+            <p>
+                {% blocktrans %} The ASP.NET application will be installed on a number of IIS Web Servers, and load balancing will be configured. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} Several instances with ASP.NET Application Service can be created. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
+                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
+            </p>
 
-        {% elif service_type == 'ISS Farm' %}
-            <p>{% blocktrans %} A load-balanced array of IIS servers. {% endblocktrans %}</p>
-            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+        {% elif service_type == 'IIS' %}
+            <p>{% blocktrans %} Standalone IIS Server {% endblocktrans %}</p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
+                    Password length should be a minimum of 8 characters. {% endblocktrans %}
+                {% blocktrans %} Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+            </p>
 
-        {% else %}
-            <p>{% blocktrans %} One IIS Server. {% endblocktrans %}</p>
-            <p>{% blocktrans %} This service can be added to an existing domain. {% endblocktrans %}</p>
+        {% elif service_type == 'IIS Farm' %}
+            <p>{% blocktrans %} A load-balanced array of IIS servers {% endblocktrans %}</p>
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, number and special character.
+                    Password length should be a minimum of 8 characters. Once you forget your password you won't be able to operate with the service. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create AD domain create the AD Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+                {% blocktrans %} Several instances with IIS Service can be created at one time. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
+                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
+            </p>
+        {% elif service_type == '' %}
+            <p>{% blocktrans %} Please try again {% endblocktrans %}</p>
+       
         {% endif %}
+        <p>
+            <strong>{% blocktrans %} Hostname template {% endblocktrans %}</strong>
+            {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for  for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
+        </p>
 
     {% else %}
          <h3>{% trans "Description" %}:</h3>
-            <p>{% blocktrans %} The Active Directory Service includes one primary and optionally a few secondary Domain Controllers, with DNS service {% endblocktrans %}</p>
-            <p>{% blocktrans %} The Internet Information Service sets up an IIS server and joins it into an existing domain {% endblocktrans %}</p>
-            <p>{% blocktrans %} The ASP.NET Application Service installs custom application onto one IIS Web Server {% endblocktrans %}</p>
-            <p>{% blocktrans %} The IIS Farm Service sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
-            <p>{% blocktrans %} The ASP.NET Application Service installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The Active Directory Service </strong> includes one primary and optionally a few secondary Domain Controllers, with DNS service {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The Internet Information Service </strong> sets up an IIS server and joins it into an existing domain {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs custom application onto one IIS Web Server {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The IIS Farm Service </strong> sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
+            <p>{% blocktrans %} If you want services work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
     {% endif %}
 </div>
 {% endblock %}

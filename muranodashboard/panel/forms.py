@@ -113,10 +113,7 @@ class CommonPropertiesExtension(object):
                 label=_('Hostname template'),
                 required=False,
                 validators=[self.validate_hostname],
-                help_text='You can set a template for machine hostname.    \
-                Use # for incrementation: host# would be host1, host2, etc. \
-                Note: We do not have validation for this field.\
-                 Enter valid symbols'))
+                help_text='Optional field for a machine hostname template.'))
 
         for field, instance in self.fields.iteritems():
             if not instance.required:
@@ -129,7 +126,7 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
     validate_domain_name = RegexValidator(domain_name_re,
                                           _(u'Name should not contain anything\
-                                            but letters, numbers and dashes \
+                                            but letters, numbers and dashes   \
                                             and should not start with a dash'),
                                           'invalid')
 
@@ -149,19 +146,14 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
 
-    adm_password = PasswordField(
-        _('Administrator password'))
+    adm_password = PasswordField(_('Administrator password'))
 
     adm_password2 = PasswordField(
         _('Confirm password'),
         help_text=_('Retype your password'),
         error_messages=CONFIRM_ERR_DICT)
 
-    recovery_password = PasswordField(
-        _('Recovery password'),
-        help_text=_('Enter a complex password with at least one letter, one   \
-                    number and one special character. It\'s better to set a   \
-                    password different from Administrator password'))
+    recovery_password = PasswordField(_('Recovery password'))
 
     recovery_password2 = PasswordField(
         _('Confirm password'),
@@ -201,7 +193,8 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
     iis_domain = forms.ChoiceField(
         label=_('Domain'),
         required=False,
-        help_text=_('You can create service inside existing domain'))
+        help_text=_('Optional field for a domain to which service can be    \
+                    joined '))
 
     def __init__(self, request, *args, **kwargs):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
@@ -231,8 +224,7 @@ class WebFarmExtension(ServiceConfigurationForm):
         min_value=1,
         max_value=65536,
         initial=80,
-        help_text=_('Enter an integer value. It should be non used port number\
-        from 1 to 65536'))
+        help_text=_('Enter an integer value from 1 to 65536'))
 
 
 class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
