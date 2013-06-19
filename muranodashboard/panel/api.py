@@ -185,28 +185,27 @@ def get_service_client(request, service_type):
 
 def services_list(request, environment_id):
     services = []
-
     session_id = Session.get_or_create(request, environment_id)
-    get_environment = muranoclient(request).environments.get
 
+    get_environment = muranoclient(request).environments.get
     environment = get_environment(environment_id, session_id)
 
-    for service_name, instance in environment.services.iteritems():
-        if instance:
-            service_data = instance[0]
-            reports = muranoclient(request).sessions.reports(
-                environment_id, session_id, service_data['id'])
-            if reports:
-                last_operation = str(reports[-1].text)
-            else:
-                last_operation = ''
-
-            service_data['operation'] = last_operation
-            service_data['environment_id'] = environment_id
-            services += instance
+    for service_name, instances in environment.services.iteritems():
+        if instances:
+            for service_item in instances:
+                service_data = service_item
+                reports = muranoclient(request).sessions.reports(
+                    environment_id, session_id, service_data['id'])
+                if reports:
+                    last_operation = str(reports[-1].text)
+                else:
+                    last_operation = ''
+                service_data['operation'] = last_operation
+                service_data['environment_id'] = environment_id
+                services.append(service_data)
 
     log.debug('Service::List')
-    return [bunch.bunchify(srv) for srv in services]
+    return [bunch.bunchify(service) for service in services]
 
 
 def service_list_by_type(request, environment_id, service_type):
@@ -235,22 +234,10 @@ def service_delete(request, service_id, environment_id, service_type):
 
 
 def service_get(request, environment_id, service_id):
-    environment = environment_get(request, environment_id)
-    for service_name, instance in environment.services.iteritems():
-        if instance:
-            service_data = instance[0]
-            if service_data['id'] == service_id:
-                reports = muranoclient(request).sessions.reports(
-                    environment_id, Session.get(request, environment_id),
-                    service_data['id'])
-                if reports:
-                    last_operation = str(reports[-1].text)
-                else:
-                    last_operation = ''
-
-                service_data['operation'] = last_operation
-                service_data['environment_id'] = environment_id
-                return bunch.bunchify(service_data)
+    services = services_list(request, environment_id)
+    for service in services:
+        if service.id == service_id:
+            return service
 
 
 def check_for_services(request, environment_id):
