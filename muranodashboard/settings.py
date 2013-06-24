@@ -121,7 +121,8 @@ INSTALLED_APPS = (
     'openstack_dashboard.dashboards.project',
     'openstack_dashboard.dashboards.admin',
     'openstack_dashboard.dashboards.settings',
-    'openstack_auth'
+    'openstack_auth',
+    'muranodashboard'
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

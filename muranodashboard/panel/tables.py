@@ -53,7 +53,8 @@ class CreateService(tables.LinkAction):
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, environment):
-        status = getattr(environment, 'status', None)
+        environment_id = self.table.kwargs['environment_id']
+        status = api.get_environment_status(request, environment_id)
         if status not in [STATUS_ID_DEPLOYING]:
             return True
         return False
@@ -101,10 +102,11 @@ class DeleteService(tables.DeleteAction):
     data_type_singular = _('Service')
     data_type_plural = _('Services')
 
-    def allowed(self, request, environment):
-        status = getattr(environment, 'status', None)
+    def allowed(self, request, service=None):
         #TODO: Change this when services deletion on deployed env fixed
-        if status in [STATUS_ID_PENDING]:
+        environment_id = self.table.kwargs.get('environment_id')
+        status = api.get_environment_status(request, environment_id)
+        if status not in [STATUS_ID_DEPLOYING, STATUS_ID_READY]:
             return True
         return False
 
@@ -124,15 +126,14 @@ class DeployEnvironment(tables.BatchAction):
     action_present = _('Deploy')
     action_past = _('Deployed')
     data_type_singular = _('Environment')
-    data_type_plural = _('Environments')
+    data_type_plural = _('Environment')
     classes = 'btn-launch'
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
         if status not in [STATUS_ID_DEPLOYING] and environment.has_services:
             return True
-        else:
-            return False
+        return False
 
     def action(self, request, environment_id):
         try:

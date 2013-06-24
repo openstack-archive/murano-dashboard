@@ -21,6 +21,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from muranodashboard.panel import api
 
+AD_NAME = 'Active Directory'
+IIS_NAME = 'IIS'
+ASP_NAME = 'ASP.NET Application'
+IIS_FARM_NAME = 'IIS Farm'
+ASP_FARM_NAME = 'ASP.NET Farm'
+
+SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME)
+
 log = logging.getLogger(__name__)
 CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}
 
@@ -57,11 +65,12 @@ class PasswordField(forms.CharField):
 
 
 class WizardFormServiceType(forms.Form):
-    ad_service = ('Active Directory', 'Active Directory')
-    iis_service = ('IIS', 'Internet Information Services')
-    asp_service = ('ASP.NET Application', 'ASP.NET Application')
-    iis_farm_service = ('IIS Farm', 'Internet Information Services Web Farm')
-    asp_farm_service = ('ASP.NET Farm', 'ASP.NET Application Web Farm')
+    ad_service = (AD_NAME, 'Active Directory')
+    iis_service = (IIS_NAME, 'Internet Information Services')
+    asp_service = (ASP_NAME, 'ASP.NET Application')
+    iis_farm_service = (IIS_FARM_NAME,
+                        'Internet Information Services Web Farm')
+    asp_farm_service = (ASP_FARM_NAME, 'ASP.NET Application Web Farm')
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
                                     ad_service,
@@ -70,11 +79,6 @@ class WizardFormServiceType(forms.Form):
                                     iis_farm_service,
                                     asp_farm_service
                                 ])
-
-
-class WizardFormConfiguration(forms.Form):
-    #The functions for this class will dynamically create in views.py
-    pass
 
 
 class ServiceConfigurationForm(forms.Form):
@@ -96,7 +100,6 @@ class ServiceConfigurationForm(forms.Form):
         if recovery_pwd1:
             recovery_pwd2 = form_data.get('recovery_password2')
             compare(recovery_pwd1, recovery_pwd2, admin=False)
-
         return self.cleaned_data
 
 
@@ -124,11 +127,10 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
                                 CommonPropertiesExtension):
     domain_name_re = re.compile(
         r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
-    validate_domain_name = RegexValidator(domain_name_re,
-                                          _(u'Name should not contain anything\
-                                            but letters, numbers and dashes   \
-                                            and should not start with a dash'),
-                                          'invalid')
+    validate_domain_name = RegexValidator(
+        domain_name_re, _(u'Name should not contain anything but letters, \
+                            numbers and dashes and should not start or end \
+                            with a dash'), 'invalid')
 
     dc_name = forms.CharField(
         label=_('Domain Name'),
@@ -160,7 +162,7 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(WizardFormADConfiguration, self).__init__(*args, **kwargs)
         CommonPropertiesExtension.__init__(self)
 
@@ -196,12 +198,13 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
         help_text=_('Optional field for a domain to which service can be    \
                     joined '))
 
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
-
+        request = self.initial.get('request')
+        if not request:
+            raise forms.ValidationError('Can\'t get a request information')
         link = request.__dict__['META']['HTTP_REFERER']
         environment_id = re.search('murano/(\w+)', link).group(0)[7:]
-
         ad = 'Active Directory'
         domains = api.service_list_by_type(request, environment_id, ad)
 
@@ -244,16 +247,24 @@ class WizardFormAspNetAppConfiguration(WizardFormIISConfiguration,
 class WizardFormIISFarmConfiguration(WizardFormIISConfiguration,
                                      WebFarmExtension,
                                      CommonPropertiesExtension):
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(WizardFormIISFarmConfiguration, self).__init__(
-            request, *args, **kwargs)
+            *args, **kwargs)
         CommonPropertiesExtension.__init__(self)
 
 
 class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration,
                                         WebFarmExtension,
                                         CommonPropertiesExtension):
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(WizardFormAspNetFarmConfiguration, self).__init__(
-            request, *args, **kwargs)
+            *args, **kwargs)
         CommonPropertiesExtension.__init__(self)
+
+
+FORMS = [('service_choice', WizardFormServiceType),
+         (AD_NAME, WizardFormADConfiguration),
+         (IIS_NAME, WizardFormIISConfiguration),
+         (ASP_NAME, WizardFormAspNetAppConfiguration),
+         (IIS_FARM_NAME, WizardFormIISFarmConfiguration),
+         (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration)]

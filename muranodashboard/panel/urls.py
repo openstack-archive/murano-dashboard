@@ -16,20 +16,26 @@ from django.conf.urls.defaults import patterns, url
 
 from views import IndexView, Services, CreateEnvironmentView, DetailServiceView
 from views import Wizard, EditEnvironmentView
-from forms import WizardFormServiceType, WizardFormConfiguration
+from views import SERVICE_CHECKER
+from forms import FORMS
+from forms import SERVICE_NAMES
+
 
 VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
+
+condition_dict_for_wizard = dict(zip(SERVICE_NAMES, SERVICE_CHECKER))
+
 
 urlpatterns = patterns(
     VIEW_MOD,
     url(r'^environments$', IndexView.as_view(), name='index'),
 
-    url(r'^create$', Wizard.as_view(
-        [WizardFormServiceType, WizardFormConfiguration]),
+    url(r'^create/$',
+        Wizard.as_view(FORMS, condition_dict=condition_dict_for_wizard),
         name='create'),
 
-    url(r'^create_environment$', CreateEnvironmentView.as_view(),
+    url(r'^create_environment/$', CreateEnvironmentView.as_view(),
         name='create_environment'),
 
     url(ENVIRONMENT_ID + r'/update_environment$',

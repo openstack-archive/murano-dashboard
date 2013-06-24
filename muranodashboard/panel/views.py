@@ -34,13 +34,37 @@ from muranodashboard.panel import api
 from tables import EnvironmentsTable, ServicesTable
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs
-from forms import WizardFormADConfiguration
-from forms import WizardFormIISConfiguration
-from forms import WizardFormAspNetAppConfiguration
-from forms import WizardFormIISFarmConfiguration
-from forms import WizardFormAspNetFarmConfiguration
-
+from forms import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME
 LOG = logging.getLogger(__name__)
+
+
+def get_service_type(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('service_choice') \
+        or {'service': 'none'}
+    return cleaned_data.get('service')
+
+
+def is_service_ad(wizard):
+    return get_service_type(wizard) == AD_NAME
+
+
+def is_service_iis(wizard):
+    return get_service_type(wizard) == IIS_NAME
+
+
+def is_service_asp(wizard):
+    return get_service_type(wizard) == ASP_NAME
+
+
+def is_service_iis_farm(wizard):
+    return get_service_type(wizard) == IIS_FARM_NAME
+
+
+def is_service_asp_farm(wizard):
+    return get_service_type(wizard) == ASP_FARM_NAME
+
+SERVICE_CHECKER = (is_service_ad, is_service_iis,
+                   is_service_asp, is_service_iis_farm, is_service_asp_farm)
 
 
 class Wizard(ModalFormMixin, SessionWizardView):
@@ -48,21 +72,22 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
     def done(self, form_list, **kwargs):
         link = self.request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search('murano/(\S+)', link).group(0)[7:-9]
 
-        url = "/project/murano/%s/services" % environment_id
+        environment_id = re.search('murano/(\w+)', link).group(0)[7:]
+        url = reverse('horizon:project:murano:services',
+                      args=(environment_id,))
+
         step0_data = form_list[0].cleaned_data
         step1_data = form_list[1].cleaned_data
 
         service_type = step0_data.get('service', '')
-
         parameters = {'service_type': service_type}
 
         parameters['units'] = []
         parameters['unitNamingPattern'] = step1_data.get(
             'unit_name_template', None)
 
-        if service_type == 'Active Directory':
+        if service_type == AD_NAME:
             parameters['configuration'] = 'standalone'
             parameters['name'] = str(step1_data.get('dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
@@ -79,8 +104,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
                     'recoveryPassword': recovery_password
                 })
 
-        elif service_type in ['IIS', 'ASP.NET Application',
-                              'IIS Farm', 'ASP.NET Farm']:
+        elif service_type in [IIS_NAME, ASP_NAME,
+                              IIS_FARM_NAME, ASP_FARM_NAME]:
             password = step1_data.get('adm_password', '')
             parameters['name'] = str(step1_data.get('iis_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
@@ -94,12 +119,11 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
 
-            if service_type == 'ASP.NET Application' \
-                    or service_type == 'ASP.NET Farm':
+            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
                 parameters['repository'] = \
                     step1_data.get('repository', '')
             instance_count = 1
-            if service_type == 'IIS Farm' or service_type == 'ASP.NET Farm':
+            if service_type == IIS_FARM_NAME or service_type == ASP_FARM_NAME:
                 instance_count = int(step1_data.get('instance_count', 1))
                 parameters['loadBalancerPort'] = \
                     step1_data.get('lb_port', '80')
@@ -119,30 +143,17 @@ class Wizard(ModalFormMixin, SessionWizardView):
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
-    def get_form(self, step=None, data=None, files=None):
-        form = super(Wizard, self).get_form(step, data, files)
-        if data:
-            self.service_type = data.get('0-service', '')
-            if self.service_type == 'Active Directory':
-                self.form_list['1'] = WizardFormADConfiguration
-            elif self.service_type == 'IIS':
-                self.form_list['1'] = WizardFormIISConfiguration
-            elif self.service_type == 'ASP.NET Application':
-                self.form_list['1'] = WizardFormAspNetAppConfiguration
-            elif self.service_type == 'IIS Farm':
-                self.form_list['1'] = WizardFormIISFarmConfiguration
-            elif self.service_type == 'ASP.NET Farm':
-                self.form_list['1'] = WizardFormAspNetFarmConfiguration
-
-        return form
-
-    def get_form_kwargs(self, step=None):
-        return {'request': self.request} if step == u'1' else {}
+    def get_form_initial(self, step):
+        if step != 'service_choice':
+            return self.initial_dict.get(step, {'request': self.request})
+        else:
+            return self.initial_dict.get(step, {})
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         if self.steps.index > 0:
-            context.update({'service_type': self.service_type})
+            data = self.get_cleaned_data_for_step('service_choice')
+            context.update({'service_type': data['service']})
         return context
 
 
