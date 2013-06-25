@@ -222,25 +222,26 @@ class DetailServiceView(tabs.TabView):
         context = super(DetailServiceView, self).get_context_data(**kwargs)
         context["service"] = self.get_data()
         context["service_name"] = self.service.name
+        context["environment_name"] = \
+            api.get_environment_name(self.request, self.environment_id)
         return context
 
     def get_data(self):
-        if not hasattr(self, "_service"):
-            service_id = self.kwargs['service_id']
-            self.environment_id = self.kwargs['environment_id']
-            try:
-                self.service = api.service_get(self.request,
-                                               self.environment_id,
-                                               service_id)
-            except:
-                redirect = reverse('horizon:project:murano:index')
-                exceptions.handle(self.request,
-                                  _('Unable to retrieve details for '
-                                    'service'),
-                                  redirect=redirect)
-            else:
-                self._service = self.service
-                return self._service
+        service_id = self.kwargs['service_id']
+        self.environment_id = self.kwargs['environment_id']
+        try:
+            self.service = api.service_get(self.request,
+                                           self.environment_id,
+                                           service_id)
+        except:
+            redirect = reverse('horizon:project:murano:index')
+            exceptions.handle(self.request,
+                              _('Unable to retrieve details for '
+                                'service'),
+                              redirect=redirect)
+        else:
+            self._service = self.service
+            return self._service
 
     def get_tabs(self, request, *args, **kwargs):
         service = self.get_data()

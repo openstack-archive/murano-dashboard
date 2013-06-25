@@ -1,0 +1,10 @@
+{% load i18n %}
+{% load url from future %}
+{% block page_header %}
+  <div class='page-header'>
+      <h2>
+          <a href=" {% url 'horizon:project:murano:index' %}"> Environments </a> > Environment {{ environment_name }} >
+          <a href=" {% url 'horizon:project:murano:services' service.environment_id %}"> services </a> > {{ service_name }}
+      </h2>
+  </div>
+{% endblock %}
