@@ -194,6 +194,19 @@ def services_list(request, environment_id):
         if instances:
             for service_item in instances:
                 service_data = service_item
+                if not hasattr(service_data, 'service_type'):
+                    if service_name == 'webServers':
+                        service_type = 'Internet Information Services'
+                    elif service_name == 'activeDirectories':
+                        service_type = 'Active Directory'
+                    elif service_name == 'webServerFarms':
+                        service_type = 'Internet Information Services Web Farm'
+                    elif service_name == 'AspNetApps':
+                        service_type = 'ASP.NET Application'
+                    elif service_name == 'AspNetAppFarms':
+                        service_type = 'ASP.NET Application Web Farm'
+                    service_data['service_type'] = service_type
+
                 reports = muranoclient(request).sessions.reports(
                     environment_id, session_id, service_data['id'])
                 if reports:
