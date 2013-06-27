@@ -16,14 +16,13 @@ import logging
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django import shortcuts
 
 from horizon import exceptions
 from horizon import tables
+from horizon import messages
 
 from muranodashboard.panel import api
-
-from django import shortcuts
-from horizon import messages
 
 LOG = logging.getLogger(__name__)
 

@@ -19,6 +19,7 @@ from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
+from consts import *
 
 log = logging.getLogger(__name__)
 
@@ -194,17 +195,17 @@ def services_list(request, environment_id):
         if instances:
             for service_item in instances:
                 service_data = service_item
-                if not hasattr(service_data, 'service_type'):
+                if not service_data.get('service_type'):
                     if service_name == 'webServers':
-                        service_type = 'Internet Information Services'
+                        service_type = IIS_NAME
                     elif service_name == 'activeDirectories':
-                        service_type = 'Active Directory'
+                        service_type = AD_NAME
                     elif service_name == 'webServerFarms':
-                        service_type = 'Internet Information Services Web Farm'
-                    elif service_name == 'AspNetApps':
-                        service_type = 'ASP.NET Application'
-                    elif service_name == 'AspNetAppFarms':
-                        service_type = 'ASP.NET Application Web Farm'
+                        service_type = IIS_FARM_NAME
+                    elif service_name == 'aspNetApps':
+                        service_type = ASP_NAME
+                    elif service_name == 'aspNetAppFarms':
+                        service_type = ASP_FARM_NAME
                     service_data['service_type'] = service_type
 
                 reports = muranoclient(request).sessions.reports(

@@ -20,14 +20,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
 from muranodashboard.panel import api
-
-AD_NAME = 'Active Directory'
-IIS_NAME = 'IIS'
-ASP_NAME = 'ASP.NET Application'
-IIS_FARM_NAME = 'IIS Farm'
-ASP_FARM_NAME = 'ASP.NET Farm'
-
-SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME)
+from consts import *
 
 log = logging.getLogger(__name__)
 CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}

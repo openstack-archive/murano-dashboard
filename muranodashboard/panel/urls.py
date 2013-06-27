@@ -18,7 +18,7 @@ from views import IndexView, Services, CreateEnvironmentView, DetailServiceView
 from views import Wizard, EditEnvironmentView
 from views import SERVICE_CHECKER
 from forms import FORMS
-from forms import SERVICE_NAMES
+from consts import SERVICE_NAMES
 
 
 VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
