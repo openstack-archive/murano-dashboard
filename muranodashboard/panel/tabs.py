@@ -43,7 +43,7 @@ class OverviewTab(tabs.Tab):
             detail_info['service_domain'] = 'Not in domain'
 
         if hasattr(service_data, 'uri'):
-            detail_info["uri"] = service_data.uri
+            detail_info['uri'] = service_data.uri
         return detail_info
 
 

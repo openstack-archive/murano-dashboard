@@ -115,8 +115,10 @@ class DeleteService(tables.DeleteAction):
     def action(self, request, service_id):
         try:
             env_id = self.table.kwargs.get('environment_id')
-            service_type = self.table.data[0]['service_type']
-            api.service_delete(request, service_id, env_id, service_type)
+            for service in self.table.data:
+                if service.id == service_id:
+                    api.service_delete(request, service_id, env_id,
+                                       service.service_type)
         except:
             msg = _('Sorry, you can\'t delete service right now')
             redirect = reverse("horizon:project:murano:index")
