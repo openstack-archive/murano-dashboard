@@ -22,6 +22,9 @@ from horizon import tables
 
 from muranodashboard.panel import api
 
+from django import shortcuts
+from horizon import messages
+
 LOG = logging.getLogger(__name__)
 
 STATUS_ID_READY = 'ready'
@@ -140,8 +143,36 @@ class DeployEnvironment(tables.BatchAction):
             api.environment_deploy(request, environment_id)
         except:
             msg = _('Unable to deploy. Try again later')
-            redirect = reverse("horizon:project:murano:index")
+            redirect = reverse('horizon:project:murano:index')
             exceptions.handle(request, msg, redirect=redirect)
+
+
+class DeployThisEnvironment(tables.Action):
+    name = 'deploy_env'
+    verbose_name = _('Deploy This Environment')
+    requires_input = False
+    classes = ('btn-launch', 'ajax-modal')
+
+    def allowed(self, request, service):
+        environment_id = self.table.kwargs['environment_id']
+        status = api.get_environment_status(request, environment_id)
+        services = self.table.data
+        if status not in [STATUS_ID_DEPLOYING, STATUS_ID_READY] and services:
+            return True
+        return False
+
+    def single(self, data_table, request, service_id):
+        environment_id = data_table.kwargs['environment_id']
+        try:
+            api.environment_deploy(request, environment_id)
+            messages.success(request, _('Deploy started'))
+        except:
+            msg = _('Unable to deploy. Try again later')
+
+            exceptions.handle(request, msg,
+                              redirect=reverse('horizon:project:murano:index'))
+        return shortcuts.redirect(
+            reverse('horizon:project:murano:services', environment_id))
 
 
 class ShowEnvironmentServices(tables.LinkAction):
@@ -215,5 +246,5 @@ class ServicesTable(tables.DataTable):
         verbose_name = _('Services')
         row_class = UpdateServiceRow
         status_columns = ['status']
-        table_actions = (CreateService, DeleteService)
+        table_actions = (CreateService, DeleteService, DeployThisEnvironment)
         row_actions = (DeleteService,)
