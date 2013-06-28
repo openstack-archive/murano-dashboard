@@ -4,17 +4,9 @@
   <h3>{% trans "Service Details" %}</h3>
   <hr class="header_rule">
   <dl>
-    <dt>{% trans "Name" %}</dt>
-    <dd>{{ service_name }}</dd><br>
-    <dt>{% trans "Type" %}</dt>
-    <dd>{{ service_type }}</dd><br>
-    <dt>{% trans "Domain" %}</dt>
-    <dd>{{ service_domain }}</dd><br>
-    <dt>{% trans "Status" %}</dt>
-    <dd>{{ service_status }}</dd><br>
-    {% if uri %}
-        <dt>{% trans "URI" %}</dt>
-        <dd>{{ uri }}</dd>
-    {% endif %}
+      {% for key, value in service.items %}
+       <dt>{{ key }}</dt>
+       <dd>{{ value }}</dd><br>
+      {% endfor %}
   </dl>
 </div>

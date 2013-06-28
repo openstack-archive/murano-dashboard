@@ -15,6 +15,7 @@
 import logging
 
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 from horizon import tabs
 from muranodashboard.panel import api
 from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES
@@ -35,16 +36,19 @@ class OverviewTab(tabs.Tab):
             if id == service_data.status:
                 status_name = name
 
-        detail_info = {'service_name': service_data.name,
-                       'service_status': status_name,
-                       'service_type': service_data.service_type}
+        detail_info = SortedDict([
+            ('Name', service_data.name),
+            ('Type', service_data.service_type),
+            ('Status', status_name),
+            ('Hostname', service_data.units[0].state.hostname), ])
 
         if not service_data.domain:
-            detail_info['service_domain'] = 'Not in domain'
+            detail_info['Domain'] = 'Not in domain'
 
         if hasattr(service_data, 'uri'):
-            detail_info['uri'] = service_data.uri
-        return detail_info
+            detail_info['URI'] = service_data.uri
+
+        return {'service': detail_info}
 
 
 class LogsTab(tabs.Tab):
