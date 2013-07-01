@@ -1,15 +1,22 @@
 {% extends "horizon/common/_modal_form.html" %}
-{% load i18n horizon humanize %}
+{% load i18n humanize %}
+<script type="text/javascript">
+    function set_wizard_goto_step() {
+        var step_name = {{ wizard.steps.prev }};
+        document.getElementById('wizard_goto_step').value = step_name;
+        document.getElementById('create_service_form').submit();
+    }
+</script>
 
-{% block form_action %}{% url horizon:project:murano:create %}?{{ request.POST.urlencode }}{% endblock %}
-
+{% block form_action %}{% url horizon:project:murano:create %}{% endblock %}
+{% block form_id %}create_service_form{% endblock %}
 {% block modal_id %}create_service{% endblock %}
 {% block modal-header %}{% trans "Create Service" %}{% endblock %}
 
 {% block modal-body %}
 <div class="left">
 <br>
-{% if wizard.steps.next %}
+{% if wizard.steps.index == 0 %}
 <br><br><br>
 {% endif %}
 
@@ -151,7 +158,12 @@
 
 {% block modal-footer %}
 {% if wizard.steps.prev %}
-<input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Create' %}"/>
+    <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
+
+    <input type="hidden" name="wizard_goto_step" id="wizard_goto_step" value=""/>
+    <button name="wizard_goto_step" class="btn btn-small" id="go_back_btn"
+            onclick="set_wizard_goto_step()" > {% trans "Back" %}</button>
+
 {% else %}
 <button name="wizard_goto_step" class="btn btn-small" type="submit" value="{{ wizard.steps.next }}">{% trans "Next >" %}</button>
 {% endif %}
