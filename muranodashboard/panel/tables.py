@@ -12,8 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
-
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django import shortcuts
@@ -23,29 +21,8 @@ from horizon import tables
 from horizon import messages
 
 from muranodashboard.panel import api
-
-LOG = logging.getLogger(__name__)
-
-STATUS_ID_READY = 'ready'
-STATUS_ID_PENDING = 'pending'
-STATUS_ID_DEPLOYING = 'deploying'
-STATUS_ID_NEW = 'new'
-
-STATUS_CHOICES = (
-    (None, True),
-    ('Ready to configure', True),
-    ('Ready', True),
-    ('Configuring', False),
-
-)
-
-STATUS_DISPLAY_CHOICES = (
-    (STATUS_ID_READY, 'Ready'),
-    (STATUS_ID_DEPLOYING, 'Deploy in progress'),
-    (STATUS_ID_PENDING, 'Configuring'),
-    (STATUS_ID_NEW, 'Ready to configure'),
-    ('', 'Ready to configure'),
-)
+from consts import STATUS_ID_READY, STATUS_ID_DEPLOYING,\
+    STATUS_CHOICES, STATUS_DISPLAY_CHOICES
 
 
 class CreateService(tables.LinkAction):
@@ -152,7 +129,7 @@ class DeployThisEnvironment(tables.Action):
     name = 'deploy_env'
     verbose_name = _('Deploy This Environment')
     requires_input = False
-    classes = ('btn-launch', 'ajax-modal')
+    classes = ('btn-launch')
 
     def allowed(self, request, service):
         environment_id = self.table.kwargs['environment_id']
@@ -169,11 +146,10 @@ class DeployThisEnvironment(tables.Action):
             messages.success(request, _('Deploy started'))
         except:
             msg = _('Unable to deploy. Try again later')
-
             exceptions.handle(request, msg,
                               redirect=reverse('horizon:project:murano:index'))
-        return shortcuts.redirect(
-            reverse('horizon:project:murano:services', environment_id))
+        return shortcuts.redirect(reverse('horizon:project:murano:services',
+                                          args=(environment_id,)))
 
 
 class ShowEnvironmentServices(tables.LinkAction):
@@ -194,14 +170,6 @@ class UpdateEnvironmentRow(tables.Row):
 
     def get_data(self, request, environment_id):
         return api.environment_get(request, environment_id)
-
-
-class UpdateServiceRow(tables.Row):
-    ajax = True
-
-    def get_data(self, request, service_id):
-        environment_id = self.table.kwargs['environment_id']
-        return api.service_get(request, environment_id, service_id)
 
 
 class EnvironmentsTable(tables.DataTable):
@@ -242,10 +210,12 @@ class ServicesTable(tables.DataTable):
 
     operation = tables.Column('operation', verbose_name=_('Last operation'))
 
+    def get_object_id(self, datum):
+        return datum.id
+
     class Meta:
         name = 'services'
         verbose_name = _('Services')
-        row_class = UpdateServiceRow
         status_columns = ['status']
         table_actions = (CreateService, DeleteService, DeployThisEnvironment)
         row_actions = (DeleteService,)
