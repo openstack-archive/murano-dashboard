@@ -47,15 +47,15 @@ def muranoclient(request):
     return Client(endpoint=endpoint, token=token_id)
 
 
-def get_status_message_for_service(request, service_id, environment_id):
+def get_status_messages_for_service(request, service_id, environment_id):
     session_id = Session.get(request, environment_id)
     reports = muranoclient(request).sessions.reports(environment_id,
                                                      session_id,
                                                      service_id)
-
-    result = 'Initialization.... \n'
+    result = '\n'
     for report in reports:
-        result += '  ' + str(report.text) + '\n'
+        result += '  ' + str(report.updated.replace('T', ' ')) + ' ' + \
+                  str(report.text) + '\n'
 
     return result
 
@@ -212,6 +212,9 @@ def services_list(request, environment_id):
                     environment_id, session_id, service_data['id'])
                 if reports:
                     last_operation = str(reports[-1].text)
+                    time = reports[-1].updated.replace('T', ' ')
+                    last_operation += '. Updated at ' + time
+
                 else:
                     last_operation = ''
                 service_data['operation'] = last_operation

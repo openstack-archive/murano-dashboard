@@ -60,8 +60,8 @@ class LogsTab(tabs.Tab):
     def get_context_data(self, request):
         service_id = self.tab_group.kwargs['service_id']
         environment_id = self.tab_group.kwargs['environment_id']
-        reports = api.get_status_message_for_service(request, service_id,
-                                                     environment_id)
+        reports = api.get_status_messages_for_service(request, service_id,
+                                                      environment_id)
         return {"reports": reports}
 
 
