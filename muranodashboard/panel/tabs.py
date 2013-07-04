@@ -20,7 +20,6 @@ from horizon import tabs
 from muranodashboard.panel import api
 from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES
 
-
 LOG = logging.getLogger(__name__)
 
 
@@ -43,6 +42,7 @@ class OverviewTab(tabs.Tab):
 
         detail_info = SortedDict([
             ('Name', service_data.name),
+            ('id', service_data.id),
             ('Type', service_data.service_type),
             ('Status', status_name), ])
 
@@ -55,6 +55,9 @@ class OverviewTab(tabs.Tab):
 
         if not service_data.domain:
             detail_info['Domain'] = 'Not in domain'
+
+        if hasattr(service_data, 'repository'):
+            detail_info['Application repository'] = service_data.repository
 
         if hasattr(service_data, 'uri'):
             detail_info['URI'] = service_data.uri
