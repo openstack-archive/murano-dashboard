@@ -30,6 +30,11 @@ class OverviewTab(tabs.Tab):
     template_name = '_services.html'
 
     def get_context_data(self, request):
+        """
+
+        :param request:
+        :return:
+        """
         service_data = self.tab_group.kwargs['service']
 
         for id, name in STATUS_DISPLAY_CHOICES:
@@ -39,8 +44,14 @@ class OverviewTab(tabs.Tab):
         detail_info = SortedDict([
             ('Name', service_data.name),
             ('Type', service_data.service_type),
-            ('Status', status_name),
-            ('Hostname', service_data.units[0].state.hostname), ])
+            ('Status', status_name), ])
+
+        if hasattr(service_data, 'unitNamingPattern'):
+            if service_data.unitNamingPattern:
+                text = service_data.unitNamingPattern
+                if '#' in text:
+                    text += '    (# transforms into index number)'
+                detail_info['Hostname template'] = text
 
         if not service_data.domain:
             detail_info['Domain'] = 'Not in domain'
