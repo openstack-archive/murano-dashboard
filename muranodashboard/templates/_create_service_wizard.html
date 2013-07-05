@@ -1,12 +1,5 @@
 {% extends "horizon/common/_modal_form.html" %}
 {% load i18n humanize %}
-<script type="text/javascript">
-    function set_wizard_goto_step() {
-        var step_name = {{ wizard.steps.prev }};
-        document.getElementById('wizard_goto_step').value = step_name;
-        document.getElementById('create_service_form').submit();
-    }
-</script>
 
 {% block form_action %}{% url horizon:project:murano:create %}{% endblock %}
 {% block form_id %}create_service_form{% endblock %}
