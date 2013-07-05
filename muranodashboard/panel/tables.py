@@ -187,7 +187,8 @@ class EnvironmentsTable(tables.DataTable):
                          link='horizon:project:murano:services',
                          verbose_name=_('Name'))
 
-    status = tables.Column('status', verbose_name=_('Status'),
+    status = tables.Column('status',
+                           verbose_name=_('Status'),
                            status=True,
                            status_choices=STATUS_CHOICES,
                            display_choices=STATUS_DISPLAY_CHOICES)
@@ -208,17 +209,24 @@ def get_service_details_link(service):
 
 
 class ServicesTable(tables.DataTable):
-    name = tables.Column('name', verbose_name=_('Name'),
+    name = tables.Column('name',
+                         verbose_name=_('Name'),
                          link=get_service_details_link)
 
-    _type = tables.Column('service_type', verbose_name=_('Type'))
+    _type = tables.Column('service_type',
+                          verbose_name=_('Type'))
 
-    status = tables.Column('status', verbose_name=_('Status'),
+    status = tables.Column('status',
+                           verbose_name=_('Status'),
                            status=True,
                            status_choices=STATUS_CHOICES,
                            display_choices=STATUS_DISPLAY_CHOICES)
 
-    operation = tables.Column('operation', verbose_name=_('Last operation'))
+    operation = tables.Column('operation',
+                              verbose_name=_('Last operation'))
+
+    operation_updated = tables.Column('operation_updated',
+                                      verbose_name=_('Time updated'))
 
     def get_object_id(self, datum):
         return datum.id

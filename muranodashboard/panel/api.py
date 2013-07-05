@@ -213,12 +213,14 @@ def services_list(request, environment_id):
                 if reports:
                     last_operation = str(reports[-1].text)
                     time = reports[-1].updated.replace('T', ' ')
-                    last_operation += '. Updated at ' + time
-
+                    # last_operation += '. Updated at ' + time
                 else:
-                    last_operation = ''
-                service_data['operation'] = last_operation
+                    last_operation = 'Service draft created'
+                    time = service_data['updated'].replace('T', ' ')[:-7]
+
                 service_data['environment_id'] = environment_id
+                service_data['operation'] = last_operation
+                service_data['operation_updated'] = time
                 services.append(service_data)
 
     log.debug('Service::List')
