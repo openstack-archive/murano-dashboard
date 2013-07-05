@@ -28,297 +28,26 @@
 </td></tr></table>
 </div>
 <div class="right">
-    {% if wizard.steps.index == 0 %}
+    {% if wizard.steps.index > 0 %}
+        <h3> {% blocktrans %} {{ service_name }} Service{% endblocktrans %} </h3>
+        {% for title, description in field_descriptions %}
+            <p>
+            {% if title %}
+                <strong>{% blocktrans %}{{ title }}:{% endblocktrans %}</strong>
+            {% endif %}
+            {% blocktrans %}{{ description }}{% endblocktrans %}
+            </p>
+        {% endfor %}
+    {% else %}
         <h3>{% trans "Description" %}:</h3>
-        <p>
-            {% blocktrans %} <strong> The Active Directory Service </strong>
-            includes one primary and optionally a few secondary Domain
-            Controllers, with DNS service {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The Internet Information Service </strong>
-            sets up an IIS server and joins it into an existing domain {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The ASP.NET Application Service </strong>
-            installs custom application onto one IIS Web Server {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The IIS Farm Service </strong>
-            sets up a load-balanced set of IIS servers {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The ASP.NET Farm Service </strong>
-            installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The MS SQL Service </strong>
-            installs an instance of Microsoft SQL Server{% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %} <strong> The MS SQL Failover Cluster </strong>
-                installs Microsoft SQL Failover Cluster Server{% endblocktrans %}
-        </p>
-        <p>
-            <i>{% blocktrans %} If you want your services to work with AD you
-            should create The Active Directory Service first {% endblocktrans %}
-            </i>
-        </p>
+        {% for slug, description in service_descriptions %}
+            <p class="switchable" id="{{ slug }}">
+                {% autoescape off %} {% blocktrans %}
+                    {{ description }}
+                {% endblocktrans %} {% endautoescape %}</p>
+        {% endfor %}
+        <p>{% blocktrans %} If you want your services to work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
     {% endif %}
-    {% if wizard.steps.index == 1 %}
-        <h3> {% blocktrans %} {{ type }} Service{% endblocktrans %} </h3>
-        {% if type == 'Active Directory' %}
-            <p>
-                <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not start or end with a dash.
-                    Single-level domain is not appropriate. Period characters are allowed only when they are used to delimit the components of domain style names. DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} You can create several Active Directory instances by setting instance number larger than one. One primary Domain Controller and a few secondary DCs will be created. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %}Account Name: {% endblocktrans %} </strong>
-                {% blocktrans %} Specify name for domain account. The default name is Administrator.{% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Passwords: {% endblocktrans %} </strong>
-                {% blocktrans %}  Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 7 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate  the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
-            </p>
-
-        {% elif type == 'ASP.NET Application' %}
-            {% blocktrans %} ASP.NET application will be installed onto one IISWeb Server {% endblocktrans %}
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character. Password length should be a minimum of 7 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Git repository {% endblocktrans %}</strong>
-                {% blocktrans %} URL of a git repository with the application you want to deploy. {% endblocktrans %}
-            </p>
-
-        {% elif type == 'ASP.NET Farm' %}
-            <p>
-                {% blocktrans %} The ASP.NET application will be installed on a number of IIS Web Servers, and load balancing will be configured. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
-                    Password length should be a minimum of 7 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} Several instances with ASP.NET Application Service can be created. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
-                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
-            </p>
-
-        {% elif type == 'IIS' %}
-            <p>{% blocktrans %} Standalone IIS Server {% endblocktrans %}</p>
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
-                    Password length should be a minimum of 7 characters. {% endblocktrans %}
-                {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
-            </p>
-
-        {% elif type == 'IIS Farm' %}
-            <p>{% blocktrans %} A load-balanced array of IIS servers {% endblocktrans %}</p>
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service administration. Your password should have at least one letter in each register, a number and a special character.
-                    Password length should be a minimum of 7 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} Several instances with IIS Service can be created at one time. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
-                {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
-            </p>
-
-        {% elif type == 'Microsoft SQL Server'%}
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service
-                    administration. Your password should have at least one
-                    letter in each register, a number and a special character.
-                    Password length should be a minimum of 7 characters. Once
-                    you forget your password you won't be able to operate  the
-                    service. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory
-                    domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Mixed-mode Authentication: {% endblocktrans %}</strong>
-                {% blocktrans %} Mixed authentication mode allows the use of Windows credentials but supplements them with local SQL
-                    Server user accounts that the administrator may create and maintain within SQL Server.
-                    If this mode is on SA password is required{% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} SA Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Set system administrator password for the MS SQL Server.{% endblocktrans %}
-            </p>
-
-        {% elif type == 'Microsoft SQL Server Cluster' %}
-            <p>
-                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a service. Just A-Z,
-                    a-z, 0-9, dash and underline are
-                    allowed. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Windows requires strong password for service
-                    administration. Your password should have at least one
-                    letter in each register, a number and a special character.
-                    Password length should be a minimum of 7 characters. Once
-                    you forget your password you won't be able to operate  the
-                    service. {% endblocktrans %}
-            </p>
-            <p><strong>{% blocktrans %} Active Directory is configured by the System Administrator: {% endblocktrans %}</strong>
-                {% blocktrans %} AD domain must be specified for the MS SQL Server Cluster. <i>This checkbox should be enabled only in case
-                your environment has scripts with valid rules that will join created service to the existent domain automatically. </i>
-                 Also AD User (administrator account) and AD Password should be entered to have access to the existing Active Directory Domain.{% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
-                {% blocktrans %} Service can be joined to the Active Directory
-                    domain. If you want to create an AD domain create the AD
-                    Service first. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} Mixed-mode Authentication: {% endblocktrans %}</strong>
-                {% blocktrans %} Mixed authentication mode allows the use of
-                    Windows credentials but supplements them with local SQL
-                    Server user accounts that the administrator may create and
-                    maintain within SQL Server.
-                    If this mode is on SA password is
-                    required{% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %} SA Password: {% endblocktrans %} </strong>
-                {% blocktrans %} Set system administrator password for the MS
-                    SQL Server.{% endblocktrans %}
-            </p>
-
-        {% endif %}
-        <p>
-            <strong>{% blocktrans %} Hostname template {% endblocktrans %}</strong>
-            {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
-        </p>
-    {% endif %}
-    {% if wizard.steps.current == 'mssql_ag_configuration' %}
-        <h3> {% blocktrans %} MS SQL Failover Cluster {% endblocktrans %} </h3>
-        <p>
-            <strong>{% blocktrans %}Cluster Static IP: {% endblocktrans %}</strong>
-            {% blocktrans %} Specify a valid IPv4 fixed IP.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}Cluster Name: {% endblocktrans %}</strong>
-            {% blocktrans %}Specify a name of a cluster. Just A-Z, a-z, 0-9, dash and underline are allowed.
-            {% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}Availability Group Name: {% endblocktrans %}</strong>
-            {% blocktrans %}Specify a name of an AG. Just A-Z, a-z, 0-9, dash and underline are allowed.
-            {% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}Availability Group Listener Name: {% endblocktrans %}</strong>
-            {% blocktrans %} Specify a name of an AG Listener . Just A-Z, a-z, 0-9, dash and underline are allowed.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}Availability Group Listener IP: {% endblocktrans %}</strong>
-            {% blocktrans %} Specify a valid IPv4 fixed IP.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}SQL User Name: {% endblocktrans %}</strong>
-            {% blocktrans %}User name that will be created to manage cluster instances.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}SQL User Password: {% endblocktrans %}</strong>
-            {% blocktrans %}User password that will be created to manage cluster instances. {% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-            {% blocktrans %} Microsoft SQL Failover Cluster includes up to 5 instances.{% endblocktrans %}
-        </p>
-    {% endif %}
-    {% if wizard.steps.current == 'mssql_datagrid' %}
-        <h3> {% blocktrans %} MS SQL Failover Cluster {% endblocktrans %} </h3>
-        <p>
-            <strong>{% blocktrans %}Nodes: {% endblocktrans %}</strong>
-            {% blocktrans %}Configure cluster instances. Cluster node  quantity can be set with 'Add' and 'Remove' buttons.
-            Configure Sync mode by enabling corresponding checkbox. All other nodes will be in Async mode. Just 2 nodes are allowed to be Sync.
-                Also one Master node need to be selected. SQL Failover cluster has limit of 5 instances.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %}Database list: {% endblocktrans %}</strong>
-            {% blocktrans %} Specify names for new databases which will be created as part of service installation.
-                Here should come comma-separated list of database names, where each name has the following syntax: first symbol
-                should be latin letter or underscore; subsequent symbols can be latin letter, numeric, underscore,
-                at sign, number sign or dollar sign.{% endblocktrans %}
-        </p>
-    {% endif %}
-
-    {% if wizard.steps.current == 'instance_configuration' %}
-        <h3>{% trans "Instance Configuration" %}:</h3>
-        <p>{% blocktrans %}Specify some instance parameters on which service would be created.{% endblocktrans %}</p>
-        <p>
-            <strong>{% blocktrans %} Instance flavor: {% endblocktrans %} </strong>
-            {% blocktrans %} Select registered in Openstack flavor. Consider that service performance depends on this parameter.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %} Instance image: {% endblocktrans %} </strong>
-            {% blocktrans %} Select valid image for a service. Image should already be prepared and registered in glance.{% endblocktrans %}
-        </p>
-        <p>
-            <strong>{% blocktrans %} Availability zone: {% endblocktrans %} </strong>
-            {% blocktrans %} Select availability zone where service would be installed. {% endblocktrans %}
-        </p>
-    {% endif %}
-
 </div>
 {% endblock %}
 
@@ -335,6 +64,15 @@
                 }
                 return selected;
             }
+
+            $('#id_service_choice-service').change(function(event) {
+                var selected = get_selection(event.target);
+                if ( selected ) {
+                    $('p.switchable:not(#'+selected+')').css('display', 'none');
+                    $('p.switchable#'+selected).css('display', 'block');
+                }
+            });
+            $('#id_service_choice-service').change();
 
             $(".btn-wizard").click(function() {
                 var step = get_selection($('#id_service_choice-service'));

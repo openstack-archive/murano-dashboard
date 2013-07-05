@@ -65,15 +65,6 @@ class NodeDataGrid(DataGrid):
         super(NodeDataGrid, self).load_state(render_context)
 
 
-    # def add(self):
-    #     id = self.pk.next()
-    #     self.queryset.add({'name': 'node%s' % (id,), 'is_sync': False,
-    #                        'is_async': False, 'is_primary': False, 'id': id})
-    #
-    # def remove(self):
-    #     pass
-
-
 class DataGridWidget(forms.widgets.Input):
     template_name = 'data_grid_field.html'
 
@@ -116,16 +107,3 @@ class DataGridCompound(forms.MultiWidget):
             return [json.loads(value), value]
         else:
             return [None, None]
-
-
-class DataGridField(forms.MultiValueField):
-    def __init__(self, *args, **kwargs):
-        super(DataGridField, self).__init__(
-            (forms.CharField(required=False), forms.CharField()),
-            *args, widget=DataGridCompound, **kwargs)
-
-    def update_request(self, request):
-        self.widget.update_request(request)
-
-    def compress(self, data_list):
-        return data_list[1]

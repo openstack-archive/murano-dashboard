@@ -1,10 +1,3 @@
-/**
- * Created with PyCharm.
- * User: tsufiev
- * Date: 30.07.13
- * Time: 20:27
- * To change this template use File | Settings | File Templates.
- */
 $(function() {
     var MAX_NODES = 5,
         MIN_NODES = 2;
