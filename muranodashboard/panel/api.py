@@ -20,7 +20,7 @@ from horizon.exceptions import ServiceCatalogException
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
-from consts import *
+from muranodashboard.panel.services import get_service_name
 
 log = logging.getLogger(__name__)
 
@@ -233,8 +233,8 @@ def services_list(request, environment_id):
 
     for service_item in environment.services:
         service_data = service_item
-        service_data['full_service_name'] = \
-            SERVICE_NAME_DICT[service_data['type']]
+        service_data['full_service_name'] = get_service_name(
+            service_data['type'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
             last_operation = str(reports[service_data['id']].text)
@@ -323,7 +323,7 @@ def get_deployment_descr(request, environment_id, deployment_id):
             descr = deployment.description
             if 'services' in descr:
                 for service in descr['services']:
-                    service['full_service_name'] = SERVICE_NAME_DICT.get(
-                        service['type'], service['type'])
+                    service['full_service_name'] = get_service_name(
+                        service['type'])
             return descr
     return None

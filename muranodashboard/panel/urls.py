@@ -20,24 +20,20 @@ from views import CreateEnvironmentView
 from views import DetailServiceView
 from views import DeploymentsView
 from views import Wizard, EditEnvironmentView
-from views import SERVICE_CHECKER, is_service_mssql_cluster
 from forms import FORMS
-from consts import SERVICE_NAMES
+from muranodashboard.panel.services import get_service_checkers
 from openstack_dashboard.dashboards.project.instances.views import DetailView
 
 VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
-
-condition_dict_for_wizard = dict(zip(SERVICE_NAMES, SERVICE_CHECKER))
-condition_dict_for_wizard['mssql_datagrid'] = is_service_mssql_cluster
-condition_dict_for_wizard['mssql_ag_configuration'] = is_service_mssql_cluster
 
 urlpatterns = patterns(
     VIEW_MOD,
     url(r'^environments$', IndexView.as_view(), name='index'),
 
     url(r'^create/$',
-        Wizard.as_view(FORMS, condition_dict=condition_dict_for_wizard),
+        Wizard.as_view(FORMS,
+                       condition_dict=dict(get_service_checkers())),
         name='create'),
 
     url(r'^create_environment/$', CreateEnvironmentView.as_view(),

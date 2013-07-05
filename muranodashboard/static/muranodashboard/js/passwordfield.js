@@ -1,10 +1,3 @@
-/**
- * Created with PyCharm.
- * User: tsufiev
- * Date: 12.08.13
- * Time: 11:34
- * To change this template use File | Settings | File Templates.
- */
 $(function() {
     function main_check(div, parameter1, parameter2, text){
         var msg = "<span class='help-inline'>" + gettext(text) + '</span>'

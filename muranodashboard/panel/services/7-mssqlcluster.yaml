@@ -1,0 +1,194 @@
+name: MS SQL Server Cluster
+type: msSqlClusterServer
+
+description: >-
+  <strong> The MS SQL Failover Cluster </strong> installs 
+  Microsoft SQL Failover Cluster Server
+
+unitTemplates:
+  - {}
+
+forms:
+  - - name: title
+      type: string
+      required: false
+      hidden: true
+      attributeNames: false
+      description: MS SQL Failover Cluster
+      # temporaryHack
+      widgetMedia:
+        js: [muranodashboard/js/mixed-mode.js, muranodashboard/js/external-ad.js]
+    - name: name
+      type: string
+      label: Service Name
+      description: >-
+        Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and 
+        underline are allowed.
+      minLength: 2
+      maxLength: 64
+      regexpValidator: '^[-\w]+$'
+      errorMessages:
+        invalid: Just letters, numbers, underscores and hyphens are allowed.
+      helpText: Just letters, numbers, underscores and hyphens are allowed.
+    - name: adminPassword
+      type: password
+      label: Administrator password
+      descriptionTitle: Passwords
+      description: >-
+        "Windows requires strong password for service administration. 
+        Your password should have at least one letter in each 
+        register, a number and a special character. Password length should be 
+        a minimum of 8 characters.
+
+        Once you forget your password you won't be able to 
+        operate  the service until recovery password would be entered. So it's 
+        better for Recovery and Administrator password to be different."
+    - name: externalAD
+      type: boolean
+      label: Active Directory is configured by the System Administrator
+      widgetAttrs:  # temporary hack
+        class: external-ad
+      required: false
+    - name: domainAdminUserName
+      type: string
+      label: Active Directory User
+      required: $externalAD
+      regexpValidator: '^[-\w]+$'
+      errorMessages:
+        invalid: 'Just letters, numbers, underscores and hyphens are allowed.'
+    - name: domainAdminPassword
+      type: password
+      label: Active Directory Password
+      required: $externalAD
+    - name: domain
+      type: domain
+      label: Domain
+      required: false
+      description: >-
+        Service can be joined to the Active Directory domain. If you want to 
+        create an AD domain create the AD Service first.
+      helpText: Optional field for a domain to which service can be joined
+    - name: mixedModeAuth
+      type: boolean
+      label: Mixed-mode Authentication
+      initial: true
+      required: false
+      description: >-
+        Mixed authentication mode allows the use of Windows
+        credentials but supplements them with local SQL Server user
+        accounts that the administrator may create and maintain within
+        SQL Server. If this mode is on SA password is required
+    - name: saPassword
+      type: password
+      label: SA Password
+      description: Set system administrator password for the MS SQL Server.
+      helpText: SQL server System Administrator account
+      required: $mixedModeAuth
+    - name: unitNamingPattern
+      type: string
+      label: Hostname template
+      attributeNames: false
+      description: >-
+        "For your convenience all instance hostnames can be named
+        in the same way. Enter a name and use # character for incrementation. 
+        For example, host# turns into host1, host2, etc. Please follow Windows 
+        hostname restrictions."
+      required: false
+      regexpValidator: '^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$'
+      helpText: Optional field for a machine hostname template
+  - - name: clusterIP
+      type: clusterip
+      label: Cluster Static IP
+      description: Specify a valid IPv4 fixed IP.
+    - name: clusterName
+      type: string
+      label: Cluster Name
+      helpText: Service name for new SQL Cluster service
+      description: >-
+        Specify a name of a cluster. Just A-Z, a-z, 0-9, dash and underline are allowed.
+    - name: agGroupName
+      type: string
+      label: Availability Group Name
+      helpText: Name of AG during SQL setup
+      description: >-
+        Specify a name of an AG. Just A-Z, a-z, 0-9, dash and underline are allowed.
+    - name: agListenerName
+      type: string
+      label: Availability Group Listener Name
+      helpText: FQDN name of a new DNS entry for AG Listener endpoint
+      regexpValidator: '^[-\w]+$'
+      errorMessages:
+        invalid: Just letters, numbers, underscores and hyphens are allowed.
+      description: >-
+        Specify a name of an AG Listener . Just A-Z, a-z, 0-9, dash and underline are allowed.
+    - name: agListenerIP
+      type: clusterip
+      label: Availability Group Listener IP
+      description: Specify a valid IPv4 fixed IP.
+    - name: sqlServiceUserName
+      type: string
+      label: SQL User Name
+      regexpValidator: '^[-\w]+$'
+      errorMessages:
+        invalid: Just letters, numbers, underscores and hyphens are allowed.
+      description: User name that will be created to manage cluster instances.
+    - name: sqlServicePassword
+      type: password
+      label: SQL User Password
+      description: User password that will be created to manage cluster instances.
+    - name: dcInstances
+      type: instance
+      label: Instance Count
+      minValue: 2
+      maxValue: 5
+      initial: 2
+      attributeNames: units
+      helpText: Enter an integer value between 2 and 5
+      description: Microsoft SQL Failover Cluster includes up to 5 instances.
+  - - name: nodes
+      type: datagrid
+      label: Nodes
+      description: >-
+        Configure cluster instances. Cluster node quantity can be set
+        with 'Add' and 'Remove' buttons. Configure Sync mode by
+        enabling corresponding checkbox. All other nodes will be in
+        Async mode. Just 2 nodes are allowed to be Sync. Also one
+        Master node need to be selected. SQL Failover cluster has
+        limit of 5 instances.
+    - name: databases
+      type: databaselist
+      label: Database list
+      description: >-
+        Specify names for new databases which will be created as part
+        of service installation. Here should come comma-separated list
+        of database names, where each name has the following syntax:
+        first symbol should be latin letter or underscore; subsequent
+        symbols can be latin letter, numeric, underscore, at sign,
+        number sign or dollar sign.
+      helpText: Enter comma separated list of databases that will be created
+  - - name: title
+      type: string
+      required: false
+      hidden: true
+      attributeNames: false
+      descriptionTitle: Instance Configuration
+      description: Specify some instance parameters on which service would be created.
+    - name: flavor
+      type: flavor
+      label: Instance flavor
+      description: >-
+        Select registered in Openstack flavor. Consider that service performance 
+        depends on this parameter.
+      required: false
+    - name: osImage
+      type: image
+      label: Instance image
+      description: >-
+        Select valid image for a service. Image should already be prepared and 
+        registered in glance.
+      required: false
+    - name: availabilityZone
+      type: azone
+      label: Availability zone
+      description: Select availability zone where service would be installed.
+      required: false

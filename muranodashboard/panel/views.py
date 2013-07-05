@@ -38,50 +38,9 @@ from muranodashboard.panel import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 
-from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME, \
-    MSSQL_NAME, MSSQL_CLUSTER_NAME, SERVICE_NAME_DICT
-
+from muranodashboard.panel.services import get_service_descriptions, \
+    get_service_name, get_service_client, get_service_field_descriptions
 LOG = logging.getLogger(__name__)
-
-
-def get_service_type(wizard):
-    cleaned_data = wizard.get_cleaned_data_for_step('service_choice') \
-        or {'service': 'none'}
-    return cleaned_data.get('service')
-
-
-def is_service_ad(wizard):
-    return get_service_type(wizard) == AD_NAME
-
-
-def is_service_iis(wizard):
-    return get_service_type(wizard) == IIS_NAME
-
-
-def is_service_asp(wizard):
-    return get_service_type(wizard) == ASP_NAME
-
-
-def is_service_iis_farm(wizard):
-    return get_service_type(wizard) == IIS_FARM_NAME
-
-
-def is_service_asp_farm(wizard):
-    return get_service_type(wizard) == ASP_FARM_NAME
-
-
-def is_service_mssql(wizard):
-    return get_service_type(wizard) == MSSQL_NAME
-
-
-def is_service_mssql_cluster(wizard):
-    return get_service_type(wizard) == MSSQL_CLUSTER_NAME
-
-
-SERVICE_CHECKER = (is_service_ad, is_service_iis,
-                   is_service_asp, is_service_iis_farm,
-                   is_service_asp_farm, is_service_mssql,
-                   is_service_mssql_cluster)
 
 
 class Wizard(ModalFormMixin, SessionWizardView):
@@ -95,104 +54,30 @@ class Wizard(ModalFormMixin, SessionWizardView):
                       args=(environment_id,))
 
         step0_data = form_list[0].cleaned_data
-        step1_data = form_list[1].cleaned_data
-        last_step_data = form_list[-1].cleaned_data
+        slug = step0_data.get('service', '')
+        attributes = {'type': get_service_client(slug)}
 
-        service_type = step0_data.get('service', '')
-        parameters = {'type': service_type}
+        for form in form_list[1:]:
+            form.extract_attributes(attributes)
 
-        parameters['units'] = []
-        parameters['unitNamingPattern'] = step1_data.get('unit_name_template')
-        parameters['availabilityZone'] = \
-            last_step_data.get('availability_zone')
-        parameters['flavor'] = last_step_data.get('flavor')
-        parameters['osImage'] = last_step_data.get('image')
+        # hack to fill units with data from nodes datagrid
+        if 'nodes' in attributes:
+            units = []
+            for node in json.loads(attributes['nodes']):
+                units.append({'isMaster': node['is_primary'],
+                              'isSync': node['is_sync']})
+            attributes['units'] = units
+            del attributes['nodes']
 
-        if service_type == AD_NAME:
-            parameters['name'] = str(step1_data.get('dc_name', 'noname'))
-            parameters['domain'] = parameters['name']  # Fix Me in orchestrator
-            parameters['adminPassword'] = \
-                str(step1_data.get('adm_password1', ''))
-            recovery_password = str(step1_data.get('password_field1', ''))
-            parameters['units'].append({'isMaster': True,
-                                        'recoveryPassword': recovery_password})
-            dc_count = int(step1_data.get('dc_count', 1))
-            parameters['adminAccountName'] = step1_data.get('adm_user', '')
-            for dc in range(dc_count - 1):
-                parameters['units'].append({
-                    'isMaster': False,
-                    'recoveryPassword': recovery_password
-                })
-
-        elif service_type in [IIS_NAME, ASP_NAME,
-                              IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME,
-                              MSSQL_CLUSTER_NAME]:
-            parameters['name'] = str(step1_data.get('service_name', 'noname'))
-            parameters['domain'] = str(step1_data.get('domain', ''))
-            parameters['adminPassword'] = step1_data.get('adm_password1', '')
-
-            if service_type in [MSSQL_NAME, MSSQL_CLUSTER_NAME]:
-                mixed_mode = step1_data.get('mixed_mode', False)
-                sa_password = str(
-                    step1_data.get('password_field1', ''))
-                parameters['saPassword'] = sa_password
-                parameters['mixedModeAuth'] = mixed_mode
-                if parameters['domain'] == '':
-                    parameters['domain'] = None
-
-            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
-                parameters['repository'] = step1_data.get('repository', '')
-
-            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
-                parameters['loadBalancerPort'] = step1_data.get('lb_port', 80)
-
-            instance_count = 1
-            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
-                instance_count = int(step1_data.get('instance_count', 1))
-
-            for unit in range(instance_count):
-                parameters['units'].append({})
-
-            if service_type == MSSQL_CLUSTER_NAME:
-                parameters['domainAdminUserName'] =  \
-                    step1_data.get('ad_user', '')
-                parameters['domainAdminPassword'] =  \
-                    step1_data.get('ad_password', '')
-
-                step2_data = form_list[2].cleaned_data
-                parameters['clusterName'] = step2_data.get('clusterName', '')
-                parameters['clusterIP'] = str(step2_data.get('fixed_ip', ''))
-                parameters['agGroupName'] = step2_data.get('agGroupName', '')
-                parameters['agListenerIP'] = step2_data.get('agListenerIP', '')
-                parameters['agListenerName'] = step2_data.get('agListenerName',
-                                                              '')
-                parameters['sqlServicePassword'] = \
-                    step2_data.get('sqlServicePassword1', '')
-                parameters['sqlServiceUserName'] = \
-                    step2_data.get('sqlServiceUserName', '')
-
-                step3_data = form_list[3].cleaned_data
-                parameters['databases'] = step3_data.get('databases')
-                form_nodes = step3_data.get('nodes')
-                units = []
-                if form_nodes:
-                    nodes = json.loads(step3_data.get('nodes'))
-                    for node in nodes:
-                        unit = {}
-                        unit['isMaster'] = node['is_primary']
-                        unit['isSync'] = node['is_sync']
-                        units.append(unit)
-                parameters['units'] = units
         try:
-            api.service_create(self.request, environment_id, parameters)
+            api.service_create(self.request, environment_id, attributes)
         except HTTPForbidden:
             msg = _('Sorry, you can\'t create service right now.'
                     'The environment is deploying.')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         else:
-            message = "The %s service successfully created." \
-                      % SERVICE_NAME_DICT[service_type]
+            message = "The %s service successfully created." % slug
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
@@ -201,19 +86,25 @@ class Wizard(ModalFormMixin, SessionWizardView):
         if step != 'service_choice':
             init_dict['request'] = self.request
 
-        if step == 'mssql_datagrid':
-            instance_count = self.storage.data['step_data'][
-                'mssql_ag_configuration'].\
-                get('mssql_ag_configuration-instance_count')
+        # hack to pass number of nodes from one form to another
+        if step == 'ms-sql-server-cluster-2':
+            form_id = 'ms-sql-server-cluster-1'
+            form_data = self.storage.data['step_data'].get(form_id, {})
+            instance_count = form_data.get(form_id + '-dcInstances')
             if instance_count:
                 init_dict['instance_count'] = int(instance_count[0])
         return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
+        context['service_descriptions'] = get_service_descriptions()
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
-            context.update({'type': SERVICE_NAME_DICT[data['service']]})
+            slug = data['service']
+            context['field_descriptions'] = get_service_field_descriptions(
+                slug, self.steps.index - 1)
+            context.update({'type': get_service_client(slug),
+                            'service_name': get_service_name(slug)})
         return context
 
 
