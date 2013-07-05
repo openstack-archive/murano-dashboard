@@ -17,6 +17,8 @@ import logging
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from horizon import tabs
+from openstack_dashboard.api import nova as nova_api
+
 from muranodashboard.panel import api
 from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES
 
@@ -35,6 +37,7 @@ class OverviewTab(tabs.Tab):
         :return:
         """
         service_data = self.tab_group.kwargs['service']
+        environment_id = self.tab_group.kwargs['environment_id']
 
         for id, name in STATUS_DISPLAY_CHOICES:
             if id == service_data.status:
@@ -42,27 +45,57 @@ class OverviewTab(tabs.Tab):
 
         detail_info = SortedDict([
             ('Name', service_data.name),
-            ('id', service_data.id),
+            ('ID', service_data.id),
             ('Type', service_data.service_type),
             ('Status', status_name), ])
 
         if hasattr(service_data, 'unitNamingPattern'):
             if service_data.unitNamingPattern:
                 text = service_data.unitNamingPattern
-                if '#' in text:
+                name_incrementation = True if '#' in text else False
+                if name_incrementation:
                     text += '    (# transforms into index number)'
                 detail_info['Hostname template'] = text
 
         if not service_data.domain:
             detail_info['Domain'] = 'Not in domain'
+        else:
+            detail_info['Domain'] = service_data.domain
 
         if hasattr(service_data, 'repository'):
             detail_info['Application repository'] = service_data.repository
 
         if hasattr(service_data, 'uri'):
-            detail_info['URI'] = service_data.uri
+            detail_info['Load Balancer URI'] = service_data.uri
 
-        return {'service': detail_info}
+        #check for deployed services so additional information can be added
+        units = []
+        instance_name = None
+        for unit in service_data.units:
+            if hasattr(unit, 'state'):
+                # unit_detail = {'Name': unit.name}
+                unit_detail = SortedDict()
+                instance_hostname = unit.state.hostname
+                if 'Hostname template' in detail_info:
+                    del detail_info['Hostname template']
+                unit_detail['Hostname'] = instance_hostname
+                instances = nova_api.server_list(request)
+
+                # HEAT always adds e before instance name
+                instance_name = 'e' + environment_id + '.' + instance_hostname
+
+                for instance in instances:
+                    if instance._apiresource.name == instance_name:
+                        id = instance._apiresource.id
+                        unit_detail['instance_id'] = id
+                if len(service_data.units) > 1:
+                    units.append(unit_detail)
+                else:
+                    detail_info.update(unit_detail)
+
+        return {'service': detail_info,
+                'units': units,
+                'instance_name': instance_name}
 
 
 class LogsTab(tabs.Tab):

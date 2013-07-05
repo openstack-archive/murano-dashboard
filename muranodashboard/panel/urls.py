@@ -19,7 +19,7 @@ from views import Wizard, EditEnvironmentView
 from views import SERVICE_CHECKER
 from forms import FORMS
 from consts import SERVICE_NAMES
-
+from openstack_dashboard.dashboards.project.instances.views import DetailView
 
 VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
@@ -47,5 +47,7 @@ urlpatterns = patterns(
 
     url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
         DetailServiceView.as_view(),
-        name='service_details')
+        name='service_details'),
+
+    url(r'^(?P<instance_id>[^/]+)/$', DetailView.as_view(), name='detail')
 )

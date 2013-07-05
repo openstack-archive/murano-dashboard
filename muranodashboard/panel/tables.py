@@ -112,7 +112,9 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING] and environment.has_services:
+        has_services = environment.has_services \
+            if hasattr(environment, 'has_services') else False
+        if status not in [STATUS_ID_DEPLOYING] and has_services:
             return True
         return False
 
@@ -172,6 +174,14 @@ class UpdateEnvironmentRow(tables.Row):
         return api.environment_get(request, environment_id)
 
 
+class UpdateServiceRow(tables.Row):
+    ajax = True
+
+    def get_data(self, request, service_id):
+        environment_id = self.table.kwargs['environment_id']
+        return api.service_get(request, environment_id, service_id)
+
+
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:project:murano:services',
@@ -217,5 +227,6 @@ class ServicesTable(tables.DataTable):
         name = 'services'
         verbose_name = _('Services')
         status_columns = ['status']
+        row_class = UpdateServiceRow
         table_actions = (CreateService, DeleteService, DeployThisEnvironment)
         row_actions = (DeleteService,)
