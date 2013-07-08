@@ -81,7 +81,38 @@ class Session(object):
 
             sessions[environment_id] = id
             request.session['sessions'] = sessions
+        return id
 
+    @staticmethod
+    def get_or_create_or_delete(request, environment_id):
+        """
+        Gets id from session in open state for specified environment, if state
+        is deployed - this session will be deleted and new would be created.
+        If there are no any sessions new would be created.
+        Returns if of chosen or created session.
+
+        :param request:
+        :param environment_id:
+        :return: Session Id
+        """
+
+        sessions = request.session.get('sessions', {})
+
+        def create_session(request, environment_id):
+            id = muranoclient(request).sessions.configure(environment_id).id
+            sessions[environment_id] = id
+            request.session['sessions'] = sessions
+            return id
+
+        if environment_id in sessions:
+            id = sessions[environment_id]
+            session_data = muranoclient(request).sessions.get(environment_id,
+                                                              id)
+            if session_data.state == "deployed":
+                del sessions[environment_id]
+                return create_session(request, environment_id)
+        else:
+            return create_session(request, environment_id)
         return id
 
     @staticmethod
@@ -96,6 +127,7 @@ class Session(object):
         """
         #We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
+        log.debug("IN_get_or_create_or_delete: sessions = %s" % sessions)
 
         return sessions[environment_id] if environment_id in sessions else None
 
@@ -186,6 +218,7 @@ def get_service_client(request, service_type):
 
 def services_list(request, environment_id):
     services = []
+    # need to create new session to see services deployed be other user
     session_id = Session.get_or_create(request, environment_id)
 
     get_environment = muranoclient(request).environments.get
@@ -213,12 +246,14 @@ def services_list(request, environment_id):
                 if reports:
                     last_operation = str(reports[-1].text)
                     time = reports[-1].updated.replace('T', ' ')
-                    last_operation += '. Updated at ' + time
-
+                    # last_operation += '. Updated at ' + time
                 else:
-                    last_operation = ''
-                service_data['operation'] = last_operation
+                    last_operation = 'Service draft created'
+                    time = service_data['updated'].replace('T', ' ')[:-7]
+
                 service_data['environment_id'] = environment_id
+                service_data['operation'] = last_operation
+                service_data['operation_updated'] = time
                 services.append(service_data)
 
     log.debug('Service::List')
@@ -236,7 +271,9 @@ def service_list_by_type(request, environment_id, service_type):
 
 
 def service_create(request, environment_id, parameters):
-    session_id = Session.get_or_create(request, environment_id)
+    # we should be able to delete session
+    # if we what add new services to this environment
+    session_id = Session.get_or_create_or_delete(request, environment_id)
     service_client = get_service_client(request, parameters['service_type'])
     log.debug('Service::Create {0}'.format(service_client))
     return service_client.create(environment_id, session_id, parameters)
