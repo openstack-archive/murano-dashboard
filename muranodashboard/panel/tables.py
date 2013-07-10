@@ -138,6 +138,8 @@ class DeployThisEnvironment(tables.Action):
         status = api.get_environment_status(request, environment_id)
         services = self.table.data
         if status not in [STATUS_ID_DEPLOYING, STATUS_ID_READY] and services:
+            # need to add checking if services was deployed by other user
+            # so user doesn't have anything to deploy
             return True
         return False
 

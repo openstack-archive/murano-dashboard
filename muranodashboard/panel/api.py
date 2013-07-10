@@ -17,6 +17,8 @@ import bunch
 
 from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
+from muranoclient.common.exceptions import HTTPForbidden,\
+    HTTPInternalServerError
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
 from consts import *
@@ -76,6 +78,7 @@ class Session(object):
 
         if environment_id in sessions:
             id = sessions[environment_id]
+
         else:
             id = muranoclient(request).sessions.configure(environment_id).id
 
@@ -106,11 +109,16 @@ class Session(object):
 
         if environment_id in sessions:
             id = sessions[environment_id]
-            session_data = muranoclient(request).sessions.get(environment_id,
-                                                              id)
-            if session_data.state == "deployed":
+            try:
+                session_data = \
+                    muranoclient(request).sessions.get(environment_id, id)
+            except HTTPForbidden:
                 del sessions[environment_id]
                 return create_session(request, environment_id)
+            else:
+                if session_data.state == "deployed":
+                    del sessions[environment_id]
+                    return create_session(request, environment_id)
         else:
             return create_session(request, environment_id)
         return id
@@ -127,7 +135,6 @@ class Session(object):
         """
         #We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
-        log.debug("IN_get_or_create_or_delete: sessions = %s" % sessions)
 
         return sessions[environment_id] if environment_id in sessions else None
 
@@ -240,15 +247,17 @@ def services_list(request, environment_id):
                     elif service_name == 'aspNetAppFarms':
                         service_type = ASP_FARM_NAME
                     service_data['service_type'] = service_type
-
-                reports = muranoclient(request).sessions.reports(
-                    environment_id, session_id, service_data['id'])
+                try:
+                    reports = muranoclient(request).sessions.\
+                        reports(environment_id, session_id, service_data['id'])
+                except HTTPInternalServerError:
+                    reports = []
                 if reports:
                     last_operation = str(reports[-1].text)
                     time = reports[-1].updated.replace('T', ' ')
-                    # last_operation += '. Updated at ' + time
                 else:
-                    last_operation = 'Service draft created'
+                    last_operation = 'Service draft created'\
+                        if environment.version == 0 else ''
                     time = service_data['updated'].replace('T', ' ')[:-7]
 
                 service_data['environment_id'] = environment_id

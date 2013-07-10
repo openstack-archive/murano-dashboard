@@ -14,7 +14,7 @@
 
 import logging
 from muranoclient.common.exceptions import \
-    CommunicationError, HTTPInternalServerError
+    CommunicationError, HTTPInternalServerError, HTTPForbidden
 import re
 
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -133,9 +133,9 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         try:
             api.service_create(self.request, environment_id, parameters)
-        except:
+        except HTTPForbidden:
             msg = _('Sorry, you can\'t create service right now.'
-                    ' Try again later')
+                    'The environment is deploying.')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         else:
@@ -169,7 +169,7 @@ class IndexView(tables.DataTableView):
             messages.error(self.request, 'Could not connect to Murano API '
                                          'Service, check connection details.')
         except HTTPInternalServerError:
-            messages.error(self.request, 'Environment doesn\'t exist')
+            pass
         return environments
 
 
@@ -196,21 +196,17 @@ class Services(tables.DataTableView):
         self.environment_id = self.kwargs['environment_id']
         try:
             services = api.services_list(self.request, self.environment_id)
-        except:
-            msg_text = 'Unable to retrieve list of services.'
-            msg = _(msg_text)
-            try:
-                env_status = api.get_environment_status(self.request,
-                                                        self.environment_id)
-            except:
-                exceptions.handle(self.request, ignore=False)
+        except HTTPForbidden:
+            msg = _('Unable to retrieve list of services. This environment '
+                    'is deploying or already deployed by other user.')
+            exceptions.handle(self.request, msg,
+                              redirect=reverse("horizon:project:murano:index"))
 
-            else:
-                if env_status == 'deploying':
-                    msg = _(msg_text +
-                            'This environment is deploying right now')
-
-                exceptions.handle(self.request, msg)
+        except HTTPInternalServerError:
+            msg = _('Environment with id %s doesn\'t exist anymore'
+                    % self.environment_id)
+            exceptions.handle(self.request, msg,
+                              redirect=reverse("horizon:project:murano:index"))
         return services
 
 
