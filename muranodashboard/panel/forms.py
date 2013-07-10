@@ -212,7 +212,7 @@ class WebFarmExtension(ServiceConfigurationForm):
         label=_('Instance Count'),
         min_value=1,
         max_value=100,
-        initial=1,
+        initial=2,
         help_text=_('Enter an integer value between 1 and 100'))
 
     lb_port = forms.IntegerField(
