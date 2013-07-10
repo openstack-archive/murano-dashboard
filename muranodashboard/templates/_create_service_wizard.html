@@ -33,7 +33,7 @@
         {% if service_type == 'Active Directory' %}
             <p>
                 <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
-                {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not end with a dash.
+                {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not start or end with a dash.
                             DNS server will be automatically set up on each of the Domain Controller instances. {% endblocktrans %}
             </p>
             <p>
@@ -134,7 +134,7 @@
         {% endif %}
         <p>
             <strong>{% blocktrans %} Hostname template {% endblocktrans %}</strong>
-            {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for  for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
+            {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
         </p>
 
     {% else %}
