@@ -189,11 +189,11 @@
                 };
             };
 
-             function check_passwords_match() {
-                 var $this = $(this)
-                 var password = $this.closest(".form-field").prev().find(".password").val()
-                 var confirm_password = $this.val();
-                 main_check($this, password,confirm_password, "Passwords do not match")
+            function check_passwords_match() {
+                var $this = $(this)
+                var password = $this.closest(".form-field").prev().find(".password").val()
+                var confirm_password = $this.val();
+                main_check($this, password,confirm_password, "Passwords do not match")
 
             };
 
@@ -231,18 +231,36 @@
                 main_check($this, meet_requirements, true, text);
             };
 
+            function get_selection(elem) {
+                var children = $(elem).prop('children'),
+                        selected;
+                if ( children ) {
+                    for ( var i = 0, len = children.length; i < len; i++ )
+                        if ( children[i].selected)
+                            selected = children[i].value;
+                }
+                return selected;
+            }
+
             $(".confirm_password").change(check_passwords_match);
             $(".password").change(check_strength_remove_err_if_matches);
-        });
+            $(".btn-wizard").click(function() {
+                var step = get_selection($('#id_service_choice-service'));
+                if ( step ) {
+                    $('.btn-wizard').val(step);
+                } else {
+                    $('#wizard_goto_step').val('service_choice')
+                }
+            });
+        })
     </script>
-{% if wizard.steps.index == 2 %}
-    <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
-
-    <input type="hidden" name="wizard_goto_step" id="wizard_goto_step" value=""/>
-    <button name="wizard_goto_step" class="btn btn-small" id="go_back_btn"
-            onclick="set_wizard_goto_step()" > {% trans "Back" %}</button>
-
-{% else %}
-<button name="wizard_goto_step" class="btn btn-small" type="submit" value="{{ wizard.steps.next }}">{% trans "Next >" %}</button>
-{% endif %}
+    <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
+	{% if wizard.steps.index == 2 %}
+        <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
+        <button name="wizard_goto_step" type="submit" class="btn btn-small btn-wizard">
+            {% trans "Back" %}</button>
+    {% else %}
+        <button name="wizard_goto_step" type="submit" class="btn btn-small btn-wizard">
+            {% trans "Next >" %}</button>
+	{% endif %}
 {% endblock %}
