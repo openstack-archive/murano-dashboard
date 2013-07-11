@@ -1,0 +1,12 @@
+include muranodashboard/templates/
+include tools/pip-requires
+include run_tests.sh
+include ChangeLog
+include README.rst
+include MANIFEST.in
+include AUTHORS
+include LICENSE
+include ChangeLog
+include babel.cfg
+include tox.ini
+global-exclude *.pyc
