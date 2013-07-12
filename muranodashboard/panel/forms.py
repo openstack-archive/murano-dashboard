@@ -114,6 +114,10 @@ class CommonPropertiesExtension(object):
         for field, instance in self.fields.iteritems():
             if not instance.required:
                 instance.widget.attrs['placeholder'] = 'Optional'
+            if field in ['adm_password', 'recovery_password']:
+                instance.widget.attrs['class'] = 'password'
+            if field in ['adm_password2', 'recovery_password2']:
+                instance.widget.attrs['class'] = 'confirm_password'
 
 
 class WizardFormADConfiguration(ServiceConfigurationForm,
@@ -141,7 +145,7 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
 
-    adm_password = PasswordField(_('Administrator password'))
+    adm_password = PasswordField(_('Administrator password'),)
 
     adm_password2 = PasswordField(
         _('Confirm password'),
