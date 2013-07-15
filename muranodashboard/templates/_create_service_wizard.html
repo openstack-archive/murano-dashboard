@@ -153,10 +153,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             function main_check(element, parameter1, parameter2, text){
-                console.log('Inside main_check')
-                console.log('text = ' + text)
                 var msg = "<span class='help-inline'>" + gettext(text) + '</span>'
-                var error_node = element.closest(".form-field").find("span.help-inline")
+                var div = element.closest(".form-field")
+                var error_node = div.find("span.help-inline")
 
                 if (error_node.length) {
                     var not_added = false;
@@ -166,31 +165,29 @@
 
                 };
                 if (parameter1 != parameter2 && not_added) {
-                    element.closest(".form-field").addClass("error");
-                    element.closest(".form-field").find("label").after(msg)
+                    div.addClass("error");
+                    div.find("label").after(msg)
                 } else if (parameter1 == parameter2) {
-                    element.closest(".form-field").removeClass("error");
+                    div.removeClass("error");
                     error_node.remove();
                 };
             };
 
              function check_passwords_match() {
-                 var password = $(this).closest(".form-field").prev().find(".password").val()
-                 var confirm_password = $(this).val();
-                 main_check($(this), password,confirm_password, "Passwords do not match")
+                 var $this = $(this)
+                 var password = $this.closest(".form-field").prev().find(".password").val()
+                 var confirm_password = $this.val();
+                 main_check($this, password,confirm_password, "Passwords do not match")
 
             };
 
             function check_strength_remove_err_if_matches(){
-                console.log('Inside check_strength_remove_err_if_matches')
-                var password = $(this).val();
-                console.log('password= ' + password)
-                var confirm_password = $(this).closest(".form-field").next().find(".confirm_password").val()
+                var $this = $(this)
+                var password = $this.val();
+                var div_confirm = $this.closest(".form-field").next()
+                var confirm_password = div_confirm.find(".confirm_password").val()
                 if (confirm_password.length){
-                    if (password == confirm_password){
-                        $(this).closest(".form-field").next().removeClass("error");
-                        $(this).closest(".form-field").next().find("span.help-inline").remove();
-                    };
+                    main_check($this, password, confirm_password, "Passwords do not match")
                 };
                 var text = "Your password should have at least"
                 var meet_requirements = true;
@@ -215,9 +212,9 @@
                     text += " 1 specical character";
                     meet_requirements = false;
                 }
-                console.log('text = ' + text)
-                main_check($(this), meet_requirements, true, text);
+                main_check($this, meet_requirements, true, text);
             };
+
             $(".confirm_password").change(check_passwords_match);
             $(".password").change(check_strength_remove_err_if_matches);
         });
