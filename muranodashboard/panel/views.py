@@ -86,6 +86,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
         parameters['units'] = []
         parameters['unitNamingPattern'] = step1_data.get(
             'unit_name_template', None)
+        parameters['availabilityZone'] = "Region1"
 
         if service_type == AD_NAME:
             parameters['configuration'] = 'standalone'

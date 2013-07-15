@@ -28,7 +28,27 @@
 </table>
 </div>
 <div class="right">
-    {% if wizard.steps.prev %}
+    {% if wizard.steps.index == 0 %}
+        <h3>{% trans "Description" %}:</h3>
+        <p>{% blocktrans %} <strong> The Active Directory Service </strong>
+            includes one primary and optionally a few secondary Domain
+            Controllers, with DNS service {% endblocktrans %}</p>
+        <p>{% blocktrans %} <strong> The Internet Information Service </strong>
+            sets up an IIS server and joins it into an existing
+            domain {% endblocktrans %}</p>
+        <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong>
+            installs custom application onto one IIS Web
+            Server {% endblocktrans %}</p>
+        <p>{% blocktrans %} <strong> The IIS Farm Service </strong> sets up a
+            load-balanced set of IIS servers {% endblocktrans %}</p>
+        <p>{% blocktrans %} <strong> The ASP.NET Farm Service </strong>
+            installs a custom application on a load-balanced array of IIS
+            servers {% endblocktrans %}</p>
+        <p>{% blocktrans %} If you want your services to work with AD you
+            should create The Active Directory Service
+            first {% endblocktrans %}</p>
+    {% endif %}
+    {% if wizard.steps.index == 1 %}
         <h3> {% blocktrans %} {{ service_type }} Service{% endblocktrans %} </h3>
         {% if service_type == 'Active Directory' %}
             <p>
@@ -136,16 +156,12 @@
             <strong>{% blocktrans %} Hostname template {% endblocktrans %}</strong>
             {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
         </p>
-
-    {% else %}
-         <h3>{% trans "Description" %}:</h3>
-            <p>{% blocktrans %} <strong> The Active Directory Service </strong> includes one primary and optionally a few secondary Domain Controllers, with DNS service {% endblocktrans %}</p>
-            <p>{% blocktrans %} <strong> The Internet Information Service </strong> sets up an IIS server and joins it into an existing domain {% endblocktrans %}</p>
-            <p>{% blocktrans %} <strong> The ASP.NET Application Service </strong> installs custom application onto one IIS Web Server {% endblocktrans %}</p>
-            <p>{% blocktrans %} <strong> The IIS Farm Service </strong> sets up a load-balanced set of IIS servers {% endblocktrans %}</p>
-            <p>{% blocktrans %} <strong> The ASP.NET Farm Service </strong> installs a custom application on a load-balanced array of IIS servers {% endblocktrans %}</p>
-            <p>{% blocktrans %} If you want your services to work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
     {% endif %}
+    {% if wizard.steps.index == 2 %}
+        <h3>{% trans "Instance Configuration" %}:</h3>
+        <p>Set image and flavor for an instance on witch service would be created.</p>
+    {% endif %}
+
 </div>
 {% endblock %}
 
@@ -219,7 +235,7 @@
             $(".password").change(check_strength_remove_err_if_matches);
         });
     </script>
-{% if wizard.steps.prev %}
+{% if wizard.steps.index == 2 %}
     <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
 
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step" value=""/>

@@ -18,7 +18,8 @@ import re
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-
+from horizon import exceptions
+from openstack_dashboard.api import glance, nova as novaapi
 from muranodashboard.panel import api
 from consts import *
 
@@ -97,6 +98,7 @@ class ServiceConfigurationForm(forms.Form):
 
 
 class CommonPropertiesExtension(object):
+
     hostname_re = re.compile(
         r'^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)'
         r'*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$')
@@ -259,9 +261,48 @@ class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration,
         CommonPropertiesExtension.__init__(self)
 
 
+class WizardInstanceConfiguration(forms.Form):
+    flavor = forms.ChoiceField(label=_('Instance flavor'),
+                               required=False)
+
+    image = forms.ChoiceField(label=_('Instance image'),
+                              required=False)
+
+    # az = forms.CharField(label=_('Availability zone'), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(WizardInstanceConfiguration, self).__init__(
+            *args, **kwargs)
+        request = self.initial.get('request')
+        if not request:
+            raise forms.ValidationError(
+                'Can\'t get a request information')
+        flavors = novaapi.flavor_list(request)
+        self.fields['flavor'].choices = [(flavor.id, "%s" % flavor.name)
+                                         for flavor in flavors]
+        try:
+            # public filter removed
+            public_images, _more = glance.image_list_detailed(request)
+        except:
+            public_images = []
+            exceptions.handle(request,
+                              _("Unable to retrieve public images."))
+
+        choices = [(image.id, image.name)
+                   for image in public_images
+                   if image.properties.get("image_type", '') != "snapshot"]
+        if choices:
+            choices.insert(0, ("", _("Select Image")))
+        else:
+            choices.insert(0, ("", _("No images available.")))
+
+        self.fields['image'].choices = choices
+
+
 FORMS = [('service_choice', WizardFormServiceType),
          (AD_NAME, WizardFormADConfiguration),
          (IIS_NAME, WizardFormIISConfiguration),
          (ASP_NAME, WizardFormAspNetAppConfiguration),
          (IIS_FARM_NAME, WizardFormIISFarmConfiguration),
-         (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration)]
+         (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration),
+         ('instance_configuration', WizardInstanceConfiguration)]
