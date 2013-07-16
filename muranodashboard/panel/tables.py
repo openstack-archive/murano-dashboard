@@ -162,11 +162,7 @@ class ShowEnvironmentServices(tables.LinkAction):
     url = 'horizon:project:murano:services'
 
     def allowed(self, request, environment):
-        status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING]:
-            return True
-        else:
-            return False
+        return True
 
 
 class UpdateEnvironmentRow(tables.Row):
