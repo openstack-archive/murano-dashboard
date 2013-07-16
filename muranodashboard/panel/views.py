@@ -146,7 +146,12 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
     def get_form_initial(self, step):
         if step != 'service_choice':
-            return self.initial_dict.get(step, {'request': self.request})
+            step_data = self.storage.data['step_data']
+            if step in step_data:
+                default = dict(step_data.items() + [('request', self.request)])
+            else:
+                default = {'request': self.request}
+            return self.initial_dict.get(step, default)
         else:
             return self.initial_dict.get(step, {})
 

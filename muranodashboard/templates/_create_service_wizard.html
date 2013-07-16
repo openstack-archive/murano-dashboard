@@ -249,13 +249,13 @@
                 if ( step ) {
                     $('.btn-wizard').val(step);
                 } else {
-                    $('#wizard_goto_step').val('service_choice')
+                    $('#wizard_goto_step').val('{{ wizard.steps.prev }}')
                 }
             });
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
-	{% if wizard.steps.index == 2 %}
+	{% if wizard.steps.index > 0 %}
         <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
         <button name="wizard_goto_step" type="submit" class="btn btn-small btn-wizard">
             {% trans "Back" %}</button>
