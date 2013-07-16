@@ -204,8 +204,7 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
             raise forms.ValidationError('Can\'t get a request information')
         link = request.__dict__['META']['HTTP_REFERER']
         environment_id = re.search('murano/(\w+)', link).group(0)[7:]
-        ad = 'Active Directory'
-        domains = api.service_list_by_type(request, environment_id, ad)
+        domains = api.service_list_by_type(request, environment_id, AD_NAME)
 
         self.fields['iis_domain'].choices = [("", "Not in domain")] + \
                                             [(domain.name, domain.name)

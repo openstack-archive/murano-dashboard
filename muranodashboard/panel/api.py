@@ -17,8 +17,7 @@ import bunch
 
 from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
-from muranoclient.common.exceptions import HTTPForbidden,\
-    HTTPInternalServerError
+from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
 from consts import *
@@ -50,16 +49,20 @@ def muranoclient(request):
 
 
 def get_status_messages_for_service(request, service_id, environment_id):
-    session_id = Session.get(request, environment_id)
-    reports = muranoclient(request).sessions.reports(environment_id,
-                                                     session_id,
-                                                     service_id)
-    result = '\n'
-    for report in reports:
-        result += '  ' + str(report.updated.replace('T', ' ')) + ' ' + \
-                  str(report.text) + '\n'
+    deployments = muranoclient(request).deployments.\
+        list(environment_id).deployments
 
-    return result
+    result = '\n'
+    #TODO: Add updated time to logs
+    if deployments:
+        for deployment in deployments:
+            reports = muranoclient(request).deployments.reports(environment_id,
+                                                                deployment.id,
+                                                                [service_id])
+
+            for report in reports:
+                result += '  ' + str(report.text) + '\n'
+    return reports
 
 
 class Session(object):
@@ -146,8 +149,8 @@ def environments_list(request):
     for index, env in enumerate(environments):
         environments[index].has_services = False
         environment = environment_get(request, env.id)
-        for service_name, instance in environment.services.iteritems():
-            if instance:
+        for service in environment.services:
+            if service:
                 environments[index].has_services = True
                 break
         if not environments[index].has_services:
@@ -170,7 +173,7 @@ def environment_create(request, parameters):
 
 def environment_delete(request, environment_id):
     log.debug('Environment::Delete <Id: {0}>'.format(environment_id))
-    muranoclient(request).environments.delete(environment_id)
+    return muranoclient(request).environments.delete(environment_id)
 
 
 def environment_get(request, environment_id):
@@ -208,21 +211,6 @@ def get_environment_status(request, environment_id):
     return environment.status
 
 
-def get_service_client(request, service_type):
-    if service_type == 'Active Directory':
-        return muranoclient(request).activeDirectories
-    elif service_type == 'IIS':
-        return muranoclient(request).webServers
-    elif service_type == 'ASP.NET Application':
-        return muranoclient(request).aspNetApps
-    elif service_type == 'IIS Farm':
-        return muranoclient(request).webServerFarms
-    elif service_type == 'ASP.NET Farm':
-        return muranoclient(request).aspNetAppFarms
-    else:
-        raise NameError('Unknown service type: {0}'.format(service_type))
-
-
 def services_list(request, environment_id):
     services = []
     # need to create new session to see services deployed be other user
@@ -231,69 +219,54 @@ def services_list(request, environment_id):
     get_environment = muranoclient(request).environments.get
     environment = get_environment(environment_id, session_id)
 
-    for service_name, instances in environment.services.iteritems():
-        if instances:
-            for service_item in instances:
-                service_data = service_item
-                if not service_data.get('service_type'):
-                    if service_name == 'webServers':
-                        service_type = IIS_NAME
-                    elif service_name == 'activeDirectories':
-                        service_type = AD_NAME
-                    elif service_name == 'webServerFarms':
-                        service_type = IIS_FARM_NAME
-                    elif service_name == 'aspNetApps':
-                        service_type = ASP_NAME
-                    elif service_name == 'aspNetAppFarms':
-                        service_type = ASP_FARM_NAME
-                    service_data['service_type'] = service_type
-                try:
-                    reports = muranoclient(request).sessions.\
-                        reports(environment_id, session_id, service_data['id'])
-                except HTTPInternalServerError:
-                    reports = []
-                if reports:
-                    last_operation = str(reports[-1].text)
-                    time = reports[-1].updated.replace('T', ' ')
-                else:
-                    last_operation = 'Service draft created'\
-                        if environment.version == 0 else ''
-                    time = service_data['updated'].replace('T', ' ')[:-7]
+    for service_item in environment.services:
+        service_data = service_item
+        try:
+            reports = muranoclient(request).sessions.\
+                reports(environment_id, session_id, service_data['id'])
+        except HTTPNotFound:
+            reports = []
+        if reports:
+            last_operation = str(reports[-1].text)
+            time = reports[-1].updated.replace('T', ' ')
+        else:
+            last_operation = 'Service draft created'\
+                if environment.version == 0 else ''
+            time = service_data['updated'].replace('T', ' ')[:-7]
 
-                service_data['environment_id'] = environment_id
-                service_data['operation'] = last_operation
-                service_data['operation_updated'] = time
-                services.append(service_data)
+        service_data['environment_id'] = environment_id
+        service_data['operation'] = last_operation
+        service_data['operation_updated'] = time
+        services.append(service_data)
 
     log.debug('Service::List')
     return [bunch.bunchify(service) for service in services]
 
 
-def service_list_by_type(request, environment_id, service_type):
-    session_id = Session.get(request, environment_id)
-
-    service_client = get_service_client(request, service_type)
-    instances = service_client.list(environment_id, session_id)
-
+def service_list_by_type(request, environment_id, service_name):
+    services = services_list(request, environment_id)
     log.debug('Service::Instances::List')
-    return instances
+    return [service for service in services
+            if service['service_type'] == service_name]
 
 
 def service_create(request, environment_id, parameters):
     # we should be able to delete session
     # if we what add new services to this environment
     session_id = Session.get_or_create_or_delete(request, environment_id)
-    service_client = get_service_client(request, parameters['service_type'])
-    log.debug('Service::Create {0}'.format(service_client))
-    return service_client.create(environment_id, session_id, parameters)
+    log.debug('Service::Create {0}'.format(parameters['service_type']))
+    return muranoclient(request).services.post(environment_id,
+                                               path='/',
+                                               data=parameters,
+                                               session_id=session_id)
 
 
-def service_delete(request, service_id, environment_id, service_type):
+def service_delete(request, environment_id, service_id):
     log.debug('Service::Delete <SrvId: {0}>'.format(service_id))
-
-    session_id = Session.get_or_create(request, environment_id)
-    service_client = get_service_client(request, service_type)
-    service_client.delete(environment_id, service_id, session_id)
+    session_id = Session.get(request, environment_id)
+    return muranoclient(request).services.delete(environment_id,
+                                                 '/' + service_id,
+                                                 session_id)
 
 
 def service_get(request, environment_id, service_id):
@@ -301,11 +274,3 @@ def service_get(request, environment_id, service_id):
     for service in services:
         if service.id == service_id:
             return service
-
-
-def check_for_services(request, environment_id):
-    environment = environment_get(request, environment_id)
-    for service_name, instance in environment.services.iteritems():
-        if instance:
-            return True
-    return False
