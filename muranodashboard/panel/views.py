@@ -13,8 +13,9 @@
 #    under the License.
 
 import logging
-from muranoclient.common.exceptions import \
+from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden
+
 import re
 
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -172,10 +173,16 @@ class IndexView(tables.DataTableView):
         try:
             environments = api.environments_list(self.request)
         except CommunicationError:
-            messages.error(self.request, 'Could not connect to Murano API '
-                                         'Service, check connection details.')
+            exceptions.handle(self.request,
+                              'Could not connect to Murano API \
+                              Service, check connection details')
         except HTTPInternalServerError:
-            pass
+            exceptions.handle(self.request,
+                              'Murano API Service is not responding. \
+                              Try again later')
+        except HTTPUnauthorized:
+            exceptions.handle(self.request)
+
         return environments
 
 
