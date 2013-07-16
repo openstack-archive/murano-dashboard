@@ -50,7 +50,7 @@ def muranoclient(request):
 
 def get_status_messages_for_service(request, service_id, environment_id):
     deployments = muranoclient(request).deployments.\
-        list(environment_id).deployments
+        list(environment_id)
 
     result = '\n'
     #TODO: Add updated time to logs
@@ -62,7 +62,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
 
             for report in reports:
                 result += '  ' + str(report.text) + '\n'
-    return reports
+    return result
 
 
 class Session(object):
