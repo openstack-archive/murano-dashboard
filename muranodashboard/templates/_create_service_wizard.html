@@ -255,12 +255,17 @@
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
+    {% if wizard.steps.index == 2 %}
+        {% trans "Create" as next %}
+    {% else %}
+        {% trans "Next" as next %}
+    {% endif %}
 	{% if wizard.steps.index > 0 %}
-        <input type="submit" class="btn btn-primary pull-right" value="{% trans 'Create' %}"/>
+        <input type="submit" class="btn btn-primary pull-right" value="{{ next }}"/>
         <button name="wizard_goto_step" type="submit" class="btn btn-small btn-wizard">
             {% trans "Back" %}</button>
     {% else %}
         <button name="wizard_goto_step" type="submit" class="btn btn-small btn-wizard">
-            {% trans "Next >" %}</button>
+            {{ next }}</button>
 	{% endif %}
 {% endblock %}
