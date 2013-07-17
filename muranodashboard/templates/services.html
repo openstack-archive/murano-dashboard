@@ -9,13 +9,3 @@
 {% block main %}
   {{ table.render }}
 {% endblock %}
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript">
-    function set_wizard_goto_step() {
-        var step_name = 'service_choice';
-        document.getElementById('wizard_goto_step').value = step_name;
-        document.getElementById('create_service_form').submit();
-    }
-</script>
-{% endblock js %}
