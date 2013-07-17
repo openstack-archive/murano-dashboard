@@ -49,8 +49,8 @@
             first {% endblocktrans %}</p>
     {% endif %}
     {% if wizard.steps.index == 1 %}
-        <h3> {% blocktrans %} {{ service_type }} Service{% endblocktrans %} </h3>
-        {% if service_type == 'Active Directory' %}
+        <h3> {% blocktrans %} {{ type }} Service{% endblocktrans %} </h3>
+        {% if type == 'activeDirectory' %}
             <p>
                 <strong>{% blocktrans %} Domain Name: {% endblocktrans %}</strong>
                 {% blocktrans %} Enter a desired name for a new domain. This name should fit in standard Windows domain name requirements: it should contain only A-Z, a-z, 0-9, and (-) and should not start or end with a dash.
@@ -66,7 +66,7 @@
                 {% blocktrans %} Once you forget your password you won't be able to operate  the service until recovery password would be entered. So it's better for Recovery and Administrator password to be different. {% endblocktrans %}
             </p>
 
-        {% elif service_type == 'ASP.NET Application' %}
+        {% elif type == 'aspNetApp' %}
             {% blocktrans %} ASP.NET application will be installed onto one IISWeb Server {% endblocktrans %}
             <p>
                 <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
@@ -86,7 +86,7 @@
                 {% blocktrans %} URL of a git repository with the application you want to deploy. {% endblocktrans %}
             </p>
 
-        {% elif service_type == 'ASP.NET Farm' %}
+        {% elif type == 'aspNetAppFarm' %}
             <p>
                 {% blocktrans %} The ASP.NET application will be installed on a number of IIS Web Servers, and load balancing will be configured. {% endblocktrans %}
             </p>
@@ -108,7 +108,7 @@
                 {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
             </p>
 
-        {% elif service_type == 'IIS' %}
+        {% elif type == 'webServer' %}
             <p>{% blocktrans %} Standalone IIS Server {% endblocktrans %}</p>
             <p>
                 <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
@@ -125,7 +125,7 @@
                 {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
 
-        {% elif service_type == 'IIS Farm' %}
+        {% elif type == 'webServerFarm' %}
             <p>{% blocktrans %} A load-balanced array of IIS servers {% endblocktrans %}</p>
             <p>
                 <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
@@ -148,7 +148,7 @@
                 <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
                 {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
             </p>
-        {% elif service_type == '' %}
+        {% elif type == '' %}
             <p>{% blocktrans %} Please try again {% endblocktrans %}</p>
        
         {% endif %}

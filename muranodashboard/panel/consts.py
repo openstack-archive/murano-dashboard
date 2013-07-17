@@ -12,14 +12,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-AD_NAME = 'Active Directory'
-IIS_NAME = 'IIS'
-ASP_NAME = 'ASP.NET Application'
-IIS_FARM_NAME = 'IIS Farm'
-ASP_FARM_NAME = 'ASP.NET Farm'
+AD_NAME = 'activeDirectory'
+IIS_NAME = 'webServer'
+ASP_NAME = 'aspNetApp'
+IIS_FARM_NAME = 'aspNetAppFarm'
+ASP_FARM_NAME = 'webServerFarm'
 
 SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME)
-
+SERVICE_NAME_DICT = {AD_NAME: 'Active Directory',
+                     IIS_NAME: 'IIS',
+                     ASP_NAME: 'ASP.NET Application',
+                     IIS_FARM_NAME: 'IIS Farm',
+                     ASP_FARM_NAME: 'ASP.NET Farm'}
 
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'

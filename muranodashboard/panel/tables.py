@@ -212,7 +212,7 @@ class ServicesTable(tables.DataTable):
                          verbose_name=_('Name'),
                          link=get_service_details_link)
 
-    _type = tables.Column('service_type',
+    _type = tables.Column('full_service_name',
                           verbose_name=_('Type'))
 
     status = tables.Column('status',

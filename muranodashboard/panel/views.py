@@ -13,9 +13,6 @@
 #    under the License.
 
 import logging
-from muranoclient.common.exceptions import HTTPUnauthorized, \
-    CommunicationError, HTTPInternalServerError, HTTPForbidden
-
 import re
 
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -29,13 +26,15 @@ from horizon import tables
 from horizon import workflows
 from horizon import messages
 from horizon.forms.views import ModalFormMixin
-
-from muranodashboard.panel import api
-
 from tables import EnvironmentsTable, ServicesTable
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs
-from forms import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME
+
+from muranodashboard.panel import api
+from muranoclient.common.exceptions import HTTPUnauthorized, \
+    CommunicationError, HTTPInternalServerError, HTTPForbidden
+
+from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME
 LOG = logging.getLogger(__name__)
 
 
@@ -82,7 +81,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
         step1_data = form_list[1].cleaned_data
 
         service_type = step0_data.get('service', '')
-        parameters = {'service_type': service_type}
+        parameters = {'type': service_type}
 
         parameters['units'] = []
         parameters['unitNamingPattern'] = step1_data.get(
@@ -160,7 +159,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
-            context.update({'service_type': data['service']})
+            context.update({'type': data['service']})
         return context
 
 
