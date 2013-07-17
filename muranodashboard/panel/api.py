@@ -221,6 +221,8 @@ def services_list(request, environment_id):
 
     for service_item in environment.services:
         service_data = service_item
+        service_data['full_service_name'] = \
+            SERVICE_NAME_DICT[service_data['type']]
         try:
             reports = muranoclient(request).sessions.\
                 reports(environment_id, session_id, service_data['id'])
@@ -247,14 +249,14 @@ def service_list_by_type(request, environment_id, service_name):
     services = services_list(request, environment_id)
     log.debug('Service::Instances::List')
     return [service for service in services
-            if service['service_type'] == service_name]
+            if service['type'] == service_name]
 
 
 def service_create(request, environment_id, parameters):
     # we should be able to delete session
     # if we what add new services to this environment
     session_id = Session.get_or_create_or_delete(request, environment_id)
-    log.debug('Service::Create {0}'.format(parameters['service_type']))
+    log.debug('Service::Create {0}'.format(parameters['type']))
     return muranoclient(request).services.post(environment_id,
                                                path='/',
                                                data=parameters,

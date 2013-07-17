@@ -46,7 +46,7 @@ class OverviewTab(tabs.Tab):
         detail_info = SortedDict([
             ('Name', service_data.name),
             ('ID', service_data.id),
-            ('Type', service_data.service_type),
+            ('Type', service_data.full_service_name),
             ('Status', status_name), ])
 
         if hasattr(service_data, 'unitNamingPattern'):
