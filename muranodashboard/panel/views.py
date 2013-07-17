@@ -181,7 +181,7 @@ class IndexView(tables.DataTableView):
                               'Murano API Service is not responding. \
                               Try again later')
         except HTTPUnauthorized:
-            exceptions.handle(self.request)
+            exceptions.handle(self.request, ignore=True, escalate=True)
 
         return environments
 
