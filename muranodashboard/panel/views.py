@@ -34,7 +34,8 @@ from muranodashboard.panel import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden
 
-from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME
+from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME,\
+    MSSQL_NAME
 LOG = logging.getLogger(__name__)
 
 
@@ -63,8 +64,13 @@ def is_service_iis_farm(wizard):
 def is_service_asp_farm(wizard):
     return get_service_type(wizard) == ASP_FARM_NAME
 
+
+def is_service_mssql_farm(wizard):
+    return get_service_type(wizard) == MSSQL_NAME
+
 SERVICE_CHECKER = (is_service_ad, is_service_iis,
-                   is_service_asp, is_service_iis_farm, is_service_asp_farm)
+                   is_service_asp, is_service_iis_farm,
+                   is_service_asp_farm, is_service_mssql_farm)
 
 
 class Wizard(ModalFormMixin, SessionWizardView):
@@ -94,7 +100,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
             parameters['adminPassword'] = \
                 str(step1_data.get('adm_password', ''))
-            recovery_password = str(step1_data.get('recovery_password', ''))
+            recovery_password = str(step1_data.get('password_field', ''))
             parameters['units'].append({'isMaster': True,
                                         'recoveryPassword': recovery_password,
                                         'location': 'west-dc'})
@@ -106,16 +112,16 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 })
 
         elif service_type in [IIS_NAME, ASP_NAME,
-                              IIS_FARM_NAME, ASP_FARM_NAME]:
+                              IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME]:
             password = step1_data.get('adm_password', '')
-            parameters['name'] = str(step1_data.get('iis_name', 'noname'))
+            parameters['name'] = str(step1_data.get('service_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
                                          'password': password}
 
             parameters['domain'] = str(step1_data.get('iis_domain', ''))
             password = step1_data.get('adm_password', '')
             domain = step1_data.get('iis_domain', '')
-            parameters['name'] = str(step1_data.get('iis_name', 'noname'))
+            parameters['name'] = str(step1_data.get('service_name', 'noname'))
             parameters['domain'] = parameters['name']
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
@@ -128,6 +134,15 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 instance_count = int(step1_data.get('instance_count', 1))
                 parameters['loadBalancerPort'] = \
                     step1_data.get('lb_port', '80')
+
+            if service_type == MSSQL_NAME:
+                sa_password = str(
+                    step1_data.get('password_field', ''))
+                mixed_mode = str(
+                    step1_data.get('mixed_mode', ''))
+
+                parameters['saPassword'] = sa_password
+                parameters['mixedModeAuth'] = mixed_mode
 
             for unit in range(instance_count):
                 parameters['units'].append({})

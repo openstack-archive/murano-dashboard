@@ -148,6 +148,11 @@
                 <strong>{% blocktrans %} Load Balancer port {% endblocktrans %}</strong>
                 {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
             </p>
+
+        {% elif type == 'msSqlServer' %}
+            <p>{% blocktrans %} MS SQL Server servers {% endblocktrans %}</p>
+            <p>Add a discription here</p>
+
         {% elif type == '' %}
             <p>{% blocktrans %} Please try again {% endblocktrans %}</p>
        

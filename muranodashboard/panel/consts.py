@@ -17,13 +17,17 @@ IIS_NAME = 'webServer'
 ASP_NAME = 'aspNetApp'
 IIS_FARM_NAME = 'aspNetAppFarm'
 ASP_FARM_NAME = 'webServerFarm'
+MSSQL_NAME = 'msSqlServer'
 
-SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME)
+SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME,
+                 IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME)
+
 SERVICE_NAME_DICT = {AD_NAME: 'Active Directory',
                      IIS_NAME: 'IIS',
                      ASP_NAME: 'ASP.NET Application',
                      IIS_FARM_NAME: 'IIS Farm',
-                     ASP_FARM_NAME: 'ASP.NET Farm'}
+                     ASP_FARM_NAME: 'ASP.NET Farm',
+                     MSSQL_NAME: 'MS SQL Server'}
 
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'

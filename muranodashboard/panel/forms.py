@@ -65,13 +65,15 @@ class WizardFormServiceType(forms.Form):
     iis_farm_service = (IIS_FARM_NAME,
                         'Internet Information Services Web Farm')
     asp_farm_service = (ASP_FARM_NAME, 'ASP.NET Application Web Farm')
+    ms_sql_service = (MSSQL_NAME, 'MS SQL Server')
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
                                     ad_service,
                                     iis_service,
                                     asp_service,
                                     iis_farm_service,
-                                    asp_farm_service
+                                    asp_farm_service,
+                                    ms_sql_service
                                 ])
 
 
@@ -90,10 +92,10 @@ class ServiceConfigurationForm(forms.Form):
         admin_pwd2 = form_data.get('adm_password2')
         compare(admin_pwd1, admin_pwd2)
 
-        recovery_pwd1 = form_data.get('recovery_password')
-        if recovery_pwd1:
-            recovery_pwd2 = form_data.get('recovery_password2')
-            compare(recovery_pwd1, recovery_pwd2, admin=False)
+        second_pwd1 = form_data.get('password_field')
+        if second_pwd1:
+            second_pwd2 = form_data.get('password_field2')
+            compare(second_pwd1, second_pwd2, admin=False)
         return self.cleaned_data
 
 
@@ -116,9 +118,9 @@ class CommonPropertiesExtension(object):
         for field, instance in self.fields.iteritems():
             if not instance.required:
                 instance.widget.attrs['placeholder'] = 'Optional'
-            if field in ['adm_password', 'recovery_password']:
+            if field in ['adm_password', 'password_field']:
                 instance.widget.attrs['class'] = 'password'
-            if field in ['adm_password2', 'recovery_password2']:
+            if field in ['adm_password2', 'password_field2']:
                 instance.widget.attrs['class'] = 'confirm_password'
 
 
@@ -154,9 +156,9 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         help_text=_('Retype your password'),
         error_messages=CONFIRM_ERR_DICT)
 
-    recovery_password = PasswordField(_('Recovery password'))
+    password_field = PasswordField(_('Recovery password'))
 
-    recovery_password2 = PasswordField(
+    password_field2 = PasswordField(
         _('Confirm password'),
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
@@ -173,7 +175,7 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
                                    _(u'Just letters, numbers, underscores     \
                                    and hyphens are allowed.'), 'invalid')
 
-    iis_name = forms.CharField(
+    service_name = forms.CharField(
         label=_('Service Name'),
         min_length=2,
         max_length=64,
@@ -260,6 +262,33 @@ class WizardFormAspNetFarmConfiguration(WizardFormAspNetAppConfiguration,
         CommonPropertiesExtension.__init__(self)
 
 
+class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
+                                   CommonPropertiesExtension):
+    mixed_mode = forms.BooleanField(
+        label=_('Mixed-mode Authentication '),
+        required=False)
+
+    password_field = PasswordField(
+        _('SA password'),
+        help_text=_('SQL server System Administrator account'))
+
+    password_field2 = PasswordField(
+        _('Confirm password'),
+        error_messages=CONFIRM_ERR_DICT,
+        help_text=_('Retype your password'))
+
+    instance_count = forms.IntegerField(
+        label=_('Instance Count'),
+        min_value=1,
+        max_value=100,
+        initial=1,
+        help_text=_('Enter an integer value between 1 and 100'))
+
+    def __init__(self, *args, **kwargs):
+        super(WizardFormMSSQLConfiguration, self).__init__(*args, **kwargs)
+        CommonPropertiesExtension.__init__(self)
+
+
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'),
                                required=False)
@@ -304,4 +333,5 @@ FORMS = [('service_choice', WizardFormServiceType),
          (ASP_NAME, WizardFormAspNetAppConfiguration),
          (IIS_FARM_NAME, WizardFormIISFarmConfiguration),
          (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration),
+         (MSSQL_NAME, WizardFormMSSQLConfiguration),
          ('instance_configuration', WizardInstanceConfiguration)]
