@@ -18,13 +18,19 @@ import re
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from horizon import exceptions
-from openstack_dashboard.api import glance, nova as novaapi
+from openstack_dashboard.api import nova as novaapi
+# from openstack_dashboard.api import glance
 from muranodashboard.panel import api
 from consts import *
 
 log = logging.getLogger(__name__)
 CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}
+
+
+def perform_password_check(password1, password2, type):
+    if password1 != password2:
+        raise forms.ValidationError(
+            _(' %s passwords don\'t match' % type))
 
 
 class PasswordField(forms.CharField):
@@ -47,6 +53,7 @@ class PasswordField(forms.CharField):
         if err_msg:
             if err_msg.get('required'):
                 error_messages['required'] = err_msg.get('required')
+
         required = kwargs.get('required')
         if required is None:
             required = True
@@ -100,7 +107,7 @@ class CommonPropertiesExtension(object):
         for field, instance in self.fields.iteritems():
             if not instance.required:
                 instance.widget.attrs['placeholder'] = 'Optional'
-            if field in ['adm_password', 'password_field']:
+            if field in ['adm_password1', 'password_field1']:
                 instance.widget.attrs['class'] = 'password'
             if field in ['adm_password2', 'password_field2']:
                 instance.widget.attrs['class'] = 'confirm_password'
@@ -131,14 +138,14 @@ class WizardFormADConfiguration(forms.Form,
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
 
-    adm_password = PasswordField(_('Administrator password'),)
+    adm_password1 = PasswordField(_('Administrator password'),)
 
     adm_password2 = PasswordField(
         _('Confirm password'),
         help_text=_('Retype your password'),
         error_messages=CONFIRM_ERR_DICT)
 
-    password_field = PasswordField(_('Recovery password'))
+    password_field1 = PasswordField(_('Recovery password'))
 
     password_field2 = PasswordField(
         _('Confirm password'),
@@ -146,23 +153,16 @@ class WizardFormADConfiguration(forms.Form,
         help_text=_('Retype your password'))
 
     def clean(self):
-        def compare(pwd1, pwd2, admin=True):
-            if pwd1 != pwd2:
-                pwd_type = 'Administrator'
-                if not admin:
-                    pwd_type = 'Recovery'
-                raise forms.ValidationError(
-                    _(' %s passwords don\'t match' % pwd_type))
-
-        form_data = self.cleaned_data
-        admin_pwd1 = form_data.get('adm_password')
-        admin_pwd2 = form_data.get('adm_password2')
-        compare(admin_pwd1, admin_pwd2)
-
-        second_pwd1 = form_data.get('password_field')
-        if second_pwd1:
-            second_pwd2 = form_data.get('password_field2')
-            compare(second_pwd1, second_pwd2, admin=False)
+        admin_password1 = self.cleaned_data.get('adm_password1')
+        admin_password2 = self.cleaned_data.get('adm_password2')
+        perform_password_check(admin_password1,
+                               admin_password2,
+                               'Administrator')
+        recovery_password1 = self.cleaned_data.get('password_field1')
+        recovery_password2 = self.cleaned_data.get('password_field2')
+        perform_password_check(recovery_password1,
+                               recovery_password2,
+                               'Recovery')
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -186,7 +186,7 @@ class WizardFormIISConfiguration(forms.Form,
         help_text=_('Just letters, numbers, underscores     \
                                    and hyphens are allowed'))
 
-    adm_password = PasswordField(
+    adm_password1 = PasswordField(
         _('Administrator password'),
         help_text=_('Enter a complex password with at least one letter, one   \
                                        number and one special character'))
@@ -200,6 +200,14 @@ class WizardFormIISConfiguration(forms.Form,
         required=False,
         help_text=_('Optional field for a domain to which service can be    \
                     joined '))
+
+    def clean(self):
+        admin_password1 = self.cleaned_data.get('adm_password1')
+        admin_password2 = self.cleaned_data.get('adm_password2')
+        perform_password_check(admin_password1,
+                               admin_password2,
+                               'Administrator')
+        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(WizardFormIISConfiguration, self).__init__(*args, **kwargs)
@@ -270,7 +278,7 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         label=_('Mixed-mode Authentication '),
         required=False)
 
-    password_field = PasswordField(
+    password_field1 = PasswordField(
         _('SA password'),
         required=False,
         help_text=_('SQL server System Administrator account'))
@@ -289,10 +297,20 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         help_text=_('Enter an integer value between 1 and 100'))
 
     def clean(self):
-        form_data = self.cleaned_data
-        mixed_mode = form_data.get('mixed_mode')
+        mixed_mode = self.cleaned_data.get('mixed_mode')
         if mixed_mode:
             self.fields['password_field'].required = True
+        admin_password1 = self.cleaned_data.get('adm_password1')
+        admin_password2 = self.cleaned_data.get('adm_password2')
+        perform_password_check(admin_password1,
+                               admin_password2,
+                               'Administrator')
+        sa_password1 = self.cleaned_data.get('password_field1')
+        sa_password2 = self.cleaned_data.get('password_field2')
+        perform_password_check(sa_password1,
+                               sa_password2,
+                               'Recovery')
+        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLConfiguration, self).__init__(*args, **kwargs)
@@ -303,8 +321,8 @@ class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'),
                                required=False)
 
-    image = forms.ChoiceField(label=_('Instance image'),
-                              required=False)
+    # image = forms.ChoiceField(label=_('Instance image'),
+    #                           required=False)
 
     # az = forms.CharField(label=_('Availability zone'), required=False)
 
@@ -318,23 +336,25 @@ class WizardInstanceConfiguration(forms.Form):
         flavors = novaapi.flavor_list(request)
         self.fields['flavor'].choices = [(flavor.id, "%s" % flavor.name)
                                          for flavor in flavors]
-        try:
-            # public filter removed
-            public_images, _more = glance.image_list_detailed(request)
-        except:
-            public_images = []
-            exceptions.handle(request,
-                              _("Unable to retrieve public images."))
-
-        choices = [(image.id, image.name)
-                   for image in public_images
-                   if image.properties.get("image_type", '') != "snapshot"]
-        if choices:
-            choices.insert(0, ("", _("Select Image")))
-        else:
-            choices.insert(0, ("", _("No images available.")))
-
-        self.fields['image'].choices = choices
+       #TODO: uncomment this when custom filter for valid template will
+       # be created
+        # try:
+        #     # public filter removed
+        #     public_images, _more = glance.image_list_detailed(request)
+        # except:
+        #     public_images = []
+        #     exceptions.handle(request,
+        #                       _("Unable to retrieve public images."))
+        #
+        # choices = [(image.id, image.name)
+        #            for image in public_images
+        #            if image.properties.get("image_type", '') != "snapshot"]
+        # if choices:
+        #     choices.insert(0, ("", _("Select Image")))
+        # else:
+        #     choices.insert(0, ("", _("No images available.")))
+        #
+        # self.fields['image'].choices = choices
 
 
 FORMS = [('service_choice', WizardFormServiceType),

@@ -85,6 +85,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         step0_data = form_list[0].cleaned_data
         step1_data = form_list[1].cleaned_data
+        step2_data = form_list[2].cleaned_data
 
         service_type = step0_data.get('service', '')
         parameters = {'type': service_type}
@@ -93,14 +94,15 @@ class Wizard(ModalFormMixin, SessionWizardView):
         parameters['unitNamingPattern'] = step1_data.get(
             'unit_name_template', None)
         parameters['availabilityZone'] = "Region1"
+        parameters['flavor'] = step2_data.get('flavor')
 
         if service_type == AD_NAME:
             parameters['configuration'] = 'standalone'
             parameters['name'] = str(step1_data.get('dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
             parameters['adminPassword'] = \
-                str(step1_data.get('adm_password', ''))
-            recovery_password = str(step1_data.get('password_field', ''))
+                str(step1_data.get('adm_password1', ''))
+            recovery_password = str(step1_data.get('password_field1', ''))
             parameters['units'].append({'isMaster': True,
                                         'recoveryPassword': recovery_password,
                                         'location': 'west-dc'})
@@ -113,13 +115,13 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         elif service_type in [IIS_NAME, ASP_NAME,
                               IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME]:
-            password = step1_data.get('adm_password', '')
+            password = step1_data.get('adm_password1', '')
             parameters['name'] = str(step1_data.get('service_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
                                          'password': password}
 
             parameters['domain'] = str(step1_data.get('iis_domain', ''))
-            password = step1_data.get('adm_password', '')
+            password = step1_data.get('adm_password1', '')
             domain = step1_data.get('iis_domain', '')
             parameters['name'] = str(step1_data.get('service_name', 'noname'))
             parameters['domain'] = parameters['name']
@@ -137,7 +139,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
             if service_type == MSSQL_NAME:
                 sa_password = str(
-                    step1_data.get('password_field', ''))
+                    step1_data.get('password_field1', ''))
                 mixed_mode = str(
                     step1_data.get('mixed_mode', ''))
 
