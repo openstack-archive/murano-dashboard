@@ -276,16 +276,15 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
                                    CommonPropertiesExtension):
     mixed_mode = forms.BooleanField(
         label=_('Mixed-mode Authentication '),
+        initial=True,
         required=False)
 
     password_field1 = PasswordField(
         _('SA password'),
-        required=False,
         help_text=_('SQL server System Administrator account'))
 
     password_field2 = PasswordField(
         _('Confirm password'),
-        required=False,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
@@ -298,8 +297,12 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 
     def clean(self):
         mixed_mode = self.cleaned_data.get('mixed_mode')
-        if mixed_mode:
-            self.fields['password_field'].required = True
+        if not mixed_mode:
+            for i in xrange(1, 3, 1):
+                self.fields['password_field' + str(i)].required = False
+                if self.errors.get('password_field' + str(i)):
+                    del self.errors['password_field' + str(i)]
+
         admin_password1 = self.cleaned_data.get('adm_password1')
         admin_password2 = self.cleaned_data.get('adm_password2')
         perform_password_check(admin_password1,

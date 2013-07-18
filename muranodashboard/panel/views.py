@@ -138,10 +138,11 @@ class Wizard(ModalFormMixin, SessionWizardView):
                     step1_data.get('lb_port', '80')
 
             if service_type == MSSQL_NAME:
-                sa_password = str(
-                    step1_data.get('password_field1', ''))
                 mixed_mode = str(
                     step1_data.get('mixed_mode', ''))
+
+                sa_password = str(
+                    step1_data.get('password_field1', ''))
 
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
