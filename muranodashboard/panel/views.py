@@ -35,7 +35,7 @@ from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden
 
 from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME,\
-    MSSQL_NAME
+    MSSQL_NAME, SERVICE_NAME_DICT
 LOG = logging.getLogger(__name__)
 
 
@@ -155,7 +155,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         else:
-            message = "The %s service successfully created." % service_type
+            message = "The %s service successfully created." \
+                      % SERVICE_NAME_DICT[service_type]
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
@@ -169,7 +170,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
-            context.update({'type': data['service']})
+            context.update({'type': SERVICE_NAME_DICT[data['service']]})
         return context
 
 

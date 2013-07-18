@@ -47,12 +47,16 @@ class PasswordField(forms.CharField):
         if err_msg:
             if err_msg.get('required'):
                 error_messages['required'] = err_msg.get('required')
+        required = kwargs.get('required')
+        if required is None:
+            required = True
 
         super(PasswordField, self).__init__(
             min_length=7,
             max_length=255,
             validators=[self.validate_password],
             label=label,
+            required=required,
             error_messages=error_messages,
             help_text=help_text,
             widget=forms.PasswordInput(render_value=False))
@@ -75,28 +79,6 @@ class WizardFormServiceType(forms.Form):
                                     asp_farm_service,
                                     ms_sql_service
                                 ])
-
-
-class ServiceConfigurationForm(forms.Form):
-    def clean(self):
-        def compare(pwd1, pwd2, admin=True):
-            if pwd1 != pwd2:
-                pwd_type = 'Administrator'
-                if not admin:
-                    pwd_type = 'Recovery'
-                raise forms.ValidationError(
-                    _(' %s passwords don\'t match' % pwd_type))
-
-        form_data = self.cleaned_data
-        admin_pwd1 = form_data.get('adm_password')
-        admin_pwd2 = form_data.get('adm_password2')
-        compare(admin_pwd1, admin_pwd2)
-
-        second_pwd1 = form_data.get('password_field')
-        if second_pwd1:
-            second_pwd2 = form_data.get('password_field2')
-            compare(second_pwd1, second_pwd2, admin=False)
-        return self.cleaned_data
 
 
 class CommonPropertiesExtension(object):
@@ -124,7 +106,7 @@ class CommonPropertiesExtension(object):
                 instance.widget.attrs['class'] = 'confirm_password'
 
 
-class WizardFormADConfiguration(ServiceConfigurationForm,
+class WizardFormADConfiguration(forms.Form,
                                 CommonPropertiesExtension):
     domain_name_re = re.compile(
         r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
@@ -163,12 +145,32 @@ class WizardFormADConfiguration(ServiceConfigurationForm,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
+    def clean(self):
+        def compare(pwd1, pwd2, admin=True):
+            if pwd1 != pwd2:
+                pwd_type = 'Administrator'
+                if not admin:
+                    pwd_type = 'Recovery'
+                raise forms.ValidationError(
+                    _(' %s passwords don\'t match' % pwd_type))
+
+        form_data = self.cleaned_data
+        admin_pwd1 = form_data.get('adm_password')
+        admin_pwd2 = form_data.get('adm_password2')
+        compare(admin_pwd1, admin_pwd2)
+
+        second_pwd1 = form_data.get('password_field')
+        if second_pwd1:
+            second_pwd2 = form_data.get('password_field2')
+            compare(second_pwd1, second_pwd2, admin=False)
+        return self.cleaned_data
+
     def __init__(self, *args, **kwargs):
         super(WizardFormADConfiguration, self).__init__(*args, **kwargs)
         CommonPropertiesExtension.__init__(self)
 
 
-class WizardFormIISConfiguration(ServiceConfigurationForm,
+class WizardFormIISConfiguration(forms.Form,
                                  CommonPropertiesExtension):
     name_re = re.compile(r'^[-\w]+$')
     validate_name = RegexValidator(name_re,
@@ -214,7 +216,7 @@ class WizardFormIISConfiguration(ServiceConfigurationForm,
         CommonPropertiesExtension.__init__(self)
 
 
-class WebFarmExtension(ServiceConfigurationForm):
+class WebFarmExtension(forms.Form):
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
         min_value=1,
@@ -270,10 +272,12 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 
     password_field = PasswordField(
         _('SA password'),
+        required=False,
         help_text=_('SQL server System Administrator account'))
 
     password_field2 = PasswordField(
         _('Confirm password'),
+        required=False,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
@@ -283,6 +287,12 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         max_value=100,
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
+
+    def clean(self):
+        form_data = self.cleaned_data
+        mixed_mode = form_data.get('mixed_mode')
+        if mixed_mode:
+            self.fields['password_field'].required = True
 
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLConfiguration, self).__init__(*args, **kwargs)
