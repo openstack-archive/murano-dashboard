@@ -301,6 +301,15 @@
                     $('#wizard_goto_step').val('{{ wizard.steps.prev }}')
                 }
             });
+            $("#id_msSqlServer-mixed_mode").change(function(){
+                if ($("#id_msSqlServer-mixed_mode").prop('checked')){
+                    $('#id_msSqlServer-password_field1').removeAttr('placeholder')
+                    $('#id_msSqlServer-password_field2').removeAttr('placeholder')
+                } else {
+                    $('#id_msSqlServer-password_field1').attr('placeholder', 'Optional')
+                    $('#id_msSqlServer-password_field2').attr('placeholder', 'Optional')
+                }
+            })
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
