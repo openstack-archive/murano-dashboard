@@ -331,7 +331,8 @@ class WizardInstanceConfiguration(forms.Form):
     # image = forms.ChoiceField(label=_('Instance image'),
     #                           required=False)
 
-    availability_zone = forms.ChoiceField(label=_('Availability zone'))
+    availability_zone = forms.ChoiceField(label=_('Availability zone'),
+                                          required=False)
 
     def __init__(self, *args, **kwargs):
         super(WizardInstanceConfiguration, self).__init__(
@@ -368,6 +369,13 @@ class WizardInstanceConfiguration(forms.Form):
             availability_zones = []
             exceptions.handle(request,
                               _("Unable to retrieve  availability zones."))
+
+            if availability_zones:
+                availability_zones.insert(0, ("", _("Select "
+                                                    "Availability Zone")))
+            else:
+                availability_zones.insert(0, ("", _("No availability "
+                                                    "zone available.")))
 
         self.fields['availability_zone'].choices = \
             [(az.zoneName, az.zoneName)
