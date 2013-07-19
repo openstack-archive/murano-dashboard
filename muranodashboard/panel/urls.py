@@ -14,7 +14,11 @@
 
 from django.conf.urls.defaults import patterns, url
 
-from views import IndexView, Services, CreateEnvironmentView, DetailServiceView
+from views import IndexView, DeploymentDetailsView
+from views import Services
+from views import CreateEnvironmentView
+from views import DetailServiceView
+from views import DeploymentsView
 from views import Wizard, EditEnvironmentView
 from views import SERVICE_CHECKER
 from forms import FORMS
@@ -25,7 +29,6 @@ VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
 condition_dict_for_wizard = dict(zip(SERVICE_NAMES, SERVICE_CHECKER))
-
 
 urlpatterns = patterns(
     VIEW_MOD,
@@ -49,5 +52,11 @@ urlpatterns = patterns(
         DetailServiceView.as_view(),
         name='service_details'),
 
-    url(r'^(?P<instance_id>[^/]+)/$', DetailView.as_view(), name='detail')
+    url(r'^(?P<instance_id>[^/]+)/$', DetailView.as_view(), name='detail'),
+
+    url(ENVIRONMENT_ID + r'/deployments$',
+        DeploymentsView.as_view(), name='deployments'),
+
+    url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
+        DeploymentDetailsView.as_view(), name='deployment_details')
 )

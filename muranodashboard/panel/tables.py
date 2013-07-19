@@ -21,8 +21,8 @@ from horizon import tables
 from horizon import messages
 
 from muranodashboard.panel import api
-from consts import STATUS_ID_READY, STATUS_ID_DEPLOYING,\
-    STATUS_CHOICES, STATUS_DISPLAY_CHOICES
+from consts import STATUS_ID_READY, STATUS_ID_DEPLOYING, \
+    STATUS_CHOICES, STATUS_DISPLAY_CHOICES, STATUS_ID_NEW
 
 
 class CreateService(tables.LinkAction):
@@ -181,6 +181,15 @@ class UpdateServiceRow(tables.Row):
         return api.service_get(request, environment_id, service_id)
 
 
+class ShowDeployments(tables.LinkAction):
+    name = 'show_deployments'
+    verbose_name = _('Show Deployments')
+    url = 'horizon:project:murano:deployments'
+
+    def allowed(self, request, environment):
+        return environment.status != STATUS_ID_NEW
+
+
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:project:murano:services',
@@ -199,7 +208,7 @@ class EnvironmentsTable(tables.DataTable):
         status_columns = ['status']
         table_actions = (CreateEnvironment, DeleteEnvironment)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       EditEnvironment, DeleteEnvironment)
+                       EditEnvironment, DeleteEnvironment, ShowDeployments)
 
 
 def get_service_details_link(service):
@@ -237,3 +246,43 @@ class ServicesTable(tables.DataTable):
         row_class = UpdateServiceRow
         table_actions = (CreateService, DeleteService, DeployThisEnvironment)
         row_actions = (DeleteService,)
+
+
+class ShowDeploymentDetails(tables.LinkAction):
+    name = 'show_deployment_details'
+    verbose_name = _('Show Details')
+
+    def get_link_url(self, deployment=None):
+        kwargs = {'environment_id': deployment.environment_id,
+                  'deployment_id': deployment.id}
+        return reverse('horizon:project:murano:deployment_details',
+                       kwargs=kwargs)
+
+    def allowed(self, request, environment):
+        return True
+
+
+class DeploymentsTable(tables.DataTable):
+    started = tables.Column('started',
+                            verbose_name=_('Time Started'))
+    finished = tables.Column('finished',
+                             verbose_name=_('Time Finished'))
+
+    class Meta:
+        name = 'deployments'
+        verbose_name = _('Deployments')
+        row_actions = (ShowDeploymentDetails,)
+
+
+class EnvConfigTable(tables.DataTable):
+    name = tables.Column('name',
+                         verbose_name=_('Name'))
+    _type = tables.Column('type',
+                          verbose_name=_('Type'))
+
+    def get_object_id(self, datum):
+        return datum['id']
+
+    class Meta:
+        name = 'environment_configuration'
+        verbose_name = _('Deployed Services')

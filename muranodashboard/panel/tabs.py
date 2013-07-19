@@ -20,7 +20,7 @@ from horizon import tabs
 from openstack_dashboard.api import nova as nova_api
 
 from muranodashboard.panel import api
-from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES
+from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES, EnvConfigTable
 
 LOG = logging.getLogger(__name__)
 
@@ -98,9 +98,9 @@ class OverviewTab(tabs.Tab):
                 'instance_name': instance_name}
 
 
-class LogsTab(tabs.Tab):
+class ServiceLogsTab(tabs.Tab):
     name = _("Logs")
-    slug = "_logs"
+    slug = "service_logs"
     template_name = '_service_logs.html'
     preload = False
 
@@ -112,7 +112,39 @@ class LogsTab(tabs.Tab):
         return {"reports": reports}
 
 
+class EnvLogsTab(tabs.Tab):
+    name = _("Logs")
+    slug = "env_logs"
+    template_name = '_deployment_logs.html'
+    preload = False
+
+    def get_context_data(self, request):
+        reports = self.tab_group.kwargs['logs']
+        result = '\n'.join([r.created.replace('T', ' ') +
+                            ' - ' + r.text for r in reports])
+        if not result:
+            result = '\n'
+        return {"reports": result}
+
+
+class EnvConfigTab(tabs.TableTab):
+    name = _("Configuration")
+    slug = "env_config"
+    table_classes = (EnvConfigTable,)
+    template_name = 'horizon/common/_detail_table.html'
+    preload = False
+
+    def get_environment_configuration_data(self):
+        deployment = self.tab_group.kwargs['deployment']
+        return deployment.get('services')
+
+
 class ServicesTabs(tabs.TabGroup):
     slug = "services_details"
-    tabs = (OverviewTab, LogsTab)
+    tabs = (OverviewTab, ServiceLogsTab)
     sticky = True
+
+
+class DeploymentTabs(tabs.TabGroup):
+    slug = "deployment_details"
+    tabs = (EnvConfigTab, EnvLogsTab,)

@@ -26,16 +26,20 @@ from horizon import tables
 from horizon import workflows
 from horizon import messages
 from horizon.forms.views import ModalFormMixin
-from tables import EnvironmentsTable, ServicesTable
+from tables import EnvironmentsTable
+from tables import ServicesTable
+from tables import DeploymentsTable
+from tables import EnvConfigTable
 from workflows import CreateEnvironment, UpdateEnvironment
-from tabs import ServicesTabs
+from tabs import ServicesTabs, DeploymentTabs
 
 from muranodashboard.panel import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
-    CommunicationError, HTTPInternalServerError, HTTPForbidden
+    CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 
-from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME,\
+from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME, \
     MSSQL_NAME, SERVICE_NAME_DICT
+
 LOG = logging.getLogger(__name__)
 
 
@@ -67,6 +71,7 @@ def is_service_asp_farm(wizard):
 
 def is_service_mssql_farm(wizard):
     return get_service_type(wizard) == MSSQL_NAME
+
 
 SERVICE_CHECKER = (is_service_ad, is_service_iis,
                    is_service_asp, is_service_iis_farm,
@@ -299,7 +304,7 @@ class EditEnvironmentView(workflows.WorkflowView):
         if not hasattr(self, "_object"):
             environment_id = self.kwargs['environment_id']
             try:
-                self._object =                                              \
+                self._object = \
                     api.environment_get(self.request, environment_id)
             except:
                 redirect = reverse("horizon:project:murano:index")
@@ -312,3 +317,93 @@ class EditEnvironmentView(workflows.WorkflowView):
         initial.update({'environment_id': self.kwargs['environment_id'],
                         'name': getattr(self.get_object(), 'name', '')})
         return initial
+
+
+class DeploymentsView(tables.DataTableView):
+    table_class = DeploymentsTable
+    template_name = 'deployments.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeploymentsView, self).get_context_data(**kwargs)
+
+        try:
+            environment_name = api.get_environment_name(
+                self.request,
+                self.environment_id)
+            context['environment_name'] = environment_name
+        except:
+            msg = _('Sorry, this environment does\'t exist anymore')
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(self.request, msg, redirect=redirect)
+        return context
+
+    def get_data(self):
+        deployments = []
+        self.environment_id = self.kwargs['environment_id']
+        try:
+            deployments = api.deployments_list(self.request,
+                                               self.environment_id)
+
+        except HTTPForbidden:
+            msg = _('Unable to retrieve list of deployments')
+            exceptions.handle(self.request, msg,
+                              redirect=reverse("horizon:project:murano:index"))
+
+        except HTTPInternalServerError:
+            msg = _('Environment with id %s doesn\'t exist anymore'
+                    % self.environment_id)
+            exceptions.handle(self.request, msg,
+                              redirect=reverse("horizon:project:murano:index"))
+        return deployments
+
+
+class DeploymentDetailsView(tabs.TabbedTableView):
+    tab_group_class = DeploymentTabs
+    table_class = EnvConfigTable
+    template_name = 'deployment_reports.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeploymentDetailsView, self).get_context_data(**kwargs)
+        context["environment_id"] = self.environment_id
+        context["environment_name"] = \
+            api.get_environment_name(self.request, self.environment_id)
+        context["deployment_start_time"] = \
+            api.get_deployment_start(self.request,
+                                     self.environment_id,
+                                     self.deployment_id)
+        return context
+
+    def get_deployment(self):
+        deployment = None
+        try:
+            deployment = api.get_deployment_descr(self.request,
+                                                  self.environment_id,
+                                                  self.deployment_id)
+        except (HTTPInternalServerError, HTTPNotFound):
+            msg = _('Deployment with id %s doesn\'t exist anymore'
+                    % self.deployment_id)
+            redirect = reverse("horizon:project:murano:deployments")
+            exceptions.handle(self.request, msg, redirect=redirect)
+        return deployment
+
+    def get_logs(self):
+        logs = []
+        try:
+            logs = api.deployment_reports(self.request,
+                                          self.environment_id,
+                                          self.deployment_id)
+        except (HTTPInternalServerError, HTTPNotFound):
+            msg = _('Deployment with id %s doesn\'t exist anymore'
+                    % self.deployment_id)
+            redirect = reverse("horizon:project:murano:deployments")
+            exceptions.handle(self.request, msg, redirect=redirect)
+        return logs
+
+    def get_tabs(self, request, *args, **kwargs):
+        self.deployment_id = self.kwargs['deployment_id']
+        self.environment_id = self.kwargs['environment_id']
+        deployment = self.get_deployment()
+        logs = self.get_logs()
+
+        return self.tab_group_class(request, deployment=deployment, logs=logs,
+                                    **kwargs)

@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load url from future %}
+{% block page_header %}
+  <div class='page-header'>
+      <h2>
+          {% blocktrans %}Deployment information{% endblocktrans %}
+      </h2>
+
+      <h3>
+          <a href=" {% url 'horizon:project:murano:index' %}">
+              {% blocktrans %}environments{% endblocktrans %}
+          </a> >
+         <a href=" {% url 'horizon:project:murano:deployments' environment_id %}">
+              {% blocktrans %}Deployments of {{ environment_name }}{% endblocktrans %}
+          </a> >
+          Deployment at {{ deployment_start_time }}
+      </h3>
+  </div>
+{% endblock %}

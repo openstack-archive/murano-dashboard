@@ -49,7 +49,7 @@ def muranoclient(request):
 
 
 def get_status_messages_for_service(request, service_id, environment_id):
-    deployments = muranoclient(request).deployments.\
+    deployments = muranoclient(request).deployments. \
         list(environment_id)
 
     result = '\n'
@@ -58,7 +58,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
         for deployment in deployments:
             reports = muranoclient(request).deployments.reports(environment_id,
                                                                 deployment.id,
-                                                                [service_id])
+                                                                service_id)
 
             for report in reports:
                 result += '  ' + str(report.text) + '\n'
@@ -218,21 +218,22 @@ def services_list(request, environment_id):
 
     get_environment = muranoclient(request).environments.get
     environment = get_environment(environment_id, session_id)
+    try:
+        reports = muranoclient(request).environments.last_status(
+            environment_id, session_id)
+    except HTTPNotFound:
+        reports = {}
 
     for service_item in environment.services:
         service_data = service_item
         service_data['full_service_name'] = \
             SERVICE_NAME_DICT[service_data['type']]
-        try:
-            reports = muranoclient(request).sessions.\
-                reports(environment_id, session_id, service_data['id'])
-        except HTTPNotFound:
-            reports = []
-        if reports:
-            last_operation = str(reports[-1].text)
-            time = reports[-1].updated.replace('T', ' ')
+
+        if service_data['id'] in reports and reports[service_data['id']]:
+            last_operation = str(reports[service_data['id']].text)
+            time = reports[service_data['id']].updated.replace('T', ' ')
         else:
-            last_operation = 'Service draft created'\
+            last_operation = 'Service draft created' \
                 if environment.version == 0 else ''
             time = service_data['updated'].replace('T', ' ')[:-7]
 
@@ -276,3 +277,40 @@ def service_get(request, environment_id, service_id):
     for service in services:
         if service.id == service_id:
             return service
+
+
+def deployments_list(request, environment_id):
+    log.debug('Deployments::List')
+    deployments = muranoclient(request).deployments.list(environment_id)
+    for deployment in deployments:
+        if deployment.started:
+            deployment.started = deployment.started.replace('T', ' ')
+        if deployment.finished:
+            deployment.finished = deployment.finished.replace('T', ' ')
+
+    log.debug('Environment::List {0}'.format(deployments))
+    return deployments
+
+
+def deployment_reports(request, environment_id, deployment_id):
+    log.debug('Deployment::Reports::List')
+    reports = muranoclient(request).deployments.reports(environment_id,
+                                                        deployment_id)
+    log.debug('Deployment::Reports::List {0}'.format(reports))
+    return reports
+
+
+def get_deployment_start(request, environment_id, deployment_id):
+    deployments = muranoclient(request).deployments.list(environment_id)
+    for deployment in deployments:
+        if deployment.id == deployment_id:
+            return deployment.started.replace('T', ' ')
+    return None
+
+
+def get_deployment_descr(request, environment_id, deployment_id):
+    deployments = muranoclient(request).deployments.list(environment_id)
+    for deployment in deployments:
+        if deployment.id == deployment_id:
+            return deployment.description
+    return None

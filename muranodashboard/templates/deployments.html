@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Environment Deployments" %}{% endblock %}
+
+{% block page_header %}
+  {% include "_deployments_page_header.html"%}
+{% endblock page_header %}
+
+{% block main %}
+  {{ table.render }}
+{% endblock %}
