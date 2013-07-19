@@ -209,6 +209,7 @@ class Services(tables.DataTableView):
                 self.request,
                 self.environment_id)
             context['environment_name'] = environment_name
+
         except:
             msg = _('Sorry, this environment does\'t exist anymore')
             redirect = reverse("horizon:project:murano:index")
@@ -231,6 +232,8 @@ class Services(tables.DataTableView):
                     % self.environment_id)
             exceptions.handle(self.request, msg,
                               redirect=reverse("horizon:project:murano:index"))
+        except HTTPUnauthorized:
+            exceptions.handle(self.request)
         return services
 
 
@@ -253,7 +256,10 @@ class DetailServiceView(tabs.TabView):
             self.service = api.service_get(self.request,
                                            self.environment_id,
                                            service_id)
-        except:
+        except HTTPUnauthorized:
+            exceptions.handle(self.request)
+
+        except HTTPForbidden:
             redirect = reverse('horizon:project:murano:index')
             exceptions.handle(self.request,
                               _('Unable to retrieve details for '
