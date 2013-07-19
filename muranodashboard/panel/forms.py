@@ -364,22 +364,22 @@ class WizardInstanceConfiguration(forms.Form):
         #
         # self.fields['image'].choices = choices
         try:
-            availability_zones = novaclient(request).availability_zones.list()
+            availability_zones = novaclient(request).availability_zones.\
+                list(detailed=False)
         except:
             availability_zones = []
             exceptions.handle(request,
                               _("Unable to retrieve  availability zones."))
 
-            if availability_zones:
-                availability_zones.insert(0, ("", _("Select "
-                                                    "Availability Zone")))
-            else:
-                availability_zones.insert(0, ("", _("No availability "
-                                                    "zone available.")))
+        az_choices = [(az.zoneName, az.zoneName)
+                      for az in availability_zones if az.zoneState]
 
-        self.fields['availability_zone'].choices = \
-            [(az.zoneName, az.zoneName)
-             for az in availability_zones if az.zoneState]
+        if az_choices:
+            az_choices.insert(0, ("", _("Select Availability Zone")))
+        else:
+            az_choices.insert(0, ("", _("No availability zone available.")))
+
+        self.fields['availability_zone'].choices = az_choices
 
 
 FORMS = [('service_choice', WizardFormServiceType),
