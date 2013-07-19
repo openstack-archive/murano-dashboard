@@ -278,6 +278,10 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         label=_('Mixed-mode Authentication '),
         initial=True,
         required=False)
+    #add style to split label and checkbox
+    mixed_mode.widget.attrs['style'] = 'float: left; \
+                                        width: auto; \
+                                        margin-right: 10px;'
 
     password_field1 = PasswordField(
         _('SA password'),

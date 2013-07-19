@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 {% for hidden in wizard.form.hidden_fields %}
   {{ hidden }}
 {% endfor %}
@@ -8,7 +10,10 @@
 {% endif %}
 {% for field in wizard.form.visible_fields %}
   <div class="control-group form-field clearfix{% if field.errors %} error{% endif %}">
-    {{ field.label_tag }}
+  {% if field|is_checkbox %}
+      {{ field }}{{ field.label_tag }}
+  {% else %}
+      {{ field.label_tag }}
     {% if field.errors %}
       {% for error in field.errors %}
         <span class="help-inline">{{ error }}</span>
@@ -18,5 +23,6 @@
     <div class="input">
       {{ field }}
     </div>
+  {% endif %}
   </div>
 {% endfor %}
