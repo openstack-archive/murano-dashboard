@@ -15,8 +15,8 @@
 AD_NAME = 'activeDirectory'
 IIS_NAME = 'webServer'
 ASP_NAME = 'aspNetApp'
-IIS_FARM_NAME = 'aspNetAppFarm'
-ASP_FARM_NAME = 'webServerFarm'
+IIS_FARM_NAME = 'webServerFarm'
+ASP_FARM_NAME = 'aspNetAppFarm'
 MSSQL_NAME = 'msSqlServer'
 
 SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME,
