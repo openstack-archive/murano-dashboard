@@ -18,8 +18,9 @@ import re
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from openstack_dashboard.api import nova as novaapi
 # from openstack_dashboard.api import glance
+from horizon import exceptions
+from openstack_dashboard.api.nova import novaclient
 from muranodashboard.panel import api
 from consts import *
 
@@ -325,13 +326,12 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 
 
 class WizardInstanceConfiguration(forms.Form):
-    flavor = forms.ChoiceField(label=_('Instance flavor'),
-                               required=False)
+    flavor = forms.ChoiceField(label=_('Instance flavor'))
 
     # image = forms.ChoiceField(label=_('Instance image'),
     #                           required=False)
 
-    # az = forms.CharField(label=_('Availability zone'), required=False)
+    availability_zone = forms.ChoiceField(label=_('Availability zone'))
 
     def __init__(self, *args, **kwargs):
         super(WizardInstanceConfiguration, self).__init__(
@@ -340,10 +340,10 @@ class WizardInstanceConfiguration(forms.Form):
         if not request:
             raise forms.ValidationError(
                 'Can\'t get a request information')
-        flavors = novaapi.flavor_list(request)
-        self.fields['flavor'].choices = [(flavor.id, "%s" % flavor.name)
+        flavors = novaclient(request).flavors.list()
+        self.fields['flavor'].choices = [(flavor.name, flavor.name)
                                          for flavor in flavors]
-       #TODO: uncomment this when custom filter for valid template will
+       #TODO: uncomment this when custom filter for valid images will
        # be created
         # try:
         #     # public filter removed
@@ -362,6 +362,16 @@ class WizardInstanceConfiguration(forms.Form):
         #     choices.insert(0, ("", _("No images available.")))
         #
         # self.fields['image'].choices = choices
+        try:
+            availability_zones = novaclient(request).availability_zones.list()
+        except:
+            availability_zones = []
+            exceptions.handle(request,
+                              _("Unable to retrieve  availability zones."))
+
+        self.fields['availability_zone'].choices = \
+            [(az.zoneName, az.zoneName)
+             for az in availability_zones if az.zoneState]
 
 
 FORMS = [('service_choice', WizardFormServiceType),

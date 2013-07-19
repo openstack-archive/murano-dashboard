@@ -91,9 +91,9 @@ class Wizard(ModalFormMixin, SessionWizardView):
         parameters = {'type': service_type}
 
         parameters['units'] = []
-        parameters['unitNamingPattern'] = step1_data.get(
-            'unit_name_template', None)
-        parameters['availabilityZone'] = "Region1"
+        parameters['unitNamingPattern'] = step1_data.get('unit_name_template')
+        # parameters['availabilityZone'] = step2_data.get('availability_zone')
+        parameters['availabilityZone'] = 'Region1'
         parameters['flavor'] = step2_data.get('flavor')
 
         if service_type == AD_NAME:
