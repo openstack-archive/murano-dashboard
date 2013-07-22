@@ -379,7 +379,6 @@ class WizardInstanceConfiguration(forms.Form):
 
         az_choices = [(az.zoneName, az.zoneName)
                       for az in availability_zones if az.zoneState]
-
         if az_choices:
             az_choices.insert(0, ("", _("Select Availability Zone")))
         else:
