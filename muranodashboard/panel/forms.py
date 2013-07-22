@@ -342,8 +342,14 @@ class WizardInstanceConfiguration(forms.Form):
             raise forms.ValidationError(
                 'Can\'t get a request information')
         flavors = novaclient(request).flavors.list()
-        self.fields['flavor'].choices = [(flavor.name, flavor.name)
-                                         for flavor in flavors]
+        flavor_choices = [(flavor.name, flavor.name) for flavor in flavors]
+
+        self.fields['flavor'].choices = flavor_choices
+        for flavor in flavor_choices:
+            if 'medium' in flavor[1]:
+                self.fields['flavor'].initial = flavor[0]
+                break
+
        #TODO: uncomment this when custom filter for valid images will
        # be created
         # try:
