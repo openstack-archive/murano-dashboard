@@ -217,9 +217,8 @@
 {% block modal-footer %}
     <script type="text/javascript">
         $(document).ready(function () {
-            function main_check(element, parameter1, parameter2, text){
+            function main_check(div, parameter1, parameter2, text){
                 var msg = "<span class='help-inline'>" + gettext(text) + '</span>'
-                var div = element.closest(".form-field")
                 var error_node = div.find("span.help-inline")
 
                 if (error_node.length) {
@@ -242,8 +241,8 @@
                 var $this = $(this)
                 var password = $this.closest(".form-field").prev().find(".password").val()
                 var confirm_password = $this.val();
-                main_check($this, password,confirm_password, "Passwords do not match")
-
+                var div = $this.closest(".form-field")
+                main_check(div, password,confirm_password, "Passwords do not match")
             };
 
             function check_strength_remove_err_if_matches(){
@@ -251,8 +250,9 @@
                 var password = $this.val();
                 var div_confirm = $this.closest(".form-field").next()
                 var confirm_password = div_confirm.find(".confirm_password").val()
+                var div = $this.closest(".form-field").next()
                 if (confirm_password.length){
-                    main_check($this, password, confirm_password, "Passwords do not match")
+                    main_check(div, password, confirm_password, "Passwords do not match")
                 };
                 var text = "Your password should have at least"
                 var meet_requirements = true;
@@ -277,7 +277,8 @@
                     text += " 1 specical character";
                     meet_requirements = false;
                 }
-                main_check($this, meet_requirements, true, text);
+                var div = $this.closest(".form-field")
+                main_check(div, meet_requirements, true, text);
             };
 
             function get_selection(elem) {
@@ -308,10 +309,8 @@
                 } else {
                     $('#id_msSqlServer-password_field1').attr("disabled", "disabled");
                     $('#id_msSqlServer-password_field2').attr("disabled", "disabled");
-
                 }
             })
-
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
