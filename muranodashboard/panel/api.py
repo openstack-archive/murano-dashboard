@@ -61,7 +61,8 @@ def get_status_messages_for_service(request, service_id, environment_id):
                                                                 service_id)
 
             for report in reports:
-                result += '  ' + str(report.text) + '\n'
+                result += report.created.replace('T', ' ') + ' - ' + str(
+                    report.text) + '\n'
     return result
 
 
@@ -312,5 +313,10 @@ def get_deployment_descr(request, environment_id, deployment_id):
     deployments = muranoclient(request).deployments.list(environment_id)
     for deployment in deployments:
         if deployment.id == deployment_id:
-            return deployment.description
+            descr = deployment.description
+            if 'services' in descr:
+                for service in descr['services']:
+                    service['full_service_name'] = SERVICE_NAME_DICT.get(
+                        service['type'], service['type'])
+            return descr
     return None
