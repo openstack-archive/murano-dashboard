@@ -34,6 +34,20 @@ def perform_password_check(password1, password2, type):
             _(' %s passwords don\'t match' % type))
 
 
+def validate_domain_name(name_to_check):
+    subdomain_list = name_to_check.split('.')
+    if len(subdomain_list) == 1:
+        raise forms.ValidationError(
+            _('Single-level domain is not appropriate. '))
+    domain_name_re = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')
+    for subdomain in subdomain_list:
+        if not domain_name_re.match(subdomain):
+            raise forms.ValidationError(
+                _('Only letters, numbers and dashes in the middle are allowed.'
+                  ' Period characters are allowed only when they are used to '
+                  'delimit the components of domain style names.'))
+
+
 class PasswordField(forms.CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
@@ -116,21 +130,14 @@ class CommonPropertiesExtension(object):
 
 class WizardFormADConfiguration(forms.Form,
                                 CommonPropertiesExtension):
-    domain_name_re = re.compile(
-        r'^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$')
-    validate_domain_name = RegexValidator(
-        domain_name_re, _(u'Name should not contain anything but letters, \
-                            numbers and dashes and should not start or end \
-                            with a dash'), 'invalid')
 
     dc_name = forms.CharField(
         label=_('Domain Name'),
         min_length=2,
         max_length=64,
         validators=[validate_domain_name],
-        error_messages={'invalid': validate_domain_name.message},
         help_text=_('Just letters, numbers and dashes are allowed.          \
-        A dot can be used to create subdomains'))
+        Single-level domain is not appropriate.'))
 
     dc_count = forms.IntegerField(
         label=_('Instance Count'),
