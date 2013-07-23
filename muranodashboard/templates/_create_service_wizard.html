@@ -208,7 +208,19 @@
     {% endif %}
     {% if wizard.steps.index == 2 %}
         <h3>{% trans "Instance Configuration" %}:</h3>
-        <p>Set flavor for an instance on which service would be created.</p>
+        <p>{% blocktrans %}Specify some instance parameters on which service would be created.{% endblocktrans %}</p>
+        <p>
+            <strong>{% blocktrans %} Instance flavor: {% endblocktrans %} </strong>
+            {% blocktrans %} Select registered in Openstack flavor. Consider that service performance depends on this parameter.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %} Instance image: {% endblocktrans %} </strong>
+            {% blocktrans %} Select valid image for a service. Image should already be prepared and registered in glance with "murano_enabled" property{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %} Availability zone: {% endblocktrans %} </strong>
+            {% blocktrans %} Select availability zone where service would be installed. {% endblocktrans %}
+        </p>
     {% endif %}
 
 </div>

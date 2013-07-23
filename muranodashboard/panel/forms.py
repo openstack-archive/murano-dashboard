@@ -18,7 +18,7 @@ import re
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-# from openstack_dashboard.api import glance
+from openstack_dashboard.api import glance
 from horizon import exceptions
 from openstack_dashboard.api.nova import novaclient
 from muranodashboard.panel import api
@@ -328,8 +328,8 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'))
 
-    # image = forms.ChoiceField(label=_('Instance image'),
-    #                           required=False)
+    image = forms.ChoiceField(label=_('Instance image'),
+                              required=False)
 
     availability_zone = forms.ChoiceField(label=_('Availability zone'),
                                           required=False)
@@ -350,25 +350,22 @@ class WizardInstanceConfiguration(forms.Form):
                 self.fields['flavor'].initial = flavor[0]
                 break
 
-       #TODO: uncomment this when custom filter for valid images will
-       # be created
-        # try:
-        #     # public filter removed
-        #     public_images, _more = glance.image_list_detailed(request)
-        # except:
-        #     public_images = []
-        #     exceptions.handle(request,
-        #                       _("Unable to retrieve public images."))
-        #
-        # choices = [(image.id, image.name)
-        #            for image in public_images
-        #            if image.properties.get("image_type", '') != "snapshot"]
-        # if choices:
-        #     choices.insert(0, ("", _("Select Image")))
-        # else:
-        #     choices.insert(0, ("", _("No images available.")))
-        #
-        # self.fields['image'].choices = choices
+        try:
+            # public filter removed
+            public_images, _more = glance.image_list_detailed(request)
+        except:
+            public_images = []
+            exceptions.handle(request,
+                              _("Unable to retrieve public images."))
+
+        choices = [(image.id, image.name) for image in public_images
+                   if image.properties.get('murano_enabled')]
+        if choices:
+            choices.insert(0, ("", _("Select Image")))
+        else:
+            choices.insert(0, ("", _("No images available")))
+
+        self.fields['image'].choices = choices
         try:
             availability_zones = novaclient(request).availability_zones.\
                 list(detailed=False)
@@ -382,7 +379,7 @@ class WizardInstanceConfiguration(forms.Form):
         if az_choices:
             az_choices.insert(0, ("", _("Select Availability Zone")))
         else:
-            az_choices.insert(0, ("", _("No availability zone available.")))
+            az_choices.insert(0, ("", _("No availability zone available")))
 
         self.fields['availability_zone'].choices = az_choices
 
