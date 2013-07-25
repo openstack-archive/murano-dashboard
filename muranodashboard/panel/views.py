@@ -38,7 +38,7 @@ from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 
 from consts import AD_NAME, IIS_NAME, ASP_NAME, IIS_FARM_NAME, ASP_FARM_NAME, \
-    MSSQL_NAME, SERVICE_NAME_DICT
+    MSSQL_NAME, MSSQL_CLUSTER_NAME, SERVICE_NAME_DICT
 
 LOG = logging.getLogger(__name__)
 
@@ -69,13 +69,18 @@ def is_service_asp_farm(wizard):
     return get_service_type(wizard) == ASP_FARM_NAME
 
 
-def is_service_mssql_farm(wizard):
+def is_service_mssql(wizard):
     return get_service_type(wizard) == MSSQL_NAME
+
+
+def is_service_mssql_cluster(wizard):
+    return get_service_type(wizard) == MSSQL_CLUSTER_NAME
 
 
 SERVICE_CHECKER = (is_service_ad, is_service_iis,
                    is_service_asp, is_service_iis_farm,
-                   is_service_asp_farm, is_service_mssql_farm)
+                   is_service_asp_farm, is_service_mssql,
+                   is_service_mssql_cluster)
 
 
 class Wizard(ModalFormMixin, SessionWizardView):

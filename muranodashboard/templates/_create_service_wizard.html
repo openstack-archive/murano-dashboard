@@ -162,7 +162,7 @@
                 {% blocktrans %} Specify port number where Load Balancer will be running {% endblocktrans %}
             </p>
 
-        {% elif type == 'MS SQL Server' %}
+        {% elif type == 'Microsoft SQL Server'%}
             <p>
                 <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
                 {% blocktrans %} Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and underline are allowed. {% endblocktrans %}
@@ -194,6 +194,52 @@
             <p>
                 <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
                 {% blocktrans %} Several instances with Microsoft SQL Server can be created at one time. {% endblocktrans %}
+            </p>
+        {% elif type == 'Microsoft SQL Server Cluster' %}
+            <p>
+                <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
+                {% blocktrans %} Enter a desired name for a service. Just A-Z,
+                    a-z, 0-9, dash and underline are
+                    allowed. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Administrator Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Windows requires strong password for service
+                    administration. Your password should have at least one
+                    letter in each register, a number and a special character.
+                    Password length should be a minimum of 7 characters. Once
+                    you forget your password you won't be able to operate  the
+                    service. {% endblocktrans %}
+            </p>
+            <p><strong>{% blocktrans %} Preconfigured External Active Directory {% endblocktrans %}</strong>
+                {% blocktrans %} AD domain must be specified for the MS SQL Server Cluster. <i>This checkbox should be enabled only in case
+                your environment has scripts that will join created service to the domain automatically. </i>{% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                {% blocktrans %} Service can be joined to the Active Directory
+                    domain. If you want to create an AD domain create the AD
+                    Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Mixed-mode Authentication: {% endblocktrans %}</strong>
+                {% blocktrans %} Mixed authentication mode allows the use of
+                    Windows credentials but supplements them with local SQL
+                    Server user accounts that the administrator may create and
+                    maintain within SQL Server.
+                    If this mode is on SA password is
+                    required{% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} SA Password: {% endblocktrans %} </strong>
+                {% blocktrans %} Set system administrator password for the MS
+                    SQL Server.{% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %} Instance
+                    Count: {% endblocktrans %} </strong>
+                {% blocktrans %} Several instances with Microsoft SQL Server
+                    can be created at one time. {% endblocktrans %}
             </p>
 
 
@@ -314,15 +360,25 @@
                     $('#wizard_goto_step').val('{{ wizard.steps.prev }}')
                 }
             });
-            $("#id_msSqlServer-mixed_mode").change(function(){
-                if ($("#id_msSqlServer-mixed_mode").prop('checked')) {
-                    $('#id_msSqlServer-password_field1').removeAttr("disabled")
-                    $('#id_msSqlServer-password_field2').removeAttr("disabled")
+            $(".mixed-mode").change(function(){
+                var $this = $(this)
+                if ($this.prop('checked')) {
+                    $this.parent().next().find("input").removeAttr("disabled")
+                    $this.parent().next().next().find("input").removeAttr("disabled")
                 } else {
-                    $('#id_msSqlServer-password_field1').attr("disabled", "disabled");
-                    $('#id_msSqlServer-password_field2').attr("disabled", "disabled");
+                    $this.parent().next().find("input").attr("disabled", "disabled");
+                    $this.parent().next().next().find("input").attr("disabled", "disabled");
                 }
             })
+            $(".external-ad").change(function(){
+                var $this = $(this)
+                if ($this.prop('checked')) {
+                    $this.parent().next().find("select").attr("disabled", "disabled");
+                } else {
+                    $this.parent().next().find("select").removeAttr("disabled")
+                }
+            })
+            $(".checkbox").css({'float':'left', 'width': 'auto', 'margin-right': '10px'})
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>

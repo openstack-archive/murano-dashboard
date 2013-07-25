@@ -92,6 +92,7 @@ class WizardFormServiceType(forms.Form):
                         'Internet Information Services Web Farm')
     asp_farm_service = (ASP_FARM_NAME, 'ASP.NET Application Web Farm')
     ms_sql_service = (MSSQL_NAME, 'MS SQL Server')
+    ms_sql_cluster = (MSSQL_CLUSTER_NAME, 'MS SQL Cluster Server')
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=[
                                     ad_service,
@@ -99,7 +100,8 @@ class WizardFormServiceType(forms.Form):
                                     asp_service,
                                     iis_farm_service,
                                     asp_farm_service,
-                                    ms_sql_service
+                                    ms_sql_service,
+                                    ms_sql_cluster
                                 ])
 
 
@@ -286,11 +288,7 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         label=_('Mixed-mode Authentication '),
         initial=True,
         required=False)
-    #add style to split label and checkbox
-    mixed_mode.widget.attrs['style'] = 'float: left; \
-                                        width: auto; \
-                                        margin-right: 10px;'
-
+    mixed_mode.widget.attrs['class'] = 'checkbox mixed-mode'
     password_field1 = PasswordField(
         _('SA password'),
         help_text=_('SQL server System Administrator account'))
@@ -332,6 +330,26 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         CommonPropertiesExtension.__init__(self)
 
 
+class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
+    def clean(self):
+        super(WizardFormMSSQLClusterConfiguration, self).clean()
+        if not self.cleaned_data.get('external_ad'):
+            if not self.cleaned_data.get('iis_domain'):
+                raise forms.ValidationError(
+                    _('Domain for MS SQL Cluster is required. '
+                      'Configure Active Directory service first.'))
+
+    def __init__(self, *args, **kwargs):
+        super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
+                                                                  **kwargs)
+        CommonPropertiesExtension.__init__(self)
+        self.fields.insert(3, 'external_ad', forms.BooleanField(
+            label=_('Preconfigured External Active Directory'),
+            required=False))
+        self.fields['external_ad'].widget.attrs['class'] = \
+            'checkbox external-ad'
+
+
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'))
 
@@ -356,9 +374,7 @@ class WizardInstanceConfiguration(forms.Form):
             if 'medium' in flavor[1]:
                 self.fields['flavor'].initial = flavor[0]
                 break
-
         try:
-            # public filter removed
             public_images, _more = glance.image_list_detailed(request)
         except:
             public_images = []
@@ -398,4 +414,5 @@ FORMS = [('service_choice', WizardFormServiceType),
          (IIS_FARM_NAME, WizardFormIISFarmConfiguration),
          (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration),
          (MSSQL_NAME, WizardFormMSSQLConfiguration),
+         (MSSQL_CLUSTER_NAME, WizardFormMSSQLClusterConfiguration),
          ('instance_configuration', WizardInstanceConfiguration)]

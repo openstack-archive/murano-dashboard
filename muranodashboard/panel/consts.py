@@ -18,16 +18,18 @@ ASP_NAME = 'aspNetApp'
 IIS_FARM_NAME = 'webServerFarm'
 ASP_FARM_NAME = 'aspNetAppFarm'
 MSSQL_NAME = 'msSqlServer'
+MSSQL_CLUSTER_NAME = 'msSqlClusterServer'
 
 SERVICE_NAMES = (AD_NAME, IIS_NAME, ASP_NAME,
-                 IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME)
+                 IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME, MSSQL_CLUSTER_NAME)
 
 SERVICE_NAME_DICT = {AD_NAME: 'Active Directory',
                      IIS_NAME: 'IIS',
                      ASP_NAME: 'ASP.NET Application',
                      IIS_FARM_NAME: 'IIS Farm',
                      ASP_FARM_NAME: 'ASP.NET Farm',
-                     MSSQL_NAME: 'MS SQL Server'}
+                     MSSQL_NAME: 'Microsoft SQL Server',
+                     MSSQL_CLUSTER_NAME: 'Microsoft SQL Server Cluster'}
 
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'
@@ -39,7 +41,6 @@ STATUS_CHOICES = (
     ('Ready to configure', True),
     ('Ready', True),
     ('Configuring', False),
-
 )
 
 STATUS_DISPLAY_CHOICES = (
