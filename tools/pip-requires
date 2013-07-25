@@ -4,3 +4,5 @@ anyjson
 #Fix for bug https://bugs.launchpad.net/python-keystoneclient/+bug/1116740
 requests==0.14.2
 bunch
+iso8601>=0.1.4
+six

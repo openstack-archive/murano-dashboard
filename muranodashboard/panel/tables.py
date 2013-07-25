@@ -21,6 +21,7 @@ from horizon import tables
 from horizon import messages
 
 from muranodashboard.panel import api
+from muranodashboard.openstack.common import timeutils
 from consts import STATUS_ID_READY, STATUS_ID_DEPLOYING, \
     STATUS_CHOICES, STATUS_DISPLAY_CHOICES, STATUS_ID_NEW
 
@@ -57,6 +58,14 @@ class DeleteEnvironment(tables.DeleteAction):
     data_type_plural = _('Environments')
 
     def allowed(self, request, environment):
+        if environment:
+            environment = api.environment_get(request, environment.id)
+            if environment.status == STATUS_ID_DEPLOYING:
+                deployment = api.deployments_list(request, environment.id)[0]
+                last_action = timeutils.parse_strtime(
+                    deployment.started.replace(' ', 'T'),
+                    timeutils._ISO8601_TIME_FORMAT)
+                return timeutils.is_older_than(last_action, 15 * 60)
         return True
 
     def action(self, request, environment_id):
@@ -206,7 +215,7 @@ class EnvironmentsTable(tables.DataTable):
         verbose_name = _('Environments')
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
-        table_actions = (CreateEnvironment, DeleteEnvironment)
+        table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        EditEnvironment, DeleteEnvironment, ShowDeployments)
 
