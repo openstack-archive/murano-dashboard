@@ -206,7 +206,7 @@ class WizardFormIISConfiguration(forms.Form,
         help_text=_('Retype your password'))
 
     iis_domain = forms.ChoiceField(
-        label=_('Domain'),
+        label=_('Active Directory Domain'),
         required=False,
         help_text=_('Optional field for a domain to which service can be    \
                     joined '))
@@ -345,7 +345,8 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
                                                                   **kwargs)
         CommonPropertiesExtension.__init__(self)
         self.fields.insert(3, 'external_ad', forms.BooleanField(
-            label=_('Preconfigured External Active Directory'),
+            label=_('Active Directory is configured '
+                    'by the System Administrator'),
             required=False))
         self.fields['external_ad'].widget.attrs['class'] = \
             'checkbox external-ad'

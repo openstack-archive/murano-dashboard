@@ -373,7 +373,6 @@
             $(".external-ad").change(function(){
                 var $this = $(this)
                 if ($this.prop('checked')) {
-                    alert("Service installation will depend on your script configuration")
                     $this.parent().next().find("select").attr("disabled", "disabled");
                 } else {
                     $this.parent().next().find("select").removeAttr("disabled")
