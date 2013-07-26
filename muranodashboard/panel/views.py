@@ -138,15 +138,6 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
 
-            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
-                parameters['repository'] = \
-                    step1_data.get('repository', '')
-            instance_count = 1
-            if service_type == IIS_FARM_NAME or service_type == ASP_FARM_NAME:
-                instance_count = int(step1_data.get('instance_count', 1))
-                parameters['loadBalancerPort'] = \
-                    step1_data.get('lb_port', '80')
-
             if service_type == MSSQL_NAME:
                 mixed_mode = step1_data.get('mixed_mode', False)
 
@@ -155,6 +146,14 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
+
+            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
+                parameters['repository'] = \
+                    step1_data.get('repository', '')
+            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME]:
+                instance_count = int(step1_data.get('instance_count', 1))
+                parameters['loadBalancerPort'] = \
+                    step1_data.get('lb_port', '80')
 
             for unit in range(instance_count):
                 parameters['units'].append({})
