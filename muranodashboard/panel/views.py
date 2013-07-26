@@ -124,7 +124,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 })
 
         elif service_type in [IIS_NAME, ASP_NAME,
-                              IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME]:
+                              IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME,
+                              MSSQL_CLUSTER_NAME]:
             password = step1_data.get('adm_password1', '')
             parameters['name'] = str(step1_data.get('service_name', 'noname'))
             parameters['credentials'] = {'username': 'Administrator',
@@ -138,7 +139,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
 
-            if service_type == MSSQL_NAME:
+            if service_type in [MSSQL_NAME, MSSQL_CLUSTER_NAME]:
                 mixed_mode = step1_data.get('mixed_mode', False)
 
                 sa_password = str(
@@ -147,14 +148,22 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
 
-            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
-                parameters['repository'] = \
-                    step1_data.get('repository', '')
-            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME]:
-                instance_count = int(step1_data.get('instance_count', 1))
-                parameters['loadBalancerPort'] = \
-                    step1_data.get('lb_port', '80')
+            if service_type == MSSQL_CLUSTER_NAME:
+                external_ad = step1_data.get('external_ad')
+                parameters['external_ad'] = external_ad
 
+            if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
+                parameters['repository'] = step1_data.get('repository', '')
+            if service_type in [IIS_FARM_NAME,
+                                ASP_FARM_NAME,
+                                MSSQL_NAME,
+                                MSSQL_CLUSTER_NAME]:
+                instance_count = int(step1_data.get('instance_count', 1))
+                parameters['instance_count'] = instance_count
+            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
+
+                parameters['loadBalancerPort'] = step1_data.get('lb_port',
+                                                                '80')
             for unit in range(instance_count):
                 parameters['units'].append({})
         try:

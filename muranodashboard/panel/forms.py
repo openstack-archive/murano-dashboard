@@ -338,6 +338,7 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
                 raise forms.ValidationError(
                     _('Domain for MS SQL Cluster is required. '
                       'Configure Active Directory service first.'))
+        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
