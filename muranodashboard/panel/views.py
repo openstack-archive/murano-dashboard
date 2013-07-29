@@ -102,8 +102,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         parameters['units'] = []
         parameters['unitNamingPattern'] = step1_data.get('unit_name_template')
-        # parameters['availabilityZone'] = step2_data.get('availability_zone')
-        parameters['availabilityZone'] = 'Region1'
+        parameters['availabilityZone'] = step2_data.get('availability_zone')
         parameters['flavor'] = step2_data.get('flavor')
 
         if service_type == AD_NAME:
@@ -138,6 +137,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['domain'] = parameters['name']
             parameters['adminPassword'] = password
             parameters['domain'] = str(domain)
+            instance_count = 1
 
             if service_type in [MSSQL_NAME, MSSQL_CLUSTER_NAME]:
                 mixed_mode = step1_data.get('mixed_mode', False)
