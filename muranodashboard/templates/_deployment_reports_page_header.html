@@ -11,9 +11,9 @@
               {% blocktrans %}environments{% endblocktrans %}
           </a> >
          <a href=" {% url 'horizon:project:murano:deployments' environment_id %}">
-              {% blocktrans %}Deployments of {{ environment_name }}{% endblocktrans %}
+              {% blocktrans %}{{ environment_name }} deployments{% endblocktrans %}
           </a> >
-          Deployment at {{ deployment_start_time }}
+          deployment at {{ deployment_start_time }}
       </h3>
   </div>
 {% endblock %}
