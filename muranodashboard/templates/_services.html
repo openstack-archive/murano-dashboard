@@ -6,11 +6,11 @@
   <h4>{% blocktrans %}Info {% endblocktrans %}</h4>
   <dl>
       {% for key, value in service.items %}
-        {% if  key == 'instance_id' %}
+        {% if  key == 'instance' %}
             <dt>Service instance name</dt>
             <dd>
-                <a href=" {% url 'horizon:project:instances:detail' value %}">
-                    {% blocktrans %}{{ instance_name }} {% endblocktrans %}
+                <a href=" {% url 'horizon:project:instances:detail' value.id %}">
+                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
                 </a>
             </dd><br>
         {% else %}
@@ -28,11 +28,11 @@
     <hr class="header_rule">
     <dl>
     {% for key, value in unit.items %}
-        {% if  key == 'instance_id' %}
+        {% if  key == 'instance' %}
             <dt>Service instance name</dt>
             <dd>
-                <a href=" {% url 'horizon:project:instances:detail' value %}">
-                    {% blocktrans %}{{ instance_name }} {% endblocktrans %}
+                <a href=" {% url 'horizon:project:instances:detail' value.id %}">
+                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
                 </a>
             </dd><br>
         {% else %}

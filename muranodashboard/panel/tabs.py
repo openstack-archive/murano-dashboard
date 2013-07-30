@@ -86,16 +86,18 @@ class OverviewTab(tabs.Tab):
 
                 for instance in instances:
                     if instance._apiresource.name == instance_name:
-                        id = instance._apiresource.id
-                        unit_detail['instance_id'] = id
+                        unit_detail['instance'] = {
+                            'id': instance._apiresource.id,
+                            'name': instance_name
+                        }
+                        break
+
                 if len(service_data.units) > 1:
                     units.append(unit_detail)
                 else:
                     detail_info.update(unit_detail)
 
-        return {'service': detail_info,
-                'units': units,
-                'instance_name': instance_name}
+        return {'service': detail_info, 'units': units}
 
 
 class ServiceLogsTab(tabs.Tab):
