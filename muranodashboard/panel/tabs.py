@@ -120,8 +120,13 @@ class EnvLogsTab(tabs.Tab):
 
     def get_context_data(self, request):
         reports = self.tab_group.kwargs['logs']
-        result = '\n'.join([r.created.replace('T', ' ') +
-                            ' - ' + r.text for r in reports])
+        lines = []
+        for r in reports:
+            line = r.created.replace('T', ' ') + ' - ' + r.text
+            if r.details and request.user.is_superuser:
+                line += '\n' + r.details
+            lines.append(line)
+        result = '\n'.join(lines)
         if not result:
             result = '\n'
         return {"reports": result}
