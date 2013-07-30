@@ -15,9 +15,11 @@
 import logging
 
 import re
+import ast
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_text
 from openstack_dashboard.api import glance
 from horizon import exceptions
 from openstack_dashboard.api.nova import novaclient
@@ -205,7 +207,7 @@ class WizardFormIISConfiguration(forms.Form,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
-    iis_domain = forms.ChoiceField(
+    domain = forms.ChoiceField(
         label=_('Active Directory Domain'),
         required=False,
         help_text=_('Optional field for a domain to which service can be    \
@@ -228,9 +230,9 @@ class WizardFormIISConfiguration(forms.Form,
         environment_id = re.search('murano/(\w+)', link).group(0)[7:]
         domains = api.service_list_by_type(request, environment_id, AD_NAME)
 
-        self.fields['iis_domain'].choices = [("", "Not in domain")] + \
-                                            [(domain.name, domain.name)
-                                             for domain in domains]
+        self.fields['domain'].choices = \
+            [("", "Not in domain")] + [(domain.name, domain.name)
+                                       for domain in domains]
         CommonPropertiesExtension.__init__(self)
 
 
@@ -298,13 +300,6 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         error_messages=CONFIRM_ERR_DICT,
         help_text=_('Retype your password'))
 
-    instance_count = forms.IntegerField(
-        label=_('Instance Count'),
-        min_value=1,
-        max_value=100,
-        initial=1,
-        help_text=_('Enter an integer value between 1 and 100'))
-
     def clean(self):
         mixed_mode = self.cleaned_data.get('mixed_mode')
         if not mixed_mode:
@@ -331,14 +326,6 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 
 
 class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
-    def clean(self):
-        super(WizardFormMSSQLClusterConfiguration, self).clean()
-        if not self.cleaned_data.get('external_ad'):
-            if not self.cleaned_data.get('iis_domain'):
-                raise forms.ValidationError(
-                    _('Domain for MS SQL Cluster is required. '
-                      'Configure Active Directory service first.'))
-        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
@@ -350,6 +337,22 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
             required=False))
         self.fields['external_ad'].widget.attrs['class'] = \
             'checkbox external-ad'
+
+    instance_count = forms.IntegerField(
+        label=_('Instance Count'),
+        min_value=1,
+        max_value=100,
+        initial=1,
+        help_text=_('Enter an integer value between 1 and 100'))
+
+    def clean(self):
+        super(WizardFormMSSQLClusterConfiguration, self).clean()
+        if not self.cleaned_data.get('external_ad'):
+            if not self.cleaned_data.get('domain'):
+                raise forms.ValidationError(
+                    _('Domain for MS SQL Cluster is required. '
+                      'Configure Active Directory service first.'))
+        return self.cleaned_data
 
 
 class WizardInstanceConfiguration(forms.Form):
@@ -377,20 +380,32 @@ class WizardInstanceConfiguration(forms.Form):
                 self.fields['flavor'].initial = flavor[0]
                 break
         try:
-            public_images, _more = glance.image_list_detailed(request)
+            images, _more = glance.image_list_detailed(request)
         except:
-            public_images = []
+            images = []
             exceptions.handle(request,
                               _("Unable to retrieve public images."))
 
-        choices = [(image.id, image.name) for image in public_images
-                   if image.properties.get('murano_enabled')]
-        if choices:
-            choices.insert(0, ("", _("Select Image")))
-        else:
-            choices.insert(0, ("", _("No images available")))
+        image_mapping = {}
+        image_choices = []
+        for image in images:
+            murano_property = image.properties.get('murano_image_info')
+            if murano_property:
+                #convert to dict because
+                # only string can be stored in image metadata property
+                murano_json = ast.literal_eval(murano_property)
+                image_mapping[smart_text(murano_json['name'])] = \
+                    smart_text(murano_json['id'])
 
-        self.fields['image'].choices = choices
+        for name in sorted(image_mapping.keys()):
+            image_choices.append((image_mapping[name], name))
+        if image_choices:
+            image_choices.insert(0, ("", _("Select Image")))
+        else:
+            image_choices.insert(0, ("", _("No images available")))
+
+        self.fields['image'].choices = image_choices
+
         try:
             availability_zones = novaclient(request).availability_zones.\
                 list(detailed=False)
@@ -404,7 +419,7 @@ class WizardInstanceConfiguration(forms.Form):
         if az_choices:
             az_choices.insert(0, ("", _("Select Availability Zone")))
         else:
-            az_choices.insert(0, ("", _("No availability zone available")))
+            az_choices.insert(0, ("", _("No availability zones available")))
 
         self.fields['availability_zone'].choices = az_choices
 

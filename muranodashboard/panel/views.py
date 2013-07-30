@@ -104,17 +104,16 @@ class Wizard(ModalFormMixin, SessionWizardView):
         parameters['unitNamingPattern'] = step1_data.get('unit_name_template')
         parameters['availabilityZone'] = step2_data.get('availability_zone')
         parameters['flavor'] = step2_data.get('flavor')
+        parameters['osImage'] = step2_data.get('image')
 
         if service_type == AD_NAME:
-            parameters['configuration'] = 'standalone'
             parameters['name'] = str(step1_data.get('dc_name', 'noname'))
             parameters['domain'] = parameters['name']  # Fix Me in orchestrator
             parameters['adminPassword'] = \
                 str(step1_data.get('adm_password1', ''))
             recovery_password = str(step1_data.get('password_field1', ''))
             parameters['units'].append({'isMaster': True,
-                                        'recoveryPassword': recovery_password,
-                                        'location': 'west-dc'})
+                                        'recoveryPassword': recovery_password})
             dc_count = int(step1_data.get('dc_count', 1))
             for dc in range(dc_count - 1):
                 parameters['units'].append({
@@ -125,45 +124,28 @@ class Wizard(ModalFormMixin, SessionWizardView):
         elif service_type in [IIS_NAME, ASP_NAME,
                               IIS_FARM_NAME, ASP_FARM_NAME, MSSQL_NAME,
                               MSSQL_CLUSTER_NAME]:
-            password = step1_data.get('adm_password1', '')
             parameters['name'] = str(step1_data.get('service_name', 'noname'))
-            parameters['credentials'] = {'username': 'Administrator',
-                                         'password': password}
-
-            parameters['domain'] = str(step1_data.get('iis_domain', ''))
-            password = step1_data.get('adm_password1', '')
-            domain = step1_data.get('iis_domain', '')
-            parameters['name'] = str(step1_data.get('service_name', 'noname'))
-            parameters['domain'] = parameters['name']
-            parameters['adminPassword'] = password
-            parameters['domain'] = str(domain)
-            instance_count = 1
+            parameters['domain'] = str(step1_data.get('domain', ''))
+            parameters['adminPassword'] = step1_data.get('adm_password1', '')
 
             if service_type in [MSSQL_NAME, MSSQL_CLUSTER_NAME]:
                 mixed_mode = step1_data.get('mixed_mode', False)
-
                 sa_password = str(
                     step1_data.get('password_field1', ''))
-
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
 
-            if service_type == MSSQL_CLUSTER_NAME:
-                external_ad = step1_data.get('external_ad')
-                parameters['external_ad'] = external_ad
-
             if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
                 parameters['repository'] = step1_data.get('repository', '')
-            if service_type in [IIS_FARM_NAME,
-                                ASP_FARM_NAME,
-                                MSSQL_NAME,
+
+            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
+                parameters['loadBalancerPort'] = step1_data.get('lb_port', 80)
+
+            instance_count = 1
+            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME,
                                 MSSQL_CLUSTER_NAME]:
                 instance_count = int(step1_data.get('instance_count', 1))
-                parameters['instance_count'] = instance_count
-            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
 
-                parameters['loadBalancerPort'] = step1_data.get('lb_port',
-                                                                '80')
             for unit in range(instance_count):
                 parameters['units'].append({})
         try:
