@@ -22,8 +22,12 @@ from horizon import messages
 
 from muranodashboard.panel import api
 from muranodashboard.openstack.common import timeutils
-from consts import STATUS_ID_READY, STATUS_ID_DEPLOYING, \
-    STATUS_CHOICES, STATUS_DISPLAY_CHOICES, STATUS_ID_NEW
+from consts import STATUS_ID_READY
+from consts import STATUS_ID_DEPLOYING
+from consts import STATUS_CHOICES
+from consts import STATUS_DISPLAY_CHOICES
+from consts import STATUS_ID_NEW
+from consts import DEPLOYMENT_STATUS_DISPLAY_CHOICES
 
 
 class CreateService(tables.LinkAction):
@@ -276,6 +280,11 @@ class DeploymentsTable(tables.DataTable):
                             verbose_name=_('Time Started'))
     finished = tables.Column('finished',
                              verbose_name=_('Time Finished'))
+
+    status = tables.Column('state',
+                           verbose_name=_('Status'),
+                           status=True,
+                           display_choices=DEPLOYMENT_STATUS_DISPLAY_CHOICES)
 
     class Meta:
         name = 'deployments'

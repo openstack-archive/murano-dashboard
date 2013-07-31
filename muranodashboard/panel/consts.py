@@ -36,6 +36,10 @@ STATUS_ID_PENDING = 'pending'
 STATUS_ID_DEPLOYING = 'deploying'
 STATUS_ID_NEW = 'new'
 
+DEP_STATUS_ID_RUNNING = 'running'
+DEP_STATUS_ID_ERROR = 'error'
+DEP_STATUS_ID_SUCCESS = 'success'
+
 STATUS_CHOICES = (
     (None, True),
     ('Ready to configure', True),
@@ -49,4 +53,11 @@ STATUS_DISPLAY_CHOICES = (
     (STATUS_ID_PENDING, 'Configuring'),
     (STATUS_ID_NEW, 'Ready to configure'),
     ('', 'Ready to configure'),
+)
+
+DEPLOYMENT_STATUS_DISPLAY_CHOICES = (
+    (DEP_STATUS_ID_ERROR, 'Failed'),
+    (DEP_STATUS_ID_RUNNING, 'Running'),
+    (DEP_STATUS_ID_SUCCESS, 'Successful'),
+    ('', 'Unknown'),
 )
