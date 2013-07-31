@@ -16,8 +16,9 @@ import logging
 
 import re
 import ast
+from netaddr import all_matching_cidrs
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, validate_ipv4_address
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
 from openstack_dashboard.api import glance
@@ -48,6 +49,26 @@ def validate_domain_name(name_to_check):
                 _('Only letters, numbers and dashes in the middle are allowed.'
                   ' Period characters are allowed only when they are used to '
                   'delimit the components of domain style names.'))
+
+
+def validate_cluster_ip(request, ip_ranges):
+
+    def perform_checking(ip):
+        validate_ipv4_address(ip)
+        try:
+            ip_info = novaclient(request).fixed_ips.get(ip)
+        except:
+            exceptions.handle(request, _("Unable to retrieve information "
+                                         "about fixed IP or IP is not valid."))
+        else:
+            if ip_info.hostname:
+                raise forms.ValidationError(_('Specified Cluster Static IP '
+                                              'is already in use'))
+
+        if not all_matching_cidrs(ip, ip_ranges):
+            raise forms.ValidationError(_('Specified Cluster Static IP is'
+                                          'not in valid IP range'))
+    return perform_checking
 
 
 class PasswordField(forms.CharField):
@@ -83,7 +104,7 @@ class PasswordField(forms.CharField):
             required=required,
             error_messages=error_messages,
             help_text=help_text,
-            widget=forms.PasswordInput(render_value=False))
+            widget=forms.PasswordInput(render_value=True))
 
 
 class WizardFormServiceType(forms.Form):
@@ -326,10 +347,10 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
 
 
 class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
-
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
                                                                   **kwargs)
+        request = self.initial.get('request')
         CommonPropertiesExtension.__init__(self)
         self.fields.insert(3, 'external_ad', forms.BooleanField(
             label=_('Active Directory is configured '
@@ -337,6 +358,25 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
             required=False))
         self.fields['external_ad'].widget.attrs['class'] = \
             'checkbox external-ad'
+        try:
+            network_list = novaclient(request).networks.list()
+        except:
+            network_list = []
+            exceptions.handle(request,
+                              _("Unable to retrieve list of networks."))
+        ip_ranges = [network.cidr for network in network_list]
+        ranges = ''
+        for cidr in ip_ranges:
+            ranges += cidr
+            if cidr != ip_ranges[-1]:
+                ranges += ', '
+
+        self.fields.insert(5, 'fixed_ip', forms.CharField(
+            label=_('Cluster Static IP'),
+            required=True,
+            validators=[validate_cluster_ip(request, ip_ranges)],
+            help_text=_('Select IP from available range: ' + ranges),
+            error_messages={'invalid': validate_ipv4_address.message}))
 
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
@@ -394,8 +434,10 @@ class WizardInstanceConfiguration(forms.Form):
                 #convert to dict because
                 # only string can be stored in image metadata property
                 murano_json = ast.literal_eval(murano_property)
-                image_mapping[smart_text(murano_json['title'])] = \
-                    smart_text(murano_json['id'])
+                title = murano_json.get('title')
+                image_id = murano_json.get('id')
+                if title and image_id:
+                    image_mapping[smart_text(title)] = smart_text(image_id)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
