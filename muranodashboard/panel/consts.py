@@ -37,7 +37,10 @@ STATUS_ID_DEPLOYING = 'deploying'
 STATUS_ID_NEW = 'new'
 
 DEP_STATUS_ID_RUNNING = 'running'
-DEP_STATUS_ID_ERROR = 'error'
+DEP_STATUS_ID_RUNNING_W_ERRORS = 'running_w_errors'
+DEP_STATUS_ID_RUNNING_W_WARNINGS = 'running_w_warnings'
+DEP_STATUS_ID_COMPLETED_W_ERRORS = 'completed_w_errors'
+DEP_STATUS_ID_COMPLETED_W_WARNINGS = 'completed_w_warnings'
 DEP_STATUS_ID_SUCCESS = 'success'
 
 STATUS_CHOICES = (
@@ -56,8 +59,11 @@ STATUS_DISPLAY_CHOICES = (
 )
 
 DEPLOYMENT_STATUS_DISPLAY_CHOICES = (
-    (DEP_STATUS_ID_ERROR, 'Failed'),
+    (DEP_STATUS_ID_COMPLETED_W_ERRORS, 'Failed'),
+    (DEP_STATUS_ID_COMPLETED_W_WARNINGS, 'Completed with warnings'),
     (DEP_STATUS_ID_RUNNING, 'Running'),
+    (DEP_STATUS_ID_RUNNING_W_ERRORS, 'Running with errors'),
+    (DEP_STATUS_ID_RUNNING_W_WARNINGS, 'Running with warnings'),
     (DEP_STATUS_ID_SUCCESS, 'Successful'),
     ('', 'Unknown'),
 )
