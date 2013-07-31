@@ -394,7 +394,7 @@ class WizardInstanceConfiguration(forms.Form):
                 #convert to dict because
                 # only string can be stored in image metadata property
                 murano_json = ast.literal_eval(murano_property)
-                image_mapping[smart_text(murano_json['name'])] = \
+                image_mapping[smart_text(murano_json['title'])] = \
                     smart_text(murano_json['id'])
 
         for name in sorted(image_mapping.keys()):
