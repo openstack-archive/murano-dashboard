@@ -22,7 +22,7 @@ from django.core.validators import RegexValidator, validate_ipv4_address
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
 from openstack_dashboard.api import glance
-from horizon import exceptions
+from horizon import exceptions, messages
 from openstack_dashboard.api.nova import novaclient
 from muranodashboard.panel import api
 from consts import *
@@ -436,8 +436,8 @@ class WizardInstanceConfiguration(forms.Form):
                 try:
                     murano_json = ast.literal_eval(murano_property)
                 except ValueError:
-                    exceptions.handle(request,
-                                      _("Invalid value in image metadata"))
+                    messages.error(request,
+                                   _("Invalid value in image metadata"))
                 else:
                     title = murano_json.get('title')
                     image_id = murano_json.get('id')

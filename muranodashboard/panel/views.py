@@ -135,6 +135,10 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
 
+            if service_type == MSSQL_CLUSTER_NAME:
+                clusterIP = str(step1_data.get('fixed_ip', ''))
+                parameters['clusterIP'] = clusterIP
+
             if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
                 parameters['repository'] = step1_data.get('repository', '')
 
