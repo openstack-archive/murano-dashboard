@@ -378,19 +378,25 @@
             $(".external-ad").change(function(){
                 var $this = $(this)
                 if ($this.prop('checked')) {
-                    $this.parent().next().find("select").attr("disabled", "disabled");
+                    $("select[id*='-domain']").attr("disabled", "disabled");
+                    $("label[for*='ad_user']").parent().css({'display': 'inline-block'})
+                    $("label[for*='ad_password']").parent().css({'display': 'inline-block'})
                 } else {
-                    $this.parent().next().find("select").removeAttr("disabled")
+                    $("select[id*='-domain']").removeAttr("disabled");
+                    $("label[for*='ad_user']").parent().css({'display': 'none'})
+                    $("label[for*='ad_password']").parent().css({'display': 'none'})
                 }
             })
+            $("label[for*='ad_user']").parent().css({'display':'none'})
+            $("label[for*='ad_password']").parent().css({'display': 'none'})
             $(".checkbox").css({'float':'left', 'width': 'auto', 'margin-right': '10px'})
         })
     </script>
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
-    {% if wizard.steps.index == 2 %}
-        {% trans "Create" as next %}
-    {% else %}
+    {% if wizard.steps.next %}
         {% trans "Next" as next %}
+    {% else %}
+        {% trans "Create" as next %}
     {% endif %}
 	{% if wizard.steps.index > 0 %}
         <input type="submit" class="btn btn-primary pull-right" value="{{ next }}"/>
