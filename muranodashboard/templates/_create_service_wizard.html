@@ -53,7 +53,11 @@
         </p>
         <p>
             {% blocktrans %} <strong> The MS SQL Service </strong>
-            installs one or a few Microsoft SQL Servers{% endblocktrans %}
+            installs an instance of Microsoft SQL Server{% endblocktrans %}
+        </p>
+        <p>
+            {% blocktrans %} <strong> The MS SQL Failover Cluster </strong>
+                installs Microsoft SQL Failover Cluster Server{% endblocktrans %}
         </p>
         <p>
             <i>{% blocktrans %} If you want your services to work with AD you
@@ -91,7 +95,7 @@
                 {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
             <p>
@@ -134,7 +138,7 @@
                 {% blocktrans %} Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
 
@@ -150,7 +154,7 @@
                     Password length should be a minimum of 7 characters. Once you forget your password you won't be able to operate  the service. {% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
             <p>
@@ -177,7 +181,7 @@
                     service. {% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory
                     domain. If you want to create an AD domain create the AD Service first. {% endblocktrans %}
             </p>
@@ -191,10 +195,7 @@
                 <strong>{% blocktrans %} SA Password: {% endblocktrans %} </strong>
                 {% blocktrans %} Set system administrator password for the MS SQL Server.{% endblocktrans %}
             </p>
-            <p>
-                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} Several instances with Microsoft SQL Server can be created at one time. {% endblocktrans %}
-            </p>
+
         {% elif type == 'Microsoft SQL Server Cluster' %}
             <p>
                 <strong>{% blocktrans %} Service Name: {% endblocktrans %}</strong>
@@ -211,15 +212,19 @@
                     you forget your password you won't be able to operate  the
                     service. {% endblocktrans %}
             </p>
-            <p><strong>{% blocktrans %} Preconfigured External Active Directory {% endblocktrans %}</strong>
+            <p><strong>{% blocktrans %} Active Directory is configured by the System Administrator: {% endblocktrans %}</strong>
                 {% blocktrans %} AD domain must be specified for the MS SQL Server Cluster. <i>This checkbox should be enabled only in case
-                your environment has scripts that will join created service to the domain automatically. </i>{% endblocktrans %}
+                your environment has scripts with valid rules that will join created service to the existent domain automatically. </i>{% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Domain: {% endblocktrans %}</strong>
+                <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory
                     domain. If you want to create an AD domain create the AD
                     Service first. {% endblocktrans %}
+            </p>
+            <p>
+                <strong>{% blocktrans %}Cluster Static IP: {% endblocktrans %}</strong>
+                {% blocktrans %} Specify a valid IPv4 fixed IP. Avaliable ranges shown in a tooltip.{% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Mixed-mode Authentication: {% endblocktrans %}</strong>
@@ -236,8 +241,7 @@
                     SQL Server.{% endblocktrans %}
             </p>
             <p>
-                <strong>{% blocktrans %} Instance
-                    Count: {% endblocktrans %} </strong>
+                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
                 {% blocktrans %} Several instances with Microsoft SQL Server
                     can be created at one time. {% endblocktrans %}
             </p>
