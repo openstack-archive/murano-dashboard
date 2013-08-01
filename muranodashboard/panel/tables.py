@@ -95,12 +95,10 @@ class DeleteService(tables.DeleteAction):
     data_type_plural = _('Services')
 
     def allowed(self, request, service=None):
-        #TODO: Change this when services deletion on deployed env fixed
         environment_id = self.table.kwargs.get('environment_id')
         status = api.get_environment_status(request, environment_id)
-        if status not in [STATUS_ID_DEPLOYING, STATUS_ID_READY]:
-            return True
-        return False
+
+        return False if status == STATUS_ID_DEPLOYING else True
 
     def action(self, request, service_id):
         try:
@@ -126,11 +124,7 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        has_services = environment.has_services \
-            if hasattr(environment, 'has_services') else False
-        if status not in [STATUS_ID_DEPLOYING] and has_services:
-            return True
-        return False
+        return False if status == STATUS_ID_DEPLOYING else True
 
     def action(self, request, environment_id):
         try:
