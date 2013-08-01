@@ -146,18 +146,6 @@ class Session(object):
 def environments_list(request):
     log.debug('Environment::List')
     environments = muranoclient(request).environments.list()
-
-    for index, env in enumerate(environments):
-        environments[index].has_services = False
-        environment = environment_get(request, env.id)
-        for service in environment.services:
-            if service:
-                environments[index].has_services = True
-                break
-        if not environments[index].has_services:
-            if environments[index].status == u'ready':
-                environments[index].status = u'new'
-
     log.debug('Environment::List {0}'.format(environments))
     return environments
 
@@ -267,7 +255,7 @@ def service_create(request, environment_id, parameters):
 
 def service_delete(request, environment_id, service_id):
     log.debug('Service::Delete <SrvId: {0}>'.format(service_id))
-    session_id = Session.get(request, environment_id)
+    session_id = Session.get_or_create_or_delete(request, environment_id)
     return muranoclient(request).services.delete(environment_id,
                                                  '/' + service_id,
                                                  session_id)
