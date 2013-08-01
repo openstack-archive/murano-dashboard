@@ -57,7 +57,7 @@ class ConfigureEnvironmentAction(workflows.Action):
 
     class Meta:
         name = _("Environment")
-        help_text_template = "_data_center_help.html"
+        help_text_template = "environments/_help.html"
 
 
 class ConfigureEnvironment(workflows.Step):

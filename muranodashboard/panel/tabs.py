@@ -28,7 +28,7 @@ LOG = logging.getLogger(__name__)
 class OverviewTab(tabs.Tab):
     name = _("Service")
     slug = "_service"
-    template_name = '_services.html'
+    template_name = 'services/_overview.html'
 
     def get_context_data(self, request):
         """
@@ -103,7 +103,7 @@ class OverviewTab(tabs.Tab):
 class ServiceLogsTab(tabs.Tab):
     name = _("Logs")
     slug = "service_logs"
-    template_name = '_service_logs.html'
+    template_name = 'services/_logs.html'
     preload = False
 
     def get_context_data(self, request):
@@ -117,7 +117,7 @@ class ServiceLogsTab(tabs.Tab):
 class EnvLogsTab(tabs.Tab):
     name = _("Logs")
     slug = "env_logs"
-    template_name = '_deployment_logs.html'
+    template_name = 'deployments/_logs.html'
     preload = False
 
     def get_context_data(self, request):
@@ -149,7 +149,6 @@ class EnvConfigTab(tabs.TableTab):
 class ServicesTabs(tabs.TabGroup):
     slug = "services_details"
     tabs = (OverviewTab, ServiceLogsTab)
-    sticky = True
 
 
 class DeploymentTabs(tabs.TabGroup):
