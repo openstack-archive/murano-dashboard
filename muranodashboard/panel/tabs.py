@@ -17,6 +17,7 @@ import logging
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from horizon import tabs
+from muranodashboard.panel.consts import LOG_LEVEL_TO_COLOR, LOG_LEVEL_TO_TEXT
 from openstack_dashboard.api import nova as nova_api
 
 from muranodashboard.panel import api
@@ -124,9 +125,8 @@ class EnvLogsTab(tabs.Tab):
         reports = self.tab_group.kwargs['logs']
         lines = []
         for r in reports:
-            line = r.created.replace('T', ' ') + ' - ' + r.text
-            if r.details and request.user.is_superuser:
-                line += '\n' + r.details
+            line = format_log(r.created.replace('T', ' ') + ' - ' + r.text,
+                              r.level)
             lines.append(line)
         result = '\n'.join(lines)
         if not result:
@@ -154,3 +154,12 @@ class ServicesTabs(tabs.TabGroup):
 class DeploymentTabs(tabs.TabGroup):
     slug = "deployment_details"
     tabs = (EnvConfigTab, EnvLogsTab,)
+
+
+def format_log(message, level):
+    if level == 'warning' or level == 'error':
+        frm = "<b><span style='color:#{0}' title='{1}'>{2}</span></b>"
+        return frm.format(LOG_LEVEL_TO_COLOR[level], LOG_LEVEL_TO_TEXT[level],
+                          message)
+    else:
+        return message
