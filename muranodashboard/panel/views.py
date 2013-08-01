@@ -84,7 +84,7 @@ SERVICE_CHECKER = (is_service_ad, is_service_iis,
 
 
 class Wizard(ModalFormMixin, SessionWizardView):
-    template_name = 'create_service_wizard.html'
+    template_name = 'services/wizard_create.html'
 
     def done(self, form_list, **kwargs):
         link = self.request.__dict__['META']['HTTP_REFERER']
@@ -177,7 +177,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
 class IndexView(tables.DataTableView):
     table_class = EnvironmentsTable
-    template_name = 'index.html'
+    template_name = 'environments/index.html'
 
     def get_data(self):
         environments = []
@@ -199,7 +199,7 @@ class IndexView(tables.DataTableView):
 
 class Services(tables.DataTableView):
     table_class = ServicesTable
-    template_name = 'services.html'
+    template_name = 'services/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(Services, self).get_context_data(**kwargs)
@@ -239,7 +239,7 @@ class Services(tables.DataTableView):
 
 class DetailServiceView(tabs.TabView):
     tab_group_class = ServicesTabs
-    template_name = 'service_details.html'
+    template_name = 'services/details.html'
 
     def get_context_data(self, **kwargs):
         context = super(DetailServiceView, self).get_context_data(**kwargs)
@@ -276,7 +276,7 @@ class DetailServiceView(tabs.TabView):
 
 class CreateEnvironmentView(workflows.WorkflowView):
     workflow_class = CreateEnvironment
-    template_name = 'create_dc.html'
+    template_name = 'environments/create.html'
 
     def get_initial(self):
         initial = super(CreateEnvironmentView, self).get_initial()
@@ -287,7 +287,7 @@ class CreateEnvironmentView(workflows.WorkflowView):
 
 class EditEnvironmentView(workflows.WorkflowView):
     workflow_class = UpdateEnvironment
-    template_name = 'update_env.html'
+    template_name = 'environments/update.html'
     success_url = reverse_lazy("horizon:project:murano:index")
 
     def get_context_data(self, **kwargs):
@@ -316,7 +316,7 @@ class EditEnvironmentView(workflows.WorkflowView):
 
 class DeploymentsView(tables.DataTableView):
     table_class = DeploymentsTable
-    template_name = 'deployments.html'
+    template_name = 'deployments/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(DeploymentsView, self).get_context_data(**kwargs)
@@ -355,7 +355,7 @@ class DeploymentsView(tables.DataTableView):
 class DeploymentDetailsView(tabs.TabbedTableView):
     tab_group_class = DeploymentTabs
     table_class = EnvConfigTable
-    template_name = 'deployment_reports.html'
+    template_name = 'deployments/reports.html'
 
     def get_context_data(self, **kwargs):
         context = super(DeploymentDetailsView, self).get_context_data(**kwargs)
