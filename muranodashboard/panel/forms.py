@@ -433,11 +433,16 @@ class WizardInstanceConfiguration(forms.Form):
             if murano_property:
                 #convert to dict because
                 # only string can be stored in image metadata property
-                murano_json = ast.literal_eval(murano_property)
-                title = murano_json.get('title')
-                image_id = murano_json.get('id')
-                if title and image_id:
-                    image_mapping[smart_text(title)] = smart_text(image_id)
+                try:
+                    murano_json = ast.literal_eval(murano_property)
+                except ValueError:
+                    exceptions.handle(request,
+                                      _("Invalid value in image metadata"))
+                else:
+                    title = murano_json.get('title')
+                    image_id = murano_json.get('id')
+                    if title and image_id:
+                        image_mapping[smart_text(title)] = smart_text(image_id)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
