@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load url from future %}
+
+<h3>{% trans "Service Details" %}</h3>
+<div class="status row-fluid detail">
+  <h4>{% blocktrans %}Info {% endblocktrans %}</h4>
+  <dl>
+      {% for key, value in service.items %}
+        {% if  key == 'instance' %}
+            <dt>Service instance name</dt>
+            <dd>
+                <a href=" {% url 'horizon:project:instances:detail' value.id %}">
+                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
+                </a>
+            </dd><br>
+        {% else %}
+            <dt>{% blocktrans %} {{ key }} {% endblocktrans %}</dt>
+            <dd>{% blocktrans %} {{ value }}  {% endblocktrans %}</dd>
+            <br>
+        {% endif %}
+      {% endfor %}
+  </dl>
+</div>
+
+{% for unit in units %}
+    <div class="status row-fluid detail">
+    <h4>{% blocktrans %}Service unit{% endblocktrans %}{{ forloop.counter }} </h4>
+    <hr class="header_rule">
+    <dl>
+    {% for key, value in unit.items %}
+        {% if  key == 'instance' %}
+            <dt>Service instance name</dt>
+            <dd>
+                <a href=" {% url 'horizon:project:instances:detail' value.id %}">
+                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
+                </a>
+            </dd><br>
+        {% else %}
+            <dt>{% blocktrans %} {{ key }} {% endblocktrans %}</dt>
+            <dd>{% blocktrans %} {{ value }}  {% endblocktrans %}</dd>
+            <br>
+        {% endif %}
+        </dl>
+    {% endfor %}
+      </div>
+ {% endfor %}

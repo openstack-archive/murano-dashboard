@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n sizeformat %}
+{% block title %}{% trans "Service Detail" %}{% endblock %}
+
+{% block page_header %}
+    {% include "services/_detail_page_header.html" %}
+{% endblock page_header %}
+
+{% block main %}
+<div class="row-fluid">
+  <div class="span12">
+  {{ tab_group.render }}
+  </div>
+</div>
+{% endblock %}
