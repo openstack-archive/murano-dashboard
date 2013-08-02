@@ -174,6 +174,11 @@ class WizardFormADConfiguration(forms.Form,
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
 
+    adm_user = forms.CharField(
+        label=_('Account Name'),
+        initial='Administrator',
+        validators=[validate_name])
+
     adm_password1 = PasswordField(_('Administrator password'),)
 
     adm_password2 = PasswordField(
