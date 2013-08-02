@@ -10,7 +10,7 @@
             <dt>Service instance name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:instances:detail' value.id %}">
-                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
+                    {{ value.name }}
                 </a>
             </dd><br>
         {% else %}
@@ -32,7 +32,7 @@
             <dt>Service instance name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:instances:detail' value.id %}">
-                    {% blocktrans %}{{ value.name }} {% endblocktrans %}
+                    {{ value.name }}
                 </a>
             </dd><br>
         {% else %}
