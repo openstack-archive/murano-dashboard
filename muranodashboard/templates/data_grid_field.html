@@ -1,0 +1,6 @@
+<form action="." class="gridfield" method="post">{% csrf_token %}
+    {{ data_grid.render_listview }}
+    <button type="button" id="node-add"/>Add</button>
+    <button type="button" id="node-remove"/>Remove</button>
+{#    <button type="submit" id="node-submit"/>Submit</button>#}
+</form>

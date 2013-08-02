@@ -14,6 +14,13 @@ if ROOT_PATH not in sys.path:
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.abspath(os.path.join(ROOT_PATH, 'dashboard.sqlite'))
+    }
+}
+
 SITE_BRANDING = 'OpenStack Dashboard'
 
 LOGIN_URL = '/auth/login/'
@@ -122,6 +129,10 @@ INSTALLED_APPS = (
     'openstack_dashboard.dashboards.admin',
     'openstack_dashboard.dashboards.settings',
     'openstack_auth',
+    'djblets',
+    'djblets.datagrid',
+    'djblets.util',
+    'floppyforms',
     'muranodashboard'
 )
 

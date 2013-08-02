@@ -352,6 +352,7 @@ class DeploymentsView(tables.DataTableView):
 
         try:
             environment_name = api.get_environment_name(
+
                 self.request,
                 self.environment_id)
             context['environment_name'] = environment_name

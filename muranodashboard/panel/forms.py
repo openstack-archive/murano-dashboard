@@ -16,6 +16,7 @@ import logging
 
 import re
 import ast
+import json
 from netaddr import all_matching_cidrs
 from django import forms
 from django.core.validators import RegexValidator, validate_ipv4_address
@@ -26,6 +27,8 @@ from horizon import exceptions, messages
 from openstack_dashboard.api.nova import novaclient
 from muranodashboard.panel import api
 from consts import *
+from muranodashboard.datagrids import DataGridField
+
 
 log = logging.getLogger(__name__)
 CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}
@@ -354,6 +357,7 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
                                                                   **kwargs)
+        # CommonPropertiesExtension.__init__(self)
         self.fields.insert(3, 'external_ad', forms.BooleanField(
             label=_('Active Directory is configured '
                     'by the System Administrator'),
@@ -450,9 +454,26 @@ class WizardMSSQLConfigureAG(forms.Form):
         help_text=_('Enter an integer value between 1 and 100'))
 
 
-class WizardMSSQDatagrid(forms.Form):
-    pass
+class WizardMSSQLDatagrid(forms.Form):
+    nodes = DataGridField(
+        initial=json.dumps(
+            [{'name': 'node1', 'is_sync': True, 'is_primary': True}]
+        ))
 
+    def __init__(self, *args, **kwargs):
+        super(WizardMSSQLDatagrid, self).__init__(*args, **kwargs)
+        self.fields['nodes'].update_request(self.initial.get('request'))
+
+
+# def user_list(request, mode, template_name='sandbox.html'):
+#     if request.method == 'POST':
+#         print request.POST
+#         form = SampleForm(request.POST, request=request)
+#     else:
+#         form = SampleForm(request=request)
+#     ctx = RequestContext(request)
+#     ctx.update({'sampleform': form})
+#     return render_to_response(template_name, ctx)
 
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'))
@@ -539,5 +560,5 @@ FORMS = [('service_choice', WizardFormServiceType),
          (MSSQL_NAME, WizardFormMSSQLConfiguration),
          (MSSQL_CLUSTER_NAME, WizardFormMSSQLClusterConfiguration),
          ('mssql_ag_configuration', WizardMSSQLConfigureAG),
-         ('mssql_datagrid', WizardMSSQDatagrid),
+         ('mssql_datagrid', WizardMSSQLDatagrid),
          ('instance_configuration', WizardInstanceConfiguration)]

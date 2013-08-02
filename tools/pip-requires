@@ -6,3 +6,5 @@ requests==0.14.2
 bunch
 iso8601>=0.1.4
 six
+django-pipeline
+django-floppyforms==1.1

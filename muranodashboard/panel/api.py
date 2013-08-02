@@ -41,7 +41,7 @@ def get_endpoint(request):
 def muranoclient(request):
     endpoint = get_endpoint(request)
 
-    token_id = request.user.token.token['id']
+    token_id = request.user.token.id
     log.debug('Murano::Client <Url: {0}, '
               'TokenId: {1}>'.format(endpoint, token_id))
 

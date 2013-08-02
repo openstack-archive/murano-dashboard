@@ -1,0 +1,131 @@
+from djblets.datagrid.grids import Column, DataGrid
+from models import Node, FakeQuerySet
+import floppyforms as forms
+import json
+import re
+from django.contrib.auth.models import SiteProfileNotAvailable
+
+
+class PK(object):
+    def __init__(self, value=0):
+        self.value = value
+
+    def next(self):
+        self.value += 1
+        return self.value
+
+    def current(self):
+        return self.value
+
+
+class CheckColumn(Column):
+    def render_data(self, item):
+        checked = getattr(item, self.field_name)
+        checked = 'checked="checked"' if checked else ''
+        return '<input type="checkbox" %s/>' % (checked,)
+
+
+class RadioColumn(Column):
+    def __init__(self, *args, **kwargs):
+        self.name = kwargs.get('name', 'default')
+        super(RadioColumn, self).__init__(*args, **kwargs)
+
+    def render_data(self, item):
+        checked = getattr(item, self.field_name)
+        checked = 'checked="checked"' if checked else ''
+        name = 'name="%s"' % (self.name,)
+        return '<input type="radio" %s %s/>' % (name, checked)
+
+
+class NodeDataGrid(DataGrid):
+    name = Column('Node', sortable=False)
+    is_sync = CheckColumn('Sync')
+    is_primary = RadioColumn('Primary')
+
+    def __init__(self, request, data):
+        self.pk = PK()
+        items = []
+        if type(data) in (str, unicode):
+            # BEWARE, UGLY HACK!!! Data should be list there already!
+            data = json.loads(data)
+        for kwargs in data:
+            items.append(Node(**dict(kwargs.items() +
+                                     [('id', self.pk.next())])))
+        super(NodeDataGrid, self).__init__(request, FakeQuerySet(
+            Node, items=items), optimize_sorts=False)
+        self.default_sort = []
+        self.default_columns = ['name', 'is_sync', 'is_primary']
+
+    # hack
+    def load_state(self, render_context=None):
+        if self.request.user.is_authenticated():
+            def get_profile():
+                raise SiteProfileNotAvailable
+            setattr(self.request.user, 'get_profile', get_profile)
+        super(NodeDataGrid, self).load_state(render_context)
+
+
+    # def add(self):
+    #     id = self.pk.next()
+    #     self.queryset.add({'name': 'node%s' % (id,), 'is_sync': False,
+    #                        'is_async': False, 'is_primary': False, 'id': id})
+    #
+    # def remove(self):
+    #     pass
+
+
+class DataGridWidget(forms.widgets.Input):
+    template_name = 'data_grid_field.html'
+
+    def get_context(self, name, value, attrs=None):
+        ctx = super(DataGridWidget, self).get_context_data()
+        ctx['data_grid'] = NodeDataGrid(self.request, data=value)
+        return ctx
+
+    def value_from_datadict(self, data, files, name):
+        base, match = None, re.match('(.*)_[0-9]+', name)
+        if match:
+            base = match.group(1)
+        if base:
+            pattern = re.compile(base + '_[0-9]+')
+            for key in data:
+                if re.match(pattern, key):
+                    return data[key]
+        return super(DataGridWidget, self).value_from_datadict(
+            data, files, name)
+
+    class Media:
+        css = {'all': ('css/datagrid.css',
+                       'muranodashboard/css/datagridfield.css')}
+        js = ('js/jquery.gravy.js',
+              'js/datagrid.js',
+              'muranodashboard/js/datagridfield.js')
+
+
+class DataGridCompound(forms.MultiWidget):
+    def __init__(self, attrs=None):
+        _widgets = (DataGridWidget(),
+                    forms.HiddenInput(attrs={'class': 'gridfield-hidden'}))
+        super(DataGridCompound, self).__init__(_widgets, attrs)
+
+    def update_request(self, request):
+        self.widgets[0].request = request
+
+    def decompress(self, value):
+        if value != '':
+            return [json.loads(value), value]
+        else:
+            return [None, None]
+
+
+class DataGridField(forms.MultiValueField):
+    def __init__(self, *args, **kwargs):
+        super(DataGridField, self).__init__(
+            (forms.CharField(required=False), forms.CharField()),
+            *args, widget=DataGridCompound, **kwargs)
+
+    def update_request(self, request):
+        self.widget.update_request(request)
+
+    def compress(self, data_list):
+        return data_list[1]
