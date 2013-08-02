@@ -95,16 +95,17 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         step0_data = form_list[0].cleaned_data
         step1_data = form_list[1].cleaned_data
-        step2_data = form_list[2].cleaned_data
+        last_step_data = form_list[-1].cleaned_data
 
         service_type = step0_data.get('service', '')
         parameters = {'type': service_type}
 
         parameters['units'] = []
         parameters['unitNamingPattern'] = step1_data.get('unit_name_template')
-        parameters['availabilityZone'] = step2_data.get('availability_zone')
-        parameters['flavor'] = step2_data.get('flavor')
-        parameters['osImage'] = step2_data.get('image')
+        parameters['availabilityZone'] = \
+            last_step_data.get('availability_zone')
+        parameters['flavor'] = last_step_data.get('flavor')
+        parameters['osImage'] = last_step_data.get('image')
 
         if service_type == AD_NAME:
             parameters['name'] = str(step1_data.get('dc_name', 'noname'))
@@ -134,10 +135,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
                     step1_data.get('password_field1', ''))
                 parameters['saPassword'] = sa_password
                 parameters['mixedModeAuth'] = mixed_mode
-
-            if service_type == MSSQL_CLUSTER_NAME:
-                clusterIP = str(step1_data.get('fixed_ip', ''))
-                parameters['clusterIP'] = clusterIP
+                if parameters['domain'] == '':
+                    parameters['domain'] = None
 
             if service_type == ASP_NAME or service_type == ASP_FARM_NAME:
                 parameters['repository'] = step1_data.get('repository', '')
@@ -152,6 +151,31 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
             for unit in range(instance_count):
                 parameters['units'].append({})
+
+            if service_type == MSSQL_CLUSTER_NAME:
+                parameters['domainAdminUserName'] =  \
+                    step1_data.get('ad_user', '')
+                parameters['domainAdminPassword'] =  \
+                    step1_data.get('ad_password', '')
+
+                step2_data = form_list[2].cleaned_data
+                parameters['clusterName'] = step2_data.get('clusterName', '')
+                parameters['clusterIP'] = str(step2_data.get('fixed_ip', ''))
+                parameters['agGroupName'] = step2_data.get('agGroupName', '')
+                parameters['agListenerIP'] = step2_data.get('agListenerIP', '')
+                parameters['agListenerName'] = step2_data.get('agListenerName',
+                                                              '')
+                parameters['sqlServicePassword'] = \
+                    step2_data.get('sqlServicePassword', '')
+                parameters['sqlServiceUserName'] = \
+                    step2_data.get('sqlServiceUserName', '')
+
+                #TODO:It's a draft. Change it after datagrid implamanted
+                parameters['databases'] = ["db1", "db2"],
+                for unit in parameters['units']:
+                    unit['isMaster'] = False
+                    unit['isSync'] = False
+
         try:
             api.service_create(self.request, environment_id, parameters)
         except HTTPForbidden:

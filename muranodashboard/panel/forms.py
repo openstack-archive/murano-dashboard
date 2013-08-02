@@ -30,6 +30,10 @@ from consts import *
 log = logging.getLogger(__name__)
 CONFIRM_ERR_DICT = {'required': _('Please confirm your password')}
 
+validate_name = RegexValidator(re.compile(r'^[-\w]+$'),
+                               _(u'Just letters, numbers, underscores     \
+                                  and hyphens are allowed.'), 'invalid')
+
 
 def perform_password_check(password1, password2, type):
     if password1 != password2:
@@ -52,7 +56,6 @@ def validate_domain_name(name_to_check):
 
 
 def validate_cluster_ip(request, ip_ranges):
-
     def perform_checking(ip):
         validate_ipv4_address(ip)
         try:
@@ -205,10 +208,6 @@ class WizardFormADConfiguration(forms.Form,
 
 class WizardFormIISConfiguration(forms.Form,
                                  CommonPropertiesExtension):
-    name_re = re.compile(r'^[-\w]+$')
-    validate_name = RegexValidator(name_re,
-                                   _(u'Just letters, numbers, underscores     \
-                                   and hyphens are allowed.'), 'invalid')
 
     service_name = forms.CharField(
         label=_('Service Name'),
@@ -350,14 +349,44 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
                                                                   **kwargs)
-        request = self.initial.get('request')
-        CommonPropertiesExtension.__init__(self)
         self.fields.insert(3, 'external_ad', forms.BooleanField(
             label=_('Active Directory is configured '
                     'by the System Administrator'),
             required=False))
         self.fields['external_ad'].widget.attrs['class'] = \
             'checkbox external-ad'
+
+        self.fields.insert(4, 'ad_user', forms.CharField(
+            label=_('Active Directory User'),
+            required=False,
+            validators=[validate_name]
+        ))
+        self.fields.insert(5, 'ad_password', forms.CharField(
+            label=_('Active Directory Password'),
+            required=False,
+            widget=forms.PasswordInput(render_value=True))
+        )
+
+    def clean(self):
+        super(WizardFormMSSQLClusterConfiguration, self).clean()
+        if not self.cleaned_data.get('external_ad'):
+            if not self.cleaned_data.get('domain'):
+                raise forms.ValidationError(
+                    _('Domain for MS SQL Cluster is required. '
+                      'Configure Active Directory service first.'))
+        else:
+            if not (self.cleaned_data.get('ad_user') and
+                    self.cleaned_data.get('ad_password')):
+                raise forms.ValidationError(
+                    _('Existent AD User and AD Password is required '
+                      'for service installation '))
+        return self.cleaned_data
+
+
+class WizardMSSQLConfigureAG(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(WizardMSSQLConfigureAG, self).__init__(*args, **kwargs)
+        request = self.initial.get('request')
         try:
             network_list = novaclient(request).networks.list()
         except:
@@ -371,12 +400,42 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
             if cidr != ip_ranges[-1]:
                 ranges += ', '
 
-        self.fields.insert(5, 'fixed_ip', forms.CharField(
+        self.fields.insert(0, 'fixed_ip', forms.CharField(
             label=_('Cluster Static IP'),
-            required=True,
             validators=[validate_cluster_ip(request, ip_ranges)],
             help_text=_('Select IP from available range: ' + ranges),
             error_messages={'invalid': validate_ipv4_address.message}))
+
+        self.fields.insert(4, 'agListenerIP', forms.CharField(
+            label=_('Availability Group Listener IP'),
+            validators=[validate_cluster_ip(request, ip_ranges)],
+            help_text=_('Select IP from the available range: ' + ranges),
+            error_messages={'invalid': validate_ipv4_address.message}))
+
+    clusterName = forms.CharField(
+        label='Cluster Name',
+        help_text='Service name for new SQL Cluster service.'
+    )
+
+    agGroupName = forms.CharField(
+        label='Availability Group Name',
+        help_text='Name of AG during SQL setup'
+    )
+
+    agListenerName = forms.CharField(
+        label='Availability Group Listener Name',
+        validators=[validate_name],
+        help_text='FQDN name of a new DNS entry for AG Listener endpoint')
+
+    sqlServiceUserName = forms.CharField(
+        label='SQL User Name',
+        validators=[validate_name])
+
+    sqlServicePassword1 = PasswordField(
+        label='SQL User Password')
+
+    qlServicePassword2 = PasswordField(
+        label='Confirm Password')
 
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
@@ -385,14 +444,9 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
         initial=1,
         help_text=_('Enter an integer value between 1 and 100'))
 
-    def clean(self):
-        super(WizardFormMSSQLClusterConfiguration, self).clean()
-        if not self.cleaned_data.get('external_ad'):
-            if not self.cleaned_data.get('domain'):
-                raise forms.ValidationError(
-                    _('Domain for MS SQL Cluster is required. '
-                      'Configure Active Directory service first.'))
-        return self.cleaned_data
+
+class WizardMSSQDatagrid(forms.Form):
+    pass
 
 
 class WizardInstanceConfiguration(forms.Form):
@@ -479,4 +533,6 @@ FORMS = [('service_choice', WizardFormServiceType),
          (ASP_FARM_NAME, WizardFormAspNetFarmConfiguration),
          (MSSQL_NAME, WizardFormMSSQLConfiguration),
          (MSSQL_CLUSTER_NAME, WizardFormMSSQLClusterConfiguration),
+         ('mssql_ag_configuration', WizardMSSQLConfigureAG),
+         ('mssql_datagrid', WizardMSSQDatagrid),
          ('instance_configuration', WizardInstanceConfiguration)]
