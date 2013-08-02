@@ -116,6 +116,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
             parameters['units'].append({'isMaster': True,
                                         'recoveryPassword': recovery_password})
             dc_count = int(step1_data.get('dc_count', 1))
+            parameters['adminAccountName'] = step1_data.get('adm_user', '')
             for dc in range(dc_count - 1):
                 parameters['units'].append({
                     'isMaster': False,
