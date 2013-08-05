@@ -65,7 +65,6 @@ $(function() {
     });
 
     $('.modal-footer input.btn-primary').click(function() {
-        //debugger;
         var data = [];
         $('table.datagrid tbody tr').each(function(i, tr) {
             function getInputVal(td) {
@@ -74,7 +73,7 @@ $(function() {
             data.push({
                 name: trimLabel($(tr).children().eq(0).text()),
                 is_sync: getInputVal($(tr).children().eq(1)),
-                is_primary: getInputVal($(tr).children().eq(3))
+                is_primary: getInputVal($(tr).children().eq(2))
             })
         });
         $('input.gridfield-hidden').val(JSON.stringify(data));

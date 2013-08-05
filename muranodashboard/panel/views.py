@@ -14,6 +14,7 @@
 
 import logging
 import re
+import json
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -146,8 +147,7 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 parameters['loadBalancerPort'] = step1_data.get('lb_port', 80)
 
             instance_count = 1
-            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME,
-                                MSSQL_CLUSTER_NAME]:
+            if service_type in [IIS_FARM_NAME, ASP_FARM_NAME]:
                 instance_count = int(step1_data.get('instance_count', 1))
 
             for unit in range(instance_count):
@@ -167,16 +167,22 @@ class Wizard(ModalFormMixin, SessionWizardView):
                 parameters['agListenerName'] = step2_data.get('agListenerName',
                                                               '')
                 parameters['sqlServicePassword'] = \
-                    step2_data.get('sqlServicePassword', '')
+                    step2_data.get('sqlServicePassword1', '')
                 parameters['sqlServiceUserName'] = \
                     step2_data.get('sqlServiceUserName', '')
 
-                #TODO:It's a draft. Change it after datagrid implamanted
-                parameters['databases'] = ["db1", "db2"],
-                for unit in parameters['units']:
-                    unit['isMaster'] = False
-                    unit['isSync'] = False
-
+                step3_data = form_list[3].cleaned_data
+                parameters['databases'] = step3_data.get('databases')
+                form_nodes = step3_data.get('nodes')
+                units = []
+                if form_nodes:
+                    nodes = json.loads(step3_data.get('nodes'))
+                    for node in nodes:
+                        unit = {}
+                        unit['isMaster'] = node['is_primary']
+                        unit['isSync'] = node['is_sync']
+                        units.append(unit)
+                parameters['units'] = units
         try:
             api.service_create(self.request, environment_id, parameters)
         except HTTPForbidden:
@@ -191,10 +197,17 @@ class Wizard(ModalFormMixin, SessionWizardView):
             return HttpResponseRedirect(url)
 
     def get_form_initial(self, step):
+        init_dict = {}
         if step != 'service_choice':
-            return self.initial_dict.get(step, {'request': self.request})
-        else:
-            return self.initial_dict.get(step, {})
+            init_dict['request'] = self.request
+
+        if step == 'mssql_datagrid' and self.storage.current_step_data:
+            instance_count = self.storage.current_step_data.get(
+                'mssql_ag_configuration-instance_count')
+            if instance_count:
+                init_dict['instance_count'] = int(instance_count)
+
+        return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)

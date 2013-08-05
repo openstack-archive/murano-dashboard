@@ -113,6 +113,24 @@ class PasswordField(forms.CharField):
             widget=forms.PasswordInput(render_value=True))
 
 
+class DatabaseListField(forms.CharField):
+    def to_python(self, value):
+        """Normalize data to a list of strings."""
+
+        # Return an empty list if no input was given.
+        if not value:
+            return []
+        return value.split(',')
+
+    def validate(self, value):
+        """Check if value consists only of valid names."""
+
+        # Use the parent's handling of required fields, etc.
+        super(DatabaseListField, self).validate(value)
+        for db_name in value:
+            validate_name(db_name.strip())
+
+
 class WizardFormServiceType(forms.Form):
     ad_service = (AD_NAME, 'Active Directory')
     iis_service = (IIS_NAME, 'Internet Information Services')
@@ -318,7 +336,7 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         label=_('Mixed-mode Authentication '),
         initial=True,
         required=False)
-    mixed_mode.widget.attrs['class'] = 'checkbox mixed-mode'
+    mixed_mode.widget.attrs['class'] = 'checkbox'
     password_field1 = PasswordField(
         _('SA password'),
         help_text=_('SQL server System Administrator account'))
@@ -357,7 +375,6 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
     def __init__(self, *args, **kwargs):
         super(WizardFormMSSQLClusterConfiguration, self).__init__(*args,
                                                                   **kwargs)
-        # CommonPropertiesExtension.__init__(self)
         self.fields.insert(3, 'external_ad', forms.BooleanField(
             label=_('Active Directory is configured '
                     'by the System Administrator'),
@@ -421,6 +438,11 @@ class WizardMSSQLConfigureAG(forms.Form):
             help_text=_('Select IP from the available range: ' + ranges),
             error_messages={'invalid': validate_ipv4_address.message}))
 
+        self.fields['sqlServicePassword1'].widget.attrs[
+            'class'] = 'password'
+        self.fields['sqlServicePassword2'].widget.attrs[
+            'class'] = 'confirm_password'
+
     clusterName = forms.CharField(
         label='Cluster Name',
         help_text='Service name for new SQL Cluster service.'
@@ -443,7 +465,7 @@ class WizardMSSQLConfigureAG(forms.Form):
     sqlServicePassword1 = PasswordField(
         label='SQL User Password')
 
-    qlServicePassword2 = PasswordField(
+    sqlServicePassword2 = PasswordField(
         label='Confirm Password')
 
     instance_count = forms.IntegerField(
@@ -455,25 +477,41 @@ class WizardMSSQLConfigureAG(forms.Form):
 
 
 class WizardMSSQLDatagrid(forms.Form):
-    nodes = DataGridField(
-        initial=json.dumps(
-            [{'name': 'node1', 'is_sync': True, 'is_primary': True}]
-        ))
+    nodes = DataGridField()
+
+    databases = DatabaseListField(
+        label=_('Database list'),
+        help_text=_('Enter existent or new databases names which will be '
+                    'created during service setup'))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLDatagrid, self).__init__(*args, **kwargs)
         self.fields['nodes'].update_request(self.initial.get('request'))
+        nodes = []
+        instance_count = self.initial.get('instance_count')
+        if instance_count:
+            for index in xrange(instance_count):
+                initial_data_grid = {}
+                initial_data_grid['name'] = 'node' + str(index + 1)
+                initial_data_grid['is_sync'] = True
+                if index == 0:
+                    initial_data_grid['is_primary'] = True
+                else:
+                    initial_data_grid['is_primary'] = False
+                nodes.append(initial_data_grid)
 
+            self.fields['nodes'].initial = json.dumps(nodes)
 
-# def user_list(request, mode, template_name='sandbox.html'):
-#     if request.method == 'POST':
-#         print request.POST
-#         form = SampleForm(request.POST, request=request)
-#     else:
-#         form = SampleForm(request=request)
-#     ctx = RequestContext(request)
-#     ctx.update({'sampleform': form})
-#     return render_to_response(template_name, ctx)
+    def clean(self):
+        databases = self.cleaned_data.get('databases')
+        if databases:
+            strip_list = []
+
+            for db in databases:
+                strip_list.append(db.strip())
+            self.cleaned_data['databases'] = strip_list
+        return self.cleaned_data
+
 
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'))
