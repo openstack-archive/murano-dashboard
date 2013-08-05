@@ -17,6 +17,7 @@
 
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
+DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
 PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev"
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
@@ -193,6 +194,15 @@ CLONE_FROM_GIT=$1
 			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
+		curdir=`pwd`
+		cd $SERVICE_CONTENT_DIRECTORY/dist
+		wget $DJBLETS_ZIP_URL/master.zip
+		unzip master.zip
+		cd djblets-master
+		./setup.py install
+		cd ..
+		rm -r djblets*
+		cd $curdir
 	else
 		log "$MRN_CND_SPY not found!"
 	fi
