@@ -71,7 +71,7 @@ def validate_cluster_ip(request, ip_ranges):
                 raise forms.ValidationError(_('Specified Cluster Static IP '
                                               'is already in use'))
 
-        if not all_matching_cidrs(ip, ip_ranges):
+        if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
             raise forms.ValidationError(_('Specified Cluster Static IP is'
                                           'not in valid IP range'))
     return perform_checking
@@ -417,25 +417,32 @@ class WizardMSSQLConfigureAG(forms.Form):
             network_list = novaclient(request).networks.list()
         except:
             network_list = []
+            ip_ranges = []
             exceptions.handle(request,
-                              _("Unable to retrieve list of networks."))
-        ip_ranges = [network.cidr for network in network_list]
-        ranges = ''
-        for cidr in ip_ranges:
-            ranges += cidr
-            if cidr != ip_ranges[-1]:
-                ranges += ', '
+                              _("Unable to retrieve list of networks."),
+                              ignore=True)
+        else:
+            ip_ranges = [network.cidr for network in network_list]
+            ranges = ''
+            for cidr in ip_ranges:
+                ranges += cidr
+                if cidr != ip_ranges[-1]:
+                    ranges += ', '
+        if ip_ranges:
+            help_text = _('Select IP from available range: ' + ranges)
+        else:
+            help_text = _('Specify valid fixed IP')
 
         self.fields.insert(0, 'fixed_ip', forms.CharField(
             label=_('Cluster Static IP'),
             validators=[validate_cluster_ip(request, ip_ranges)],
-            help_text=_('Select IP from available range: ' + ranges),
+            help_text=help_text,
             error_messages={'invalid': validate_ipv4_address.message}))
 
         self.fields.insert(4, 'agListenerIP', forms.CharField(
             label=_('Availability Group Listener IP'),
             validators=[validate_cluster_ip(request, ip_ranges)],
-            help_text=_('Select IP from the available range: ' + ranges),
+            help_text=help_text,
             error_messages={'invalid': validate_ipv4_address.message}))
 
         self.fields['sqlServicePassword1'].widget.attrs[
