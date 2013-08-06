@@ -218,17 +218,14 @@
             </p>
             <p><strong>{% blocktrans %} Active Directory is configured by the System Administrator: {% endblocktrans %}</strong>
                 {% blocktrans %} AD domain must be specified for the MS SQL Server Cluster. <i>This checkbox should be enabled only in case
-                your environment has scripts with valid rules that will join created service to the existent domain automatically. </i>{% endblocktrans %}
+                your environment has scripts with valid rules that will join created service to the existent domain automatically. </i>
+                 Also AD User (administrator account) and AD Password should be entered to have access to the existing Active Directory Domain.{% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Active Directory Domain: {% endblocktrans %}</strong>
                 {% blocktrans %} Service can be joined to the Active Directory
                     domain. If you want to create an AD domain create the AD
                     Service first. {% endblocktrans %}
-            </p>
-            <p>
-                <strong>{% blocktrans %}Cluster Static IP: {% endblocktrans %}</strong>
-                {% blocktrans %} Specify a valid IPv4 fixed IP. Avaliable ranges shown in a tooltip.{% endblocktrans %}
             </p>
             <p>
                 <strong>{% blocktrans %} Mixed-mode Authentication: {% endblocktrans %}</strong>
@@ -244,15 +241,6 @@
                 {% blocktrans %} Set system administrator password for the MS
                     SQL Server.{% endblocktrans %}
             </p>
-            <p>
-                <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-                {% blocktrans %} Several instances with Microsoft SQL Server
-                    can be created at one time. {% endblocktrans %}
-            </p>
-
-
-        {% elif type == '' %}
-            <p>{% blocktrans %} Please try again {% endblocktrans %}</p>
 
         {% endif %}
         <p>
@@ -260,7 +248,59 @@
             {% blocktrans %} For your convenience all instance hostnames can be named in the same way. Enter a name and use # character for incrementation. For example, host# turns into host1, host2, etc. Please follow Windows hostname restrictions.  {% endblocktrans %}
         </p>
     {% endif %}
-    {% if wizard.steps.index == 2 %}
+    {% if wizard.steps.current == 'mssql_ag_configuration' %}
+        <h3> {% blocktrans %} MS SQL Failover Cluster {% endblocktrans %} </h3>
+        <p>
+            <strong>{% blocktrans %}Cluster Static IP: {% endblocktrans %}</strong>
+            {% blocktrans %} Specify a valid IPv4 fixed IP.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}Cluster Name: {% endblocktrans %}</strong>
+            {% blocktrans %}Specify a name of a cluster. Just A-Z, a-z, 0-9, dash and underline are allowed.
+            {% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}Availability Group Name: {% endblocktrans %}</strong>
+            {% blocktrans %}Specify a name of an AG. Just A-Z, a-z, 0-9, dash and underline are allowed.
+            {% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}Availability Group Listener Name: {% endblocktrans %}</strong>
+            {% blocktrans %} Specify a name of an AG Listener . Just A-Z, a-z, 0-9, dash and underline are allowed.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}Availability Group Listener IP: {% endblocktrans %}</strong>
+            {% blocktrans %} Specify a valid IPv4 fixed IP.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}SQL User Name: {% endblocktrans %}</strong>
+            {% blocktrans %}User name that will be created to manage cluster instances.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}SQL User Password: {% endblocktrans %}</strong>
+            {% blocktrans %}User password that will be created to manage cluster instances. {% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
+            {% blocktrans %} Several instances with Microsoft SQL Server
+                can be created at one time. {% endblocktrans %}
+        </p>
+    {% endif %}
+    {% if wizard.steps.current == 'mssql_datagrid' %}
+        <h3> {% blocktrans %} MS SQL Failover Cluster {% endblocktrans %} </h3>
+        <p>
+            <strong>{% blocktrans %}Nodes: {% endblocktrans %}</strong>
+            {% blocktrans %}Configure cluster instances. Cluster node  quantity can be set with 'Add' and 'Remove' buttons.
+            Configure Sync or Async mode by enabling corresponding checkbox. Also one Master node need to be selected.{% endblocktrans %}
+        </p>
+        <p>
+            <strong>{% blocktrans %}Database list: {% endblocktrans %}</strong>
+            {% blocktrans %} Specify names for new databases which will be created as part of service installation.
+                Just A-Z, a-z, 0-9, dash and underline are allowed.{% endblocktrans %}
+        </p>
+    {% endif %}
+
+    {% if wizard.steps.current == 'instance_configuration' %}
         <h3>{% trans "Instance Configuration" %}:</h3>
         <p>{% blocktrans %}Specify some instance parameters on which service would be created.{% endblocktrans %}</p>
         <p>
