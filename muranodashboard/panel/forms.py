@@ -114,6 +114,14 @@ class PasswordField(forms.CharField):
 
 
 class DatabaseListField(forms.CharField):
+    validate_mssql_identifier = RegexValidator(
+        re.compile(r'^[a-zA-z_][a-zA-Z0-9_$#@]*$'),
+        _((u'First symbol should be latin letter or underscore. Subsequent ' +
+           u'symbols can be latin letter, numeric, underscore, at sign, ' +
+           u'number sign or dollar sign')))
+
+    default_error_messages = {'invalid': validate_mssql_identifier.message}
+
     def to_python(self, value):
         """Normalize data to a list of strings."""
 
@@ -128,7 +136,7 @@ class DatabaseListField(forms.CharField):
         # Use the parent's handling of required fields, etc.
         super(DatabaseListField, self).validate(value)
         for db_name in value:
-            validate_name(db_name.strip())
+            self.validate_mssql_identifier(db_name.strip())
 
 
 class WizardFormServiceType(forms.Form):
@@ -495,8 +503,14 @@ class WizardMSSQLDatagrid(forms.Form):
 
     databases = DatabaseListField(
         label=_('Database list'),
-        help_text=_('Enter existent or new databases names which will be '
-                    'created during service setup'))
+        help_text=_(
+            (u'Enter existent or new databases names which will be ' +
+             u'created during service setup. ' +
+             u'Here should come comma-separated list of database names, ' +
+             u'where each name has the following syntax: first symbol should' +
+             u' be latin letter or underscore; subsequent symbols can be ' +
+             u'latin letter, numeric, underscore, at sign, number sign or ' +
+             u'dollar sign')))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLDatagrid, self).__init__(*args, **kwargs)
