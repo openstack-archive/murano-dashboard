@@ -1,4 +1,4 @@
-include muranodashboard/templates/*
+recursive-include muranodashboard/templates *
 include tools/pip-requires
 include run_tests.sh
 include ChangeLog
