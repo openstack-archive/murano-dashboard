@@ -18,7 +18,7 @@
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
 DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
-PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev"
+PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip"
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
@@ -199,7 +199,7 @@ CLONE_FROM_GIT=$1
 		wget $DJBLETS_ZIP_URL/master.zip
 		unzip master.zip
 		cd djblets-master
-		./setup.py install
+		python setup.py install
 		cd ..
 		rm -r djblets*
 		cd $curdir
