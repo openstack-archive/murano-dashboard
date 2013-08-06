@@ -387,8 +387,13 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
             required=False,
             validators=[validate_name]
         ))
-        self.fields.insert(5, 'ad_password', forms.CharField(
+        self.fields.insert(5, 'ad_password1', forms.CharField(
             label=_('Active Directory Password'),
+            required=False,
+            widget=forms.PasswordInput(render_value=True))
+        )
+        self.fields.insert(6, 'ad_password2', forms.CharField(
+            label=_('Confirm Password'),
             required=False,
             widget=forms.PasswordInput(render_value=True))
         )
@@ -401,11 +406,13 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
                     _('Domain for MS SQL Cluster is required. '
                       'Configure Active Directory service first.'))
         else:
-            if not (self.cleaned_data.get('ad_user') and
-                    self.cleaned_data.get('ad_password')):
+            password1 = self.cleaned_data.get('ad_password1')
+            password2 = self.cleaned_data.get('ad_password2')
+            if not (self.cleaned_data.get('ad_user') and password1):
                 raise forms.ValidationError(
                     _('Existent AD User and AD Password is required '
                       'for service installation '))
+            perform_password_check(password1, password2, 'Active Directory')
         return self.cleaned_data
 
 

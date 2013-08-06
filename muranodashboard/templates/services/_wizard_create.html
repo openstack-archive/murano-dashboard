@@ -284,19 +284,23 @@
 {% block modal-footer %}
     <script type="text/javascript">
     function check_mixed_mode(){
-        if ($("input[id*='mixed_mode']").prop('checked')) {
+        var checked = $("input[id*='mixed_mode']").prop('checked')
+        if ( checked === true) {
             $("input[id*='password_field']").removeAttr("disabled");
-        } else {
+        }
+        if (checked === false) {
             $("input[id*='password_field']").attr("disabled", "disabled");
         }
     }
 
     function check_preconfigured_id(){
-        if ($("input[id*='external_ad']").prop('checked')) {
+        var checked = $("input[id*='external_ad']").prop('checked')
+        if ( checked== true) {
             $("select[id*='-domain']").attr("disabled", "disabled");
             $("label[for*='ad_user']").parent().css({'display': 'inline-block'});
             $("label[for*='ad_password']").parent().css({'display': 'inline-block'});
-        } else {
+        }
+        if (checked == false) {
             $("select[id*='-domain']").removeAttr("disabled");
             $("label[for*='ad_user']").parent().css({'display': 'none'});
             $("label[for*='ad_password']").parent().css({'display': 'none'});
