@@ -35,6 +35,45 @@ $(function() {
         return baseMax[0]+(+baseMax[1]+1);
     }
 
+    function getNumOfSync() {
+        var checked = 0;
+        $('table.datagrid tbody td input:checkbox').each(function(index, cb) {
+            if ( $(cb).attr('checked') )
+                checked++;
+        });
+        return checked;
+    }
+
+    function validate_sync(event) {
+        var checkbox = $(event.target);
+
+        if ( checkbox.attr('checked') ) {
+            if ( getNumOfSync() > 2 ) {
+                alert('No more than 2 nodes can be in sync-mode!')
+                checkbox.attr('checked', false);
+            }
+        } else if ( checkbox.parents().eq(1).find('input:radio').attr('checked') ) {
+            alert('Primary node is always in sync-mode!');
+            checkbox.attr('checked', true);
+        }
+    }
+
+    var primary = $('table.datagrid tbody input:radio[checked="checked"]').parents().eq(1);
+
+    function validate_primary(event) {
+        var radio = $(event.target),
+            checkbox = radio.parents().eq(1).find('input:checkbox');
+        if ( !checkbox.attr('checked') ) {
+            if ( getNumOfSync() == 2 )
+                primary.find('input:checkbox').attr('checked', false);
+            checkbox.attr('checked', true);
+        }
+        primary = radio.parents().eq(1);
+    }
+
+    $('table.datagrid tbody td input:checkbox').click(validate_sync);
+    $('table.datagrid tbody td input:radio').click(validate_primary);
+
     $('button#node-add').click(function() {
         //debugger;
         if ( $('table.datagrid tbody tr').length >= MAX_NODES ) {
@@ -45,6 +84,11 @@ $(function() {
             clone = lastRow.clone();
         clone.toggleClass('even').toggleClass('odd');
         clone.find('td:first-child').text(getNextLabel());
+        // toggle of sync and primary buttons of clone
+        clone.find('input:checkbox').attr('checked', false);
+        clone.find('input:checkbox').click(validate_sync);
+        clone.find('input:radio').attr('checked', false);
+        clone.find('input:radio').click(validate_primary);
         lastRow.after(clone);
     });
 
