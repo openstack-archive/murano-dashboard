@@ -555,8 +555,7 @@ class WizardMSSQLDatagrid(forms.Form):
 class WizardInstanceConfiguration(forms.Form):
     flavor = forms.ChoiceField(label=_('Instance flavor'))
 
-    image = forms.ChoiceField(label=_('Instance image'),
-                              required=False)
+    image = forms.ChoiceField(label=_('Instance image'))
 
     availability_zone = forms.ChoiceField(label=_('Availability zone'),
                                           required=False)
