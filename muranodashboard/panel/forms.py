@@ -78,6 +78,13 @@ def validate_cluster_ip(request, ip_ranges):
     return perform_checking
 
 
+def validate_hostname_template(template, instance_count):
+    if template and instance_count > 1:
+        if not '#' in template:
+            raise forms.ValidationError(_('Incrementation symbol "#" is '
+                                          'required in the Hostname template'))
+
+
 class PasswordField(forms.CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
@@ -234,6 +241,11 @@ class WizardFormADConfiguration(forms.Form,
         perform_password_check(recovery_password1,
                                recovery_password2,
                                'Recovery')
+
+        instance_count = self.cleaned_data.get('dc_count')
+        hostname_template = self.cleaned_data.get('unit_name_template')
+        validate_hostname_template(hostname_template, instance_count)
+
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -274,6 +286,9 @@ class WizardFormIISConfiguration(forms.Form,
         perform_password_check(admin_password1,
                                admin_password2,
                                'Administrator')
+        instance_count = self.cleaned_data.get('instance_count')
+        hostname_template = self.cleaned_data.get('unit_name_template')
+        validate_hostname_template(hostname_template, instance_count)
         return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -426,6 +441,38 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
 
 
 class WizardMSSQLConfigureAG(forms.Form):
+    clusterName = forms.CharField(
+        label='Cluster Name',
+        help_text='Service name for new SQL Cluster service.'
+    )
+
+    agGroupName = forms.CharField(
+        label='Availability Group Name',
+        help_text='Name of AG during SQL setup'
+    )
+
+    agListenerName = forms.CharField(
+        label='Availability Group Listener Name',
+        validators=[validate_name],
+        help_text='FQDN name of a new DNS entry for AG Listener endpoint')
+
+    sqlServiceUserName = forms.CharField(
+        label='SQL User Name',
+        validators=[validate_name])
+
+    sqlServicePassword1 = PasswordField(
+        label='SQL User Password')
+
+    sqlServicePassword2 = PasswordField(
+        label='Confirm Password')
+
+    instance_count = forms.IntegerField(
+        label=_('Instance Count'),
+        min_value=1,
+        max_value=100,
+        initial=1,
+        help_text=_('Enter an integer value between 1 and 100'))
+
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLConfigureAG, self).__init__(*args, **kwargs)
         request = self.initial.get('request')
@@ -463,38 +510,6 @@ class WizardMSSQLConfigureAG(forms.Form):
         self.fields['sqlServicePassword2'].widget.attrs[
             'class'] = 'confirm_password'
 
-    clusterName = forms.CharField(
-        label='Cluster Name',
-        help_text='Service name for new SQL Cluster service.'
-    )
-
-    agGroupName = forms.CharField(
-        label='Availability Group Name',
-        help_text='Name of AG during SQL setup'
-    )
-
-    agListenerName = forms.CharField(
-        label='Availability Group Listener Name',
-        validators=[validate_name],
-        help_text='FQDN name of a new DNS entry for AG Listener endpoint')
-
-    sqlServiceUserName = forms.CharField(
-        label='SQL User Name',
-        validators=[validate_name])
-
-    sqlServicePassword1 = PasswordField(
-        label='SQL User Password')
-
-    sqlServicePassword2 = PasswordField(
-        label='Confirm Password')
-
-    instance_count = forms.IntegerField(
-        label=_('Instance Count'),
-        min_value=1,
-        max_value=100,
-        initial=1,
-        help_text=_('Enter an integer value between 1 and 100'))
-
 
 class WizardMSSQLDatagrid(forms.Form):
     nodes = DataGridField()
@@ -502,13 +517,11 @@ class WizardMSSQLDatagrid(forms.Form):
     databases = DatabaseListField(
         label=_('Database list'),
         help_text=_(
-            (u'Enter existent or new databases names which will be ' +
-             u'created during service setup. ' +
-             u'Here should come comma-separated list of database names, ' +
-             u'where each name has the following syntax: first symbol should' +
-             u' be latin letter or underscore; subsequent symbols can be ' +
-             u'latin letter, numeric, underscore, at sign, number sign or ' +
-             u'dollar sign')))
+            _(u'Here should come comma-separated list of database names, '
+              u'where each name has the following syntax: first symbol should'
+              u' be latin letter or underscore; subsequent symbols can be '
+              u'latin letter, numeric, underscore, at sign, number sign or '
+              u'dollar sign')))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLDatagrid, self).__init__(*args, **kwargs)
