@@ -63,9 +63,10 @@ def validate_cluster_ip(request, ip_ranges):
         validate_ipv4_address(ip)
         try:
             ip_info = novaclient(request).fixed_ips.get(ip)
-        except:
+        except exceptions.UNAUTHORIZED:
             exceptions.handle(request, _("Unable to retrieve information "
-                                         "about fixed IP or IP is not valid."))
+                                         "about fixed IP or IP is not valid."),
+                              ignore=True)
         else:
             if ip_info.hostname:
                 raise forms.ValidationError(_('Specified Cluster Static IP '
@@ -433,9 +434,6 @@ class WizardMSSQLConfigureAG(forms.Form):
         except:
             network_list = []
             ip_ranges = []
-            exceptions.handle(request,
-                              _("Unable to retrieve list of networks."),
-                              ignore=True)
         else:
             ip_ranges = [network.cidr for network in network_list]
             ranges = ''
