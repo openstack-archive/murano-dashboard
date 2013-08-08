@@ -290,7 +290,8 @@
         <p>
             <strong>{% blocktrans %}Nodes: {% endblocktrans %}</strong>
             {% blocktrans %}Configure cluster instances. Cluster node  quantity can be set with 'Add' and 'Remove' buttons.
-            Configure Sync or Async mode by enabling corresponding checkbox. Also one Master node need to be selected.{% endblocktrans %}
+            Configure Sync mode by enabling corresponding checkbox. All other nodes will be in Async mode. Just 2 nodes are allowed to be Sync.
+                Also one Master node need to be selected. SQL Failover cluster has limit of 5 instances.{% endblocktrans %}
         </p>
         <p>
             <strong>{% blocktrans %}Database list: {% endblocktrans %}</strong>
