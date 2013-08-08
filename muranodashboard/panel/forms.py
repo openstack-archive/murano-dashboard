@@ -469,9 +469,8 @@ class WizardMSSQLConfigureAG(forms.Form):
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
         min_value=1,
-        max_value=100,
-        initial=1,
-        help_text=_('Enter an integer value between 1 and 100'))
+        max_value=5,
+        help_text=_('Enter an integer value between 1 and 5'))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLConfigureAG, self).__init__(*args, **kwargs)
@@ -516,12 +515,8 @@ class WizardMSSQLDatagrid(forms.Form):
 
     databases = DatabaseListField(
         label=_('Database list'),
-        help_text=_(
-            _(u'Here should come comma-separated list of database names, '
-              u'where each name has the following syntax: first symbol should'
-              u' be latin letter or underscore; subsequent symbols can be '
-              u'latin letter, numeric, underscore, at sign, number sign or '
-              u'dollar sign')))
+        help_text=_(u'Enter comma separated list of databases '
+                    u'that will be created'))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLDatagrid, self).__init__(*args, **kwargs)

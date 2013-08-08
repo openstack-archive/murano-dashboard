@@ -282,8 +282,7 @@
         </p>
         <p>
             <strong>{% blocktrans %} Instance Count: {% endblocktrans %} </strong>
-            {% blocktrans %} Several instances with Microsoft SQL Server
-                can be created at one time. {% endblocktrans %}
+            {% blocktrans %} Microsoft SQL Failover Cluster includes up to 5 instances.{% endblocktrans %}
         </p>
     {% endif %}
     {% if wizard.steps.current == 'mssql_datagrid' %}
@@ -296,7 +295,9 @@
         <p>
             <strong>{% blocktrans %}Database list: {% endblocktrans %}</strong>
             {% blocktrans %} Specify names for new databases which will be created as part of service installation.
-                Just A-Z, a-z, 0-9, dash and underline are allowed.{% endblocktrans %}
+                Here should come comma-separated list of database names, where each name has the following syntax: first symbol
+                should be latin letter or underscore; subsequent symbols can be latin letter, numeric, underscore,
+                at sign, number sign or dollar sign.{% endblocktrans %}
         </p>
     {% endif %}
 
