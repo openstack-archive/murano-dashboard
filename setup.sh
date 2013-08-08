@@ -241,9 +241,26 @@ preinst()
 		log "\"$_PREREQ\" found, doing next steps...."
         fi
 }
+
+# rebuild static
+rebuildstatic()
+{
+    horizon_manage=$(dpkg-query -L openstack-dashboard | grep manage.py)
+    if [ $? -ne 0 ]; then
+	log "openstack-dashboard manage.py not found, exiting!"
+	exit 1
+    fi
+    python $horizon_manage collectstatic --noinput
+    if [ $? -ne 0 ]; then
+	log "\"$horizon_manage\" collectstatic failed, exiting!"
+	exit 1
+    fi
+}
+    
 # postinstall
 postinst()
 {
+        rebuildstatic
 	sleep 2
 	service apache2 restart
 }
