@@ -201,12 +201,12 @@ class Wizard(ModalFormMixin, SessionWizardView):
         if step != 'service_choice':
             init_dict['request'] = self.request
 
-        if step == 'mssql_datagrid' and self.storage.current_step_data:
-            instance_count = self.storage.current_step_data.get(
-                'mssql_ag_configuration-instance_count')
+        if step == 'mssql_datagrid':
+            instance_count = self.storage.data['step_data'][
+                'mssql_ag_configuration'].\
+                get('mssql_ag_configuration-instance_count')
             if instance_count:
-                init_dict['instance_count'] = int(instance_count)
-
+                init_dict['instance_count'] = int(instance_count[0])
         return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):

@@ -61,6 +61,9 @@ def validate_domain_name(name_to_check):
 def validate_cluster_ip(request, ip_ranges):
     def perform_checking(ip):
         validate_ipv4_address(ip)
+        if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
+            raise forms.ValidationError(_('Specified Cluster Static IP is'
+                                          'not in valid IP range'))
         try:
             ip_info = novaclient(request).fixed_ips.get(ip)
         except exceptions.UNAUTHORIZED:
@@ -71,10 +74,6 @@ def validate_cluster_ip(request, ip_ranges):
             if ip_info.hostname:
                 raise forms.ValidationError(_('Specified Cluster Static IP '
                                               'is already in use'))
-
-        if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
-            raise forms.ValidationError(_('Specified Cluster Static IP is'
-                                          'not in valid IP range'))
     return perform_checking
 
 
@@ -468,9 +467,10 @@ class WizardMSSQLConfigureAG(forms.Form):
 
     instance_count = forms.IntegerField(
         label=_('Instance Count'),
-        min_value=1,
+        min_value=2,
         max_value=5,
-        help_text=_('Enter an integer value between 1 and 5'))
+        initial=2,
+        help_text=_('Enter an integer value between 2 and 5'))
 
     def __init__(self, *args, **kwargs):
         super(WizardMSSQLConfigureAG, self).__init__(*args, **kwargs)
@@ -508,6 +508,13 @@ class WizardMSSQLConfigureAG(forms.Form):
             'class'] = 'password'
         self.fields['sqlServicePassword2'].widget.attrs[
             'class'] = 'confirm_password'
+
+    def clean(self):
+        fixed_ip = self.cleaned_data.get('fixed_ip')
+        agListenerIP = self.cleaned_data.get('agListenerIP')
+        if fixed_ip == agListenerIP:
+            raise forms.ValidationError(_('Listener IP and Cluster '
+                                          'Static IP should be different'))
 
 
 class WizardMSSQLDatagrid(forms.Form):
