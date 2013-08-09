@@ -22,7 +22,6 @@ from horizon import messages
 
 from muranodashboard.panel import api
 from muranodashboard.openstack.common import timeutils
-from consts import STATUS_ID_READY
 from consts import STATUS_ID_DEPLOYING
 from consts import STATUS_CHOICES
 from consts import STATUS_DISPLAY_CHOICES
@@ -38,7 +37,7 @@ class CreateService(tables.LinkAction):
 
     def allowed(self, request, environment):
         environment_id = self.table.kwargs['environment_id']
-        status = api.get_environment_status(request, environment_id)
+        status = api.get_environment_data(request, environment_id, 'status')
         if status not in [STATUS_ID_DEPLOYING]:
             return True
         return False
@@ -96,7 +95,7 @@ class DeleteService(tables.DeleteAction):
 
     def allowed(self, request, service=None):
         environment_id = self.table.kwargs.get('environment_id')
-        status = api.get_environment_status(request, environment_id)
+        status = api.get_environment_data(request, environment_id, 'status')
 
         return False if status == STATUS_ID_DEPLOYING else True
 
@@ -124,7 +123,11 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        return False if status == STATUS_ID_DEPLOYING else True
+        if status == STATUS_ID_DEPLOYING:
+            return False
+        if environment.version == 0 and not environment.has_services:
+            return False
+        return True
 
     def action(self, request, environment_id):
         try:
@@ -143,10 +146,14 @@ class DeployThisEnvironment(tables.Action):
 
     def allowed(self, request, service):
         environment_id = self.table.kwargs['environment_id']
-        status = api.get_environment_status(request, environment_id)
-        if status not in [STATUS_ID_DEPLOYING, STATUS_ID_READY]:
-            return True
-        return False
+        status, version = api.get_environment_data(request, environment_id,
+                                                   'status', 'version')
+        if status == STATUS_ID_DEPLOYING:
+            return False
+        services = self.table.data
+        if version == 0 and not services:
+            return False
+        return True
 
     def single(self, data_table, request, service_id):
         environment_id = data_table.kwargs['environment_id']

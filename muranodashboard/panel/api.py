@@ -147,6 +147,15 @@ def environments_list(request):
     log.debug('Environment::List')
     environments = muranoclient(request).environments.list()
     log.debug('Environment::List {0}'.format(environments))
+    for index, env in enumerate(environments):
+        environments[index].has_services = False
+        environment = environment_get(request, env.id)
+        for service in environment.services:
+            if service:
+                environments[index].has_services = True
+            break
+        if environments[index].status == u'ready':
+            environments[index].status = u'new'
     return environments
 
 
@@ -193,11 +202,18 @@ def get_environment_name(request, environment_id):
     return environment.name
 
 
-def get_environment_status(request, environment_id):
+def get_environment_data(request, environment_id, *args):
+    """
+    For given list of environment attributes return a values
+    """
+
     session_id = Session.get(request, environment_id)
     environment = muranoclient(request).environments.get(environment_id,
                                                          session_id)
-    return environment.status
+    result = []
+    for attr in args:
+        result.append(getattr(environment, attr, None))
+    return result
 
 
 def services_list(request, environment_id):
@@ -227,6 +243,7 @@ def services_list(request, environment_id):
             time = service_data['updated'].replace('T', ' ')[:-7]
 
         service_data['environment_id'] = environment_id
+        service_data['environment_version'] = environment.version
         service_data['operation'] = last_operation
         service_data['operation_updated'] = time
         services.append(service_data)
