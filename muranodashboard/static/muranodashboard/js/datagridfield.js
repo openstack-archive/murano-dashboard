@@ -7,7 +7,7 @@
  */
 $(function() {
     var MAX_NODES = 5,
-        MIN_NODES = 1;
+        MIN_NODES = 2;
 
     function trimLabel(label) {
         return $.trim(label.replace(/(\r\n|\r|\n|↵)/gm, ''));
@@ -94,7 +94,7 @@ $(function() {
 
     $('button#node-remove').click(function() {
         if ( $('table.datagrid tbody tr').length <= MIN_NODES ) {
-            alert('Cannot remove the only node');
+            alert('There cannot be less than ' + MIN_NODES + ' nodes');
             return;
         }
         var labelNum = getMaxLabel(),
