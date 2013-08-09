@@ -17,12 +17,14 @@
 
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
-PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel"
+DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
+PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel unzip"
 PIPAPPS="pip python-pip pip-python"
 PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
+
 # Functions
 # Loger function
 log()
@@ -81,7 +83,7 @@ gitclone()
 	fi
 }
 
-# horizon part
+# patching horizon configuration
 modify_horizon_config() {
 	REMOVE=$2
 	if [ -f $1 ]; then
@@ -116,8 +118,7 @@ HORIZON_CONFIG['exceptions']['recoverable'] = EXTENDED_RECOVERABLE_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
-INSTALLED_APPS += ('muranodashboard',)
-#INSTALLED_APPS = ('muranodashboard',)
+INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then
@@ -131,6 +132,7 @@ EOF
 	fi
 }
 
+# searching horizon configuration
 find_horizon_config()
 {
 	FOUND=0
@@ -143,8 +145,8 @@ find_horizon_config()
 		fi
 	done
 	if [ $FOUND -eq 0 ];then
-		log "Horizon config not found or openstack-dashboard non installed or set proper \"HORIZON_CONFIGS\" varable, exiting!!!"
-		exit
+		log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
+		exit 1
 	fi
 }
 
@@ -168,9 +170,26 @@ preinst()
         fi
 }
 
+# rebuild static
+rebuildstatic()
+{
+    horizon_manage=$(rpm -ql openstack-dashboard | grep -E "*manage.py$")
+    if [ $? -ne 0 ]; then
+	log "openstack-dashboard manage.py not found, exiting!!!"
+	exit 1
+    fi
+    log "Rebuilding STATIC...."
+    python $horizon_manage collectstatic --noinput
+    if [ $? -ne 0 ]; then
+	log "\"$horizon_manage\" collectstatic failed, exiting!!!"
+	exit 1
+    fi
+}
+
 # postinstall
 postinst()
 {
+        rebuildstatic
         sleep 2
         service httpd restart
 }
@@ -231,6 +250,25 @@ CLONE_FROM_GIT=$1
 			log "$PIPCMD install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
+                # DJBLETS INSTALL START
+                DJBLETS_SUFFIX=master.zip
+                DJBLETS_OUTARCH_FILENAME=djblets-$DJBLETS_SUFFIX
+		cd $SERVICE_CONTENT_DIRECTORY/dist && wget $DJBLETS_ZIP_URL/$DJBLETS_SUFFIX -O $DJBLETS_OUTARCH_FILENAME
+                if [ $? -ne 0 ];then
+                        log " Can't download \"$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+                        exit 1
+                fi
+		cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $DJBLETS_OUTARCH_FILENAME
+                if [ $? -ne 0 ];then
+                        log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+                        exit 1
+                fi
+		cd $SERVICE_CONTENT_DIRECTORY/dist/djblets-master && python setup.py install
+		if [ $? -ne 0 ]; then
+			log "\"$SERVICE_CONTENT_DIRECTORY/dist/djblets-master/setup.py\" python setup FAILS, exiting!"
+			exit 1
+		fi
+		# DJBLETS INSTALL END
 	else
 		log "$MRN_CND_SPY not found!"
 	fi

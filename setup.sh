@@ -22,7 +22,7 @@ PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libx
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-#HORIZON_CONFIGS="/etc/openstack-dashboard/local_settings.py"
+
 # Functions
 # Loger function
 log()
@@ -63,7 +63,7 @@ gitclone()
 	fi
 }
 
-# test install
+# patching horizon configuration
 modify_horizon_config() {
 	REMOVE=$2
 	if [ -f $1 ]; then
@@ -99,7 +99,6 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
-#INSTALLED_APPS = ('muranodashboard',)
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then
@@ -113,6 +112,7 @@ EOF
 	fi
 }
 
+# searching horizon configuration
 find_horizon_config()
 {
 	FOUND=0
@@ -125,11 +125,10 @@ find_horizon_config()
 		fi
 	done
 	if [ $FOUND -eq 0 ];then
-		log "Horizon config not found or openstack-dashboard non installed or set proper \"HORIZON_CONFIGS\" varable, exiting!!!"
-		exit
+		log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
+		exit 1
 	fi
 }
-
 
 # install
 inst()
@@ -164,16 +163,10 @@ CLONE_FROM_GIT=$1
 	MRN_CND_SPY=$SERVICE_CONTENT_DIRECTORY/setup.py
 	if [ -e $MRN_CND_SPY ]; then
 		chmod +x $MRN_CND_SPY
-		log "$MRN_CND_SPY output:_____________________________________________________________"
-		#cd $GIT_CLONE_DIR/$SERVICE_SRV_NAME && $MRN_CND_SPY install
-		#if [ $? -ne 0 ]; then
-		#	log "\"$MRN_CND_SPY\" python setup FAILS, exiting!"
-		#	exit 1
-		#fi
+		log "$MRN_CND_SPY output:_____________________________________________________________"		
 ## Setup through pip
 		# Creating tarball
-		#cd $GIT_CLONE_DIR/$SERVICE_SRV_NAME && $MRN_CND_SPY sdist
-                rm -rf $SERVICE_CONTENT_DIRECTORY/*.egg-info
+		rm -rf $SERVICE_CONTENT_DIRECTORY/*.egg-info
 		cd $SERVICE_CONTENT_DIRECTORY && python $MRN_CND_SPY egg_info
                 if [ $? -ne 0 ];then
                         log "\"$MRN_CND_SPY\" egg info creation FAILS, exiting!!!"
@@ -186,23 +179,31 @@ CLONE_FROM_GIT=$1
 			exit 1
 		fi
 		# Running tarball install
-		#TRBL_FILE=$(basename `ls $GIT_CLONE_DIR/$SERVICE_SRV_NAME/dist/*.tar.gz`)
-		#pip install $GIT_CLONE_DIR/$SERVICE_SRV_NAME/dist/$TRBL_FILE
 		TRBL_FILE=$(basename `ls $SERVICE_CONTENT_DIRECTORY/dist/*.tar.gz`)
 		pip install $SERVICE_CONTENT_DIRECTORY/dist/$TRBL_FILE
 		if [ $? -ne 0 ];then
 			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
-		curdir=`pwd`
-		cd $SERVICE_CONTENT_DIRECTORY/dist
-		wget $DJBLETS_ZIP_URL/master.zip
-		unzip master.zip
-		cd djblets-master
-		python setup.py install
-		cd ..
-		rm -r djblets*
-		cd $curdir
+		# DJBLETS INSTALL START
+                DJBLETS_SUFFIX=master.zip
+                DJBLETS_OUTARCH_FILENAME=djblets-$DJBLETS_SUFFIX
+		cd $SERVICE_CONTENT_DIRECTORY/dist && wget $DJBLETS_ZIP_URL/$DJBLETS_SUFFIX -O $DJBLETS_OUTARCH_FILENAME
+                if [ $? -ne 0 ];then
+                        log " Can't download \"$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+                        exit 1
+                fi
+		cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $DJBLETS_OUTARCH_FILENAME
+                if [ $? -ne 0 ];then
+                        log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+                        exit 1
+                fi
+		cd $SERVICE_CONTENT_DIRECTORY/dist/djblets-master && python setup.py install
+		if [ $? -ne 0 ]; then
+			log "\"$SERVICE_CONTENT_DIRECTORY/dist/djblets-master/setup.py\" python setup FAILS, exiting!"
+			exit 1
+		fi
+		# DJBLETS INSTALL END
 	else
 		log "$MRN_CND_SPY not found!"
 	fi
@@ -245,14 +246,15 @@ preinst()
 # rebuild static
 rebuildstatic()
 {
-    horizon_manage=$(dpkg-query -L openstack-dashboard | grep manage.py)
+    horizon_manage=$(dpkg-query -L openstack-dashboard | grep -E "*manage.py$")
     if [ $? -ne 0 ]; then
-	log "openstack-dashboard manage.py not found, exiting!"
+	log "openstack-dashboard manage.py not found, exiting!!!"
 	exit 1
     fi
+    log "Rebuilding STATIC...."
     python $horizon_manage collectstatic --noinput
     if [ $? -ne 0 ]; then
-	log "\"$horizon_manage\" collectstatic failed, exiting!"
+	log "\"$horizon_manage\" collectstatic failed, exiting!!!"
 	exit 1
     fi
 }
