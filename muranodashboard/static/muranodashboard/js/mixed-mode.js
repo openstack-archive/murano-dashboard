@@ -9,10 +9,11 @@ $(function() {
     function check_mixed_mode(){
         var checked = $("input[id*='mixed_mode']").prop('checked')
         if ( checked === true) {
-            $("input[id*='password_field']").removeAttr("disabled");
-        }
-        if (checked === false) {
-            $("input[id*='password_field']").attr("disabled", "disabled");
+            $("label[for*='password_field']").parent().css(
+                {'display': 'inline-block'});
+        } else if (checked === false) {
+            $("label[for*='password_field']").parent().css(
+                {'display': 'none'});
         }
     }
 
