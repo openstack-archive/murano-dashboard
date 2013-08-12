@@ -84,6 +84,11 @@ def validate_hostname_template(template, instance_count):
                                           'required in the Hostname template'))
 
 
+class PasswordWidget(forms.PasswordInput):
+    class Media:
+        js = ('muranodashboard/js/passwordfield.js',)
+
+
 class PasswordField(forms.CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
@@ -117,7 +122,7 @@ class PasswordField(forms.CharField):
             required=required,
             error_messages=error_messages,
             help_text=help_text,
-            widget=forms.PasswordInput(render_value=True))
+            widget=PasswordWidget(render_value=True))
 
 
 class DatabaseListField(forms.CharField):
@@ -393,6 +398,9 @@ class WizardFormMSSQLConfiguration(WizardFormIISConfiguration,
         super(WizardFormMSSQLConfiguration, self).__init__(*args, **kwargs)
         CommonPropertiesExtension.__init__(self)
 
+    class Media:
+        js = ('muranodashboard/js/mixed-mode.js',)
+
 
 class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
     def __init__(self, *args, **kwargs):
@@ -437,6 +445,9 @@ class WizardFormMSSQLClusterConfiguration(WizardFormMSSQLConfiguration):
                       'for service installation '))
             perform_password_check(password1, password2, 'Active Directory')
         return self.cleaned_data
+
+    class Media:
+        js = ('muranodashboard/js/external-ad.js',)
 
 
 class WizardMSSQLConfigureAG(forms.Form):
