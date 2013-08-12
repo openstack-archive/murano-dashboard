@@ -28,6 +28,7 @@ log = logging.getLogger(__name__)
 def get_endpoint(request):
     #prefer location specified in settings for dev purposes
     endpoint = getattr(settings, 'MURANO_API_URL', None)
+
     if not endpoint:
         try:
             endpoint = url_for(request, 'murano')
@@ -40,12 +41,13 @@ def get_endpoint(request):
 
 def muranoclient(request):
     endpoint = get_endpoint(request)
+    insecure = getattr(settings, 'MURANO_API_INSECURE', False)
 
     token_id = request.user.token.id
     log.debug('Murano::Client <Url: {0}, '
               'TokenId: {1}>'.format(endpoint, token_id))
 
-    return Client(endpoint=endpoint, token=token_id)
+    return Client(endpoint=endpoint, token=token_id, insecure=insecure)
 
 
 def get_status_messages_for_service(request, service_id, environment_id):
