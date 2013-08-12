@@ -526,6 +526,7 @@ class WizardMSSQLConfigureAG(forms.Form):
         if fixed_ip == agListenerIP:
             raise forms.ValidationError(_('Listener IP and Cluster '
                                           'Static IP should be different'))
+        return self.cleaned_data
 
 
 class WizardMSSQLDatagrid(forms.Form):
@@ -553,6 +554,9 @@ class WizardMSSQLDatagrid(forms.Form):
                 nodes.append(initial_data_grid)
 
             self.fields['nodes'].initial = json.dumps(nodes)
+            if 'mssql_datagrid-nodes_1' in self.data:
+                self.data = self.data.copy()
+                self.data['mssql_datagrid-nodes_1'] = json.dumps(nodes)
 
     def clean(self):
         databases = self.cleaned_data.get('databases')
