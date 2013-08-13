@@ -11,7 +11,6 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
 import os
 from django.template.defaultfilters import slugify
 from collections import OrderedDict
@@ -24,7 +23,7 @@ _all_services = OrderedDict()
 
 
 def import_all_services():
-    from muranodashboard.panel.services.__common import decamelize
+    import muranodashboard.panel.services.helpers as utils
     directory = os.path.dirname(__file__)
     for fname in sorted(os.listdir(directory)):
         try:
@@ -35,7 +34,7 @@ def import_all_services():
                 if (not name in _all_services or
                         _all_services[name][0] < modified_on):
                     with open(path) as f:
-                            kwargs = {decamelize(k): v
+                            kwargs = {utils.decamelize(k): v
                                       for k, v in yaml.load(f).iteritems()}
                             _all_services[name] = (modified_on,
                                                    type(name, (), kwargs))
@@ -46,14 +45,13 @@ def import_all_services():
 
 
 def iterate_over_services():
+    import muranodashboard.panel.services.forms as services
     import_all_services()
     for id, service_data in _all_services.items():
         modified_on, service_cls = service_data
-        from muranodashboard.panel.services.__common import \
-            ServiceConfigurationForm
         forms = []
         for fields in service_cls.forms:
-            class Form(ServiceConfigurationForm):
+            class Form(services.ServiceConfigurationForm):
                 service = service_cls
                 fields_template = fields
             forms.append(Form)
