@@ -190,6 +190,11 @@ class Wizard(ModalFormMixin, SessionWizardView):
                     'The environment is deploying.')
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request, msg, redirect=redirect)
+        except:
+            redirect = reverse("horizon:project:murano:index")
+            exceptions.handle(self.request,
+                              _('Sorry, you can\'t create service right now.',
+                                redirect=redirect))
         else:
             message = "The %s service successfully created." \
                       % SERVICE_NAME_DICT[service_type]

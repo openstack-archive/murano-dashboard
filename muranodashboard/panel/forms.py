@@ -546,17 +546,16 @@ class WizardMSSQLDatagrid(forms.Form):
             for index in xrange(instance_count):
                 initial_data_grid = {}
                 initial_data_grid['name'] = 'node' + str(index + 1)
-                initial_data_grid['is_sync'] = True
+                if index < 2:
+                    initial_data_grid['is_sync'] = True
+                else:
+                    initial_data_grid['is_sync'] = False
                 if index == 0:
                     initial_data_grid['is_primary'] = True
                 else:
                     initial_data_grid['is_primary'] = False
                 nodes.append(initial_data_grid)
-
             self.fields['nodes'].initial = json.dumps(nodes)
-            if 'mssql_datagrid-nodes_1' in self.data:
-                self.data = self.data.copy()
-                self.data['mssql_datagrid-nodes_1'] = json.dumps(nodes)
 
     def clean(self):
         databases = self.cleaned_data.get('databases')
@@ -604,9 +603,8 @@ class WizardInstanceConfiguration(forms.Form):
         for image in images:
             murano_property = image.properties.get('murano_image_info')
             if murano_property:
-                #convert to dict because
-                # only string can be stored in image metadata property
                 try:
+                    # only string can be stored in image metadata property
                     murano_json = ast.literal_eval(murano_property)
                 except ValueError:
                     messages.error(request,

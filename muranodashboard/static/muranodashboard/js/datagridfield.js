@@ -75,7 +75,6 @@ $(function() {
     $('table.datagrid tbody td input:radio').click(validate_primary);
 
     $('button#node-add').click(function() {
-        //debugger;
         if ( $('table.datagrid tbody tr').length >= MAX_NODES ) {
             alert('Maximum number of nodes ('+MAX_NODES+') already reached.');
             return;
