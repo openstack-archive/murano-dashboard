@@ -99,8 +99,7 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
-#if murano-api set up with ssl uncomment next strings 
-#MURANO_API_URL = "https://localhost:8082"
+#if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
 EOF

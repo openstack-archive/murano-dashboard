@@ -83,7 +83,7 @@ gitclone()
 	fi
 }
 
-# patching horizon configuration
+# patching horizon configuration 
 modify_horizon_config() {
 	REMOVE=$2
 	if [ -f $1 ]; then
@@ -120,7 +120,6 @@ HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
 #if murano-api set up with ssl uncomment next strings 
-#MURANO_API_URL = "https://localhost:8082"
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
 EOF
