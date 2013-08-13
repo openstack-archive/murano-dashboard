@@ -119,6 +119,9 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
+#if murano-api set up with ssl uncomment next strings 
+#MURANO_API_URL = "https://localhost:8082"
+#MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then
@@ -160,7 +163,7 @@ preinst()
             log "Package \"$_PKG\" is not installed."
         fi
 # python-muranoclient
-        _PREREQ=python-muranoclient
+        _PREREQ=muranoclient
         $PIPCMD freeze | grep $_PREREQ
         if [ $? -ne 0 ]; then
                 log "\"$_PREREQ\" package not found, please install it first from (\"https://github.com/stackforge/python-muranoclient\"), exiting!!!"
