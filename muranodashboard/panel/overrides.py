@@ -14,7 +14,7 @@
 
 import horizon
 
-from panel import Panel
+from muranodashboard.panel.panel import Panel
 
 project = horizon.get_dashboard('project')
 project.register(Panel)
