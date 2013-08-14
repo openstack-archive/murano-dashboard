@@ -17,14 +17,14 @@
 
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
-DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
 PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip"
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
+DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
 
 # Functions
-# Loger function
+# Logger function
 log()
 {
 	MSG=$1
@@ -77,7 +77,7 @@ modify_horizon_config() {
 				exit
 	                fi
 		else
-			log "\"$1\" already has our data, you can change it manualy and restart apache2 service"
+			log "\"$1\" already has our data, you can change it manually and restart apache2 service"
 		fi
 	else
 		if [ -z $REMOVE ];then
@@ -99,6 +99,8 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
+#if murano-api set up with ssl uncomment next strings
+#MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then
@@ -157,7 +159,7 @@ CLONE_FROM_GIT=$1
 # End clone from git section 
 	fi
 
-# Setupping...
+# Installing...
 	log "Running setup.py"
 	#MRN_CND_SPY=$GIT_CLONE_DIR/$SERVICE_SRV_NAME/setup.py
 	MRN_CND_SPY=$SERVICE_CONTENT_DIRECTORY/setup.py
@@ -231,15 +233,6 @@ preinst()
 	dpkg -s $_PKG > /dev/null 2>&1
         if [ $? -ne 0 ]; then
             log "Package \"$_PKG\" is not installed."
-	fi
-# python-muranoclient	
-	_PREREQ=python-muranoclient
-	pip freeze | grep $_PREREQ
-	if [ $? -ne 0 ]; then
-                log "\"$_PREREQ\" package not found, please install it first (\"https://github.com/stackforge/python-muranoclient\"), exiting!!!"
-                exit 1
-	else
-		log "\"$_PREREQ\" found, doing next steps...."
         fi
 }
 

@@ -15,6 +15,6 @@
 #    under the License.
 
 
-from muranodashboard.openstack.common import version as common_version
-
-version_info = common_version.VersionInfo('muranodashboard')
+from pbr import version
+__version_info = version.VersionInfo('muranodashboard')
+__version__ = __version_info.cached_version_string()
