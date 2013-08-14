@@ -290,7 +290,7 @@ class ClusterIPField(forms.CharField):
                 ip_info = novaclient(request).fixed_ips.get(ip)
             except exceptions.UNAUTHORIZED:
                 exceptions.handle(
-                    request, _("Unable to retrieve information ",
+                    request, _("Unable to retrieve information "
                                "about fixed IP or IP is not valid."),
                     ignore=True)
             else:
