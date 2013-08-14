@@ -18,6 +18,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 import muranodashboard.panel.services.fields as fields
 import muranodashboard.panel.services.helpers as helpers
+import yaql
 
 
 class UpdatableFieldsForm(forms.Form):
@@ -45,6 +46,24 @@ class UpdatableFieldsForm(forms.Form):
 
 
 class ServiceConfigurationForm(UpdatableFieldsForm):
+    types = {
+        'string': fields.CharField,
+        'boolean': fields.BooleanField,
+        'instance': fields.InstanceCountField,
+        'clusterip': fields.ClusterIPField,
+        'domain': fields.DomainChoiceField,
+        'password': fields.PasswordField,
+        'integer': fields.IntegerField,
+        'databaselist': fields.DatabaseListField,
+        'datagrid': fields.DataGridField,
+        'flavor': fields.FlavorChoiceField,
+        'image': fields.ImageChoiceField,
+        'azone': fields.AZoneChoiceField,
+        'text': (fields.CharField, forms.Textarea)
+    }
+
+    localizable_keys = set(['label', 'help_text', 'error_messages'])
+
     def __init__(self, *args, **kwargs):
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
@@ -52,25 +71,9 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
 
-    EVAL_PREFIX = '$'
-
-    types = {
-        'string': forms.CharField,
-        'boolean': fields.BooleanField,
-        'instance': fields.InstanceCountField,
-        'clusterip': fields.ClusterIPField,
-        'domain': fields.DomainChoiceField,
-        'password': fields.PasswordField,
-        'integer': forms.IntegerField,
-        'databaselist': fields.DatabaseListField,
-        'datagrid': fields.DataGridField,
-        'flavor': fields.FlavorChoiceField,
-        'image': fields.ImageChoiceField,
-        'azone': fields.AZoneChoiceField,
-        'text': (forms.CharField, forms.Textarea)
-    }
-
-    localizable_keys = set(['label', 'help_text', 'error_messages'])
+    @staticmethod
+    def get_yaql_expr(expr):
+        return type(expr) == dict and expr.get('YAQL', None)
 
     def init_attribute_mappings(self, field_name, kwargs):
         def set_mapping(name, value):
@@ -123,18 +126,6 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 del kwargs['widget_attrs']
             return widget
 
-        def append_properties(cls, kwargs):
-            props = {}
-            for key, value in kwargs.iteritems():
-                if isinstance(value, property):
-                    props[key] = value
-            for key in props.keys():
-                del kwargs[key]
-            if props:
-                return type('cls_with_props', (cls,), props)
-            else:
-                return cls
-
         def append_field(field_spec):
             cls = parse_spec(field_spec['type'], 'type')[1]
             widget = None
@@ -142,7 +133,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 cls, widget = cls
             kwargs = parse_spec(field_spec)[1]
             kwargs['widget'] = process_widget(kwargs, cls, widget)
-            cls = append_properties(cls, kwargs)
+            cls = cls.push_properties(kwargs)
 
             self.init_attribute_mappings(field_spec['name'], kwargs)
             self.init_field_descriptions(kwargs)
@@ -191,26 +182,14 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     return 'widget', forms.HiddenInput
                 elif key == 'regexp_validator':
                     return 'validators', [prepare_regexp(spec)]
-                elif (type(spec) in (str, unicode) and
-                      spec[0] == self.EVAL_PREFIX):
+                elif self.get_yaql_expr(spec):
                     def _get(field):
-                        """First try to get value from cleaned data, if none
-                        found, use raw data."""
-                        data = getattr(self, 'cleaned_data', None)
-                        value = data and data.get(spec[1:], None)
-                        if value is None:
-                            name = self.add_prefix(spec[1:])
-                            value = self.data.get(name, None)
-                        return value
+                        return self.get_data(spec)
 
                     def _set(field, value):
-                        # doesn't work - why?
-                        # super(field.__class__, field).__setattr__(key, value)
                         field.__dict__[key] = value
 
                     def _del(field):
-                        # doesn't work - why?
-                        # super(field.__class__, field).__delattr__(key)
                         del field.__dict__[key]
 
                     return key, property(_get, _set, _del)
@@ -220,6 +199,18 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         for spec in field_specs:
             append_field(spec)
 
+    def get_data(self, expr, data=None):
+        """First try to get value from cleaned data, if none
+        found, use raw data."""
+        context = yaql.create_context()
+        data = data or getattr(self, 'cleaned_data', None)
+        expr = self.get_yaql_expr(expr)
+        value = data and yaql.parse(expr).evaluate(data, context)
+        # if value is None:
+        #     name = self.add_prefix(spec[1:])
+        #     value = self.data.get(name, None)
+        return value
+
     def get_unit_templates(self, data):
         def parse_spec(spec):
             if type(spec) == list:
@@ -228,9 +219,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 return dict(
                     (parse_spec(k), parse_spec(v))
                     for (k, v) in spec.iteritems())
-            elif (type(spec) in (str, unicode) and
-                  spec[0] == self.EVAL_PREFIX):
-                return data.get(spec[1:])
+            elif self.get_yaql_expr(spec):
+                return self.get_data(spec, data)
             else:
                 return spec
         return [parse_spec(spec) for spec in self.service.unit_templates]
@@ -245,15 +235,21 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             attributes[attr_name] = get_data(field_name)
 
     def clean(self):
-        form_data = self.cleaned_data
+        cleaned_data = super(ServiceConfigurationForm, self).clean()
+
+        context = yaql.create_context()
+        for validator in self.validators:
+            expr = self.get_yaql_expr(validator['expr'])
+            if not yaql.parse(expr).evaluate(cleaned_data, context):
+                raise forms.ValidationError(_(validator.get('message', '')))
 
         for name, field in self.fields.iteritems():
             if isinstance(field, fields.PasswordField):
-                field.compare(name, form_data)
+                field.compare(name, cleaned_data)
 
             if hasattr(field, 'postclean'):
-                value = field.postclean(self, form_data)
+                value = field.postclean(self, cleaned_data)
                 if value:
-                    self.cleaned_data[name] = value
+                    cleaned_data[name] = value
 
-        return self.cleaned_data
+        return cleaned_data

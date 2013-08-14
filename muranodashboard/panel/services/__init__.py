@@ -45,17 +45,24 @@ def import_all_services():
             pass
 
 
+def extract_form_data(form_data):
+    form_name = form_data.keys()[0]
+    return form_name, form_data[form_name]
+
+
 def iterate_over_services():
     import muranodashboard.panel.services.forms as services
     import_all_services()
     for id, service_data in _all_services.items():
         modified_on, service_cls = service_data
         forms = []
-        for fields in service_cls.forms:
-            class Form(services.ServiceConfigurationForm):
-                service = service_cls
-                fields_template = fields
-            forms.append(Form)
+        for form_data in service_cls.forms:
+            form_name, form_data = extract_form_data(form_data)
+            forms.append(type(form_name,
+                              (services.ServiceConfigurationForm,),
+                              {'service': service_cls,
+                               'fields_template': form_data['fields'],
+                               'validators': form_data.get('validators', [])}))
         yield slugify(service_cls.name), service_cls, forms
 
 
@@ -90,9 +97,9 @@ def get_service_client(slug):
 
 def get_service_field_descriptions(slug, index):
     def get_descriptions(Service):
-        form = Service.forms[index]
+        form_name, form_data = extract_form_data(Service.forms[index])
         descriptions = []
-        for field in form:
+        for field in form_data['fields']:
             if 'description' in field:
                 title = field.get('descriptionTitle', field.get('label', ''))
                 descriptions.append((title, field['description']))

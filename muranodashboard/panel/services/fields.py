@@ -39,7 +39,26 @@ def with_request(func):
     return update
 
 
-class PasswordField(forms.CharField):
+class CustomPropertiesField(object):
+    @classmethod
+    def push_properties(cls, kwargs):
+        props = {}
+        for key, value in kwargs.iteritems():
+            if isinstance(value, property):
+                props[key] = value
+        for key in props.keys():
+            del kwargs[key]
+        if props:
+            return type('cls_with_props', (cls,), props)
+        else:
+            return cls
+
+
+class CharField(forms.CharField, CustomPropertiesField):
+    pass
+
+
+class PasswordField(CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
@@ -97,7 +116,11 @@ class PasswordField(forms.CharField):
         return field
 
 
-class InstanceCountField(forms.IntegerField):
+class IntegerField(forms.IntegerField, CustomPropertiesField):
+    pass
+
+
+class InstanceCountField(IntegerField):
     def clean(self, value):
         self.value = super(InstanceCountField, self).clean(value)
         return self.value
@@ -113,7 +136,7 @@ class InstanceCountField(forms.IntegerField):
         return value
 
 
-class DataGridField(forms.MultiValueField):
+class DataGridField(forms.MultiValueField, CustomPropertiesField):
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = DataGridCompound
         super(DataGridField, self).__init__(
@@ -136,7 +159,11 @@ class DataGridField(forms.MultiValueField):
             self.initial = json.dumps(nodes)
 
 
-class DomainChoiceField(forms.ChoiceField):
+class ChoiceField(forms.ChoiceField, CustomPropertiesField):
+    pass
+
+
+class DomainChoiceField(ChoiceField):
     @with_request
     def update(self, request, initial):
         self.choices = [("", "Not in domain")]
@@ -149,7 +176,7 @@ class DomainChoiceField(forms.ChoiceField):
             [(domain.name, domain.name) for domain in domains])
 
 
-class FlavorChoiceField(forms.ChoiceField):
+class FlavorChoiceField(ChoiceField):
     @with_request
     def update(self, request, initial):
         self.choices = [(flavor.name, flavor.name) for flavor in
@@ -160,7 +187,7 @@ class FlavorChoiceField(forms.ChoiceField):
                 break
 
 
-class ImageChoiceField(forms.ChoiceField):
+class ImageChoiceField(ChoiceField):
     @with_request
     def update(self, request, initial):
         try:
@@ -198,7 +225,7 @@ class ImageChoiceField(forms.ChoiceField):
         self.choices = image_choices
 
 
-class AZoneChoiceField(forms.ChoiceField):
+class AZoneChoiceField(ChoiceField):
     @with_request
     def update(self, request, initial):
         try:
@@ -217,13 +244,13 @@ class AZoneChoiceField(forms.ChoiceField):
         self.choices = az_choices
 
 
-class BooleanField(forms.BooleanField):
+class BooleanField(forms.BooleanField, CustomPropertiesField):
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = forms.CheckboxInput(attrs={'class': 'checkbox'})
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
-class ClusterIPField(forms.CharField):
+class ClusterIPField(CharField):
     @staticmethod
     def validate_cluster_ip(request, ip_ranges):
         def perform_checking(ip):
@@ -270,7 +297,7 @@ class ClusterIPField(forms.CharField):
                 'Listener IP and Cluster Static IP should be different'))
 
 
-class DatabaseListField(forms.CharField):
+class DatabaseListField(CharField):
     validate_mssql_identifier = RegexValidator(
         re.compile(r'^[a-zA-z_][a-zA-Z0-9_$#@]*$'),
         _((u'First symbol should be latin letter or underscore. Subsequent ' +
