@@ -234,7 +234,7 @@ def services_list(request, environment_id):
     for service_item in environment.services:
         service_data = service_item
         service_data['full_service_name'] = get_service_name(
-            service_data['type'])
+            service_data['slug'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
             last_operation = str(reports[service_data['id']].text)
@@ -254,11 +254,11 @@ def services_list(request, environment_id):
     return [bunch.bunchify(service) for service in services]
 
 
-def service_list_by_type(request, environment_id, service_name):
+def service_list_by_type(request, environment_id, service_type):
     services = services_list(request, environment_id)
     log.debug('Service::Instances::List')
     return [service for service in services
-            if service['type'] == service_name]
+            if service['type'] == service_type]
 
 
 def service_create(request, environment_id, parameters):
@@ -324,6 +324,6 @@ def get_deployment_descr(request, environment_id, deployment_id):
             if 'services' in descr:
                 for service in descr['services']:
                     service['full_service_name'] = get_service_name(
-                        service['type'])
+                        service['slug'])
             return descr
     return None
