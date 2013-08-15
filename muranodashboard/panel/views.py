@@ -55,7 +55,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
 
         step0_data = form_list[0].cleaned_data
         slug = step0_data.get('service', '')
-        attributes = {'type': get_service_client(slug)}
+        attributes = {'type': get_service_client(slug),
+                      'slug': slug}
 
         for form in form_list[1:]:
             form.extract_attributes(attributes)
