@@ -13,7 +13,7 @@
 #    under the License.
 import os
 from django.template.defaultfilters import slugify
-from collections import OrderedDict
+from ordereddict import OrderedDict
 from yaml.scanner import ScannerError
 import yaml
 import re
@@ -34,8 +34,9 @@ def import_all_services():
                 if (not name in _all_services or
                         _all_services[name][0] < modified_on):
                     with open(path) as f:
-                            kwargs = {utils.decamelize(k): v
-                                      for k, v in yaml.load(f).iteritems()}
+                            kwargs = dict(
+                                (utils.decamelize(k), v)
+                                for (k, v) in yaml.load(f).iteritems())
                             _all_services[name] = (modified_on,
                                                    type(name, (), kwargs))
         except ScannerError:
