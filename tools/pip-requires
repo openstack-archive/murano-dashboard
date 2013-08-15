@@ -9,3 +9,4 @@ six
 django-pipeline
 django-floppyforms==1.1
 PyYAML
+ordereddict

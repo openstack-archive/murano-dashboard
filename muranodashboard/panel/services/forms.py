@@ -225,8 +225,9 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             if type(spec) == list:
                 return [parse_spec(_spec) for _spec in spec]
             elif type(spec) == dict:
-                return {parse_spec(k): parse_spec(v)
-                        for k, v in spec.iteritems()}
+                return dict(
+                    (parse_spec(k), parse_spec(v))
+                    for (k, v) in spec.iteritems())
             elif (type(spec) in (str, unicode) and
                   spec[0] == self.EVAL_PREFIX):
                 return data.get(spec[1:])
@@ -237,7 +238,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     def extract_attributes(self, attributes):
         def get_data(name):
             if type(name) == dict:
-                return {k: get_data(v) for k, v in name.iteritems()}
+                return dict((k, get_data(v)) for (k, v) in name.iteritems())
             else:
                 return self.cleaned_data[name]
         for attr_name, field_name in self.attribute_mappings.iteritems():
