@@ -92,9 +92,7 @@ class PasswordField(forms.CharField):
         field = copy.deepcopy(self)
         self.original = True
         field.label = _('Confirm password')
-        field.error_messages = {
-            'required': _('Please confirm your password')
-        }
+        field.error_messages['required'] = _('Please confirm your password')
         field.help_text = _('Retype your password')
         return field
 
@@ -234,7 +232,7 @@ class ClusterIPField(forms.CharField):
             validate_ipv4_address(ip)
             if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
                 raise forms.ValidationError(_('Specified Cluster Static IP is'
-                                              'not in valid IP range'))
+                                              ' not in valid IP range'))
             try:
                 ip_info = novaclient(request).fixed_ips.get(ip)
             except exceptions.UNAUTHORIZED:
@@ -261,15 +259,15 @@ class ClusterIPField(forms.CharField):
         else:
             self.help_text = _('Specify valid fixed IP')
         self.validators = [self.validate_cluster_ip(request, ip_ranges)]
-        self.error_messages = {'invalid': validate_ipv4_address.message}
+        self.error_messages['invalid'] = validate_ipv4_address.message
 
     def postclean(self, form, data):
         # hack to compare two IPs
         ips = []
         for key, field in form.fields.items():
             if isinstance(field, ClusterIPField):
-                ips.append(data[key])
-        if ips[0] == ips[1]:
+                ips.append(data.get(key))
+        if ips[0] == ips[1] and ips[0] is not None:
             raise forms.ValidationError(_(
                 'Listener IP and Cluster Static IP should be different'))
 
