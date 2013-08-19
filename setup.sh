@@ -17,14 +17,14 @@
 
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
-DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
 PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip"
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
+DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
 
 # Functions
-# Loger function
+# Logger function
 log()
 {
 	MSG=$1
@@ -77,7 +77,7 @@ modify_horizon_config() {
 				exit
 	                fi
 		else
-			log "\"$1\" already has our data, you can change it manualy and restart apache2 service"
+			log "\"$1\" already has our data, you can change it manually and restart apache2 service"
 		fi
 	else
 		if [ -z $REMOVE ];then
@@ -159,7 +159,7 @@ CLONE_FROM_GIT=$1
 # End clone from git section 
 	fi
 
-# Setupping...
+# Installing...
 	log "Running setup.py"
 	#MRN_CND_SPY=$GIT_CLONE_DIR/$SERVICE_SRV_NAME/setup.py
 	MRN_CND_SPY=$SERVICE_CONTENT_DIRECTORY/setup.py
@@ -188,25 +188,25 @@ CLONE_FROM_GIT=$1
 			exit 1
 		fi
 		# DJBLETS INSTALL START
-                DJBLETS_SUFFIX=master.zip
-                DJBLETS_OUTARCH_FILENAME=djblets-$DJBLETS_SUFFIX
-		cd $SERVICE_CONTENT_DIRECTORY/dist && wget $DJBLETS_ZIP_URL/$DJBLETS_SUFFIX -O $DJBLETS_OUTARCH_FILENAME
-                if [ $? -ne 0 ];then
-                        log " Can't download \"$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
-                        exit 1
-                fi
-		cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $DJBLETS_OUTARCH_FILENAME
-                if [ $? -ne 0 ];then
-                        log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
-                        exit 1
-                fi
-		cd $SERVICE_CONTENT_DIRECTORY/dist/djblets-master && python setup.py install
-		if [ $? -ne 0 ]; then
-			log "\"$SERVICE_CONTENT_DIRECTORY/dist/djblets-master/setup.py\" python setup FAILS, exiting!"
-			exit 1
+	        DJBLETS_SUFFIX=master.zip
+        	DJBLETS_OUTARCH_FILENAME=djblets-$DJBLETS_SUFFIX
+	        cd $SERVICE_CONTENT_DIRECTORY/dist && wget $DJBLETS_ZIP_URL/$DJBLETS_SUFFIX -O $DJBLETS_OUTARCH_FILENAME
+        	if [ $? -ne 0 ];then
+                	log " Can't download \"$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+	                exit 1
 		fi
-		# DJBLETS INSTALL END
-	else
+	        cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $DJBLETS_OUTARCH_FILENAME
+        	if [ $? -ne 0 ];then
+                	log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
+	                exit 1
+        	fi
+	        cd $SERVICE_CONTENT_DIRECTORY/dist/djblets-master && python setup.py install
+	        if [ $? -ne 0 ]; then
+        	    log "\"$SERVICE_CONTENT_DIRECTORY/dist/djblets-master/setup.py\" python setup FAILS, exiting!"
+	            exit 1
+        	fi
+	        # DJBLETS INSTALL END
+		else
 		log "$MRN_CND_SPY not found!"
 	fi
 }
@@ -234,15 +234,6 @@ preinst()
         if [ $? -ne 0 ]; then
             log "Package \"$_PKG\" is not installed."
 	fi
-# python-muranoclient	
-	_PREREQ=muranoclient
-	pip freeze | grep $_PREREQ
-	if [ $? -ne 0 ]; then
-                log "\"$_PREREQ\" package not found, please install it first (\"https://github.com/stackforge/python-muranoclient\"), exiting!!!"
-                exit 1
-	else
-		log "\"$_PREREQ\" found, doing next steps...."
-        fi
 }
 
 # rebuild static

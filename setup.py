@@ -21,31 +21,11 @@
 
 import setuptools
 
-from muranodashboard.openstack.common import setup
-
-requires = setup.parse_requirements()
-depend_links = setup.parse_dependency_links()
-project = 'muranodashboard'
 
 setuptools.setup(
-    name=project,
-    version=setup.get_version(project, '2013.1'),
-    description="The Murano Dashboard.",
-    license='Apache 2.0',
-    author='Mirantis Inc',
-    author_email='tnurlygayanov@mirantis.com',
-    url='https://github.com/stackforge/murano-dashboard',
-    packages=setuptools.find_packages(exclude=['bin']),
-    cmdclass=setup.get_cmdclass(),
-    include_package_data=True,
-    install_requires=requires,
-    dependency_links=depend_links,
-    classifiers=['Development Status :: 5 - Production/Stable',
-                 'Framework :: Django',
-                 'Intended Audience :: Developers',
-                 'License :: OSI Approved :: Apache Software License',
-                 'Operating System :: OS Independent',
-                 'Programming Language :: Python',
-                 'Topic :: Internet :: WWW/HTTP',
-                 'Environment :: OpenStack']
+    setup_requires=[
+        'd2to1>=0.2.10,<0.3',
+        'pbr>=0.5,<0.6'
+    ],
+    d2to1=True,
 )

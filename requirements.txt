@@ -1,0 +1,12 @@
+# Core Requirements
+d2to1>=0.2.10,<0.3
+pbr>=0.5,<1.0
+
+bunch
+iso8601>=0.1.4
+six
+PyYAML
+django-pipeline
+django-floppyforms==1.1
+ordereddict
+http://tarballs.openstack.org/python-muranoclient/python-muranoclient-release-0.2.tar.gz#egg=pythonmuranoclient-0.2
