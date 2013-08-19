@@ -33,19 +33,19 @@ $(function() {
         }
     }
 
-    function check_passwords_match() {
-        var $this = $(this);
-        var password = $this.closest(".form-field").prev().find(".password").val();
+    function check_passwords_match(event) {
+        var $this = $(event.target);
+        var password = $this.closest(".form-field").prev().find("input").val();
         var confirm_password = $this.val();
         var div = $this.closest(".form-field");
         main_check(div, password,confirm_password, "Passwords do not match")
     }
 
-    function check_strength_remove_err_if_matches(){
-        var $this = $(this)
+    function check_strength_remove_err_if_matches(event){
+        var $this = $(event.target);
         var password = $this.val();
         var div_confirm = $this.closest(".form-field").next();
-        var confirm_password = div_confirm.find(".confirm_password").val();
+        var confirm_password = div_confirm.find("input").val();
         var div = $this.closest(".form-field").next();
         if (confirm_password.length){
             main_check(div, password, confirm_password, "Passwords do not match");
@@ -77,7 +77,7 @@ $(function() {
         main_check(div, meet_requirements, true, text);
     };
 
-    $(".confirm_password").change(check_passwords_match);
-    $(".password").change(check_strength_remove_err_if_matches);
+    $("input[id$='Password'][type='password']").change(check_strength_remove_err_if_matches);
+    $("input[id*='assword-clone'][type='password']").change(check_passwords_match);
 
 });
