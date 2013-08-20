@@ -8,4 +8,4 @@ PyYAML
 django-pipeline
 django-floppyforms==1.1
 ordereddict
-http://tarballs.openstack.org/python-muranoclient/python-muranoclient-release-0.2.tar.gz#egg=muranoclient-0.2
+http://tarballs.openstack.org/python-muranoclient/python-muranoclient-release-0.2.tar.gz#egg=muranoclient-dev
