@@ -11,93 +11,123 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import os
-from django.template.defaultfilters import slugify
-from ordereddict import OrderedDict
-from yaml.scanner import ScannerError
-import yaml
-import re
 
+import os
+import re
+from django.conf import settings
+from ordereddict import OrderedDict
+import yaml
+from yaml.scanner import ScannerError
+from django.utils.translation import ugettext_lazy as _
 
 _all_services = OrderedDict()
 
 
+class Service(object):
+    def __init__(self, modified_on, **kwargs):
+        import muranodashboard.panel.services.forms as services
+        for key, value in kwargs.iteritems():
+            if key == 'forms':
+                self.forms = []
+                for form_data in value:
+                    form_name, form_data = self.extract_form_data(form_data)
+                    self.forms.append(
+                        type(form_name, (services.ServiceConfigurationForm,),
+                             {'service': self,
+                              'fields_template': form_data['fields'],
+                              'validators': form_data.get('validators', [])}))
+            else:
+                setattr(self, key, value)
+        self.modified_on = modified_on
+        self.cleaned_data = {}
+
+    @staticmethod
+    def extract_form_data(form_data):
+        form_name = form_data.keys()[0]
+        return form_name, form_data[form_name]
+
+    def update_cleaned_data(self, form, data):
+        if data:
+            # match = re.match('^.*-(\d)+$', form.prefix)
+            # index = int(match.group(1)) if match else None
+            # if index is not None:
+            #     self.cleaned_data[index] = data
+            self.cleaned_data[form.__class__.__name__] = data
+        return self.cleaned_data
+
+
 def import_all_services():
-    import muranodashboard.panel.services.helpers as utils
-    directory = os.path.dirname(__file__)
-    for fname in sorted(os.listdir(directory)):
+    from muranodashboard.panel.services.helpers import decamelize
+
+    directory = getattr(settings, 'MURANO_SERVICES_DESC_PATH', None)
+    if directory is None:
+        directory = os.path.join(os.path.dirname(__file__), '../../services/')
+
+    for filename in os.listdir(directory):
+        if not filename.endswith('.yaml'):
+            continue
+
+        service_file = os.path.join(directory, filename)
+        modified_on = os.path.getmtime(service_file)
+
+        if filename in _all_services:
+            if _all_services[filename].modified_on >= modified_on:
+                continue
+
         try:
-            if fname.endswith('.yaml'):
-                name = os.path.splitext(fname)[0]
-                path = os.path.join(directory, fname)
-                modified_on = os.stat(path).st_mtime
-                if (not name in _all_services or
-                        _all_services[name][0] < modified_on):
-                    with open(path) as f:
-                            kwargs = dict(
-                                (utils.decamelize(k), v)
-                                for (k, v) in yaml.load(f).iteritems())
-                            _all_services[name] = (modified_on,
-                                                   type(name, (), kwargs))
-        except ScannerError:
-            pass
-        except OSError:
-            pass
+            with open(service_file) as stream:
+                yaml_desc = yaml.load(stream)
+        except (OSError, ScannerError):
+            continue
+
+        service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
+        _all_services[filename] = Service(modified_on, **service)
 
 
 def iterate_over_services():
-    import muranodashboard.panel.services.forms as services
     import_all_services()
-    for id, service_data in _all_services.items():
-        modified_on, service_cls = service_data
-        forms = []
-        for fields in service_cls.forms:
-            class Form(services.ServiceConfigurationForm):
-                service = service_cls
-                fields_template = fields
-            forms.append(Form)
-        yield slugify(service_cls.name), service_cls, forms
+
+    for service in sorted(_all_services.values(), key=lambda v: v.name):
+        yield service.type, service, service.forms
 
 
 def iterate_over_service_forms():
-    for slug, Service, forms in iterate_over_services():
-        for step, form in zip(xrange(len(forms)), forms):
-            yield '{0}-{1}'.format(slug, step), form
+    for srv_type, service, forms in iterate_over_services():
+        for step, form in enumerate(forms):
+            yield '{0}-{1}'.format(srv_type, step), form
 
 
-def with_service(slug, getter, default):
-    import_all_services()
-    match = re.match('(.*)-[0-9]+', slug)
+def service_type_from_id(service_id):
+    match = re.match('(.*)-[0-9]+', service_id)
     if match:
-        slug = match.group(1)
-    for _slug, Service, forms in iterate_over_services():
-        if _slug == slug:
-            return getter(Service)
+        return match.group(1)
+    else:  # if no number suffix found, it was service_type itself passed in
+        return service_id
+
+
+def with_service(service_id, getter, default):
+    import_all_services()
+    service_type = service_type_from_id(service_id)
+    for srv_type, service, forms in iterate_over_services():
+        if srv_type == service_type:
+            return getter(service)
     return default
 
 
-def get_service_template(slug):
-    return with_service(slug, lambda Service: Service.template, '')
+def get_service_name(service_id):
+    return with_service(service_id, lambda service: service.name, '')
 
 
-def get_service_name(slug):
-    return with_service(slug, lambda Service: Service.name, '')
-
-
-def get_service_client(slug):
-    return with_service(slug, lambda Service: Service.type, None)
-
-
-def get_service_field_descriptions(slug, index):
-    def get_descriptions(Service):
-        form = Service.forms[index]
+def get_service_field_descriptions(service_id, index):
+    def get_descriptions(service):
+        Form = service.forms[index]
         descriptions = []
-        for field in form:
+        for field in Form.fields_template:
             if 'description' in field:
                 title = field.get('descriptionTitle', field.get('label', ''))
                 descriptions.append((title, field['description']))
         return descriptions
-    return with_service(slug, get_descriptions, [])
+    return with_service(service_id, get_descriptions, [])
 
 
 def get_service_type(wizard):
@@ -107,23 +137,27 @@ def get_service_type(wizard):
 
 
 def get_service_choices():
-    return [(slug, Service.name) for slug, Service, forms in
+    return [(srv_type, service.name) for srv_type, service, forms in
             iterate_over_services()]
 
 
 def get_service_checkers():
     import_all_services()
 
-    def make_comparator(slug):
+    def make_comparator(srv_id):
         def compare(wizard):
-            match = re.match('(.*)-[0-9]+', slug)
-            return match and match.group(1) == get_service_type(wizard)
+            return service_type_from_id(srv_id) == get_service_type(wizard)
         return compare
 
-    return [(slug, make_comparator(slug)) for slug, form
+    return [(srv_id, make_comparator(srv_id)) for srv_id, form
             in iterate_over_service_forms()]
 
 
 def get_service_descriptions():
-    return [(slug, Service.description) for slug, Service, forms in
-            iterate_over_services()]
+    descriptions = []
+    for srv_type, service, forms in iterate_over_services():
+        description = getattr(service, 'description', _("<b>Default service \
+        description</b>. If you want to see here something meaningful, please \
+        provide `description' field in service markup."))
+        descriptions.append((srv_type, description))
+    return descriptions

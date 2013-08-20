@@ -13,7 +13,6 @@
 #    under the License.
 
 import re
-import ast
 import json
 from django import forms
 from django.core.validators import RegexValidator, validate_ipv4_address
@@ -30,16 +29,35 @@ import copy
 
 
 def with_request(func):
-    def update(self, initial):
+    def update(self, initial, **kwargs):
         request = initial.get('request')
         if request:
-            func(self, request, initial)
+            func(self, request, **kwargs)
         else:
             raise forms.ValidationError("Can't get a request information")
     return update
 
 
-class PasswordField(forms.CharField):
+class CustomPropertiesField(object):
+    @classmethod
+    def push_properties(cls, kwargs):
+        props = {}
+        for key, value in kwargs.iteritems():
+            if isinstance(value, property):
+                props[key] = value
+        for key in props.keys():
+            del kwargs[key]
+        if props:
+            return type('cls_with_props', (cls,), props)
+        else:
+            return cls
+
+
+class CharField(forms.CharField, CustomPropertiesField):
+    pass
+
+
+class PasswordField(CharField):
     special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
@@ -53,7 +71,9 @@ class PasswordField(forms.CharField):
         return name + '-clone'
 
     def compare(self, name, form_data):
-        if self.is_original():  # run compare only for original fields
+        if self.is_original() and self.required:
+            # run compare only for original fields
+            # do not run compare for hidden fields (they are not required)
             if form_data.get(name) != form_data.get(self.get_clone_name(name)):
                 raise forms.ValidationError(_(u"{0}{1} don't match".format(
                     self.label, pluralize(2))))
@@ -84,6 +104,11 @@ class PasswordField(forms.CharField):
             help_text=help_text,
             widget=self.PasswordInput(render_value=True))
 
+    def __deepcopy__(self, memo):
+        result = super(PasswordField, self).__deepcopy__(memo)
+        result.error_messages = copy.deepcopy(self.error_messages)
+        return result
+
     def is_original(self):
         return hasattr(self, 'original') and self.original
 
@@ -97,23 +122,41 @@ class PasswordField(forms.CharField):
         return field
 
 
-class InstanceCountField(forms.IntegerField):
+class IntegerField(forms.IntegerField, CustomPropertiesField):
+    pass
+
+
+class InstanceCountField(IntegerField):
     def clean(self, value):
         self.value = super(InstanceCountField, self).clean(value)
         return self.value
 
     def postclean(self, form, data):
         value = []
-        for dc in range(self.value):
+        if hasattr(self, 'value'):
             templates = form.get_unit_templates(data)
-            if dc < len(templates) - 1:
-                value.append(templates[dc])
+            for dc in range(self.value):
+                if dc < len(templates) - 1:
+                    template = templates[dc]
+                else:
+                    template = templates[-1]
+                value.append(self.interpolate_number(template, dc + 1))
+            return value
+
+    @staticmethod
+    def interpolate_number(spec, number):
+        """Replaces all '#' occurrences with given number."""
+        def interpolate(spec):
+            if type(spec) == dict:
+                return dict((k, interpolate(v)) for (k, v) in spec.iteritems())
+            elif type(spec) in (str, unicode) and '#' in spec:
+                return spec.replace('#', '{0}').format(number)
             else:
-                value.append(templates[-1])
-        return value
+                return spec
+        return interpolate(spec)
 
 
-class DataGridField(forms.MultiValueField):
+class DataGridField(forms.MultiValueField, CustomPropertiesField):
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = DataGridCompound
         super(DataGridField, self).__init__(
@@ -124,21 +167,22 @@ class DataGridField(forms.MultiValueField):
         return data_list[1]
 
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.widget.update_request(request)
-        nodes = []
-        instance_count = initial.get('instance_count')
-        if instance_count:
-            for index in xrange(instance_count):
-                nodes.append({'name': 'node' + str(index + 1),
-                              'is_sync': index < 2,
-                              'is_primary': index == 0})
-            self.initial = json.dumps(nodes)
+        # hack to use json string instead of python dict get by YAQL
+        data = kwargs['form'].service.cleaned_data
+        if 'clusterConfiguration' in data:
+            conf = data['clusterConfiguration']
+            conf['dcInstances'] = json.dumps(conf['dcInstances'])
 
 
-class DomainChoiceField(forms.ChoiceField):
+class ChoiceField(forms.ChoiceField, CustomPropertiesField):
+    pass
+
+
+class DomainChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.choices = [("", "Not in domain")]
         link = request.__dict__['META']['HTTP_REFERER']
         environment_id = re.search(
@@ -149,9 +193,9 @@ class DomainChoiceField(forms.ChoiceField):
             [(domain.name, domain.name) for domain in domains])
 
 
-class FlavorChoiceField(forms.ChoiceField):
+class FlavorChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.choices = [(flavor.name, flavor.name) for flavor in
                         novaclient(request).flavors.list()]
         for flavor in self.choices:
@@ -160,33 +204,28 @@ class FlavorChoiceField(forms.ChoiceField):
                 break
 
 
-class ImageChoiceField(forms.ChoiceField):
+class ImageChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             # public filter removed
             images, _more = glance.image_list_detailed(request)
         except:
             images = []
-            exceptions.handle(request,
-                              _("Unable to retrieve public images."))
+            exceptions.handle(request, _("Unable to retrieve public images."))
 
         image_mapping, image_choices = {}, []
         for image in images:
             murano_property = image.properties.get('murano_image_info')
             if murano_property:
-                # convert to dict because
-                # only string can be stored in image metadata property
                 try:
-                    murano_json = ast.literal_eval(murano_property)
+                    murano_json = json.loads(murano_property)
                 except ValueError:
-                    messages.error(request,
-                                   _("Invalid value in image metadata"))
+                    messages.error(request, _("Invalid murano image metadata"))
                 else:
-                    title = murano_json.get('title')
-                    image_id = murano_json.get('id')
-                    if title and image_id:
-                        image_mapping[smart_text(title)] = smart_text(image_id)
+                    title = murano_json.get('title', image.name)
+                    murano_json['name'] = image.name
+                    image_mapping[smart_text(title)] = json.dumps(murano_json)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
@@ -197,10 +236,14 @@ class ImageChoiceField(forms.ChoiceField):
 
         self.choices = image_choices
 
+    def clean(self, value):
+        value = super(ImageChoiceField, self).clean(value)
+        return json.loads(value) if value else value
 
-class AZoneChoiceField(forms.ChoiceField):
+
+class AZoneChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             availability_zones = novaclient(request).availability_zones.\
                 list(detailed=False)
@@ -211,21 +254,19 @@ class AZoneChoiceField(forms.ChoiceField):
 
         az_choices = [(az.zoneName, az.zoneName)
                       for az in availability_zones if az.zoneState]
-        if az_choices:
-            az_choices.insert(0, ("", _("Select Availability Zone")))
-        else:
+        if not az_choices:
             az_choices.insert(0, ("", _("No availability zones available")))
 
         self.choices = az_choices
 
 
-class BooleanField(forms.BooleanField):
+class BooleanField(forms.BooleanField, CustomPropertiesField):
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = forms.CheckboxInput(attrs={'class': 'checkbox'})
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
-class ClusterIPField(forms.CharField):
+class ClusterIPField(CharField):
     @staticmethod
     def validate_cluster_ip(request, ip_ranges):
         def perform_checking(ip):
@@ -240,6 +281,10 @@ class ClusterIPField(forms.CharField):
                     request, _("Unable to retrieve information "
                                "about fixed IP or IP is not valid."),
                     ignore=True)
+            except exceptions.NOT_FOUND:
+                exceptions.handle(
+                    request, _("Could not found fixed ips for ip %s" % (ip,)),
+                    ignore=True)
             else:
                 if ip_info.hostname:
                     raise forms.ValidationError(
@@ -247,7 +292,7 @@ class ClusterIPField(forms.CharField):
         return perform_checking
 
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             network_list = novaclient(request).networks.list()
             ip_ranges = [network.cidr for network in network_list]
@@ -261,18 +306,8 @@ class ClusterIPField(forms.CharField):
         self.validators = [self.validate_cluster_ip(request, ip_ranges)]
         self.error_messages['invalid'] = validate_ipv4_address.message
 
-    def postclean(self, form, data):
-        # hack to compare two IPs
-        ips = []
-        for key, field in form.fields.items():
-            if isinstance(field, ClusterIPField):
-                ips.append(data.get(key))
-        if ips[0] == ips[1] and ips[0] is not None:
-            raise forms.ValidationError(_(
-                'Listener IP and Cluster Static IP should be different'))
 
-
-class DatabaseListField(forms.CharField):
+class DatabaseListField(CharField):
     validate_mssql_identifier = RegexValidator(
         re.compile(r'^[a-zA-z_][a-zA-Z0-9_$#@]*$'),
         _((u'First symbol should be latin letter or underscore. Subsequent ' +

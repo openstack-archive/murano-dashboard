@@ -73,6 +73,5 @@ class FakeQuerySet(EmptyQuerySet):
 class Node(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=20)
-    is_primary = models.BooleanField(default=False)
-    is_sync = models.BooleanField(default=False)
-    is_async = models.BooleanField(default=False)
+    isMaster = models.BooleanField(default=False)
+    isSync = models.BooleanField(default=False)

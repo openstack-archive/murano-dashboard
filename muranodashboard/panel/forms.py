@@ -20,16 +20,6 @@ from muranodashboard.panel.services import iterate_over_service_forms, \
 
 log = logging.getLogger(__name__)
 
-# has to be returned to all forms
-# def validate_hostname_template(template, instance_count):
-#     if template and instance_count > 1:
-#         if not '#' in template:
-#             raise forms.ValidationError(
-#                 _('Incrementation symbol "#" is '
-#                   'required in the Hostname template'))
-#
-#
-
 
 class WizardFormServiceType(forms.Form):
     service = forms.ChoiceField(label=_('Service Type'),

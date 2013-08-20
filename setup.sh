@@ -21,7 +21,7 @@ PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libx
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
+NON_PIP_PACKAGES_BASE_URL=https://github.com
 
 # Functions
 # Logger function
@@ -187,26 +187,30 @@ CLONE_FROM_GIT=$1
 			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
-		# DJBLETS INSTALL START
-                DJBLETS_SUFFIX=master.zip
-                DJBLETS_OUTARCH_FILENAME=djblets-$DJBLETS_SUFFIX
-		cd $SERVICE_CONTENT_DIRECTORY/dist && wget $DJBLETS_ZIP_URL/$DJBLETS_SUFFIX -O $DJBLETS_OUTARCH_FILENAME
-                if [ $? -ne 0 ];then
-                        log " Can't download \"$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
-                        exit 1
-                fi
-		cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $DJBLETS_OUTARCH_FILENAME
-                if [ $? -ne 0 ];then
-                        log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$DJBLETS_OUTARCH_FILENAME\", exiting!!!"
-                        exit 1
-                fi
-		cd $SERVICE_CONTENT_DIRECTORY/dist/djblets-master && python setup.py install
-		if [ $? -ne 0 ]; then
-			log "\"$SERVICE_CONTENT_DIRECTORY/dist/djblets-master/setup.py\" python setup FAILS, exiting!"
-			exit 1
+		# NON PIP PACKAGES INSTALL START
+		for pkg in tsufiev.djblets; do
+		    PACKAGE=${pkg##*.}
+		    OWNER=${pkg%.*}
+		    SUFFIX=master.zip
+        	    PACKAGE_OUTARCH_FILENAME=$PACKAGE-$SUFFIX
+	            cd $SERVICE_CONTENT_DIRECTORY/dist && wget $NON_PIP_PACKAGES_BASE_URL/$OWNER/$PACKAGE/archive/$SUFFIX -O $PACKAGE_OUTARCH_FILENAME
+        	if [ $? -ne 0 ];then
+                	log " Can't download \"$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
+	                exit 1
 		fi
-		# DJBLETS INSTALL END
-	else
+	            cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $PACKAGE_OUTARCH_FILENAME
+        	if [ $? -ne 0 ];then
+                	log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
+	                exit 1
+        	fi
+	            cd $SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*} && python setup.py install
+	        if [ $? -ne 0 ]; then
+        		log "\"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*}/setup.py\" python setup FAILS, exiting!"
+	            exit 1
+        	fi
+		done
+	        # NON PIP PACKAGES INSTALL END
+		else
 		log "$MRN_CND_SPY not found!"
 	fi
 }
@@ -233,7 +237,7 @@ preinst()
 	dpkg -s $_PKG > /dev/null 2>&1
         if [ $? -ne 0 ]; then
             log "Package \"$_PKG\" is not installed."
-        fi
+	fi
 }
 
 # rebuild static
@@ -243,6 +247,14 @@ rebuildstatic()
     if [ $? -ne 0 ]; then
 	log "openstack-dashboard manage.py not found, exiting!!!"
 	exit 1
+    fi
+    _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
+    if [ -d "$_old_murano_static" ];then
+        log "Our staic for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
+        rm -rf $_old_murano_static
+        if [ $? -ne 0 ]; then
+            log "Can't delete \"$_old_murano_static\, WARNING!!!"
+        fi
     fi
     log "Rebuilding STATIC...."
     python $horizon_manage collectstatic --noinput

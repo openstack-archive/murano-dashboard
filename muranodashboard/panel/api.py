@@ -21,6 +21,7 @@ from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
 from muranodashboard.panel.services import get_service_name
+from consts import STATUS_ID_READY, STATUS_ID_NEW
 
 log = logging.getLogger(__name__)
 
@@ -57,7 +58,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
     result = '\n'
     #TODO: Add updated time to logs
     if deployments:
-        for deployment in deployments:
+        for deployment in reversed(deployments):
             reports = muranoclient(request).deployments.reports(environment_id,
                                                                 deployment.id,
                                                                 service_id)
@@ -156,8 +157,9 @@ def environments_list(request):
             if service:
                 environments[index].has_services = True
             break
-        if environments[index].status == u'ready':
-            environments[index].status = u'new'
+        if not environments[index].has_services:
+            if environments[index].status == STATUS_ID_READY:
+                environments[index].status = STATUS_ID_NEW
     return environments
 
 
@@ -207,6 +209,7 @@ def get_environment_name(request, environment_id):
 def get_environment_data(request, environment_id, *args):
     """
     For given list of environment attributes return a values
+    :return list
     """
 
     session_id = Session.get(request, environment_id)
@@ -234,7 +237,7 @@ def services_list(request, environment_id):
     for service_item in environment.services:
         service_data = service_item
         service_data['full_service_name'] = get_service_name(
-            service_data['slug'])
+            service_data['type'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
             last_operation = str(reports[service_data['id']].text)
@@ -324,6 +327,6 @@ def get_deployment_descr(request, environment_id, deployment_id):
             if 'services' in descr:
                 for service in descr['services']:
                     service['full_service_name'] = get_service_name(
-                        service['slug'])
+                        service['type'])
             return descr
     return None

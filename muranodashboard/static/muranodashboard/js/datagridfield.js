@@ -123,8 +123,8 @@ $(function() {
             }
             data.push({
                 name: trimLabel($(tr).children().eq(0).text()),
-                is_sync: getInputVal($(tr).children().eq(1)),
-                is_primary: getInputVal($(tr).children().eq(2))
+                isSync: getInputVal($(tr).children().eq(1)),
+                isMaster: getInputVal($(tr).children().eq(2))
             })
         });
         $('input.gridfield-hidden').val(JSON.stringify(data));

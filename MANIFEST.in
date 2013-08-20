@@ -1,6 +1,6 @@
 recursive-include muranodashboard/static *
 recursive-include muranodashboard/templates *
-include muranodashboard/panel/services/*.yaml
+include muranodashboard/services/*.yaml
 include tools/pip-requires
 include run_tests.sh
 include ChangeLog

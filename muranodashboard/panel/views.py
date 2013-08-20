@@ -39,7 +39,7 @@ from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 
 from muranodashboard.panel.services import get_service_descriptions, \
-    get_service_name, get_service_client, get_service_field_descriptions
+    get_service_name, get_service_field_descriptions
 LOG = logging.getLogger(__name__)
 
 
@@ -54,20 +54,15 @@ class Wizard(ModalFormMixin, SessionWizardView):
                       args=(environment_id,))
 
         step0_data = form_list[0].cleaned_data
-        slug = step0_data.get('service', '')
-        attributes = {'type': get_service_client(slug),
-                      'slug': slug}
+        service_type = step0_data.get('service', '')
+        attributes = {'type': service_type}
 
         for form in form_list[1:]:
             form.extract_attributes(attributes)
 
-        # hack to fill units with data from nodes datagrid
+        # hack to destringify nodes into units
         if 'nodes' in attributes:
-            units = []
-            for node in json.loads(attributes['nodes']):
-                units.append({'isMaster': node['is_primary'],
-                              'isSync': node['is_sync']})
-            attributes['units'] = units
+            attributes['units'] = json.loads(attributes['nodes'])
             del attributes['nodes']
 
         try:
@@ -80,10 +75,11 @@ class Wizard(ModalFormMixin, SessionWizardView):
         except Exception:
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request,
-                              _('Sorry, you can\'t create service right now.',
-                                redirect=redirect))
+                              _('Sorry, you can\'t create service right now.'),
+                              redirect=redirect)
         else:
-            message = "The %s service successfully created." % slug
+            message = "The %s service successfully created." % \
+                      get_service_name(service_type)
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
@@ -91,14 +87,6 @@ class Wizard(ModalFormMixin, SessionWizardView):
         init_dict = {}
         if step != 'service_choice':
             init_dict['request'] = self.request
-
-        # hack to pass number of nodes from one form to another
-        if step == 'ms-sql-server-cluster-2':
-            form_id = 'ms-sql-server-cluster-1'
-            form_data = self.storage.data['step_data'].get(form_id, {})
-            instance_count = form_data.get(form_id + '-dcInstances')
-            if instance_count:
-                init_dict['instance_count'] = int(instance_count[0])
         return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):
@@ -106,11 +94,11 @@ class Wizard(ModalFormMixin, SessionWizardView):
         context['service_descriptions'] = get_service_descriptions()
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
-            slug = data['service']
+            service_type = data['service']
             context['field_descriptions'] = get_service_field_descriptions(
-                slug, self.steps.index - 1)
-            context.update({'type': get_service_client(slug),
-                            'service_name': get_service_name(slug)})
+                service_type, self.steps.index - 1)
+            context.update({'type': service_type,
+                            'service_name': get_service_name(service_type)})
         return context
 
 
