@@ -8,12 +8,6 @@
 
 {% block modal-body %}
 <div class="left">
-<br>
-{% if wizard.steps.index == 0 %}
-<br><br><br>
-{% endif %}
-
-<table><tr><td>
 {{ wizard.management_form }}
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
@@ -25,7 +19,6 @@
         {% include "services/_horizon_form_fields.html" %}
     </fieldset>
 {% endif %}
-</td></tr></table>
 </div>
 <div class="right">
     {% if wizard.steps.index > 0 %}
@@ -87,7 +80,7 @@
     {{ wizard.form.media }}
 
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
-    {% if wizard.steps.next %}
+    {% if wizard.steps.next or wizard.steps.index == 0 %}
         {% trans "Next" as next %}
     {% else %}
         {% trans "Create" as next %}
