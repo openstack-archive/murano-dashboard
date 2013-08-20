@@ -171,6 +171,14 @@ rebuildstatic()
 	log "openstack-dashboard manage.py not found, exiting!!!"
 	exit 1
     fi
+    _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
+    if [ -d "$_old_murano_static" ];then
+        log "Our staic for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
+        rm -rf $_old_murano_static
+        if [ $? -ne 0 ]; then
+            log "Can't delete \"$_old_murano_static\, WARNING!!!"
+        fi
+    fi
     log "Rebuilding STATIC...."
     python $horizon_manage collectstatic --noinput
     if [ $? -ne 0 ]; then
