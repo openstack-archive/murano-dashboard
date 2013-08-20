@@ -43,11 +43,8 @@ forms:
         "Windows requires strong password for service administration. 
         Your password should have at least one letter in each 
         register, a number and a special character. Password length should be 
-        a minimum of 8 characters.
+        a minimum of 7 characters."
 
-        Once you forget your password you won't be able to 
-        operate  the service until recovery password would be entered. So it's 
-        better for Recovery and Administrator password to be different."
     - name: domain
       type: domain
       label: Domain
