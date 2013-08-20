@@ -18,7 +18,7 @@
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
 DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
-PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel unzip"
+PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel unzip libffi-devel"
 PIPAPPS="pip python-pip pip-python"
 PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
@@ -161,15 +161,6 @@ preinst()
         if [ $? -ne 0 ]; then
             log "Package \"$_PKG\" is not installed."
         fi
-# python-muranoclient
-        _PREREQ=muranoclient
-        $PIPCMD freeze | grep $_PREREQ
-        if [ $? -ne 0 ]; then
-                log "\"$_PREREQ\" package not found, please install it first from (\"https://github.com/stackforge/python-muranoclient\"), exiting!!!"
-                exit 1
-        else
-                log "\"$_PREREQ\" found, doing next steps...."
-        fi
 }
 
 # rebuild static
@@ -294,16 +285,6 @@ uninst()
 # Command line args'
 COMMAND="$1"
 case $COMMAND in
-	testinstall )
-		find_horizon_config
-		postinst
-		;;
-
-        testuninstall )
-                find_horizon_config remove
-		postinst
-                ;;
-
 	install )
 		inst
 		find_horizon_config

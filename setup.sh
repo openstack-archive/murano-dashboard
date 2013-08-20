@@ -17,7 +17,7 @@
 
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
-PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip"
+PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip libffi-dev"
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
@@ -262,14 +262,6 @@ postinst()
 # Command line args'
 COMMAND="$1"
 case $COMMAND in
-	testinstall )
-		find_horizon_config
-		;;
-
-        testuninstall )
-                find_horizon_config remove
-                ;;
-
 	install )
 		preinst
 		inst
