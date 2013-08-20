@@ -18,7 +18,7 @@
 LOGLVL=1
 SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
 DJBLETS_ZIP_URL=https://github.com/tsufiev/djblets/archive
-PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel unzip"
+PREREQ_PKGS="wget make git python-pip mysql-connector-python python-devel unzip libffi-devel"
 PIPAPPS="pip python-pip pip-python"
 PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
@@ -83,7 +83,7 @@ gitclone()
 	fi
 }
 
-# patching horizon configuration
+# patching horizon configuration 
 modify_horizon_config() {
 	REMOVE=$2
 	if [ -f $1 ]; then
@@ -119,6 +119,8 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
+#if murano-api set up with ssl uncomment next strings 
+#MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then
@@ -158,15 +160,6 @@ preinst()
         rpm -q $_PKG > /dev/null 2>&1
         if [ $? -ne 0 ]; then
             log "Package \"$_PKG\" is not installed."
-        fi
-# python-muranoclient
-        _PREREQ=python-muranoclient
-        $PIPCMD freeze | grep $_PREREQ
-        if [ $? -ne 0 ]; then
-                log "\"$_PREREQ\" package not found, please install it first from (\"https://github.com/stackforge/python-muranoclient\"), exiting!!!"
-                exit 1
-        else
-                log "\"$_PREREQ\" found, doing next steps...."
         fi
 }
 
