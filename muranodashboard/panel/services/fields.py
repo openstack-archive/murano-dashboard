@@ -104,13 +104,14 @@ class InstanceCountField(forms.IntegerField):
 
     def postclean(self, form, data):
         value = []
-        for dc in range(self.value):
-            templates = form.get_unit_templates(data)
-            if dc < len(templates) - 1:
-                value.append(templates[dc])
-            else:
-                value.append(templates[-1])
-        return value
+        if hasattr(self, 'value'):
+            for dc in range(self.value):
+                templates = form.get_unit_templates(data)
+                if dc < len(templates) - 1:
+                    value.append(templates[dc])
+                else:
+                    value.append(templates[-1])
+            return value
 
 
 class DataGridField(forms.MultiValueField):
