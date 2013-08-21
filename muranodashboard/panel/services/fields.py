@@ -211,9 +211,7 @@ class AZoneChoiceField(forms.ChoiceField):
 
         az_choices = [(az.zoneName, az.zoneName)
                       for az in availability_zones if az.zoneState]
-        if az_choices:
-            az_choices.insert(0, ("", _("Select Availability Zone")))
-        else:
+        if not az_choices:
             az_choices.insert(0, ("", _("No availability zones available")))
 
         self.choices = az_choices

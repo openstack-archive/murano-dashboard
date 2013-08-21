@@ -95,7 +95,7 @@ class DeleteService(tables.DeleteAction):
 
     def allowed(self, request, service=None):
         environment_id = self.table.kwargs.get('environment_id')
-        status = api.get_environment_data(request, environment_id, 'status')
+        status, = api.get_environment_data(request, environment_id, 'status')
 
         return False if status == STATUS_ID_DEPLOYING else True
 
@@ -132,7 +132,7 @@ class DeployEnvironment(tables.BatchAction):
     def action(self, request, environment_id):
         try:
             api.environment_deploy(request, environment_id)
-        except:
+        except Exception:
             msg = _('Unable to deploy. Try again later')
             redirect = reverse('horizon:project:murano:index')
             exceptions.handle(request, msg, redirect=redirect)

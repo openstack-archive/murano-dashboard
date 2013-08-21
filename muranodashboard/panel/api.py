@@ -209,6 +209,7 @@ def get_environment_name(request, environment_id):
 def get_environment_data(request, environment_id, *args):
     """
     For given list of environment attributes return a values
+    :return list
     """
 
     session_id = Session.get(request, environment_id)
