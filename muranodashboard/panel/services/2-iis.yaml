@@ -80,7 +80,6 @@ forms:
       description: >-
         Select valid image for a service. Image should already be prepared and 
         registered in glance.
-      required: false
     - name: availabilityZone
       type: azone
       label: Availability zone
