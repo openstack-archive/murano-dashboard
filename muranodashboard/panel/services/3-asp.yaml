@@ -37,10 +37,10 @@ forms:
       label: Administrator password
       descriptionTitle: Passwords
       description: >-
-        "Windows requires strong password for service administration. 
+        Windows requires strong password for service administration.
         Your password should have at least one letter in each 
         register, a number and a special character. Password length should be 
-        a minimum of 7 characters."
+        a minimum of 7 characters.
     - name: domain
       type: domain
       label: Domain
@@ -62,10 +62,10 @@ forms:
       type: string
       label: Hostname template
       description: >-
-        "For your convenience all instance hostnames can be named
+        For your convenience all instance hostnames can be named
         in the same way. Enter a name and use # character for incrementation. 
         For example, host# turns into host1, host2, etc. Please follow Windows 
-        hostname restrictions."
+        hostname restrictions.
       required: false
       #regexpValidator: '^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$'
       helpText: Optional field for a machine hostname template
