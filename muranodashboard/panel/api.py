@@ -21,6 +21,7 @@ from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
 from muranodashboard.panel.services import get_service_name
+from consts import STATUS_ID_READY, STATUS_ID_NEW
 
 log = logging.getLogger(__name__)
 
@@ -156,8 +157,9 @@ def environments_list(request):
             if service:
                 environments[index].has_services = True
             break
-        if environments[index].status == u'ready':
-            environments[index].status = u'new'
+        if not environments[index].has_services:
+            if environments[index].status == STATUS_ID_READY:
+                environments[index].status = STATUS_ID_NEW
     return environments
 
 
