@@ -29,7 +29,7 @@ forms:
         Controller instances.
       attributeNames: [name, domain]
       minLength: 2
-      maxLength: 64
+      maxLength: 15
       regexpValidator: '^([a-zA-Z\d][a-zA-Z\d-]*[a-zA-Z\d]\.){1,}[a-zA-Z\d][a-zA-Z\d-]*[a-zA-Z\d]$'
       errorMessages:
         invalid: >-
