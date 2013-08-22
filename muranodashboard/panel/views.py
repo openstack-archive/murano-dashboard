@@ -61,13 +61,9 @@ class Wizard(ModalFormMixin, SessionWizardView):
         for form in form_list[1:]:
             form.extract_attributes(attributes)
 
-        # hack to fill units with data from nodes datagrid
+        # hack to destringify nodes into units
         if 'nodes' in attributes:
-            units = []
-            for node in json.loads(attributes['nodes']):
-                units.append({'isMaster': node['is_primary'],
-                              'isSync': node['is_sync']})
-            attributes['units'] = units
+            attributes['units'] = json.loads(attributes['nodes'])
             del attributes['nodes']
 
         try:
@@ -80,8 +76,8 @@ class Wizard(ModalFormMixin, SessionWizardView):
         except Exception:
             redirect = reverse("horizon:project:murano:index")
             exceptions.handle(self.request,
-                              _('Sorry, you can\'t create service right now.',
-                                redirect=redirect))
+                              _('Sorry, you can\'t create service right now.'),
+                              redirect=redirect)
         else:
             message = "The %s service successfully created." % slug
             messages.success(self.request, message)
@@ -91,14 +87,6 @@ class Wizard(ModalFormMixin, SessionWizardView):
         init_dict = {}
         if step != 'service_choice':
             init_dict['request'] = self.request
-
-        # hack to pass number of nodes from one form to another
-        if step == 'ms-sql-server-cluster-2':
-            form_id = 'ms-sql-server-cluster-1'
-            form_data = self.storage.data['step_data'].get(form_id, {})
-            instance_count = form_data.get(form_id + '-dcInstances')
-            if instance_count:
-                init_dict['instance_count'] = int(instance_count[0])
         return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):

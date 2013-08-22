@@ -6,7 +6,15 @@ description: >-
   Microsoft SQL Failover Cluster Server
 
 unitTemplates:
-  - {}
+  - isMaster: true
+    isSync: true
+    name: 'node#'
+  - isMaster: false
+    isSync: true
+    name: 'node#'
+  - isMaster: false
+    isSync: false
+    name: 'node#'
 
 forms:
   - serviceConfiguration:
@@ -130,7 +138,7 @@ forms:
           minValue: 2
           maxValue: 5
           initial: 2
-          attributeNames: units
+          attributeNames: false
           helpText: Enter an integer value between 2 and 5
           description: Microsoft SQL Failover Cluster includes up to 5 instances.
         - name: unitNamingPattern
@@ -153,6 +161,7 @@ forms:
         - name: nodes
           type: datagrid
           label: Nodes
+          initial: {YAQL: $.clusterConfiguration.dcInstances}
           description: >-
             Configure cluster instances. Cluster node quantity can be set
             with 'Add' and 'Remove' buttons. Configure Sync mode by

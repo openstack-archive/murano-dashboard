@@ -53,8 +53,8 @@ class RadioColumn(Column):
 
 class NodeDataGrid(DataGrid):
     name = Column('Node', sortable=False)
-    is_sync = CheckColumn('Sync')
-    is_primary = RadioColumn('Primary')
+    isSync = CheckColumn('Sync')
+    isMaster = RadioColumn('Primary')
 
     def __init__(self, request, data):
         self.pk = PK()
@@ -68,7 +68,7 @@ class NodeDataGrid(DataGrid):
         super(NodeDataGrid, self).__init__(request, FakeQuerySet(
             Node, items=items), optimize_sorts=False)
         self.default_sort = []
-        self.default_columns = ['name', 'is_sync', 'is_primary']
+        self.default_columns = ['name', 'isSync', 'isMaster']
 
     # hack
     def load_state(self, render_context=None):
