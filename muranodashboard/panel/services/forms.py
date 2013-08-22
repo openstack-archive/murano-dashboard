@@ -157,11 +157,24 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         def is_localizable(keys):
             return set(keys).intersection(self.localizable_keys)
 
+        def make_property(key, spec):
+            def _get(field):
+                return self.get_data(spec)
+
+            def _set(field, value):
+                field.__dict__[key] = value
+
+            def _del(field):
+                del field.__dict__[key]
+            return property(_get, _set, _del)
+
         def parse_spec(spec, keys=[]):
             if not type(keys) == list:
                 keys = [keys]
             key = keys and keys[-1] or None
-            if type(spec) == dict:
+            if self.get_yaql_expr(spec):
+                return key, make_property(key, spec)
+            elif type(spec) == dict:
                 items = []
                 for k, v in spec.iteritems():
                     if not k in ('type', 'name'):
@@ -182,17 +195,6 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     return 'widget', forms.HiddenInput
                 elif key == 'regexp_validator':
                     return 'validators', [prepare_regexp(spec)]
-                elif self.get_yaql_expr(spec):
-                    def _get(field):
-                        return self.get_data(spec)
-
-                    def _set(field, value):
-                        field.__dict__[key] = value
-
-                    def _del(field):
-                        del field.__dict__[key]
-
-                    return key, property(_get, _set, _del)
                 else:
                     return key, spec
 
