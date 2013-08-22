@@ -50,14 +50,14 @@ forms:
         - name: domainAdminUserName
           type: string
           label: Active Directory User
-          required: {YAQL: $.externalAD}
+          required: {YAQL: $.serviceConfiguration.externalAD}
           regexpValidator: '^[-\w]+$'
           errorMessages:
             invalid: 'Just letters, numbers, underscores and hyphens are allowed.'
         - name: domainAdminPassword
           type: password
           label: Active Directory Password
-          required: {YAQL: $.externalAD}
+          required: {YAQL: $.serviceConfiguration.externalAD}
         - name: domain
           type: domain
           label: Domain
@@ -81,7 +81,7 @@ forms:
           label: SA Password
           description: Set system administrator password for the MS SQL Server.
           helpText: SQL server System Administrator account
-          required: {YAQL: $.mixedModeAuth}
+          required: {YAQL: $.serviceConfiguration.mixedModeAuth}
   - clusterConfiguration:
       fields:
         - name: clusterIP
@@ -146,7 +146,7 @@ forms:
           helpText: Optional field for a machine hostname template
       validators:
         # if unitNamingPattern is given and dcInstances > 1, then '#' should occur in unitNamingPattern
-        - expr: {YAQL: $.dcInstances < 2 or not $.unitNamingPattern or '#' in $.unitNamingPattern}
+        - expr: {YAQL: $.serviceConfiguration.dcInstances < 2 or not $.serviceConfiguration.unitNamingPattern or '#' in $.serviceConfiguration.unitNamingPattern}
           message: Incrementation symbol "#" is required in the Hostname template
   - unitsConfiguration:
       fields:

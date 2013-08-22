@@ -205,12 +205,10 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         """First try to get value from cleaned data, if none
         found, use raw data."""
         context = yaql.create_context()
-        data = data or getattr(self, 'cleaned_data', None)
+        data = self.service.update_cleaned_data(
+            self, data or getattr(self, 'cleaned_data', None))
         expr = self.get_yaql_expr(expr)
         value = data and yaql.parse(expr).evaluate(data, context)
-        # if value is None:
-        #     name = self.add_prefix(spec[1:])
-        #     value = self.data.get(name, None)
         return value
 
     def get_unit_templates(self, data):
@@ -238,11 +236,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
     def clean(self):
         cleaned_data = super(ServiceConfigurationForm, self).clean()
-
+        all_data = self.service.update_cleaned_data(self, cleaned_data)
         context = yaql.create_context()
         for validator in self.validators:
             expr = self.get_yaql_expr(validator['expr'])
-            if not yaql.parse(expr).evaluate(cleaned_data, context):
+            if not yaql.parse(expr).evaluate(all_data, context):
                 raise forms.ValidationError(_(validator.get('message', '')))
 
         for name, field in self.fields.iteritems():
@@ -254,4 +252,5 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 if value:
                     cleaned_data[name] = value
 
+        self.service.update_cleaned_data(self, cleaned_data)
         return cleaned_data
