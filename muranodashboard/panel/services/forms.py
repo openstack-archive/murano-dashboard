@@ -40,7 +40,7 @@ class UpdatableFieldsForm(forms.Form):
 
         for name, field in self.fields.iteritems():
             if hasattr(field, 'update'):
-                field.update(self.initial)
+                field.update(self.initial, form=self)
             if not field.required:
                 field.widget.attrs['placeholder'] = 'Optional'
 

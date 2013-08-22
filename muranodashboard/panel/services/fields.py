@@ -30,10 +30,10 @@ import copy
 
 
 def with_request(func):
-    def update(self, initial):
+    def update(self, initial, **kwargs):
         request = initial.get('request')
         if request:
-            func(self, request, initial)
+            func(self, request, **kwargs)
         else:
             raise forms.ValidationError("Can't get a request information")
     return update
@@ -128,13 +128,26 @@ class InstanceCountField(IntegerField):
     def postclean(self, form, data):
         value = []
         if hasattr(self, 'value'):
+            templates = form.get_unit_templates(data)
             for dc in range(self.value):
-                templates = form.get_unit_templates(data)
                 if dc < len(templates) - 1:
-                    value.append(templates[dc])
+                    template = templates[dc]
                 else:
-                    value.append(templates[-1])
+                    template = templates[-1]
+                value.append(self.interpolate_number(template, dc + 1))
             return value
+
+    @staticmethod
+    def interpolate_number(spec, number):
+        """Replaces all '#' occurrences with given number."""
+        def interpolate(spec):
+            if type(spec) == dict:
+                return dict((k, interpolate(v)) for (k, v) in spec.iteritems())
+            elif type(spec) in (str, unicode) and '#' in spec:
+                return spec.replace('#', '{0}').format(number)
+            else:
+                return spec
+        return interpolate(spec)
 
 
 class DataGridField(forms.MultiValueField, CustomPropertiesField):
@@ -148,16 +161,12 @@ class DataGridField(forms.MultiValueField, CustomPropertiesField):
         return data_list[1]
 
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.widget.update_request(request)
-        nodes = []
-        instance_count = initial.get('instance_count')
-        if instance_count:
-            for index in xrange(instance_count):
-                nodes.append({'name': 'node' + str(index + 1),
-                              'is_sync': index < 2,
-                              'is_primary': index == 0})
-            self.initial = json.dumps(nodes)
+        # hack to use json string instead of python dict get by YAQL
+        data = kwargs['form'].service.cleaned_data
+        data['clusterConfiguration']['dcInstances'] = json.dumps(
+            data['clusterConfiguration']['dcInstances'])
 
 
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):
@@ -166,7 +175,7 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
 
 class DomainChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.choices = [("", "Not in domain")]
         link = request.__dict__['META']['HTTP_REFERER']
         environment_id = re.search(
@@ -179,7 +188,7 @@ class DomainChoiceField(ChoiceField):
 
 class FlavorChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         self.choices = [(flavor.name, flavor.name) for flavor in
                         novaclient(request).flavors.list()]
         for flavor in self.choices:
@@ -190,7 +199,7 @@ class FlavorChoiceField(ChoiceField):
 
 class ImageChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             # public filter removed
             images, _more = glance.image_list_detailed(request)
@@ -228,7 +237,7 @@ class ImageChoiceField(ChoiceField):
 
 class AZoneChoiceField(ChoiceField):
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             availability_zones = novaclient(request).availability_zones.\
                 list(detailed=False)
@@ -273,7 +282,7 @@ class ClusterIPField(CharField):
         return perform_checking
 
     @with_request
-    def update(self, request, initial):
+    def update(self, request, **kwargs):
         try:
             network_list = novaclient(request).networks.list()
             ip_ranges = [network.cidr for network in network_list]
