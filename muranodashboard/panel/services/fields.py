@@ -196,25 +196,20 @@ class ImageChoiceField(ChoiceField):
             images, _more = glance.image_list_detailed(request)
         except:
             images = []
-            exceptions.handle(request,
-                              _("Unable to retrieve public images."))
+            exceptions.handle(request, _("Unable to retrieve public images."))
 
         image_mapping, image_choices = {}, []
         for image in images:
             murano_property = image.properties.get('murano_image_info')
             if murano_property:
-                # convert to dict because
-                # only string can be stored in image metadata property
                 try:
-                    murano_json = ast.literal_eval(murano_property)
+                    murano_json = json.loads(murano_property)
                 except ValueError:
-                    messages.error(request,
-                                   _("Invalid value in image metadata"))
+                    messages.error(request, _("Invalid murano image metadata"))
                 else:
-                    title = murano_json.get('title')
-                    image_id = murano_json.get('id')
-                    if title and image_id:
-                        image_mapping[smart_text(title)] = smart_text(image_id)
+                    title = murano_json.get('title', image.name)
+                    murano_json['name'] = image.name
+                    image_mapping[smart_text(title)] = json.dumps(murano_json)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
@@ -224,6 +219,10 @@ class ImageChoiceField(ChoiceField):
             image_choices.insert(0, ("", _("No images available")))
 
         self.choices = image_choices
+
+    def clean(self, value):
+        value = super(ImageChoiceField, self).clean(value)
+        return json.loads(value) if value else value
 
 
 class AZoneChoiceField(ChoiceField):
