@@ -24,15 +24,16 @@ forms:
           type: string
           label: Domain Name
           description: >-
-            Enter a desired name for a new domain. This name should fit 
-            in standard Windows domain name requirements: it should contain 
-            only A-Z, a-z, 0-9, and (-) and should not end with a dash.
+            Enter a desired name for a new domain. This name should fit to
+            DNS Domain Name requirements: it should contain
+            only A-Z, a-z, 0-9, (.) and (-) and should not end with a dash.
             DNS server will be automatically set up on each of the Domain 
-            Controller instances. The domain length is restricted by 15 characters.
+            Controller instances. Note: Only first 15 characters or characters
+            before first period is used as NetBIOS name.
           attributeNames: [name, domain]
           minLength: 2
-          maxLength: 15
-          regexpValidator: '^([a-zA-Z\d][a-zA-Z\d-]*[a-zA-Z\d]\.){1,}[a-zA-Z\d][a-zA-Z\d-]*[a-zA-Z\d]$'
+          maxLength: 255
+          regexpValidator: '^(?=.{2,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$'
           errorMessages:
             invalid: >-
               Only letters, numbers and dashes in the middle are
