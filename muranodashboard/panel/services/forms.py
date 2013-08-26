@@ -19,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 import muranodashboard.panel.services.fields as fields
 import muranodashboard.panel.services.helpers as helpers
 import yaql
+import types
 
 
 class UpdatableFieldsForm(forms.Form):
@@ -213,14 +214,14 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
     def get_unit_templates(self, data):
         def parse_spec(spec):
-            if type(spec) == list:
+            if self.get_yaql_expr(spec):
+                return self.get_data(spec, data)
+            elif isinstance(spec, types.ListType):
                 return [parse_spec(_spec) for _spec in spec]
-            elif type(spec) == dict:
+            elif isinstance(spec, types.DictType):
                 return dict(
                     (parse_spec(k), parse_spec(v))
                     for (k, v) in spec.iteritems())
-            elif self.get_yaql_expr(spec):
-                return self.get_data(spec, data)
             else:
                 return spec
         return [parse_spec(spec) for spec in self.service.unit_templates]
