@@ -13,7 +13,6 @@
 #    under the License.
 
 import re
-import ast
 import json
 from django import forms
 from django.core.validators import RegexValidator, validate_ipv4_address

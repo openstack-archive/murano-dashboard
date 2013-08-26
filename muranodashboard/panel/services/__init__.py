@@ -11,12 +11,16 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import os
+import re
+
+from django.conf import settings
 from django.template.defaultfilters import slugify
 from ordereddict import OrderedDict
-from yaml.scanner import ScannerError
+
 import yaml
-import re
+from yaml.scanner import ScannerError
 
 
 _all_services = OrderedDict()
@@ -56,30 +60,37 @@ class Service(object):
 
 
 def import_all_services():
-    import muranodashboard.panel.services.helpers as utils
-    directory = os.path.dirname(__file__)
-    for fname in sorted(os.listdir(directory)):
+    from muranodashboard.panel.services.helpers import decamelize
+
+    directory = getattr(settings, 'MURANO_SERVICES_DESC_PATH', None)
+    if directory is None:
+        directory = os.path.join(os.path.dirname(__file__), '../../services/')
+
+    for filename in os.listdir(directory):
+        if not filename.endswith('.yaml'):
+            continue
+
+        service_file = os.path.join(directory, filename)
+        modified_on = os.path.getmtime(service_file)
+
+        if filename in _all_services:
+            if _all_services[filename].modified_on >= modified_on:
+                continue
+
         try:
-            if fname.endswith('.yaml'):
-                name = os.path.splitext(fname)[0]
-                path = os.path.join(directory, fname)
-                modified_on = os.stat(path).st_mtime
-                if (not name in _all_services or
-                        _all_services[name].modified_on < modified_on):
-                    with open(path) as f:
-                            _all_services[name] = Service(
-                                modified_on,
-                                **dict((utils.decamelize(k), v)
-                                       for (k, v) in yaml.load(f).iteritems()))
-        except ScannerError:
-            pass
-        except OSError:
-            pass
+            with open(service_file) as stream:
+                yaml_desc = yaml.load(stream)
+        except (OSError, ScannerError):
+            continue
+
+        service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
+        _all_services[filename] = Service(modified_on, **service)
 
 
 def iterate_over_services():
     import_all_services()
-    for id, service in _all_services.items():
+
+    for service in sorted(_all_services.values(), key=lambda v: v.name):
         yield slugify(service.name), service, service.forms
 
 
