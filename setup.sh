@@ -188,7 +188,7 @@ CLONE_FROM_GIT=$1
 			exit 1
 		fi
 		# NON PIP PACKAGES INSTALL START
-		for pkg in tsufiev.djblets ativelkov.yaql; do
+		for pkg in tsufiev.djblets; do
 		    PACKAGE=${pkg##*.}
 		    OWNER=${pkg%.*}
 		    SUFFIX=master.zip
