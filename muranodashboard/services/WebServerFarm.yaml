@@ -53,13 +53,13 @@ forms:
           helpText: Optional field for a domain to which service can be joined
         - name: dcInstances
           type: instance
-          minValue: 1
+          minValue: 2
           maxValue: 100
           attributeNames: [units, instanceCount]
-          initial: 1
+          initial: 2
           label: Instance Count
           description: Several instances with IIS Service can be created at one time.
-          helpText: Enter an integer value between 1 and 100
+          helpText: Enter an integer value between 2 and 100
         - name: loadBalancerPort
           type: integer
           label: Load Balancer port

@@ -31,11 +31,6 @@ forms:
           errorMessages:
             invalid: Just letters, numbers, underscores and hyphens are allowed.
           helpText: Just letters, numbers, underscores and hyphens are allowed.
-        - name: dcInstances
-          type: instance
-          hidden: true
-          attributeNames: units
-          initial: 1
         - name: username
           type: string
           hidden: true
@@ -48,8 +43,8 @@ forms:
           descriptionTitle: Passwords
           description: >-
             Windows requires strong password for service administration.
-            Your password should have at least one letter in each 
-            register, a number and a special character. Password length should be 
+            Your password should have at least one letter in each
+            register, a number and a special character. Password length should be
             a minimum of 7 characters.
         - name: domain
           type: domain
@@ -68,6 +63,16 @@ forms:
           errorMessages:
             invalid: Enter correct git repository url
           helpText: Enter a valid git repository URL
+        - name: dcInstances
+          type: instance
+          label: Instance Count
+          description: >-
+            Several instances with ASP.NET application can be created at one time.
+          attributeNames: units
+          minValue: 2
+          maxValue: 100
+          initial: 2
+          helpText: Enter an integer value between 2 and 100
         - name: loadBalancerPort
           type: integer
           label: Load Balancer port
