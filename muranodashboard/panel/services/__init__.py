@@ -16,7 +16,6 @@ import os
 import re
 
 from django.conf import settings
-from django.template.defaultfilters import slugify
 from ordereddict import OrderedDict
 
 import yaml
@@ -91,35 +90,37 @@ def iterate_over_services():
     import_all_services()
 
     for service in sorted(_all_services.values(), key=lambda v: v.name):
-        yield slugify(service.name), service, service.forms
+        yield service.type, service, service.forms
 
 
 def iterate_over_service_forms():
-    for slug, service, forms in iterate_over_services():
+    for srv_type, service, forms in iterate_over_services():
         for step, form in enumerate(forms):
-            yield '{0}-{1}'.format(slug, step), form
+            yield '{0}-{1}'.format(srv_type, step), form
 
 
-def with_service(slug, getter, default):
-    import_all_services()
-    match = re.match('(.*)-[0-9]+', slug)
+def service_type_from_id(service_id):
+    match = re.match('(.*)-[0-9]+', service_id)
     if match:
-        slug = match.group(1)
-    for _slug, service, forms in iterate_over_services():
-        if _slug == slug:
+        return match.group(1)
+    else:  # if no number suffix found, it was service_type itself passed in
+        return service_id
+
+
+def with_service(service_id, getter, default):
+    import_all_services()
+    service_type = service_type_from_id(service_id)
+    for srv_type, service, forms in iterate_over_services():
+        if srv_type == service_type:
             return getter(service)
     return default
 
 
-def get_service_name(slug):
-    return with_service(slug, lambda service: service.name, '')
+def get_service_name(service_id):
+    return with_service(service_id, lambda service: service.name, '')
 
 
-def get_service_client(slug):
-    return with_service(slug, lambda service: service.type, None)
-
-
-def get_service_field_descriptions(slug, index):
+def get_service_field_descriptions(service_id, index):
     def get_descriptions(service):
         Form = service.forms[index]
         descriptions = []
@@ -128,7 +129,7 @@ def get_service_field_descriptions(slug, index):
                 title = field.get('descriptionTitle', field.get('label', ''))
                 descriptions.append((title, field['description']))
         return descriptions
-    return with_service(slug, get_descriptions, [])
+    return with_service(service_id, get_descriptions, [])
 
 
 def get_service_type(wizard):
@@ -138,23 +139,22 @@ def get_service_type(wizard):
 
 
 def get_service_choices():
-    return [(slug, service.name) for slug, service, forms in
+    return [(srv_type, service.name) for srv_type, service, forms in
             iterate_over_services()]
 
 
 def get_service_checkers():
     import_all_services()
 
-    def make_comparator(slug):
+    def make_comparator(srv_id):
         def compare(wizard):
-            match = re.match('(.*)-[0-9]+', slug)
-            return match and match.group(1) == get_service_type(wizard)
+            return service_type_from_id(srv_id) == get_service_type(wizard)
         return compare
 
-    return [(slug, make_comparator(slug)) for slug, form
+    return [(srv_id, make_comparator(srv_id)) for srv_id, form
             in iterate_over_service_forms()]
 
 
 def get_service_descriptions():
-    return [(slug, service.description) for slug, service, forms in
+    return [(srv_type, service.description) for srv_type, service, forms in
             iterate_over_services()]

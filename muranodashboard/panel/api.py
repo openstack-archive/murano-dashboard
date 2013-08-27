@@ -237,7 +237,7 @@ def services_list(request, environment_id):
     for service_item in environment.services:
         service_data = service_item
         service_data['full_service_name'] = get_service_name(
-            service_data['slug'])
+            service_data['type'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
             last_operation = str(reports[service_data['id']].text)
@@ -327,6 +327,6 @@ def get_deployment_descr(request, environment_id, deployment_id):
             if 'services' in descr:
                 for service in descr['services']:
                     service['full_service_name'] = get_service_name(
-                        service['slug'])
+                        service['type'])
             return descr
     return None
