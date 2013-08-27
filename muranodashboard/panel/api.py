@@ -63,7 +63,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
                                                                 deployment.id,
                                                                 service_id)
 
-            for report in reports:
+            for report in reversed(reports):
                 result += report.created.replace('T', ' ') + ' - ' + str(
                     report.text) + '\n'
     return result
