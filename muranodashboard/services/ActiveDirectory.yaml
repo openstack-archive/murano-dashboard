@@ -9,7 +9,6 @@ description: >-
 unitTemplates:
   - isMaster: true
     recoveryPassword: {YAQL: $.serviceConfiguration.recoveryPassword}
-    location: west-dc
   - isMaster: false
     recoveryPassword: {YAQL: $.serviceConfiguration.recoveryPassword}
 
@@ -33,7 +32,7 @@ forms:
           attributeNames: [name, domain]
           minLength: 2
           maxLength: 255
-          regexpValidator: '^(?=.{2,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$'
+          regexpValidator: '^[0-9A-Za-z](?!--)[0-9A-Za-z\-]{0,13}[0-9A-Za-z]\.[0-9A-Za-z][0-9A-Za-z\-]{0,61}[0-9A-Za-z]$'
           errorMessages:
             invalid: >-
               Only letters, numbers and dashes in the middle are
