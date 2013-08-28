@@ -71,7 +71,9 @@ class PasswordField(CharField):
         return name + '-clone'
 
     def compare(self, name, form_data):
-        if self.is_original():  # run compare only for original fields
+        if self.is_original() and self.required:
+            # run compare only for original fields
+            # do not run compare for hidden fields (they are not required)
             if form_data.get(name) != form_data.get(self.get_clone_name(name)):
                 raise forms.ValidationError(_(u"{0}{1} don't match".format(
                     self.label, pluralize(2))))
@@ -164,8 +166,9 @@ class DataGridField(forms.MultiValueField, CustomPropertiesField):
         self.widget.update_request(request)
         # hack to use json string instead of python dict get by YAQL
         data = kwargs['form'].service.cleaned_data
-        data['clusterConfiguration']['dcInstances'] = json.dumps(
-            data['clusterConfiguration']['dcInstances'])
+        if 'clusterConfiguration' in data:
+            conf = data['clusterConfiguration']
+            conf['dcInstances'] = json.dumps(conf['dcInstances'])
 
 
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):
@@ -293,16 +296,6 @@ class ClusterIPField(CharField):
             self.help_text = _('Specify valid fixed IP')
         self.validators = [self.validate_cluster_ip(request, ip_ranges)]
         self.error_messages['invalid'] = validate_ipv4_address.message
-
-    def postclean(self, form, data):
-        # hack to compare two IPs
-        ips = []
-        for key, field in form.fields.items():
-            if isinstance(field, ClusterIPField):
-                ips.append(data.get(key))
-        if ips[0] == ips[1] and ips[0] is not None:
-            raise forms.ValidationError(_(
-                'Listener IP and Cluster Static IP should be different'))
 
 
 class DatabaseListField(CharField):
