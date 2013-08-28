@@ -58,12 +58,12 @@ def get_status_messages_for_service(request, service_id, environment_id):
     result = '\n'
     #TODO: Add updated time to logs
     if deployments:
-        for deployment in deployments:
+        for deployment in reversed(deployments):
             reports = muranoclient(request).deployments.reports(environment_id,
                                                                 deployment.id,
                                                                 service_id)
 
-            for report in reversed(reports):
+            for report in reports:
                 result += report.created.replace('T', ' ') + ' - ' + str(
                     report.text) + '\n'
     return result
