@@ -160,7 +160,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
         def make_property(key, spec):
             def _get(field):
-                return self.get_data(spec)
+                data_ready, value = self.get_data(spec)
+                return value if data_ready else field.__dict__[key]
 
             def _set(field, value):
                 field.__dict__[key] = value
@@ -210,12 +211,13 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             self, data or getattr(self, 'cleaned_data', None))
         expr = self.get_yaql_expr(expr)
         value = data and yaql.parse(expr).evaluate(data, context)
-        return value
+        return data != {}, value
 
     def get_unit_templates(self, data):
         def parse_spec(spec):
             if self.get_yaql_expr(spec):
-                return self.get_data(spec, data)
+                data_ready, value = self.get_data(spec, data)
+                return value
             elif isinstance(spec, types.ListType):
                 return [parse_spec(_spec) for _spec in spec]
             elif isinstance(spec, types.DictType):
@@ -227,13 +229,13 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         return [parse_spec(spec) for spec in self.service.unit_templates]
 
     def extract_attributes(self, attributes):
-        def get_data(name):
+        def get_attr(name):
             if type(name) == dict:
-                return dict((k, get_data(v)) for (k, v) in name.iteritems())
+                return dict((k, get_attr(v)) for (k, v) in name.iteritems())
             else:
                 return self.cleaned_data[name]
         for attr_name, field_name in self.attribute_mappings.iteritems():
-            attributes[attr_name] = get_data(field_name)
+            attributes[attr_name] = get_attr(field_name)
 
     def clean(self):
         cleaned_data = super(ServiceConfigurationForm, self).clean()
