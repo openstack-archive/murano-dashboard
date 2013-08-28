@@ -154,7 +154,7 @@ forms:
           helpText: Optional field for a machine hostname template
       validators:
         # if unitNamingPattern is given and dcInstances > 1, then '#' should occur in unitNamingPattern
-        - expr: {YAQL: $.clusterConfiguration.dcInstances < 2 or not $.clusterConfiguration.unitNamingPattern.bool() or '#' in $.clusterConfiguration.unitNamingPattern}
+        - expr: {YAQL: not $.clusterConfiguration.unitNamingPattern.bool() or '#' in $.clusterConfiguration.unitNamingPattern}
           message: Incrementation symbol "#" is required in the Hostname template
   - unitsConfiguration:
       fields:
