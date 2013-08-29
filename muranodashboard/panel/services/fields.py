@@ -276,6 +276,10 @@ class ClusterIPField(CharField):
                     request, _("Unable to retrieve information "
                                "about fixed IP or IP is not valid."),
                     ignore=True)
+            except exceptions.NOT_FOUND:
+                exceptions.handle(
+                    request, _("Could not found fixed ips for ip %s" % (ip,)),
+                    ignore=True)
             else:
                 if ip_info.hostname:
                     raise forms.ValidationError(
