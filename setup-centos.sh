@@ -276,6 +276,9 @@ CLONE_FROM_GIT=$1
 	else
 		log "$MRN_CND_SPY not found!"
 	fi
+	# add apache to autostart
+	chkconfig --add httpd
+	chkconfig httpd on
 }
 
 # uninstall
