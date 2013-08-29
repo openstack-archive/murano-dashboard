@@ -156,6 +156,9 @@ forms:
         # if unitNamingPattern is given and dcInstances > 1, then '#' should occur in unitNamingPattern
         - expr: {YAQL: not $.clusterConfiguration.unitNamingPattern.bool() or '#' in $.clusterConfiguration.unitNamingPattern}
           message: Incrementation symbol "#" is required in the Hostname template
+          # if IP is not valid on its own, it will be empty - the
+          # first check is needed to not emit comparison error when
+          # both IPs are not valid
         - expr: {YAQL: $.clusterConfiguration.clusterIP.bool() and $.clusterConfiguration.clusterIP != $.clusterConfiguration.agListenerIP}
           message: Listener IP and Cluster Static IP should be different
   - unitsConfiguration:
