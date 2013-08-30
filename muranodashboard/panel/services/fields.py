@@ -104,6 +104,11 @@ class PasswordField(CharField):
             help_text=help_text,
             widget=self.PasswordInput(render_value=True))
 
+    def __deepcopy__(self, memo):
+        result = super(PasswordField, self).__deepcopy__(memo)
+        result.error_messages = copy.deepcopy(self.error_messages)
+        return result
+
     def is_original(self):
         return hasattr(self, 'original') and self.original
 
