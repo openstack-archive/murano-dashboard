@@ -69,7 +69,7 @@ forms:
         - name: domain
           type: domain
           label: Domain
-          required: false
+          required: {YAQL: not $.serviceConfiguration.externalAD}
           description: >-
             Service can be joined to the Active Directory domain. If you want to 
             create an AD domain create the AD Service first.
