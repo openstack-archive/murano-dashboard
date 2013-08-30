@@ -159,7 +159,7 @@ forms:
           # if IP is not valid on its own, it will be empty - the
           # first check is needed to not emit comparison error when
           # both IPs are not valid
-        - expr: {YAQL: $.clusterConfiguration.clusterIP.bool() and $.clusterConfiguration.clusterIP != $.clusterConfiguration.agListenerIP}
+        - expr: {YAQL: not $.clusterConfiguration.clusterIP.bool() or $.clusterConfiguration.clusterIP != $.clusterConfiguration.agListenerIP}
           message: Listener IP and Cluster Static IP should be different
   - unitsConfiguration:
       fields:
