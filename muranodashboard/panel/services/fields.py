@@ -26,6 +26,7 @@ from openstack_dashboard.api.nova import novaclient
 from muranodashboard.datagrids import DataGridCompound
 from django.template.defaultfilters import pluralize
 import copy
+import types
 
 
 def with_request(func):
@@ -147,9 +148,9 @@ class InstanceCountField(IntegerField):
     def interpolate_number(spec, number):
         """Replaces all '#' occurrences with given number."""
         def interpolate(spec):
-            if type(spec) == dict:
+            if isinstance(spec, types.DictType):
                 return dict((k, interpolate(v)) for (k, v) in spec.iteritems())
-            elif type(spec) in (str, unicode) and '#' in spec:
+            elif isinstance(spec, basestring) and '#' in spec:
                 return spec.replace('#', '{0}').format(number)
             else:
                 return spec

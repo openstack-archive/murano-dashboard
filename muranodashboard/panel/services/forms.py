@@ -74,7 +74,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
     @staticmethod
     def get_yaql_expr(expr):
-        return type(expr) == dict and expr.get('YAQL', None)
+        return isinstance(expr, types.DictType) and expr.get('YAQL', None)
 
     def init_attribute_mappings(self, field_name, kwargs):
         def set_mapping(name, value):
@@ -89,7 +89,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
         if 'attribute_names' in kwargs:
             attr_names = kwargs['attribute_names']
-            if type(attr_names) == list:
+            if isinstance(attr_names, types.ListType):
                 # allow pushing field value to multiple attributes
                 for attr_name in attr_names:
                     set_mapping(attr_name, field_name)
@@ -130,7 +130,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         def append_field(field_spec):
             cls = parse_spec(field_spec['type'], 'type')[1]
             widget = None
-            if type(cls) == tuple:
+            if isinstance(cls, types.TupleType):
                 cls, widget = cls
             kwargs = parse_spec(field_spec)[1]
             kwargs['widget'] = process_widget(kwargs, cls, widget)
@@ -171,12 +171,12 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             return property(_get, _set, _del)
 
         def parse_spec(spec, keys=[]):
-            if not type(keys) == list:
+            if not isinstance(keys, types.ListType):
                 keys = [keys]
             key = keys and keys[-1] or None
             if self.get_yaql_expr(spec):
                 return key, make_property(key, spec)
-            elif type(spec) == dict:
+            elif isinstance(spec, types.DictType):
                 items = []
                 for k, v in spec.iteritems():
                     if not k in ('type', 'name'):
@@ -186,9 +186,9 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                             k = newKey
                         items.append((k, v))
                 return key, dict(items)
-            elif type(spec) == list:
+            elif isinstance(spec, types.ListType):
                 return key, [parse_spec(_spec, keys)[1] for _spec in spec]
-            elif type(spec) in (str, unicode) and is_localizable(keys):
+            elif isinstance(spec, basestring) and is_localizable(keys):
                 return key, _(spec)
             else:
                 if key == 'type':
@@ -230,7 +230,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
     def extract_attributes(self, attributes):
         def get_attr(name):
-            if type(name) == dict:
+            if isinstance(name, types.DictType):
                 return dict((k, get_attr(v)) for (k, v) in name.iteritems())
             else:
                 return self.cleaned_data[name]
