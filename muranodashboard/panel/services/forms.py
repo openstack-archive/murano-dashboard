@@ -238,22 +238,26 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             attributes[attr_name] = get_attr(field_name)
 
     def clean(self):
-        cleaned_data = super(ServiceConfigurationForm, self).clean()
-        all_data = self.service.update_cleaned_data(self, cleaned_data)
-        context = yaql.create_context()
-        for validator in self.validators:
-            expr = self.get_yaql_expr(validator['expr'])
-            if not yaql.parse(expr).evaluate(all_data, context):
-                raise forms.ValidationError(_(validator.get('message', '')))
+        if self._errors:
+            return self.cleaned_data
+        else:
+            cleaned_data = super(ServiceConfigurationForm, self).clean()
+            all_data = self.service.update_cleaned_data(self, cleaned_data)
+            context = yaql.create_context()
+            for validator in self.validators:
+                expr = self.get_yaql_expr(validator['expr'])
+                if not yaql.parse(expr).evaluate(all_data, context):
+                    raise forms.ValidationError(
+                        _(validator.get('message', '')))
 
-        for name, field in self.fields.iteritems():
-            if isinstance(field, fields.PasswordField):
-                field.compare(name, cleaned_data)
+            for name, field in self.fields.iteritems():
+                if isinstance(field, fields.PasswordField):
+                    field.compare(name, cleaned_data)
 
-            if hasattr(field, 'postclean'):
-                value = field.postclean(self, cleaned_data)
-                if value:
-                    cleaned_data[name] = value
+                if hasattr(field, 'postclean'):
+                    value = field.postclean(self, cleaned_data)
+                    if value:
+                        cleaned_data[name] = value
 
-        self.service.update_cleaned_data(self, cleaned_data)
-        return cleaned_data
+            self.service.update_cleaned_data(self, cleaned_data)
+            return cleaned_data
