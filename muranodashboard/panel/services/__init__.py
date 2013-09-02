@@ -14,13 +14,11 @@
 
 import os
 import re
-
 from django.conf import settings
 from ordereddict import OrderedDict
-
 import yaml
 from yaml.scanner import ScannerError
-
+from django.utils.translation import ugettext_lazy as _
 
 _all_services = OrderedDict()
 
@@ -156,5 +154,10 @@ def get_service_checkers():
 
 
 def get_service_descriptions():
-    return [(srv_type, service.description) for srv_type, service, forms in
-            iterate_over_services()]
+    descriptions = []
+    for srv_type, service, forms in iterate_over_services():
+        description = getattr(service, 'description', _("<b>Default service \
+        description</b>. If you want to see here something meaningful, please \
+        provide `description' field in service markup."))
+        descriptions.append((srv_type, description))
+    return descriptions
