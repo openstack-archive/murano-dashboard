@@ -62,6 +62,10 @@ forms:
           required: false
           regexpValidator: '^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$'
           helpText: Optional field for a machine hostname template
+          # temporaryHack
+          widgetMedia:
+            js: [muranodashboard/js/support_placeholder.js]
+            css: {all: [muranodashboard/css/support_placeholder.css]}
   - instanceConfiguration:
       fields:
         - name: title
