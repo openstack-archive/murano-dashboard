@@ -27,6 +27,9 @@ from muranodashboard.datagrids import DataGridCompound
 from django.template.defaultfilters import pluralize
 import copy
 import types
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def with_request(func):
@@ -72,6 +75,7 @@ class PasswordField(CharField):
         return name + '-clone'
 
     def compare(self, name, form_data):
+        log.debug('Inside PasswordField compare method')
         if self.is_original() and self.required:
             # run compare only for original fields
             # do not run compare for hidden fields (they are not required)
