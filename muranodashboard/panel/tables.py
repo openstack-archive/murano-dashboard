@@ -37,7 +37,7 @@ class CreateService(tables.LinkAction):
 
     def allowed(self, request, environment):
         environment_id = self.table.kwargs['environment_id']
-        status = api.get_environment_data(request, environment_id, 'status')
+        status, = api.get_environment_data(request, environment_id, 'status')
         if status not in [STATUS_ID_DEPLOYING]:
             return True
         return False
