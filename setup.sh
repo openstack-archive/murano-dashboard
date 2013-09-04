@@ -99,6 +99,11 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
+MIDDLEWARE_CLASSES += ('muranodashboard.settings.ExceptionMiddleware',)
+LOGGING['formatters'] = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
+LOGGING['handlers']['file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
+LOGGING['loggers']['muranodashboard'] = {'handlers': ['file'], 'level': 'DEBUG'}
+LOGGING['loggers']['muranoclient'] = {'handlers': ['file'], 'level': 'ERROR'}
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
@@ -269,6 +274,7 @@ postinst()
 {
         rebuildstatic
 	sleep 2
+	chown www-data:www-data /var/log/murano-dashboard.log
 	service apache2 restart
 }
 # Command line args'

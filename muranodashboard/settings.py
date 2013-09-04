@@ -1,7 +1,8 @@
 import logging
+import traceback
 import os
 import sys
-
+from django.http import HttpResponseServerError
 from openstack_dashboard import exceptions
 from muranoclient.common import exceptions as muranoclient
 
@@ -63,6 +64,15 @@ HORIZON_CONFIG = {
                    'unauthorized': EXTENDED_UNAUTHORIZED_EXCEPTIONS},
     'customization_module': 'panel.overrides'
 }
+
+
+logger = logging.getLogger(__name__)
+
+
+class ExceptionMiddleware(object):
+    def process_exception(self, request, exception):
+        logger.error(traceback.format_exc())
+        return HttpResponseServerError()
 
 
 MIDDLEWARE_CLASSES = (
