@@ -244,11 +244,13 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             cleaned_data = super(ServiceConfigurationForm, self).clean()
             all_data = self.service.update_cleaned_data(self, cleaned_data)
             context = yaql.create_context()
+            error_messages = []
             for validator in self.validators:
                 expr = self.get_yaql_expr(validator['expr'])
                 if not yaql.parse(expr).evaluate(all_data, context):
-                    raise forms.ValidationError(
-                        _(validator.get('message', '')))
+                    error_messages.append(_(validator.get('message', '')))
+            if error_messages:
+                raise forms.ValidationError(error_messages)
 
             for name, field in self.fields.iteritems():
                 if isinstance(field, fields.PasswordField):
