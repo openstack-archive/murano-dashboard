@@ -63,18 +63,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         'text': (fields.CharField, forms.Textarea)
     }
 
-    yaql_functions = {
-        'test': lambda self, pattern: re.match(pattern(), self()) is not None,
-    }
-
     localizable_keys = set(['label', 'help_text', 'error_messages'])
 
     def __init__(self, *args, **kwargs):
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
-        self.context = yaql.create_context()
-        for name, func in self.yaql_functions.iteritems():
-            self.context.register_function(func, name)
         self.insert_fields(self.fields_template)
         self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
@@ -213,10 +206,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     def get_data(self, expr, data=None):
         """First try to get value from cleaned data, if none
         found, use raw data."""
+        context = yaql.create_context()
         data = self.service.update_cleaned_data(
             self, data or getattr(self, 'cleaned_data', None))
         expr = self.get_yaql_expr(expr)
-        value = data and yaql.parse(expr).evaluate(data, self.context)
+        value = data and yaql.parse(expr).evaluate(data, context)
         return data != {}, value
 
     def get_unit_templates(self, data):
@@ -249,10 +243,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         else:
             cleaned_data = super(ServiceConfigurationForm, self).clean()
             all_data = self.service.update_cleaned_data(self, cleaned_data)
+            context = yaql.create_context()
             error_messages = []
             for validator in self.validators:
                 expr = self.get_yaql_expr(validator['expr'])
-                if not yaql.parse(expr).evaluate(all_data, self.context):
+                if not yaql.parse(expr).evaluate(all_data, context):
                     error_messages.append(_(validator.get('message', '')))
             if error_messages:
                 raise forms.ValidationError(error_messages)
