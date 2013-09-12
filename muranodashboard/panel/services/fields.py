@@ -38,7 +38,14 @@ def with_request(func):
     return update
 
 
-class CustomPropertiesField(object):
+class CustomPropertiesField(forms.Field):
+    def clean(self, value):
+        """Skip all validators if field is disabled."""
+        if getattr(self, 'enabled', True):
+            return super(CustomPropertiesField, self).clean(value)
+        else:
+            return super(CustomPropertiesField, self).to_python(value)
+
     @classmethod
     def push_properties(cls, kwargs):
         props = {}

@@ -58,18 +58,18 @@ forms:
         - name: domainAdminUserName
           type: string
           label: Active Directory User
-          required: {YAQL: $.serviceConfiguration.externalAD}
+          enabled: {YAQL: $.serviceConfiguration.externalAD}
           regexpValidator: '^[-\w]+$'
           errorMessages:
-            invalid: 'Just letters, numbers, underscores and hyphens are allowed.'
+            invalid: Just letters, numbers, underscores and hyphens are allowed.
         - name: domainAdminPassword
           type: password
           label: Active Directory Password
-          required: {YAQL: $.serviceConfiguration.externalAD}
+          enabled: {YAQL: $.serviceConfiguration.externalAD}
         - name: domain
           type: domain
           label: Domain
-          required: {YAQL: not $.serviceConfiguration.externalAD}
+          enabled: {YAQL: not $.serviceConfiguration.externalAD}
           description: >-
             Service can be joined to the Active Directory domain. If you want to 
             create an AD domain create the AD Service first.
@@ -89,7 +89,7 @@ forms:
           label: SA Password
           description: Set system administrator password for the MS SQL Server.
           helpText: SQL server System Administrator account
-          required: {YAQL: $.serviceConfiguration.mixedModeAuth}
+          enabled: {YAQL: $.serviceConfiguration.mixedModeAuth}
   - clusterConfiguration:
       fields:
         - name: clusterIP

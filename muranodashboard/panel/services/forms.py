@@ -253,7 +253,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 raise forms.ValidationError(error_messages)
 
             for name, field in self.fields.iteritems():
-                if isinstance(field, fields.PasswordField):
+                if (isinstance(field, fields.PasswordField) and
+                        getattr(field, 'enabled', True)):
                     field.compare(name, cleaned_data)
 
                 if hasattr(field, 'postclean'):
