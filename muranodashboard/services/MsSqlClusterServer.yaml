@@ -106,6 +106,7 @@ forms:
           type: string
           label: Availability Group Name
           helpText: Name of AG during SQL setup
+          regexpValidator: '^[A-Za-z0-9_-]+$'
           description: >-
             Specify a name of an AG. Just A-Z, a-z, 0-9, dash and underline are allowed.
         - name: agListenerName
