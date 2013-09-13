@@ -196,7 +196,7 @@ postinst()
 {
         rebuildstatic
         sleep 2
-	chown dashboard:dashboard /var/log/murano-dashboard.log
+	chown apache:apache /var/log/murano-dashboard.log
         service httpd restart
 }
 
