@@ -222,6 +222,7 @@ class ImageChoiceField(ChoiceField):
             # public filter removed
             images, _more = glance.image_list_detailed(request)
         except:
+            log.error("Error to request image list from glance ")
             images = []
             exceptions.handle(request, _("Unable to retrieve public images."))
 
@@ -232,6 +233,8 @@ class ImageChoiceField(ChoiceField):
                 try:
                     murano_json = json.loads(murano_property)
                 except ValueError:
+                    log.warning("JSON in image metadata is not valid. "
+                                "Check it in glance.")
                     messages.error(request, _("Invalid murano image metadata"))
                 else:
                     title = murano_json.get('title', image.name)
@@ -288,13 +291,17 @@ class ClusterIPField(CharField):
             try:
                 ip_info = novaclient(request).fixed_ips.get(ip)
             except exceptions.UNAUTHORIZED:
+                log.error("Error to get information about IP address"
+                          " using novaclient")
                 exceptions.handle(
                     request, _("Unable to retrieve information "
                                "about fixed IP or IP is not valid."),
                     ignore=True)
             except exceptions.NOT_FOUND:
+                msg = "Could not found fixed ips for ip %s" % (ip,)
+                log.error(msg)
                 exceptions.handle(
-                    request, _("Could not found fixed ips for ip %s" % (ip,)),
+                    request, _(msg),
                     ignore=True)
             else:
                 if ip_info.hostname:
