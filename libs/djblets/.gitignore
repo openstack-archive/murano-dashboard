@@ -1,0 +1,12 @@
+build
+dist
+djblets/static/*
+Djblets.egg-info
+
+.coverage
+
+*.rej
+*.orig
+.*.sw*
+*.pyc
+.DS_Store

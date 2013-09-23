@@ -23,7 +23,7 @@ PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-NON_PIP_PACKAGES_BASE_URL=https://github.com
+NON_PIP_PACKAGES_BASE_DIR=$SERVICE_CONTENT_DIRECTORY/libs
 # Functions
 # Loger function
 log()
@@ -251,24 +251,12 @@ CLONE_FROM_GIT=$1
 			exit 1
 		fi
 		# NON PIP PACKAGES INSTALL START
-		for pkg in tsufiev.djblets; do
-		    PACKAGE=${pkg##*.}
-		    OWNER=${pkg%.*}
-		    SUFFIX=master.zip
-        	    PACKAGE_OUTARCH_FILENAME=$PACKAGE-$SUFFIX
-	            cd $SERVICE_CONTENT_DIRECTORY/dist && wget $NON_PIP_PACKAGES_BASE_URL/$OWNER/$PACKAGE/archive/$SUFFIX -O $PACKAGE_OUTARCH_FILENAME
-        	    if [ $? -ne 0 ];then
-                	log " Can't download \"$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
-	                exit 1
-		    fi
-	            cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $PACKAGE_OUTARCH_FILENAME
-        	    if [ $? -ne 0 ];then
-                	log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
-	                exit 1
-        	    fi
-	            cd $SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*} && python setup.py install
+		for pkg in djblets; do
+		    PKG_DIR=$NON_PIP_PACKAGES_BASE_DIR/$pkg
+	            cd $PKG_DIR
+	            python setup.py install
 	            if [ $? -ne 0 ]; then
-        		log "\"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*}/setup.py\" python setup FAILS, exiting!"
+        		log "\"$PKG_DIR/setup.py\" python setup FAILS, exiting!"
 			exit 1
         	    fi
 		done

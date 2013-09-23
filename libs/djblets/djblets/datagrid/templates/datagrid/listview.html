@@ -1,0 +1,55 @@
+{% load datagrid %}
+{% load i18n %}
+{% load staticfiles %}
+<div class="datagrid-wrapper" id="{{datagrid.id}}">
+ <div class="datagrid-titlebox">
+{% block datagrid_title %}
+   <h1 class="datagrid-title">{{datagrid.title}}</h1>
+{% endblock %}
+ </div>
+ <div class="datagrid-main">
+  <table class="datagrid">
+   <colgroup>
+{% for column in datagrid.columns %}
+    <col class="{{column.id}}"{% ifnotequal column.width 0 %} width="{{column.width}}%"{% endifnotequal %} />
+{% endfor %}
+    <col class="datagrid-customize" />
+   </colgroup>
+   <thead>
+    <tr class="datagrid-headers">
+{% for column in datagrid.columns %}
+     {{column.get_header}}{% endfor %}
+     <th class="edit-columns datagrid-header" id="{{datagrid.id}}-edit"><img src="{% static "images/datagrid/edit.png" %}" border="0" width="20" height="14" alt="{% trans "Edit columns" %}" /></th>
+    </tr>
+   </thead>
+   <tbody>
+{% for row in datagrid.rows %}
+    <tr class="{% cycle odd,even %}">
+{%  for cell in row.cells %}
+     {{cell}}{% endfor %}
+    </tr>
+{% endfor %}
+   </tbody>
+  </table>
+{% if is_paginated %}
+{%  paginator %}
+{% endif %}
+ </div>
+ <table class="datagrid-menu" id="{{datagrid.id}}-menu" style="display:none;position:absolute;">
+{% for column in datagrid.all_columns %}
+{%  with column.toggle_url as toggle_url %}
+  <tr class="{{column.id}}">
+   <td><div class="datagrid-menu-checkbox">{% if column.active %}<img src="{% static "images/datagrid/checkmark.png" %}" width="8" height="8" border="0" alt="X" />{% endif %}</div></td>
+   <td class="datagrid-menu-label"><a href="#">
+{%   if column.image_url %}
+    <img src="{{column.image_url}}" width="{{column.image_width}}" height="{{column.image_height}}" alt="{{column.image_alt}}" />
+{%   elif column.image_class %}
+    <div class="{{column.image_class}}"></div>
+{%   endif %}
+    {{column.detailed_label|default_if_none:""}}</a>
+   </td>
+  </tr>
+{%  endwith %}
+{% endfor %}
+ </table>
+</div>

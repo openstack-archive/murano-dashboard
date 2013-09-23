@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load djblets_deco %}
+{% load staticfiles %}
+{% block title %}{{datagrid.title}}{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static "css/datagrid.css" %}" />
+{% include "js/jquery.html" %}
+{% include "js/jquery-ui.html" %}
+<script type="text/javascript" src="{% static "js/jquery.gravy.js" %}"></script>
+<script type="text/javascript" src="{% static "js/datagrid.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+{% box %}
+{{datagrid.render_listview}}
+{% endbox %}
+{% endblock %}
