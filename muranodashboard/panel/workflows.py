@@ -23,7 +23,7 @@ from horizon import workflows
 from muranodashboard.panel import api
 
 
-LOG = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class SelectProjectUserAction(workflows.Action):
@@ -87,7 +87,9 @@ class CreateEnvironment(workflows.Workflow):
         try:
             api.environment_create(request, context)
             return True
-        except:
+        except Exception:
+            name = self.context.get('name', 'noname')
+            log.error("Unable to create environment {0}".format(name))
             exceptions.handle(request)
             return False
 
@@ -100,9 +102,11 @@ class UpdateEnvironmentInfoAction(workflows.Action):
             api.environment_update(request,
                                    data['environment_id'],
                                    data['name'])
-
-        except:
+        except Exception:
             exceptions.handle(request, ignore=True)
+            log.error("Unable to update environment name with ud={0}".format(
+                data['environment_id'],
+            ))
             return False
         return True
 

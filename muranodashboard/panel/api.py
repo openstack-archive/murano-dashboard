@@ -166,8 +166,6 @@ def environments_list(request):
 def environment_create(request, parameters):
     #name is required param
     name = parameters['name']
-    log.debug('Environment::Create <Name: {0}>'.format(name))
-
     env = muranoclient(request).environments.create(name)
     log.debug('Environment::Create {0}'.format(env))
     return env
