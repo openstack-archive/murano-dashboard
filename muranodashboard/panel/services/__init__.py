@@ -14,12 +14,15 @@
 
 import os
 import re
+import time
+import logging
 from django.conf import settings
 from ordereddict import OrderedDict
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
 
+log = logging.getLogger(__name__)
 _all_services = OrderedDict()
 
 
@@ -62,6 +65,7 @@ def import_all_services():
     directory = getattr(settings, 'MURANO_SERVICES_DESC_PATH', None)
     if directory is None:
         directory = os.path.join(os.path.dirname(__file__), '../../services/')
+    log.debug("Importing service definitions from '{0}'".format(directory))
 
     for filename in os.listdir(directory):
         if not filename.endswith('.yaml'):
@@ -77,11 +81,16 @@ def import_all_services():
         try:
             with open(service_file) as stream:
                 yaml_desc = yaml.load(stream)
-        except (OSError, ScannerError):
+        except (OSError, ScannerError) as e:
+            log.warn("Failed to import service definition from {0},"
+                     " reason: {1!s}".format(service_file, e))
             continue
 
         service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
         _all_services[filename] = Service(modified_on, **service)
+        log.info("Added service '{0}' from '{1}', modified on {2}".format(
+            _all_services[filename].name, service_file,
+            time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(modified_on))))
 
 
 def iterate_over_services():

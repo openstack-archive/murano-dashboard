@@ -13,6 +13,7 @@
 #    under the License.
 
 import re
+import logging
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
@@ -21,10 +22,13 @@ import muranodashboard.panel.services.helpers as helpers
 import yaql
 import types
 
+log = logging.getLogger(__name__)
+
 
 class UpdatableFieldsForm(forms.Form):
     def update_fields(self):
-        # duplicate all password fields
+
+        #Create 'Confirm Password' fields by duplicating" Password fields
         while True:
             index, inserted = 0, False
             for name, field in self.fields.iteritems():
@@ -66,10 +70,10 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     localizable_keys = set(['label', 'help_text', 'error_messages'])
 
     def __init__(self, *args, **kwargs):
+        log.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
         self.insert_fields(self.fields_template)
-        self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
 
     @staticmethod
@@ -199,7 +203,6 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     return 'validators', [prepare_regexp(spec)]
                 else:
                     return key, spec
-
         for spec in field_specs:
             append_field(spec)
 
@@ -261,6 +264,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     value = field.postclean(self, cleaned_data)
                     if value:
                         cleaned_data[name] = value
+                        log.debug("Update cleaned data in postclean method")
 
             self.service.update_cleaned_data(self, cleaned_data)
             return cleaned_data

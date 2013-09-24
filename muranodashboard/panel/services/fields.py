@@ -38,6 +38,7 @@ def with_request(func):
         if request:
             func(self, request, **kwargs)
         else:
+            log.error("No 'request' key in form initial dictionary")
             raise forms.ValidationError("Can't get a request information")
     return update
 

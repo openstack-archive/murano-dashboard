@@ -152,9 +152,15 @@ class Session(object):
         """
         #We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
-        log.debug("Get session info")
-
-        return sessions[environment_id] if environment_id in sessions else None
+        session_id = sessions[environment_id] \
+            if environment_id in sessions else None
+        if session_id:
+            log.debug("Using session_id {0} for the environment {1}".format(
+                session_id, environment_id))
+        else:
+            log.debug("Session for the environment {0} not found".found(
+                environment_id))
+        return session_id
 
 
 def environments_list(request):
