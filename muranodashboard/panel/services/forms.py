@@ -229,6 +229,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     for (k, v) in spec.iteritems())
             else:
                 return spec
+        #TODO: add try-except if unit_templates is not in service description
         return [parse_spec(spec) for spec in self.service.unit_templates]
 
     def extract_attributes(self, attributes):

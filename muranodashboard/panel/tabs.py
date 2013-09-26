@@ -58,10 +58,11 @@ class OverviewTab(tabs.Tab):
                     text += '    (# transforms into index number)'
                 detail_info['Hostname template'] = text
 
-        if not service_data.domain:
-            detail_info['Domain'] = 'Not in domain'
-        else:
-            detail_info['Domain'] = service_data.domain
+        if hasattr(service_data, 'domain'):
+            if not service_data.domain:
+                detail_info['Domain'] = 'Not in domain'
+            else:
+                detail_info['Domain'] = service_data.domain
 
         if hasattr(service_data, 'repository'):
             detail_info['Application repository'] = service_data.repository
