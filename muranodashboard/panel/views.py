@@ -60,11 +60,6 @@ class Wizard(ModalFormMixin, SessionWizardView):
         for form in form_list[1:]:
             form.extract_attributes(attributes)
 
-        # hack to destringify nodes into units
-        if 'nodes' in attributes:
-            attributes['units'] = json.loads(attributes['nodes'])
-            del attributes['nodes']
-
         try:
             api.service_create(self.request, environment_id, attributes)
         except HTTPForbidden:

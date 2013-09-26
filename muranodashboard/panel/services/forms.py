@@ -27,8 +27,7 @@ log = logging.getLogger(__name__)
 
 class UpdatableFieldsForm(forms.Form):
     def update_fields(self):
-
-        #Create 'Confirm Password' fields by duplicating" Password fields
+        # Create 'Confirm Password' fields by duplicating password fields
         while True:
             index, inserted = 0, False
             for name, field in self.fields.iteritems():
@@ -60,7 +59,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         'password': fields.PasswordField,
         'integer': fields.IntegerField,
         'databaselist': fields.DatabaseListField,
-        'datagrid': fields.DataGridField,
+        'table': fields.TableField,
         'flavor': fields.FlavorChoiceField,
         'image': fields.ImageChoiceField,
         'azone': fields.AZoneChoiceField,
@@ -74,6 +73,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
         self.insert_fields(self.fields_template)
+        self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
 
     @staticmethod
@@ -203,6 +203,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     return 'validators', [prepare_regexp(spec)]
                 else:
                     return key, spec
+
         for spec in field_specs:
             append_field(spec)
 

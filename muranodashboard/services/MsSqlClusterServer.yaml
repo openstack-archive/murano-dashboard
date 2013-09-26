@@ -8,13 +8,13 @@ description: >-
 unitTemplates:
   - isMaster: true
     isSync: true
-    name: 'node#'
+    name: 'node-#'
   - isMaster: false
     isSync: true
-    name: 'node#'
+    name: 'node-#'
   - isMaster: false
     isSync: false
-    name: 'node#'
+    name: 'node-#'
 
 forms:
   - serviceConfiguration:
@@ -169,8 +169,19 @@ forms:
   - unitsConfiguration:
       fields:
         - name: nodes
-          type: datagrid
+          type: table
           label: Nodes
+          attributeNames: units
+          columns:
+            - columnName: name
+              columnType: label
+              title: Node
+            - columnName: isSync
+              columnType: checkbox
+              title: Sync
+            - columnName: isMaster
+              columnType: radio
+              title: Master
           initial: {YAQL: $.clusterConfiguration.dcInstances}
           description: >-
             Configure cluster instances. Cluster node quantity can be set

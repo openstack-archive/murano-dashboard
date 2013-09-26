@@ -21,7 +21,6 @@ PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libx
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-NON_PIP_PACKAGES_BASE_URL=https://github.com
 
 # Functions
 # Logger function
@@ -98,7 +97,7 @@ HORIZON_CONFIG['exceptions']['recoverable'] = EXTENDED_RECOVERABLE_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
-INSTALLED_APPS += ('muranodashboard','djblets','djblets.datagrid','djblets.util','floppyforms',)
+INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.settings.ExceptionMiddleware',)
 LOGGING['formatters'] = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
 LOGGING['handlers']['file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
@@ -192,29 +191,6 @@ CLONE_FROM_GIT=$1
 			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
-		# NON PIP PACKAGES INSTALL START
-		for pkg in tsufiev.djblets; do
-		    PACKAGE=${pkg##*.}
-		    OWNER=${pkg%.*}
-		    SUFFIX=master.zip
-        	    PACKAGE_OUTARCH_FILENAME=$PACKAGE-$SUFFIX
-	            cd $SERVICE_CONTENT_DIRECTORY/dist && wget $NON_PIP_PACKAGES_BASE_URL/$OWNER/$PACKAGE/archive/$SUFFIX -O $PACKAGE_OUTARCH_FILENAME
-        	if [ $? -ne 0 ];then
-                	log " Can't download \"$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
-	                exit 1
-		fi
-	            cd $SERVICE_CONTENT_DIRECTORY/dist && unzip $PACKAGE_OUTARCH_FILENAME
-        	if [ $? -ne 0 ];then
-                	log " Can't unzip \"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE_OUTARCH_FILENAME\", exiting!!!"
-	                exit 1
-        	fi
-	            cd $SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*} && python setup.py install
-	        if [ $? -ne 0 ]; then
-        		log "\"$SERVICE_CONTENT_DIRECTORY/dist/$PACKAGE-${SUFFIX%.*}/setup.py\" python setup FAILS, exiting!"
-	            exit 1
-        	fi
-		done
-	        # NON PIP PACKAGES INSTALL END
 		else
 		log "$MRN_CND_SPY not found!"
 	fi

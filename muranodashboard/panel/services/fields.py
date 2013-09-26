@@ -23,11 +23,14 @@ from muranodashboard.panel import api
 from horizon import exceptions, messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api.nova import novaclient
-from muranodashboard.datagrids import DataGridCompound
 from django.template.defaultfilters import pluralize
 import copy
 import types
 import logging
+import itertools
+import horizon.tables as tables
+import floppyforms
+from django.template.loader import render_to_string
 
 log = logging.getLogger(__name__)
 
@@ -168,24 +171,127 @@ class InstanceCountField(IntegerField):
         return interpolate(spec)
 
 
-class DataGridField(forms.MultiValueField, CustomPropertiesField):
-    def __init__(self, *args, **kwargs):
-        kwargs['widget'] = DataGridCompound
-        super(DataGridField, self).__init__(
-            (forms.CharField(required=False), forms.CharField()),
-            *args, **kwargs)
+class Column(tables.Column):
+    template_name = 'common/form-fields/data-grid/input.html'
 
-    def compress(self, data_list):
-        return data_list[1]
+    def __init__(self, transform, **kwargs):
+        table_name = kwargs.pop('table_name', False)
+        if hasattr(self, 'template_name'):
+            def _transform(datum):
+                context = {'data': getattr(datum, self.name, None),
+                           'row_index': str(datum.id),
+                           'table_name': table_name,
+                           'column_name': self.name}
+                return render_to_string(self.template_name, context)
+            _transform.__name__ = transform
+            transform = _transform
+        super(Column, self).__init__(transform, **kwargs)
+
+
+class CheckColumn(Column):
+    template_name = 'common/form-fields/data-grid/checkbox.html'
+
+
+class RadioColumn(Column):
+    template_name = 'common/form-fields/data-grid/radio.html'
+
+
+def DataTableFactory(name, columns):
+    class Object(object):
+        row_name_re = re.compile(r'.*\{0}.*')
+
+        def __init__(self, id, **kwargs):
+            self.id = id
+            for key, value in kwargs.iteritems():
+                if isinstance(value, basestring) and \
+                        re.match(self.row_name_re, value):
+                    setattr(self, key, value.format(id))
+                else:
+                    setattr(self, key, value)
+
+    class DataTableBase(tables.DataTable):
+        def __init__(self, request, data, **kwargs):
+            super(DataTableBase, self).__init__(
+                request,
+                [Object(i, **item) for (i, item) in enumerate(data, 1)],
+                **kwargs)
+
+    class Meta:
+        template = 'common/form-fields/data-grid/data_table.html'
+        name = ''
+        footer = False
+
+    attrs = dict((col_id, cls(col_id, verbose_name=col_name, table_name=name))
+                 for (col_id, cls, col_name) in columns)
+    attrs['Meta'] = Meta
+    return tables.base.DataTableMetaclass('DataTable', (DataTableBase,), attrs)
+
+
+class TableWidget(floppyforms.widgets.Input):
+    template_name = 'common/form-fields/data-grid/table_field.html'
+    delimiter_re = re.compile('([\w-]*)@@([0-9]*)@@([\w-]*)')
+    types = {'label': Column,
+             'radio': RadioColumn,
+             'checkbox': CheckColumn}
+
+    def __init__(self, columns_spec, *args, **kwargs):
+        columns = []
+        for spec in columns_spec:
+            name = spec['column_name']
+            columns.append((name,
+                            self.types[spec['column_type']],
+                            spec.get('title', None) or name.title()))
+        self.columns = columns
+        super(TableWidget, self).__init__(*args, **kwargs)
+
+    def get_context(self, name, value, attrs=None):
+        ctx = super(TableWidget, self).get_context_data()
+        if value:
+            ctx['data_table'] = DataTableFactory(name, self.columns)(
+                self.request, value)
+        return ctx
+
+    def value_from_datadict(self, data, files, name):
+        def extract_value(row_idx, col_id, col_cls):
+            if col_cls == CheckColumn:
+                val = data.get("{0}@@{1}@@{2}".format(name, row_idx, col_id),
+                               False)
+                return val and val == 'on'
+            elif col_cls == RadioColumn:
+                row_id = data.get("{0}@@@@{1}".format(name, col_id), False)
+                if row_id:
+                    return int(row_id) == row_idx
+                return False
+            else:
+                return data.get("{0}@@{1}@@{2}".format(
+                    name, row_idx, col_id), None)
+
+        items = []
+        main_column, rest_columns = self.columns[0], self.columns[1:]
+        for row_index in itertools.count(1):
+            if not extract_value(row_index, *main_column[:2]):
+                break
+            item = {}
+            for column_id, column_instance, column_name in self.columns:
+                value = extract_value(row_index, column_id, column_instance)
+                item[column_id] = value
+            items.append(item)
+        print items
+        return items
+
+    class Media:
+        css = {'all': ('muranodashboard/css/tablefield.css',)}
+        js = ('muranodashboard/js/tablefield.js',)
+
+
+class TableField(CustomPropertiesField):
+    def __init__(self, *args, **kwargs):
+        kwargs['widget'] = TableWidget(kwargs.pop('columns'))
+        super(TableField, self).__init__(*args, **kwargs)
 
     @with_request
     def update(self, request, **kwargs):
-        self.widget.update_request(request)
-        # hack to use json string instead of python dict get by YAQL
-        data = kwargs['form'].service.cleaned_data
-        if 'clusterConfiguration' in data:
-            conf = data['clusterConfiguration']
-            conf['dcInstances'] = json.dumps(conf['dcInstances'])
+        self.widget.request = request
 
 
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):

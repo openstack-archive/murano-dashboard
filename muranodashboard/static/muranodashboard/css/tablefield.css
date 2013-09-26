@@ -1,0 +1,10 @@
+input[type=radio].data-grid, input[type=checkbox].data-grid {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    width: auto !important;
+}
+
+.data-grid table {
+    margin-bottom: 5px ! important;;
+}
