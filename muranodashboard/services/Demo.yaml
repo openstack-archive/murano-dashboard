@@ -1,0 +1,33 @@
+name: Demo Service
+type: demoService
+
+description: >-
+  <strong> Demo Service </strong>
+  shows how Murano is working.
+
+unitTemplates:
+  - {}
+
+forms:
+  - serviceConfiguration:
+      fields:
+        - name: configuration
+          type: string
+          hidden: true
+          initial: standalone
+        - name: name
+          type: string
+          label: Service Name
+          description: >-
+            To identify your service in logs please specify a service name
+        - name: dcInstances
+          type: instance
+          label: Instance Count
+          description: >-
+            Murano can provision more then one instance of the service at a time.
+            For a demo scenario only 2 instances are allowed.
+          attributeNames: units
+          minValue: 1
+          maxValue: 2
+          initial: 2
+          helpText: Enter 1 and 2 value
