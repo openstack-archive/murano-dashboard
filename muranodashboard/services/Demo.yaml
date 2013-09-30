@@ -66,12 +66,6 @@ forms:
                 Select registered in Openstack flavor. Consider that service performance
                 depends on this parameter.
               required: false
-            - name: osImage
-              type: image
-              label: Instance image
-              description: >-
-                Select valid image for a service. Image should already be prepared and
-                registered in glance.
             - name: availabilityZone
               type: azone
               label: Availability zone
