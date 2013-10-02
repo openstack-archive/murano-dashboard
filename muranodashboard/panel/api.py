@@ -158,7 +158,7 @@ class Session(object):
             log.debug("Using session_id {0} for the environment {1}".format(
                 session_id, environment_id))
         else:
-            log.debug("Session for the environment {0} not found".found(
+            log.debug("Session for the environment {0} not found".format(
                 environment_id))
         return session_id
 
