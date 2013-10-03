@@ -120,4 +120,6 @@ $(function() {
         }
         $(rowRef).remove();
     });
+
+    $('.data-grid .table_caption').remove()
 });
