@@ -18,21 +18,28 @@ import json
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_text
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect
+
+
+from openstack_dashboard.api import glance
 
 from horizon import exceptions
 from horizon import tabs
 from horizon import tables
 from horizon import workflows
 from horizon import messages
-from horizon.forms.views import ModalFormMixin
+from horizon.forms.views import ModalFormMixin, ModalFormView
 from tables import EnvironmentsTable
 from tables import ServicesTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
+from tables import ImagesTable
+
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs, DeploymentTabs
+from forms import AddImageForm
 
 from muranodashboard.panel import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
@@ -330,3 +337,42 @@ class DeploymentDetailsView(tabs.TabbedTableView):
 
         return self.tab_group_class(request, deployment=deployment, logs=logs,
                                     **kwargs)
+
+
+class MuranoImageView(tables.DataTableView):
+    table_class = ImagesTable
+    template_name = 'images/index.html'
+
+    def get_data(self):
+        images = []
+        try:
+            images, _more = glance.image_list_detailed(self.request)
+
+        except HTTPForbidden:
+            msg = _('Unable to retrieve list of images')
+            exceptions.handle(self.request, msg,
+                              redirect=reverse("horizon:project:murano:index"))
+        murano_images = []
+        for image in images:
+            murano_property = image.properties.get('murano_image_info')
+            if murano_property:
+                try:
+                    murano_json = json.loads(murano_property)
+                except ValueError:
+                    LOG.warning("JSON in image metadata is not valid. "
+                                "Check it in glance.")
+                    messages.error(self.request,
+                                   _("Invalid murano image metadata"))
+                else:
+                    image.title = murano_json.get('title', 'No title')
+                    image.type = murano_json.get('type', 'No title')
+
+                murano_images.append(image)
+        return murano_images
+
+
+class AddMuranoImageView(ModalFormView):
+    form_class = AddImageForm
+    template_name = 'images/add.html'
+    context_object_name = 'image'
+    success_url = reverse_lazy("horizon:project:murano:murano_images")
