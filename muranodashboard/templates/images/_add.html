@@ -1,0 +1,32 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}add_murano_image_form{% endblock %}
+{% block form_attrs %}enctype="multipart/form-data"{% endblock %}
+{% block form_action %}add_image{% endblock %}
+{% block modal-header %}{% trans "Add An Image" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>{% trans "Add image to Murano. Valid image metadata will be added so this image can be picked during service creation." %}</p>
+    <p><strong>{% trans "Image Title"  %}</strong>
+        {% blocktrans %}Enter an image desciption which will help you to recognize the service during service creation {% endblocktrans %}
+    </p>
+    <p><strong>{% trans "Images"  %}</strong>
+            {% blocktrans %}Select image from Glance{% endblocktrans %}
+    </p>
+    <p><strong>{% trans "Murano Type"  %}</strong>
+            {% blocktrans %}Pick image type from supported by Murano{% endblocktrans %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Update Image" %}" />
+{% endblock %}

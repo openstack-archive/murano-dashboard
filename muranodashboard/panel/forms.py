@@ -15,6 +15,11 @@
 import logging
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from horizon.forms import SelfHandlingForm
+from horizon import messages, exceptions
+from openstack_dashboard.api import glance
+import json
+
 from muranodashboard.panel.services import iterate_over_service_forms, \
     get_service_choices
 
@@ -28,3 +33,40 @@ class WizardFormServiceType(forms.Form):
 
 FORMS = [('service_choice', WizardFormServiceType)]
 FORMS.extend(iterate_over_service_forms())
+
+
+class AddImageForm(SelfHandlingForm):
+    title = forms.CharField(max_length="255",
+                            label=_("Image Title"))
+
+    image_choices = forms.ChoiceField(label='Images')
+
+    windows_image = ('ws-2012-std', ' Windows Server 2012 Desktop')
+    demo_image = ('murano_demo', 'Murano Demo Image')
+
+    image_type = forms.ChoiceField(label="Murano Type",
+                                   choices=[windows_image, demo_image])
+
+    def __init__(self, request, *args, **kwargs):
+        super(AddImageForm, self).__init__(request, *args, **kwargs)
+        try:
+            images, _more = glance.image_list_detailed(request)
+        except Exception:
+            log.error("Failed to request image list from glance ")
+            images = []
+            exceptions.handle(request, _("Unable to retrieve public images."))
+        self.fields['image_choices'].choices = [(image.id, image.name)
+                                                for image in images]
+
+    def handle(self, request, data):
+        log.debug('Adding new murano using data {0}'.format(data))
+        murano_properties = {'murano_image_info': json.dumps(
+            {'title': data['title'], 'type': data['image_type']})}
+        try:
+            image = glance.image_update(request, data['image_choices'],
+                                        properties=murano_properties)
+
+            messages.success(request, _('Image added to Murano'))
+            return image
+        except Exception:
+            exceptions.handle(request, _('Unable to update image.'))
