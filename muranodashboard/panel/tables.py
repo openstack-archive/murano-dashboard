@@ -326,7 +326,7 @@ class AddMuranoImage(tables.LinkAction):
 
 class RemoveImageMetadata(tables.DeleteAction):
     data_type_singular = _('Murano Metadata')
-    data_type_plural = _('Murano Metadatum')
+    data_type_plural = _('Murano Metadata')
 
     def delete(self, request, obj_id):
         try:
