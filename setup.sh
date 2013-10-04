@@ -98,7 +98,7 @@ HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
-MIDDLEWARE_CLASSES += ('muranodashboard.settings.ExceptionMiddleware',)
+MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
 LOGGING['formatters'] = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
 LOGGING['handlers']['file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
 LOGGING['loggers']['muranodashboard'] = {'handlers': ['file'], 'level': 'DEBUG'}
