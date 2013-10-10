@@ -362,7 +362,7 @@ class ImageChoiceField(ChoiceField):
                                 not self.image_type == itype):
                             continue
 
-                    image_mapping[smart_text(title)] = murano_property
+                    image_mapping[smart_text(title)] = json.dumps(murano_json)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
