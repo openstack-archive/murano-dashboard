@@ -68,6 +68,7 @@ forms:
               required: false
             - name: osImage
               type: image
+              imageType: cirros.demo
               label: Instance image
               description: >-
                 Select valid image for a service. Image should already be prepared and
