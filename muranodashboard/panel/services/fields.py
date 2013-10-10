@@ -323,6 +323,10 @@ class FlavorChoiceField(ChoiceField):
 
 
 class ImageChoiceField(ChoiceField):
+    def __init__(self, *args, **kwargs):
+        self.image_type = kwargs.pop('image_type', None)
+        super(ImageChoiceField, self).__init__(*args, **kwargs)
+
     @with_request
     def update(self, request, **kwargs):
         try:
@@ -346,7 +350,19 @@ class ImageChoiceField(ChoiceField):
                 else:
                     title = murano_json.get('title', image.name)
                     murano_json['name'] = image.name
-                    image_mapping[smart_text(title)] = json.dumps(murano_json)
+
+                    if self.image_type is not None:
+                        itype = murano_json.get('type')
+
+                        if not self.image_type and itype is None:
+                            continue
+
+                        prefix = '{type}.'.format(type=self.image_type)
+                        if (not itype.startswith(prefix) and
+                                not self.image_type == itype):
+                            continue
+
+                    image_mapping[smart_text(title)] = murano_property
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
