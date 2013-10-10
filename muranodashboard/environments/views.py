@@ -35,7 +35,7 @@ from tables import EnvConfigTable
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs, DeploymentTabs
 
-import api
+from . import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 from functools import update_wrapper

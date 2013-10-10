@@ -15,23 +15,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tables
-from horizon import messages
 from openstack_dashboard.api import glance
 
 
-class MuranoImages(tables.LinkAction):
-    name = 'show_images'
-    verbose_name = _('Murano Images')
-    url = 'horizon:murano:images:murano_images'
-
-    def allowed(self, request, environment):
-        return True
-
-
-class AddMuranoImage(tables.LinkAction):
-    name = "add_image"
-    verbose_name = _("Add Image")
-    url = "horizon:murano:images:add_image"
+class MarkImage(tables.LinkAction):
+    name = "mark_image"
+    verbose_name = _("Mark Image")
+    url = "horizon:murano:images:mark_image"
     classes = ("ajax-modal", "btn-create")
 
     def allowed(self, request, image):
@@ -39,26 +29,27 @@ class AddMuranoImage(tables.LinkAction):
 
 
 class RemoveImageMetadata(tables.DeleteAction):
-    data_type_singular = _('Murano Metadata')
-    data_type_plural = _('Murano Metadata')
+    data_type_singular = _('Metadata')
+    data_type_plural = _('Metadata')
 
     def delete(self, request, obj_id):
         try:
             glance.image_update(request, obj_id, properties={})
-            messages.success(request, _('Image removed from Murano.'))
         except Exception:
-            exceptions.handle(request, _('Unable to update image.'))
+            exceptions.handle(request, _('Unable to remove metadata'))
 
 
-class ImagesTable(tables.DataTable):
-    image_title = tables.Column('title', verbose_name=_('Murano title'))
-    image_id = tables.Column('id', verbose_name=_('Image id'))
-
-    image_name = tables.Column('name', verbose_name=_('Name in Glance'))
-    image_type = tables.Column('name', verbose_name=_('Murano Type'))
+class MarkedImagesTable(tables.DataTable):
+    image = tables.Column(
+        'name',
+        link='horizon:project:images_and_snapshots:images:detail',
+        verbose_name=_('Image')
+    )
+    type = tables.Column('type', verbose_name=_('Type'))
+    title = tables.Column('title', verbose_name=_('Title'))
 
     class Meta:
-        name = 'images'
-        verbose_name = _('Murano Images')
-        table_actions = (AddMuranoImage, RemoveImageMetadata)
+        name = 'marked_images'
+        verbose_name = _('Marked Images')
+        table_actions = (MarkImage, RemoveImageMetadata)
         row_actions = (RemoveImageMetadata,)

@@ -1,0 +1,35 @@
+{% extends 'horizon/common/_modal_form.html' %}
+{% load i18n %}
+
+{% block form_id %}add_murano_image_form{% endblock %}
+{% block form_attrs %}enctype='multipart/form-data'{% endblock %}
+{% block form_action %}mark_image{% endblock %}
+{% block modal-header %}{% trans 'Mark Image' %}{% endblock %}
+
+{% block modal-body %}
+<div class='left'>
+    <fieldset>
+    {% include 'horizon/common/_form_fields.html' %}
+    </fieldset>
+</div>
+<div class='right'>
+    <h3>{% trans 'Description:' %}</h3>
+    <p>{% trans 'Mark image with specific Murano metadata. Valid image metadata will be added to the selected image so image can be picked during service creation.' %}</p>
+    <p>
+        <strong>{% trans 'Image'  %}:</strong>
+        {% blocktrans %}Select one of the images registered in the Glance{% endblocktrans %}
+    </p>
+    <p>
+        <strong>{% trans 'Title'  %}:</strong>
+        {% blocktrans %}Image description which will help you to recognize the image during service creation{% endblocktrans %}
+    </p>
+    <p>
+        <strong>{% trans 'Type'  %}:</strong>
+        {% blocktrans %}Pick image type from types supported by Murano{% endblocktrans %}
+    </p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Mark' %}' />
+{% endblock %}

@@ -14,17 +14,18 @@
 
 from django.conf.urls.defaults import patterns, url
 
-from .views import MuranoImageView, AddMuranoImageView
+from .views import MarkedImagesView, MarkImageView
 
 
 urlpatterns = patterns(
     '',
-    url(r'^$', MuranoImageView.as_view(),
+    url(r'^$', MarkedImagesView.as_view(),
         name='index'),
 
-    url(r'^add_image$', AddMuranoImageView.as_view(),
-        name='add_image'),
+    url(r'^mark_image$', MarkImageView.as_view(),
+        name='mark_image'),
 
-    url(r'^remove_image$', MuranoImageView.as_view(),
-        name='remove_image'),
+    url(r'^remove_metadata$', MarkedImagesView.as_view(),
+        name='remove_metadata'),
+
 )
