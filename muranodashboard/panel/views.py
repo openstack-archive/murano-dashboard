@@ -35,11 +35,11 @@ from tables import EnvironmentsTable
 from tables import ServicesTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
-from tables import ImagesTable
+from tables import MarkedImagesTable
 
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs, DeploymentTabs
-from forms import AddImageForm
+from forms import MarkImageForm
 
 from muranodashboard.panel import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
@@ -334,40 +334,40 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                     **kwargs)
 
 
-class MuranoImageView(tables.DataTableView):
-    table_class = ImagesTable
+class MarkedImagesView(tables.DataTableView):
+    table_class = MarkedImagesTable
     template_name = 'images/index.html'
 
     def get_data(self):
         images = []
         try:
             images, _more = glance.image_list_detailed(self.request)
-
-        except HTTPForbidden:
+        except Exception:
             msg = _('Unable to retrieve list of images')
-            exceptions.handle(self.request, msg,
-                              redirect=reverse("horizon:project:murano:index"))
-        murano_images = []
+            uri = reverse('horizon:project:murano:index')
+
+            exceptions.handle(self.request, msg, redirect=uri)
+
+        marked_images = []
         for image in images:
-            murano_property = image.properties.get('murano_image_info')
-            if murano_property:
+            metadata = image.properties.get('murano_image_info')
+            if metadata:
                 try:
-                    murano_json = json.loads(murano_property)
+                    metadata = json.loads(metadata)
                 except ValueError:
-                    LOG.warning("JSON in image metadata is not valid. "
-                                "Check it in glance.")
-                    messages.error(self.request,
-                                   _("Invalid murano image metadata"))
+                    msg = _('Invalid metadata for image: {0}'.format(image.id))
+                    LOG.warn(msg)
+                    messages.error(self.request, msg)
                 else:
-                    image.title = murano_json.get('title', 'No title')
-                    image.type = murano_json.get('type', 'No title')
+                    image.title = metadata.get('title', 'No Title')
+                    image.type = metadata.get('type', 'No Type')
 
-                murano_images.append(image)
-        return murano_images
+                marked_images.append(image)
+        return marked_images
 
 
-class AddMuranoImageView(ModalFormView):
-    form_class = AddImageForm
-    template_name = 'images/add.html'
+class MarkImageView(ModalFormView):
+    form_class = MarkImageForm
+    template_name = 'images/mark.html'
     context_object_name = 'image'
-    success_url = reverse_lazy("horizon:project:murano:murano_images")
+    success_url = reverse_lazy('horizon:project:murano:images')

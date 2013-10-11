@@ -20,8 +20,8 @@ from horizon import messages, exceptions
 from openstack_dashboard.api import glance
 import json
 
-from muranodashboard.panel.services import iterate_over_service_forms, \
-    get_service_choices
+from muranodashboard.panel.services import iterate_over_service_forms
+from muranodashboard.panel.services import get_service_choices
 
 log = logging.getLogger(__name__)
 
@@ -35,38 +35,43 @@ FORMS = [('service_choice', WizardFormServiceType)]
 FORMS.extend(iterate_over_service_forms())
 
 
-class AddImageForm(SelfHandlingForm):
-    title = forms.CharField(max_length="255",
-                            label=_("Image Title"))
+class MarkImageForm(SelfHandlingForm):
+    _metadata = {
+        'windows.2012.standart': ' Windows Server 2012 Desktop',
+        'linux': 'Generic Linux',
+        'cirros.demo': 'Murano Demo Image'
+    }
 
-    image_choices = forms.ChoiceField(label='Images')
-
-    windows_image = ('ws-2012-std', ' Windows Server 2012 Desktop')
-    demo_image = ('murano_demo', 'Murano Demo Image')
-
-    image_type = forms.ChoiceField(label="Murano Type",
-                                   choices=[windows_image, demo_image])
+    image = forms.ChoiceField(label='Image')
+    type = forms.ChoiceField(label="Metadata", choices=_metadata.items())
 
     def __init__(self, request, *args, **kwargs):
-        super(AddImageForm, self).__init__(request, *args, **kwargs)
+        super(MarkImageForm, self).__init__(request, *args, **kwargs)
+
+        images = []
         try:
             images, _more = glance.image_list_detailed(request)
         except Exception:
-            log.error("Failed to request image list from glance ")
-            images = []
-            exceptions.handle(request, _("Unable to retrieve public images."))
-        self.fields['image_choices'].choices = [(image.id, image.name)
-                                                for image in images]
+            log.error('Failed to request image list from Glance')
+            exceptions.handle(request, _('Unable to retrieve list of images'))
+
+        self.fields['image'].choices = [(i.id, i.name) for i in images]
 
     def handle(self, request, data):
-        log.debug('Adding new murano using data {0}'.format(data))
-        murano_properties = {'murano_image_info': json.dumps(
-            {'title': data['title'], 'type': data['image_type']})}
-        try:
-            image = glance.image_update(request, data['image_choices'],
-                                        properties=murano_properties)
+        log.debug('Marking image with specified metadata: {0}'.format(data))
 
-            messages.success(request, _('Image added to Murano'))
+        image, mtype = (data['image'], data['type'])
+
+        properties = {
+            'murano_image_info': json.dumps({
+                'title': self._metadata[mtype],
+                'type': mtype
+            })
+        }
+
+        try:
+            image = glance.image_update(request, image, properties=properties)
+            messages.success(request, _('Image successfully marked'))
             return image
         except Exception:
-            exceptions.handle(request, _('Unable to update image.'))
+            exceptions.handle(request, _('Unable to mark image'))
