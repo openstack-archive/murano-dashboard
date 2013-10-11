@@ -20,7 +20,6 @@ from horizon import messages, exceptions
 from openstack_dashboard.api import glance
 import json
 
-from muranodashboard.panel.services import iterate_over_service_forms
 from muranodashboard.panel.services import get_service_choices
 
 log = logging.getLogger(__name__)
@@ -29,10 +28,6 @@ log = logging.getLogger(__name__)
 class WizardFormServiceType(forms.Form):
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=get_service_choices())
-
-
-FORMS = [('service_choice', WizardFormServiceType)]
-FORMS.extend(iterate_over_service_forms())
 
 
 class MarkImageForm(SelfHandlingForm):
