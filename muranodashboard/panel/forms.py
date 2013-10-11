@@ -37,13 +37,14 @@ FORMS.extend(iterate_over_service_forms())
 
 class MarkImageForm(SelfHandlingForm):
     _metadata = {
-        'windows.2012.standart': ' Windows Server 2012 Desktop',
+        'windows.2012': ' Windows Server 2012',
         'linux': 'Generic Linux',
-        'cirros.demo': 'Murano Demo Image'
+        'cirros.demo': 'Murano Demo'
     }
 
     image = forms.ChoiceField(label='Image')
-    type = forms.ChoiceField(label="Metadata", choices=_metadata.items())
+    title = forms.CharField(max_length="255", label=_("Title"))
+    type = forms.ChoiceField(label="Type", choices=_metadata.items())
 
     def __init__(self, request, *args, **kwargs):
         super(MarkImageForm, self).__init__(request, *args, **kwargs)
@@ -60,18 +61,17 @@ class MarkImageForm(SelfHandlingForm):
     def handle(self, request, data):
         log.debug('Marking image with specified metadata: {0}'.format(data))
 
-        image, mtype = (data['image'], data['type'])
-
+        image_id = data['image']
         properties = {
             'murano_image_info': json.dumps({
-                'title': self._metadata[mtype],
-                'type': mtype
+                'title': data['title'],
+                'type': data['type']
             })
         }
 
         try:
-            image = glance.image_update(request, image, properties=properties)
+            img = glance.image_update(request, image_id, properties=properties)
             messages.success(request, _('Image successfully marked'))
-            return image
+            return img
         except Exception:
             exceptions.handle(request, _('Unable to mark image'))
