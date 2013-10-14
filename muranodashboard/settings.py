@@ -128,9 +128,6 @@ INSTALLED_APPS = (
     'openstack_dashboard.dashboards.admin',
     'openstack_dashboard.dashboards.settings',
     'openstack_auth',
-    'djblets',
-    'djblets.datagrid',
-    'djblets.util',
     'floppyforms',
     'muranodashboard'
 )
