@@ -75,11 +75,12 @@ class LazyWizard(SessionWizardView):
         def view(request, *args, **kwargs):
             forms = initforms
             if hasattr(initforms, '__call__'):
-                forms = initforms()
+                forms = initforms(request)
             condition_dict = initkwargs.get('condition_dict', False)
             _kwargs = copy.copy(initkwargs)
             if condition_dict and hasattr(condition_dict, '__call__'):
-                _kwargs.update({'condition_dict': dict(condition_dict())})
+                _kwargs.update(
+                    {'condition_dict': dict(condition_dict(request))})
             _kwargs = cls.get_initkwargs(forms, *initargs, **_kwargs)
             self = cls(**_kwargs)
             if hasattr(self, 'get') and not hasattr(self, 'head'):
@@ -126,7 +127,7 @@ class Wizard(ModalFormMixin, LazyWizard):
                               redirect=redirect)
         else:
             message = "The %s service successfully created." % \
-                      get_service_name(service_type)
+                      get_service_name(self.request, service_type)
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
@@ -138,14 +139,16 @@ class Wizard(ModalFormMixin, LazyWizard):
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
-        context['service_descriptions'] = get_service_descriptions()
+        context['service_descriptions'] = get_service_descriptions(
+            self.request)
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
             service_type = data['service']
             context['field_descriptions'] = get_service_field_descriptions(
-                service_type, self.steps.index - 1)
+                self.request, service_type, self.steps.index - 1)
+            service_name = get_service_name(self.request, service_type)
             context.update({'type': service_type,
-                            'service_name': get_service_name(service_type)})
+                            'service_name': service_name})
         return context
 
 

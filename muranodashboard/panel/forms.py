@@ -25,9 +25,11 @@ from muranodashboard.panel.services import get_service_choices
 log = logging.getLogger(__name__)
 
 
-class WizardFormServiceType(forms.Form):
-    service = forms.ChoiceField(label=_('Service Type'),
-                                choices=get_service_choices())
+def ChoiceServiceFormFactory(request):
+    class _Class(forms.Form):
+        service = forms.ChoiceField(label=_('Service Type'),
+                                    choices=get_service_choices(request))
+    return _Class
 
 
 class AddImageForm(SelfHandlingForm):
