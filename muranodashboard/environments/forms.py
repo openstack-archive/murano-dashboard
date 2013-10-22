@@ -20,7 +20,7 @@ from horizon import messages, exceptions
 from openstack_dashboard.api import glance
 import json
 
-from muranodashboard.panel.services import get_service_choices
+from muranodashboard.environments.services import get_service_choices
 
 log = logging.getLogger(__name__)
 

@@ -19,7 +19,7 @@ from django.core.validators import RegexValidator, validate_ipv4_address
 from netaddr import all_matching_cidrs
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
-from muranodashboard.panel import api
+from muranodashboard.environments import api
 from horizon import exceptions, messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api.nova import novaclient

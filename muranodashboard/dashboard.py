@@ -11,15 +11,22 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
 import horizon
 from django.utils.translation import ugettext_lazy as _
-from openstack_dashboard.dashboards.project import dashboard
 
 
-class Panel(horizon.Panel):
-    name = _("Environments")
-    slug = 'murano'
+class DeployPanels(horizon.PanelGroup):
+    slug = "deployment_group"
+    name = _("Deployment")
+    panels = ('environments',)
 
 
-dashboard.Project.register(Panel)
+class Murano(horizon.Dashboard):
+    name = _("Murano")
+    slug = "murano"
+    panels = (DeployPanels,)
+    default_panel = 'environments'
+    supports_tenants = True
+
+
+horizon.register(Murano)

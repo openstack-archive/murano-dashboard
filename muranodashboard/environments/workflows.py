@@ -20,7 +20,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import workflows
 
-from muranodashboard.panel import api
+from muranodashboard.environments import api
 
 
 log = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class CreateEnvironment(workflows.Workflow):
     finalize_button_name = _("Create")
     success_message = _('Created environment "%s".')
     failure_message = _('Unable to create environment "%s".')
-    success_url = "horizon:project:murano:index"
+    success_url = "horizon:murano:environments:index"
     default_steps = (SelectProjectUser, ConfigureEnvironment)
 
     def format_status_message(self, message):
@@ -133,7 +133,7 @@ class UpdateEnvironment(workflows.Workflow):
     finalize_button_name = _("Save")
     success_message = _('Modified environment "%s".')
     failure_message = _('Unable to modify environment "%s".')
-    success_url = "horizon:project:murano:index"
+    success_url = "horizon:murano:environments:index"
     default_steps = (UpdateEnvironmentInfo,)
 
     def format_status_message(self, message):

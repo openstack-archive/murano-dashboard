@@ -21,7 +21,7 @@ from horizon import tables
 from horizon import messages
 from openstack_dashboard.api import glance
 
-from muranodashboard.panel import api
+from muranodashboard.environments import api
 from muranodashboard.openstack.common import timeutils
 from consts import STATUS_ID_DEPLOYING
 from consts import STATUS_CHOICES
@@ -33,7 +33,7 @@ from consts import DEPLOYMENT_STATUS_DISPLAY_CHOICES
 class CreateService(tables.LinkAction):
     name = 'CreateService'
     verbose_name = _('Create Service')
-    url = 'horizon:project:murano:create'
+    url = 'horizon:murano:environments:create'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, environment):
@@ -47,7 +47,7 @@ class CreateService(tables.LinkAction):
 class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
     verbose_name = _('Create Environment')
-    url = 'horizon:project:murano:create_environment'
+    url = 'horizon:murano:environments:create_environment'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, datum):
@@ -60,7 +60,7 @@ class CreateEnvironment(tables.LinkAction):
 class MuranoImages(tables.LinkAction):
     name = 'show_images'
     verbose_name = _('Murano Images')
-    url = 'horizon:project:murano:murano_images'
+    url = 'horizon:murano:environments:murano_images'
 
     def allowed(self, request, environment):
         return True
@@ -88,7 +88,7 @@ class DeleteEnvironment(tables.DeleteAction):
 class EditEnvironment(tables.LinkAction):
     name = 'edit'
     verbose_name = _('Edit Environment')
-    url = 'horizon:project:murano:update_environment'
+    url = 'horizon:murano:environments:update_environment'
     classes = ('ajax-modal', 'btn-edit')
 
     def allowed(self, request, environment):
@@ -119,7 +119,7 @@ class DeleteService(tables.DeleteAction):
                                        service_id)
         except:
             msg = _('Sorry, you can\'t delete service right now')
-            redirect = reverse("horizon:project:murano:index")
+            redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(request, msg, redirect=redirect)
 
 
@@ -144,7 +144,7 @@ class DeployEnvironment(tables.BatchAction):
             api.environment_deploy(request, environment_id)
         except Exception:
             msg = _('Unable to deploy. Try again later')
-            redirect = reverse('horizon:project:murano:index')
+            redirect = reverse('horizon:murano:environments:index')
             exceptions.handle(request, msg, redirect=redirect)
 
 
@@ -172,16 +172,18 @@ class DeployThisEnvironment(tables.Action):
             messages.success(request, _('Deploy started'))
         except:
             msg = _('Unable to deploy. Try again later')
-            exceptions.handle(request, msg,
-                              redirect=reverse('horizon:project:murano:index'))
-        return shortcuts.redirect(reverse('horizon:project:murano:services',
-                                          args=(environment_id,)))
+            exceptions.handle(
+                request, msg,
+                redirect=reverse('horizon:murano:environments:index'))
+        return shortcuts.redirect(
+            reverse('horizon:murano:environments:services',
+                    args=(environment_id,)))
 
 
 class ShowEnvironmentServices(tables.LinkAction):
     name = 'show'
     verbose_name = _('Services')
-    url = 'horizon:project:murano:services'
+    url = 'horizon:murano:environments:services'
 
     def allowed(self, request, environment):
         return True
@@ -205,7 +207,7 @@ class UpdateServiceRow(tables.Row):
 class ShowDeployments(tables.LinkAction):
     name = 'show_deployments'
     verbose_name = _('Show Deployments')
-    url = 'horizon:project:murano:deployments'
+    url = 'horizon:murano:environments:deployments'
 
     def allowed(self, request, environment):
         return environment.status != STATUS_ID_NEW
@@ -213,7 +215,7 @@ class ShowDeployments(tables.LinkAction):
 
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
-                         link='horizon:project:murano:services',
+                         link='horizon:murano:environments:services',
                          verbose_name=_('Name'))
 
     status = tables.Column('status',
@@ -233,7 +235,7 @@ class EnvironmentsTable(tables.DataTable):
 
 
 def get_service_details_link(service):
-    return reverse('horizon:project:murano:service_details',
+    return reverse('horizon:murano:environments:service_details',
                    args=(service.environment_id, service.id))
 
 
@@ -276,7 +278,7 @@ class ShowDeploymentDetails(tables.LinkAction):
     def get_link_url(self, deployment=None):
         kwargs = {'environment_id': deployment.environment_id,
                   'deployment_id': deployment.id}
-        return reverse('horizon:project:murano:deployment_details',
+        return reverse('horizon:murano:environments:deployment_details',
                        kwargs=kwargs)
 
     def allowed(self, request, environment):
@@ -317,7 +319,7 @@ class EnvConfigTable(tables.DataTable):
 class AddMuranoImage(tables.LinkAction):
     name = "add_image"
     verbose_name = _("Add Image")
-    url = "horizon:project:murano:add_image"
+    url = "horizon:murano:environments:add_image"
     classes = ("ajax-modal", "btn-create")
 
     def allowed(self, request, image):

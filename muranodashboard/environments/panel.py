@@ -13,8 +13,13 @@
 #    under the License.
 
 import horizon
+from django.utils.translation import ugettext_lazy as _
+from muranodashboard import dashboard
 
-from muranodashboard.panel.panel import Panel
 
-project = horizon.get_dashboard('project')
-project.register(Panel)
+class Environments(horizon.Panel):
+    name = _("Environments")
+    slug = 'environments'
+
+
+dashboard.Murano.register(Environments)

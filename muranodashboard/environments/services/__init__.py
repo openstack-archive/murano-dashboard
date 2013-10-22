@@ -33,7 +33,7 @@ _last_check_time = 0
 
 class Service(object):
     def __init__(self, **kwargs):
-        import muranodashboard.panel.services.forms as services
+        import muranodashboard.environments.services.forms as services
         for key, value in kwargs.iteritems():
             if key == 'forms':
                 self.forms = []
@@ -64,7 +64,7 @@ class Service(object):
 
 
 def import_service(filename, service_file):
-    from muranodashboard.panel.services.helpers import decamelize
+    from muranodashboard.environments.services.helpers import decamelize
     try:
         with open(service_file) as stream:
             yaml_desc = yaml.load(stream)

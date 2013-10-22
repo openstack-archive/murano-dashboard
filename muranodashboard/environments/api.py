@@ -20,7 +20,7 @@ from horizon.exceptions import ServiceCatalogException
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from openstack_dashboard.api.base import url_for
 from muranoclient.v1.client import Client
-from muranodashboard.panel.services import get_service_name
+from muranodashboard.environments.services import get_service_name
 from consts import STATUS_ID_READY, STATUS_ID_NEW
 
 log = logging.getLogger(__name__)

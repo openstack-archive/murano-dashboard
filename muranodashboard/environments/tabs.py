@@ -17,11 +17,13 @@ import logging
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from horizon import tabs
-from muranodashboard.panel.consts import LOG_LEVEL_TO_COLOR, LOG_LEVEL_TO_TEXT
+from muranodashboard.environments.consts import LOG_LEVEL_TO_COLOR
+from muranodashboard.environments.consts import LOG_LEVEL_TO_TEXT
 from openstack_dashboard.api import nova as nova_api
 
-from muranodashboard.panel import api
-from muranodashboard.panel.tables import STATUS_DISPLAY_CHOICES, EnvConfigTable
+from muranodashboard.environments import api
+from muranodashboard.environments.tables import STATUS_DISPLAY_CHOICES
+from muranodashboard.environments.tables import EnvConfigTable
 
 LOG = logging.getLogger(__name__)
 

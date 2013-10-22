@@ -52,15 +52,14 @@ EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(
 
 
 HORIZON_CONFIG = {
-    'dashboards': ('project', 'admin', 'settings',),
-    'default_dashboard': 'project',
-    'user_home': 'openstack_dashboard.views.get_user_home',
+    'dashboards': ('project', 'admin', 'settings', 'murano'),
+    'default_dashboard': 'murano',
+    'user_home': 'muranodashboard.views.get_user_home',
     'ajax_queue_limit': 10,
     'help_url': "http://docs.openstack.org",
     'exceptions': {'recoverable': EXTENDED_RECOVERABLE_EXCEPTIONS,
                    'not_found': EXTENDED_NOT_FOUND_EXCEPTIONS,
                    'unauthorized': EXTENDED_UNAUTHORIZED_EXCEPTIONS},
-    'customization_module': 'panel.overrides'
 }
 
 

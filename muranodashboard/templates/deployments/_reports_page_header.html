@@ -7,10 +7,10 @@
       </h2>
 
       <h3>
-          <a href=" {% url 'horizon:project:murano:index' %}">
+          <a href=" {% url 'horizon:murano:environments:index' %}">
               {% blocktrans %}environments{% endblocktrans %}
           </a> >
-         <a href=" {% url 'horizon:project:murano:deployments' environment_id %}">
+         <a href=" {% url 'horizon:murano:environments:deployments' environment_id %}">
               {% blocktrans %}{{ environment_name }} deployments{% endblocktrans %}
           </a> >
           deployment at {{ deployment_start_time }}

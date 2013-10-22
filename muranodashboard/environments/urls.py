@@ -26,7 +26,7 @@ from services import get_service_checkers
 from services import make_forms_getter
 from openstack_dashboard.dashboards.project.instances.views import DetailView
 
-VIEW_MOD = 'openstack_dashboard.dashboards.project.murano.views'
+VIEW_MOD = 'muranodashboard.environments.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
 

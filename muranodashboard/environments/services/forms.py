@@ -17,8 +17,8 @@ import logging
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-import muranodashboard.panel.services.fields as fields
-import muranodashboard.panel.services.helpers as helpers
+import muranodashboard.environments.services.fields as fields
+import muranodashboard.environments.services.helpers as helpers
 import yaql
 import types
 
