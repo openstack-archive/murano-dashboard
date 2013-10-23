@@ -92,7 +92,7 @@ forms:
           enabled: {YAQL: $.serviceConfiguration.mixedModeAuth}
   - clusterConfiguration:
       fields:
-        - name: clusterIP
+        - name: clusterIp
           type: clusterip
           label: Cluster Static IP
           description: Specify a valid IPv4 fixed IP.
