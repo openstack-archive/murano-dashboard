@@ -19,7 +19,6 @@ from views import Services
 from views import CreateEnvironmentView
 from views import DetailServiceView
 from views import DeploymentsView
-from views import MuranoImageView, AddMuranoImageView
 from views import Wizard, EditEnvironmentView
 from forms import ChoiceServiceFormFactory
 from services import get_service_checkers
@@ -46,15 +45,6 @@ urlpatterns = patterns(
 
     url(r'^create_environment$', CreateEnvironmentView.as_view(),
         name='create_environment'),
-
-    url(r'^murano_images$', MuranoImageView.as_view(),
-        name='murano_images'),
-
-    url(r'^add_image$', AddMuranoImageView.as_view(),
-        name='add_image'),
-
-    url(r'^remove_image$', MuranoImageView.as_view(),
-        name='remove_image'),
 
     url(ENVIRONMENT_ID + r'/update_environment$',
         EditEnvironmentView.as_view(),

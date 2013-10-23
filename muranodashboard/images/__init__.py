@@ -11,28 +11,3 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import horizon
-from django.utils.translation import ugettext_lazy as _
-
-
-class DeployPanels(horizon.PanelGroup):
-    slug = 'deployment_group'
-    name = _('Deployment')
-    panels = ('environments',)
-
-
-class ManagePanels(horizon.PanelGroup):
-    slug = 'manage_metadata'
-    name = _('Manage')
-    panels = ('images',)
-
-
-class Murano(horizon.Dashboard):
-    name = _('Murano')
-    slug = 'murano'
-    panels = (DeployPanels, ManagePanels)
-    default_panel = 'environments'
-    supports_tenants = True
-
-
-horizon.register(Murano)

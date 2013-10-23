@@ -11,28 +11,20 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import horizon
-from django.utils.translation import ugettext_lazy as _
+
+from django.conf.urls.defaults import patterns, url
+
+from .views import MuranoImageView, AddMuranoImageView
 
 
-class DeployPanels(horizon.PanelGroup):
-    slug = 'deployment_group'
-    name = _('Deployment')
-    panels = ('environments',)
+urlpatterns = patterns(
+    '',
+    url(r'^$', MuranoImageView.as_view(),
+        name='index'),
 
+    url(r'^add_image$', AddMuranoImageView.as_view(),
+        name='add_image'),
 
-class ManagePanels(horizon.PanelGroup):
-    slug = 'manage_metadata'
-    name = _('Manage')
-    panels = ('images',)
-
-
-class Murano(horizon.Dashboard):
-    name = _('Murano')
-    slug = 'murano'
-    panels = (DeployPanels, ManagePanels)
-    default_panel = 'environments'
-    supports_tenants = True
-
-
-horizon.register(Murano)
+    url(r'^remove_image$', MuranoImageView.as_view(),
+        name='remove_image'),
+)
