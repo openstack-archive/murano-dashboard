@@ -1,4 +1,4 @@
-name: Linux Telnet Service
+name: Linux Telnet
 type: linuxTelnetService
 
 description: >-
@@ -11,11 +11,26 @@ unitTemplates:
 forms:
   - serviceConfiguration:
       fields:
+        - name: title
+          type: string
+          required: false
+          hidden: true
+          attributeNames: false
+          description: Telnet service that can be installed at linux
+          widgetMedia:
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: name
           type: string
           label: Service Name
           description: >-
-            To identify your service in logs please specify a service name
+            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and
+            underline are allowed.
+          minLength: 2
+          maxLength: 64
+          regexpValidator: '^[-\w]+$'
+          errorMessages:
+            invalid: Just letters, numbers, underscores and hyphens are allowed.
+          helpText: Just letters, numbers, underscores and hyphens are allowed.
         - name: dcInstances
           type: instance
           hidden: true
