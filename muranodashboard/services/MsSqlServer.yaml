@@ -2,7 +2,7 @@ name: MS SQL Server
 type: msSqlServer
 
 description: >-
-  <strong> The MS SQL Service </strong> installs an instance of 
+  <strong> The MS SQL Service </strong> installs an instance of
   Microsoft SQL Server
 
 unitTemplates:
@@ -20,11 +20,12 @@ forms:
           # temporaryHack
           widgetMedia:
             js: [muranodashboard/js/mixed-mode.js]
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: name
           type: string
           label: Service Name
           description: >-
-            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and 
+            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and
             underline are allowed.
           minLength: 2
           maxLength: 64
@@ -43,15 +44,15 @@ forms:
           descriptionTitle: Passwords
           description: >-
             Windows requires strong password for service administration.
-            Your password should have at least one letter in each 
-            register, a number and a special character. Password length should be 
+            Your password should have at least one letter in each
+            register, a number and a special character. Password length should be
             a minimum of 7 characters.
         - name: domain
           type: domain
           label: Domain
           required: false
           description: >-
-            Service can be joined to the Active Directory domain. If you want to 
+            Service can be joined to the Active Directory domain. If you want to
             create an AD domain create the AD Service first.
           helpText: Optional field for a domain to which service can be joined
         - name: mixedModeAuth
@@ -75,8 +76,8 @@ forms:
           label: Hostname template
           description: >-
             For your convenience all instance hostnames can be named
-            in the same way. Enter a name and use # character for incrementation. 
-            For example, host# turns into host1, host2, etc. Please follow Windows 
+            in the same way. Enter a name and use # character for incrementation.
+            For example, host# turns into host1, host2, etc. Please follow Windows
             hostname restrictions.
           required: false
           regexpValidator: '^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$'
@@ -98,7 +99,7 @@ forms:
           type: flavor
           label: Instance flavor
           description: >-
-            Select registered in Openstack flavor. Consider that service performance 
+            Select registered in Openstack flavor. Consider that service performance
             depends on this parameter.
           required: false
         - name: osImage
@@ -106,7 +107,7 @@ forms:
           imageType: windows
           label: Instance image
           description: >-
-            Select valid image for a service. Image should already be prepared and 
+            Select valid image for a service. Image should already be prepared and
             registered in glance.
         - name: availabilityZone
           type: azone
