@@ -1,0 +1,5 @@
+input[type="checkbox"] {
+    float: left;
+    width: auto !important;
+    margin-right: 10px;
+}
