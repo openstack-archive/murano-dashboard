@@ -11,3 +11,4 @@ django-floppyforms==1.1
 ordereddict
 yaql==0.2
 python-muranoclient>=0.2
+https://github.com/EkaterinaFedorova/python-metadataclient/releases/download/v0.1-alpha/python-metadataclient-0.1.a8.g1cdbe49.tar.gz#egg=python-metadataclient-0.1.a8.g1cdbe49
