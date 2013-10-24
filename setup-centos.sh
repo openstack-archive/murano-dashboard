@@ -23,6 +23,10 @@ PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
+DASHBOARD_CACHE_DIR="/var/lib/murano-dashboard/cache"
+APACHE_USER=apache
+APACHE_GROUP=apache
+
 # Functions
 # Loger function
 log()
@@ -115,7 +119,7 @@ EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(exceptions.UNAUTHORIZED + UNAUTHORIZED_
 HORIZON_CONFIG['exceptions']['recoverable'] = EXTENDED_RECOVERABLE_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
 HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
-HORIZON_CONFIG['customization_module'] = 'muranodashboard.panel.overrides'
+HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
 LOGGING['formatters'] = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
@@ -216,7 +220,7 @@ CLONE_FROM_GIT=$1
 	if [ ! -z $CLONE_FROM_GIT ]; then
 # Preparing clone root directory
 	if [ ! -d $GIT_CLONE_DIR ];then
-		log "Creting $GIT_CLONE_DIR direcory..."
+		log "Creating $GIT_CLONE_DIR direcory..."
 		mkdir -p $GIT_CLONE_DIR
 		if [ $? -ne 0 ];then
 			log "Can't create $GIT_CLONE_DIR, exiting!!!" 
@@ -255,6 +259,8 @@ CLONE_FROM_GIT=$1
 			log "$PIPCMD install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
+		mkdir -p $DASHBOARD_CACHE_DIR
+		chown $APACHE_USER:$APACHE_GROUP $DASHBOARD_CACHE_DIR
 	else
 		log "$MRN_CND_SPY not found!"
 	fi
@@ -274,6 +280,7 @@ uninst()
 	if [ $? -eq 0 ]; then
 		log "Removing package \"$PYPKG\" with pip"
 		$PIPCMD uninstall $_pkg --yes
+		rm -rf $DASHBOARD_CACHE_DIR
 	else
 		log "Python package \"$PYPKG\" not found"
 	fi

@@ -25,10 +25,7 @@ CHUNK_SIZE = 1 << 20  # 1MB
 ARCHIVE_PKG_NAME = 'archive.tar.gz'
 ARCHIVE_SUBDIR = 'service_forms'
 CACHE_DIR = getattr(settings, 'UI_METADATA_CACHE_DIR',
-                    os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                 '../../cache/'))
-if not os.path.exists(CACHE_DIR):
-    os.mkdir(CACHE_DIR)
+                    '/var/lib/murano-dashboard/cache')
 
 ARCHIVE_PKG_PATH = os.path.join(CACHE_DIR, ARCHIVE_PKG_NAME)
 ARCHIVE_SUBDIR_PATH = os.path.join(CACHE_DIR, ARCHIVE_SUBDIR)
