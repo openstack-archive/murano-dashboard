@@ -17,10 +17,6 @@ forms:
           hidden: true
           attributeNames: false
           description: MS SQL Server
-          # temporaryHack
-          widgetMedia:
-            js: [muranodashboard/js/mixed-mode.js]
-            css: {all: [muranodashboard/css/checkbox.css]}
         - name: name
           type: string
           label: Service Name
@@ -65,6 +61,10 @@ forms:
             credentials but supplements them with local SQL Server user
             accounts that the administrator may create and maintain within
             SQL Server. If this mode is on SA password is required
+          # temporaryHack
+          widgetMedia:
+            js: [muranodashboard/js/mixed-mode.js]
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: saPassword
           type: password
           label: SA Password

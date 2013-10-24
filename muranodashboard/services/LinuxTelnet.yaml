@@ -17,8 +17,6 @@ forms:
           hidden: true
           attributeNames: false
           description: Telnet service that can be installed at linux
-          widgetMedia:
-            css: {all: [muranodashboard/css/checkbox.css]}
         - name: name
           type: string
           label: Service Name
@@ -43,6 +41,8 @@ forms:
              Indicates if the target machine has to get telnet deployed
           initial: true
           required: false
+          widgetMedia:
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: unitNamingPattern
           type: string
           label: Hostname

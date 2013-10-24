@@ -25,10 +25,6 @@ forms:
           hidden: true
           attributeNames: false
           description: MS SQL Failover Cluster
-          # temporaryHack
-          widgetMedia:
-            js: [muranodashboard/js/mixed-mode.js, muranodashboard/js/external-ad.js]
-            css: {all: [muranodashboard/css/checkbox.css]}
         - name: name
           type: string
           label: Service Name
@@ -55,6 +51,10 @@ forms:
           label: Active Directory is configured by the System Administrator
           widgetAttrs:  # temporary hack
             class: external-ad
+          # temporaryHack
+          widgetMedia:
+            js: [muranodashboard/js/external-ad.js]
+            css: {all: [muranodashboard/css/checkbox.css]}
           required: false
         - name: domainAdminUserName
           type: string
@@ -85,6 +85,10 @@ forms:
             credentials but supplements them with local SQL Server user
             accounts that the administrator may create and maintain within
             SQL Server. If this mode is on SA password is required
+          # temporaryHack
+          widgetMedia:
+            js: [muranodashboard/js/mixed-mode.js]
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: saPassword
           type: password
           label: SA Password
