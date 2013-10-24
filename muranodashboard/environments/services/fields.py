@@ -399,7 +399,13 @@ class AZoneChoiceField(ChoiceField):
 
 class BooleanField(forms.BooleanField, CustomPropertiesField):
     def __init__(self, *args, **kwargs):
-        kwargs['widget'] = forms.CheckboxInput(attrs={'class': 'checkbox'})
+        if 'widget' in kwargs:
+            widget = kwargs['widget']
+            if isinstance(widget, type):
+                widget = widget(attrs={'class': 'checkbox'})
+        else:
+            widget = forms.CheckboxInput(attrs={'class': 'checkbox'})
+        kwargs['widget'] = widget
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
