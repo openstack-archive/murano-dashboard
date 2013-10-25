@@ -63,4 +63,5 @@ class MarkImageForm(SelfHandlingForm):
             messages.success(request, _('Image successfully marked'))
             return img
         except Exception:
-            exceptions.handle(request, _('Unable to mark image'))
+            exceptions.handle(request, _('Unable to mark image'),
+                              redirect='horizon:murano:images:index')
