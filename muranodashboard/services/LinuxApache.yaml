@@ -1,9 +1,9 @@
-name: Linux Telnet
-type: linuxTelnetService
+name: Linux Apache
+type: linuxApacheService
 
 description: >-
-  <strong> Linux Telnet Service </strong>
-  Demonstrates a simple linux agent, which installs Telnet if required.
+  <strong> Linux Apache Service </strong>
+  Demonstrates a linux agent, which installs Apache web server.
 
 unitTemplates:
   - {}
@@ -11,29 +11,29 @@ unitTemplates:
 forms:
   - serviceConfiguration:
       fields:
-        - name: title
-          type: string
-          required: false
-          hidden: true
-          attributeNames: false
-          description: Telnet service that can be installed at linux
         - name: name
           type: string
           label: Service Name
           description: >-
-            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and
-            underline are allowed.
-          minLength: 2
-          maxLength: 64
-          regexpValidator: '^[-\w]+$'
-          errorMessages:
-            invalid: Just letters, numbers, underscores and hyphens are allowed.
-          helpText: Just letters, numbers, underscores and hyphens are allowed.
+            To identify your service in logs please specify a service name
+        - name: deployApachePHP
+          label: PHP module
+          type: boolean
+          description: >-
+             Add php support into Apache web server.
+          initial: false
+          required: false
+          widgetMedia:
+            css: {all: [muranodashboard/css/checkbox.css]}
         - name: dcInstances
           type: instance
-          hidden: true
-          attributeNames: units
+          minValue: 1
+          maxValue: 10
+          attributeNames: [units, instanceCount]
           initial: 1
+          label: Instance Count
+          description: Several instances with Apache web Service can be created at one time.
+          helpText: Enter an integer value between 1 and 10
         - name: unitNamingPattern
           type: string
           label: Hostname
