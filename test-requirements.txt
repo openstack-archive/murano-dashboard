@@ -1,16 +1,15 @@
-distribute>=0.6.24
 
 # Testing Requirements
-coverage
+coverage>=3.6
 django-nose
-mox
+mox>=0.5.3
 nose
 nose-exclude
 nosexcover
-openstack.nose_plugin
-nosehtmloutput
+openstack.nose_plugin>=0.7
+nosehtmloutput>=0.0.3
 pep8>=1.3
-pylint
+pylint==0.25.2
 selenium
 
 # Docs Requirements
@@ -18,4 +17,4 @@ sphinx>=1.1.2
 docutils==0.9.1
 # for bug 1091333, remove after sphinx >1.1.3 is released.
 # docutils installs Django 1.5.2 and it's unappropriated
-Django>=1.4.2,<1.5
+Django>=1.4,<1.6

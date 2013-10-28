@@ -1,14 +1,12 @@
-d2to1>=0.2.10,<0.3
-pbr>=0.5,<1.0
-anyjson
+pbr>=0.5.21,<1.0
+anyjson>=0.3.3
 
 bunch
-iso8601>=0.1.4
-six
+iso8601>=0.1.8
+six>=1.4.1
 PyYAML
-django-pipeline
 django-floppyforms==1.1
 ordereddict
 yaql==0.2
 python-muranoclient>=0.2
-https://github.com/EkaterinaFedorova/python-metadataclient/releases/download/v0.1-alpha/python-metadataclient-0.1.a8.g1cdbe49.tar.gz#egg=python-metadataclient-0.1.a8.g1cdbe49
+murano-metadataclient==0.4.a13.gd65dfd2
