@@ -17,7 +17,10 @@ import re
 import time
 import logging
 from django.conf import settings
-from ordereddict import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:  # python2.6
+    from ordereddict import OrderedDict
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
