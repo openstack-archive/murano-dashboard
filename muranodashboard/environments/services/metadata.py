@@ -46,7 +46,7 @@ def get_endpoint(request):
         try:
             endpoint = url_for(request, 'murano-metadata')
         except ServiceCatalogException:
-            endpoint = 'http://localhost:5000'
+            endpoint = 'http://localhost:8084'
             log.warning(
                 'Murano Metadata API location could not be found in Service '
                 'Catalog, using default: {0}'.format(endpoint))

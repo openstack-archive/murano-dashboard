@@ -56,15 +56,6 @@ class CreateEnvironment(tables.LinkAction):
         api.environment_create(request, environment)
 
 
-class MarkedImages(tables.LinkAction):
-    name = 'show_images'
-    verbose_name = _('Marked Images')
-    url = 'horizon:project:murano:images'
-
-    def allowed(self, request, environment):
-        return True
-
-
 class DeleteEnvironment(tables.DeleteAction):
     data_type_singular = _('Environment')
     data_type_plural = _('Environments')
@@ -228,7 +219,7 @@ class EnvironmentsTable(tables.DataTable):
         verbose_name = _('Environments')
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
-        table_actions = (CreateEnvironment, MarkedImages)
+        table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        EditEnvironment, DeleteEnvironment, ShowDeployments)
 
