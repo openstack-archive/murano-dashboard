@@ -11,28 +11,24 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import horizon
-from django.utils.translation import ugettext_lazy as _
+
+from django.conf.urls.defaults import patterns, url
+
+from .views import ServiceCatalogView
+from .views import UploadServiceView
+from .views import ComposeServiceView
 
 
-class DeployPanels(horizon.PanelGroup):
-    slug = 'deployment_group'
-    name = _('Deployment')
-    panels = ('environments',)
+urlpatterns = patterns(
+    '',
+    url(r'^$', ServiceCatalogView.as_view(),
+        name='index'),
 
+    url(r'^upload_service$', UploadServiceView.as_view(),
+        name='upload_service'),
 
-class ManagePanels(horizon.PanelGroup):
-    slug = 'manage_metadata'
-    name = _('Manage')
-    panels = ('images', 'service_catalog')
+    url(r'^compose_service/(?P<full_service_name>[^/]+)?$',
+        ComposeServiceView.as_view(),
+        name='compose_service'),
 
-
-class Murano(horizon.Dashboard):
-    name = _('Murano')
-    slug = 'murano'
-    panels = (DeployPanels, ManagePanels)
-    default_panel = 'environments'
-    supports_tenants = True
-
-
-horizon.register(Murano)
+)
