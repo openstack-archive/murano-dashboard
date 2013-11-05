@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 from views import IndexView, DeploymentDetailsView
 from views import Services
