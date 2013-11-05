@@ -115,7 +115,8 @@ class ServiceCatalogTable(tables.DataTable):
         name = 'service_catalog'
         verbose_name = _('Service Definitions')
         table_actions = (ToggleEnabled,
-                         DeleteService)
+                         DeleteService,
+                         UploadService)
         row_actions = (DownloadService,
                        ToggleEnabled,
                        DeleteService)

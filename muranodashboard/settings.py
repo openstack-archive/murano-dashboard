@@ -1,8 +1,10 @@
 import logging
 import os
 import sys
+
 from openstack_dashboard import exceptions
 from muranoclient.common import exceptions as muranoclient
+from metadataclient.common import exceptions as metadataclient
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 BIN_DIR = os.path.abspath(os.path.join(ROOT_PATH, '..', 'bin'))
@@ -39,14 +41,19 @@ ROOT_URLCONF = 'openstack_dashboard.urls'
 
 RECOVERABLE_EXC = (muranoclient.HTTPException,
                    muranoclient.CommunicationError,
-                   muranoclient.Forbidden)
+                   muranoclient.Forbidden,
+                   metadataclient.HTTPException,
+                   metadataclient.CommunicationError,
+                   metadataclient.Forbidden)
 EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(
     exceptions.RECOVERABLE + RECOVERABLE_EXC)
 
-NOT_FOUND_EXC = (muranoclient.HTTPNotFound, muranoclient.EndpointNotFound)
+NOT_FOUND_EXC = (muranoclient.HTTPNotFound, muranoclient.EndpointNotFound,
+                 metadataclient.HTTPNotFound, metadataclient.EndpointNotFound)
 EXTENDED_NOT_FOUND_EXCEPTIONS = tuple(exceptions.NOT_FOUND + NOT_FOUND_EXC)
 
-UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized, )
+UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized,
+                    metadataclient.HTTPUnauthorized)
 EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(
     exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
 

@@ -18,23 +18,28 @@ from django.utils.translation import ugettext_lazy as _
 from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
-
+from metadataclient.common.exceptions import HTTPException
 from muranodashboard.environments.services.metadata import metadataclient
 
 log = logging.getLogger(__name__)
 
 
 class UploadServiceForm(SelfHandlingForm):
-    file_field = forms.FileField(label=_('Service .tag.gz package'),
-                                 required=True)
+    file = forms.FileField(label=_('Service .tag.gz package'),
+                           required=True)
 
     def handle(self, request, data):
         log.debug('Uploading .tag.gz package {0}'.format(data))
         try:
+            result = metadataclient(request).metadata_admin.upload_service(
+                data['file'])
             messages.success(request, _('Service uploaded.'))
-            # ToDo: have to change the way service is uploaded either here,
-            # or in metadataclient
-            return metadataclient(request).metadata_admin.upload_service(
-                data['file_field'])
-        except Exception:
-            exceptions.handle(request, _('Unable to upload service.'))
+            return result
+        except HTTPException as e:
+            if e.code == 400:
+                msg = 'File already exists'
+            else:
+                msg = e.details
+            exceptions.handle(request, _('Unable to upload service: '
+                                         '{0}'.format(msg)),
+                              redirect='horizon:murano:service_catalog:index')
