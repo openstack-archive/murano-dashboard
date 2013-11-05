@@ -14,12 +14,19 @@
 
 import os
 import re
+import time
+import logging
 from django.conf import settings
-from ordereddict import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:  # python2.6
+    from ordereddict import OrderedDict
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
+import copy
 
+log = logging.getLogger(__name__)
 _all_services = OrderedDict()
 
 
@@ -62,11 +69,20 @@ def import_all_services():
     directory = getattr(settings, 'MURANO_SERVICES_DESC_PATH', None)
     if directory is None:
         directory = os.path.join(os.path.dirname(__file__), '../../services/')
+    file_list = [f for f in os.listdir(directory) if f.endswith('.yaml')]
 
-    for filename in os.listdir(directory):
-        if not filename.endswith('.yaml'):
-            continue
+    log.debug("Removing non-existing service definitions from cache")
+    # TODO: this has O(n^2) complexity, should fix it if there are many defs
+    for filename in _all_services.keys():
+        try:
+            file_list.index(filename)
+        except ValueError:
+            del _all_services[filename]
+            log.info("Removed service '{0}' from cache".format(filename))
 
+    log.debug("Updating service definitions cache from '{0}'".format(
+        directory))
+    for filename in file_list:
         service_file = os.path.join(directory, filename)
         modified_on = os.path.getmtime(service_file)
 
@@ -77,11 +93,16 @@ def import_all_services():
         try:
             with open(service_file) as stream:
                 yaml_desc = yaml.load(stream)
-        except (OSError, ScannerError):
+        except (OSError, ScannerError) as e:
+            log.warn("Failed to import service definition from {0},"
+                     " reason: {1!s}".format(service_file, e))
             continue
 
         service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
         _all_services[filename] = Service(modified_on, **service)
+        log.info("Added service '{0}' from '{1}', modified on {2}".format(
+            _all_services[filename].name, service_file,
+            time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(modified_on))))
 
 
 def iterate_over_services():
@@ -91,10 +112,14 @@ def iterate_over_services():
         yield service.type, service, service.forms
 
 
-def iterate_over_service_forms():
-    for srv_type, service, forms in iterate_over_services():
-        for step, form in enumerate(forms):
-            yield '{0}-{1}'.format(srv_type, step), form
+def make_forms_getter(initial_forms=[]):
+    def _get_forms():
+        _forms = copy.copy(initial_forms)
+        for srv_type, service, forms in iterate_over_services():
+            for step, form in enumerate(forms):
+                _forms.append(('{0}-{1}'.format(srv_type, step), form))
+        return _forms
+    return _get_forms
 
 
 def service_type_from_id(service_id):
@@ -141,6 +166,9 @@ def get_service_choices():
             iterate_over_services()]
 
 
+get_forms = make_forms_getter()
+
+
 def get_service_checkers():
     import_all_services()
 
@@ -150,7 +178,7 @@ def get_service_checkers():
         return compare
 
     return [(srv_id, make_comparator(srv_id)) for srv_id, form
-            in iterate_over_service_forms()]
+            in get_forms()]
 
 
 def get_service_descriptions():

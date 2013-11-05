@@ -24,5 +24,4 @@ $(function() {
 
     $("input[id*='mixedModeAuth']").change(check_mixed_mode);
     check_mixed_mode();
-    $(".checkbox").css({'float': 'left', 'width': 'auto', 'margin-right': '10px'})
 });

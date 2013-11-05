@@ -17,13 +17,13 @@ forms:
           hidden: true
           attributeNames: false
           description: >-
-            The ASP.NET application will be installed on a number of IIS Web 
+            The ASP.NET application will be installed on a number of IIS Web
             Servers, and load balancing will be configured.
         - name: name
           type: string
           label: Service Name
           description: >-
-            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and 
+            Enter a desired name for a service. Just A-Z, a-z, 0-9, dash and
             underline are allowed.
           minLength: 2
           maxLength: 64
@@ -51,7 +51,7 @@ forms:
           label: Domain
           required: false
           description: >-
-            Service can be joined to the Active Directory domain. If you want to 
+            Service can be joined to the Active Directory domain. If you want to
             create an AD domain create the AD Service first.
           helpText: Optional field for a domain to which service can be joined
         - name: repository
@@ -86,8 +86,8 @@ forms:
           label: Hostname template
           description: >-
             For your convenience all instance hostnames can be named
-            in the same way. Enter a name and use # character for incrementation. 
-            For example, host# turns into host1, host2, etc. Please follow Windows 
+            in the same way. Enter a name and use # character for incrementation.
+            For example, host# turns into host1, host2, etc. Please follow Windows
             hostname restrictions.
           required: false
           regexpValidator: '^(([a-zA-Z0-9#][a-zA-Z0-9-#]*[a-zA-Z0-9#])\.)*([A-Za-z0-9#]|[A-Za-z0-9#][A-Za-z0-9-#]*[A-Za-z0-9#])$'
@@ -98,7 +98,7 @@ forms:
             css: {all: [muranodashboard/css/support_placeholder.css]}
       validators:
         # if unitNamingPattern is given and dcInstances > 1, then '#' should occur in unitNamingPattern
-        - expr: {YAQL: not $.serviceConfiguration.unitNamingPattern.bool() or ('#' in $.serviceConfiguration.unitNamingPattern)}
+        - expr: {YAQL: not $.serviceConfiguration.unitNamingPattern.bool() or '#' in $.serviceConfiguration.unitNamingPattern}
           message: Incrementation symbol "#" is required in the Hostname template
   - instanceConfiguration:
       fields:
@@ -113,7 +113,7 @@ forms:
           type: flavor
           label: Instance flavor
           description: >-
-            Select registered in Openstack flavor. Consider that service performance 
+            Select registered in Openstack flavor. Consider that service performance
             depends on this parameter.
           required: false
         - name: osImage
@@ -121,7 +121,7 @@ forms:
           imageType: windows
           label: Instance image
           description: >-
-            Select valid image for a service. Image should already be prepared and 
+            Select valid image for a service. Image should already be prepared and
             registered in glance.
         - name: availabilityZone
           type: azone

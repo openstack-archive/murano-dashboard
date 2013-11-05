@@ -12,6 +12,10 @@
     License for the specific language governing permissions and limitations
     under the License.
 */
+
+/* The fix was borrowed from
+http://www.hagenburger.net/BLOG/HTML5-Input-Placeholder-Fix-With-jQuery.html
+ */
 $(function() {
     var get_IE_version = function() {
         if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
@@ -20,9 +24,13 @@ $(function() {
         }
     }
     if (get_IE_version() < 10) {
+        // placeholder attribute for optional drop-down fields doesn't work
+        // very well together with this fix - so remove placeholder
+        // attribute for every drop-down list.
+        $('select').filter('[placeholder]').removeAttr('placeholder');
         $('[placeholder]').focus(function() {
-              var input = $(this);
-              if (input.val() == input.attr('placeholder')) {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
                 input.val('');
                 input.removeClass('placeholder');
               }

@@ -15,13 +15,12 @@
 import logging
 import re
 import json
+import copy
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_text
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect
-
 
 from openstack_dashboard.api import glance
 
@@ -41,16 +40,62 @@ from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs, DeploymentTabs
 from forms import MarkImageForm
 
-from muranodashboard.panel import api
+import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
+from functools import update_wrapper
+from django.utils.decorators import classonlymethod
+from services import get_service_descriptions
+from services import get_service_name
+from services import get_service_field_descriptions
 
-from muranodashboard.panel.services import get_service_descriptions, \
-    get_service_name, get_service_field_descriptions
 LOG = logging.getLogger(__name__)
 
 
-class Wizard(ModalFormMixin, SessionWizardView):
+class LazyWizard(SessionWizardView):
+    """The class which defers evaluation of form_list and condition_dict
+    until view method is called. So, each time we load a page with a dynamic
+    UI form, it will have markup/logic from the newest YAML-file definition.
+    """
+    @classonlymethod
+    def as_view(cls, initforms, *initargs, **initkwargs):
+        """
+        Main entry point for a request-response process.
+        """
+        # sanitize keyword arguments
+        for key in initkwargs:
+            if key in cls.http_method_names:
+                raise TypeError(u"You tried to pass in the %s method name as a"
+                                u" keyword argument to %s(). Don't do that."
+                                % (key, cls.__name__))
+            if not hasattr(cls, key):
+                raise TypeError(u"%s() received an invalid keyword %r" % (
+                    cls.__name__, key))
+
+        def view(request, *args, **kwargs):
+            forms = initforms
+            if hasattr(initforms, '__call__'):
+                forms = initforms()
+            condition_dict = initkwargs.get('condition_dict', False)
+            _kwargs = copy.copy(initkwargs)
+            if condition_dict and hasattr(condition_dict, '__call__'):
+                _kwargs.update({'condition_dict': dict(condition_dict())})
+            _kwargs = cls.get_initkwargs(forms, *initargs, **_kwargs)
+            self = cls(**_kwargs)
+            if hasattr(self, 'get') and not hasattr(self, 'head'):
+                self.head = self.get
+            return self.dispatch(request, *args, **kwargs)
+
+        # take name and docstring from class
+        update_wrapper(view, cls, updated=())
+
+        # and possible attributes set by decorators
+        # like csrf_exempt from dispatch
+        update_wrapper(view, cls.dispatch, assigned=())
+        return view
+
+
+class Wizard(ModalFormMixin, LazyWizard):
     template_name = 'services/wizard_create.html'
 
     def done(self, form_list, **kwargs):

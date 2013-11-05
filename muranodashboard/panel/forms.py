@@ -13,16 +13,14 @@
 #    under the License.
 
 import logging
-import json
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from horizon.forms import SelfHandlingForm
 from horizon import messages, exceptions
 from openstack_dashboard.api import glance
-from muranodashboard.panel.services import iterate_over_service_forms
-from muranodashboard.panel.services import get_service_choices
+import json
 
+from muranodashboard.panel.services import get_service_choices
 
 log = logging.getLogger(__name__)
 
@@ -30,10 +28,6 @@ log = logging.getLogger(__name__)
 class WizardFormServiceType(forms.Form):
     service = forms.ChoiceField(label=_('Service Type'),
                                 choices=get_service_choices())
-
-
-FORMS = [('service_choice', WizardFormServiceType)]
-FORMS.extend(iterate_over_service_forms())
 
 
 class MarkImageForm(SelfHandlingForm):

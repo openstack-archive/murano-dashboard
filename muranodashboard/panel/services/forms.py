@@ -122,6 +122,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                         js = media.get('js', ())
                         css = media.get('css', {})
                 widget = Widget
+
             if 'widget_attrs' in kwargs:
                 widget = widget(attrs=kwargs['widget_attrs'])
                 del kwargs['widget_attrs']
