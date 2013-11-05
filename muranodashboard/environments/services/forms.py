@@ -26,7 +26,14 @@ log = logging.getLogger(__name__)
 
 
 class UpdatableFieldsForm(forms.Form):
-    def update_fields(self):
+    """This class is supposed to be a base for forms belonging to a FormWizard
+    descendant, or be used as a mixin for workflows.Action class.
+
+    In first case the `request' used in `update' method is provided in
+    `self.initial' dictionary, in the second case request should be provided
+    directly in **kwargs.
+    """
+    def update_fields(self, request=None):
         # Create 'Confirm Password' fields by duplicating password fields
         while True:
             index, inserted = 0, False
@@ -44,7 +51,7 @@ class UpdatableFieldsForm(forms.Form):
 
         for name, field in self.fields.iteritems():
             if hasattr(field, 'update'):
-                field.update(self.initial, form=self)
+                field.update(self.initial, form=self, request=request)
             if not field.required:
                 field.widget.attrs['placeholder'] = 'Optional'
 
