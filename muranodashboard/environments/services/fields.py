@@ -36,9 +36,16 @@ log = logging.getLogger(__name__)
 
 
 def with_request(func):
+    """The decorator is meant to be used together with `UpdatableFieldsForm':
+    apply it to the `update' method of fields inside that form.
+    """
     def update(self, initial, **kwargs):
         request = initial.get('request')
         if request:
+            func(self, request, **kwargs)
+        elif kwargs.get('request'):
+            log.debug("Using 'request' value from kwargs")
+            request = kwargs.pop('request')
             func(self, request, **kwargs)
         else:
             log.error("No 'request' key in form initial dictionary")
@@ -211,10 +218,12 @@ def DataTableFactory(name, columns):
 
     class DataTableBase(tables.DataTable):
         def __init__(self, request, data, **kwargs):
-            super(DataTableBase, self).__init__(
-                request,
-                [Object(i, **item) for (i, item) in enumerate(data, 1)],
-                **kwargs)
+            if isinstance(data, object):
+                objects = data
+            else:
+                objects = [Object(i, **item)
+                           for (i, item) in enumerate(data, 1)]
+            super(DataTableBase, self).__init__(request, objects, **kwargs)
 
     class Meta:
         template = 'common/form-fields/data-grid/data_table.html'
