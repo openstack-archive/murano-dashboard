@@ -234,6 +234,9 @@ def get_environment_data(request, environment_id, *args):
 
 
 def services_list(request, environment_id):
+    def strip(msg, to=100):
+        return '%s...' % msg[:to] if len(msg) > to else msg
+
     services = []
     # need to create new session to see services deployed be other user
     session_id = Session.get_or_create(request, environment_id)
@@ -252,7 +255,7 @@ def services_list(request, environment_id):
             request, service_data['type'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
-            last_operation = str(reports[service_data['id']].text)
+            last_operation = strip(str(reports[service_data['id']].text))
             time = reports[service_data['id']].updated.replace('T', ' ')
         else:
             last_operation = 'Service draft created' \
