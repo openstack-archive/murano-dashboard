@@ -114,9 +114,67 @@ class ServiceCatalogTable(tables.DataTable):
     class Meta:
         name = 'service_catalog'
         verbose_name = _('Service Definitions')
-        table_actions = (ToggleEnabled,
-                         DeleteService,
-                         UploadService)
-        row_actions = (DownloadService,
+        table_actions = (ComposeService,
+                         UploadService,
+                         ToggleEnabled,
+                         DeleteService)
+        row_actions = (ModifyService,
+                       DownloadService,
                        ToggleEnabled,
                        DeleteService)
+
+
+class UploadFile(tables.LinkAction):
+    # ToDo: this is a stub. You should add real code here
+    name = "upload_file"
+    verbose_name = _("Upload File")
+    url = "horizon:murano:service_catalog:upload_file"
+    classes = ("ajax-modal", "btn-create")
+
+    def allowed(self, request, image):
+        return True
+
+
+class DownloadFile(tables.Action):
+    name = "download_file"
+    verbose_name = _("Download File")
+
+    def allowed(self, request, image):
+        return True
+
+    def single(self, data_table, request, obj_id):
+        # ToDo: this is a stub. You should add real code here
+        pass
+
+
+class ToggleSelection(tables.BatchAction):
+    name = 'toggle_selection'
+    data_type_singular = _('File selection')
+    data_type_plural = _('File selection')
+    action_present = _('Toggle')
+    action_past = _('Toggled')
+
+    def handle(self, table, request, obj_ids):
+        # ToDo: this is a stub. You should add real code here
+        pass
+
+
+class DeleteFile(tables.DeleteAction):
+    name = 'delete_file'
+    data_type_singular = _('File')
+
+    def delete(self, request, obj_id):
+        # ToDo: this is a stub. You should add real code here
+        pass
+
+
+class MetadataObjectsTable(tables.DataTable):
+    file_name = tables.Column('filename', verbose_name=_('File Name'))
+    path = tables.Column('path', verbose_name=_('Path'))
+    selected = tables.Column('selected', verbose_name=_('Selected'))
+
+    class Meta:
+        name = 'metadata_objects'
+        verbose_name = _('Metadata Objects')
+        table_actions = (UploadFile, DeleteFile, ToggleSelection)
+        row_actions = (ToggleSelection, DownloadFile, DeleteFile)
