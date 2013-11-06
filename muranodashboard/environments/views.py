@@ -80,6 +80,9 @@ class LazyWizard(SessionWizardView):
             self = cls(**_kwargs)
             if hasattr(self, 'get') and not hasattr(self, 'head'):
                 self.head = self.get
+            self.request = request
+            self.args = args
+            self.kwargs = kwargs
             return self.dispatch(request, *args, **kwargs)
 
         # take name and docstring from class
