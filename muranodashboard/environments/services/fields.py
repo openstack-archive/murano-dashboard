@@ -243,21 +243,29 @@ class TableWidget(floppyforms.widgets.Input):
              'radio': RadioColumn,
              'checkbox': CheckColumn}
 
-    def __init__(self, columns_spec, *args, **kwargs):
-        columns = []
-        for spec in columns_spec:
-            name = spec['column_name']
-            columns.append((name,
-                            self.types[spec['column_type']],
-                            spec.get('title', None) or name.title()))
-        self.columns = columns
+    def __init__(self, columns_spec=None, table_class=None, js_buttons=True,
+                 *args, **kwargs):
+        assert columns_spec is not None or table_class is not None
+        self.columns = []
+        if columns_spec:
+            for spec in columns_spec:
+                name = spec['column_name']
+                self.columns.append((name,
+                                     self.types[spec['column_type']],
+                                     spec.get('title', None) or name.title()))
+        self.table_class = table_class
+        self.js_buttons = js_buttons
         super(TableWidget, self).__init__(*args, **kwargs)
 
     def get_context(self, name, value, attrs=None):
         ctx = super(TableWidget, self).get_context_data()
         if value:
-            ctx['data_table'] = DataTableFactory(name, self.columns)(
-                self.request, value)
+            if self.table_class:
+                cls = self.table_class
+            else:
+                cls = DataTableFactory(name, self.columns)
+            ctx['data_table'] = cls(self.request, value)
+            ctx['js_buttons'] = self.js_buttons
         return ctx
 
     def value_from_datadict(self, data, files, name):
@@ -294,9 +302,9 @@ class TableWidget(floppyforms.widgets.Input):
 
 
 class TableField(CustomPropertiesField):
-    def __init__(self, *args, **kwargs):
-        kwargs['widget'] = TableWidget(kwargs.pop('columns'))
-        super(TableField, self).__init__(*args, **kwargs)
+    def __init__(self, columns=None, label=None, table_class=None, **kwargs):
+        widget = TableWidget(columns, table_class, **kwargs)
+        super(TableField, self).__init__(label=label, widget=widget)
 
     @with_request
     def update(self, request, **kwargs):
