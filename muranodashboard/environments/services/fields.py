@@ -39,16 +39,17 @@ def with_request(func):
     """The decorator is meant to be used together with `UpdatableFieldsForm':
     apply it to the `update' method of fields inside that form.
     """
-    def update(self, initial, **kwargs):
-        request = initial.get('request')
-        if request:
-            func(self, request, **kwargs)
-        elif kwargs.get('request'):
-            log.debug("Using 'request' value from kwargs")
-            request = kwargs.pop('request')
+    def update(self, initial, request=None, **kwargs):
+        initial_request = initial.get('request')
+        if initial_request:
+            log.debug("Using 'request' value from initial dictionary")
+            func(self, initial_request, **kwargs)
+        elif request:
+            log.debug("Using direct 'request' value")
             func(self, request, **kwargs)
         else:
-            log.error("No 'request' key in form initial dictionary")
+            log.error("No 'request' value passed neither via initial "
+                      "dictionary, nor directly")
             raise forms.ValidationError("Can't get a request information")
     return update
 

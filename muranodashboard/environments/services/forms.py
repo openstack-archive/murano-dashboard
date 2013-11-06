@@ -31,7 +31,7 @@ class UpdatableFieldsForm(forms.Form):
 
     In first case the `request' used in `update' method is provided in
     `self.initial' dictionary, in the second case request should be provided
-    directly in **kwargs.
+    directly in `request' parameter.
     """
     def update_fields(self, request=None):
         # Create 'Confirm Password' fields by duplicating password fields
