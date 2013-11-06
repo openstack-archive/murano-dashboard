@@ -1,3 +1,5 @@
 <div class="data-grid">{{ data_table.render }}</div>
-<button type="button" id="node-add" class="btn btn-small">Add node</button>
-<button type="button" id="node-remove" class="btn btn-small">Remove node</button>
+{% if js_buttons %}
+    <button type="button" id="node-add" class="btn btn-small">Add node</button>
+    <button type="button" id="node-remove" class="btn btn-small">Remove node</button>
+{% endif %}
