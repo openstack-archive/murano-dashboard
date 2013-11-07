@@ -88,8 +88,11 @@ def unpack_ui_package(archive_path):
     if not tarfile.is_tarfile(archive_path):
         raise RuntimeError("{0} is not valid tarfile!".format(archive_path))
     dst_dir = os.path.dirname(os.path.abspath(archive_path))
-    with tarfile.open(archive_path, 'r:gz') as tar:
+    tar = tarfile.open(archive_path, 'r:gz')
+    try:
         tar.extractall(path=dst_dir)
+    finally:
+        tar.close()
     return os.path.join(dst_dir, ARCHIVE_SUBDIR)
 
 
