@@ -23,12 +23,10 @@ import hashlib
 
 CHUNK_SIZE = 1 << 20  # 1MB
 ARCHIVE_PKG_NAME = 'archive.tar.gz'
-ARCHIVE_SUBDIR = 'service_forms'
 CACHE_DIR = getattr(settings, 'UI_METADATA_CACHE_DIR',
                     '/var/lib/murano-dashboard/cache')
 
 ARCHIVE_PKG_PATH = os.path.join(CACHE_DIR, ARCHIVE_PKG_NAME)
-ARCHIVE_SUBDIR_PATH = os.path.join(CACHE_DIR, ARCHIVE_SUBDIR)
 
 log = logging.getLogger(__name__)
 
@@ -36,6 +34,14 @@ log = logging.getLogger(__name__)
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
 from metadataclient.v1.client import Client
+
+
+def get_first_subdir(path):
+    for file in os.listdir(path):
+        new_path = os.path.join(path, file)
+        if os.path.isdir(new_path):
+            return new_path
+    return None
 
 
 def get_endpoint(request):
@@ -93,7 +99,7 @@ def unpack_ui_package(archive_path):
         tar.extractall(path=dst_dir)
     finally:
         tar.close()
-    return os.path.join(dst_dir, ARCHIVE_SUBDIR)
+    return get_first_subdir(dst_dir)
 
 
 def get_ui_metadata(request):
@@ -117,6 +123,6 @@ def get_ui_metadata(request):
         return unpack_ui_package(ARCHIVE_PKG_PATH), True
     elif code == 304:
         log.info("Metadata package hash-sum hasn't changed, doing nothing")
-        return ARCHIVE_SUBDIR_PATH, False
+        return get_first_subdir(CACHE_DIR), False
     else:
         raise RuntimeError('Unexpected response received: {0}'.format(code))
