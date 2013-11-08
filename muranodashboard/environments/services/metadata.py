@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 import tempfile
+import re
 from django.conf import settings
 import os.path
 import os
@@ -34,14 +35,6 @@ log = logging.getLogger(__name__)
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
 from metadataclient.v1.client import Client
-
-
-def get_first_subdir(path):
-    for file in os.listdir(path):
-        new_path = os.path.join(path, file)
-        if os.path.isdir(new_path):
-            return new_path
-    return None
 
 
 def get_endpoint(request):
@@ -68,6 +61,13 @@ def metadataclient(request):
     return Client(endpoint=endpoint, token=token_id)
 
 
+def _get_existing_hash():
+    for item in os.listdir(CACHE_DIR):
+        if re.match(r'[a-f0-9]{40}', item):
+            return item
+    return None
+
+
 def get_hash(archive_path):
     """Calculate SHA1-hash of archive file.
 
@@ -92,14 +92,24 @@ def get_hash(archive_path):
 
 def unpack_ui_package(archive_path):
     if not tarfile.is_tarfile(archive_path):
-        raise RuntimeError("{0} is not valid tarfile!".format(archive_path))
-    dst_dir = os.path.dirname(os.path.abspath(archive_path))
+        raise RuntimeError('{0} is not valid tarfile!'.format(archive_path))
+    hash = get_hash(archive_path)
+    dst_dir = os.path.join(CACHE_DIR, hash)
+    if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
+    else:
+        shutil.rmtree(dst_dir)
     tar = tarfile.open(archive_path, 'r:gz')
     try:
-        tar.extractall(path=dst_dir)
+        log.debug('Extracting metadata archive')
+        # extract files without containing folder
+        for tarinfo in tar:
+            if tarinfo.isreg():
+                tarinfo.name = os.path.basename(tarinfo.name)
+                tar.extract(tarinfo, dst_dir)
     finally:
         tar.close()
-    return get_first_subdir(dst_dir)
+    return dst_dir
 
 
 def get_ui_metadata(request):
@@ -108,21 +118,32 @@ def get_ui_metadata(request):
     occurred, returns None.
     """
     log.debug("Retrieving metadata from Repository")
+    hash = _get_existing_hash()
+    if hash:
+        metadata_dir = os.path.join(CACHE_DIR, hash)
+
+    #ToDO: Do we need to catch exception here?
     response, body_iter = metadataclient(request).metadata_client.get_ui_data(
-        get_hash(ARCHIVE_PKG_PATH))
+        hash)
     code = response.status
     if code == 200:
         with tempfile.NamedTemporaryFile(delete=False) as out:
             for chunk in body_iter:
                 out.write(chunk)
-        if os.path.exists(ARCHIVE_PKG_PATH):
-            os.remove(ARCHIVE_PKG_PATH)
         shutil.move(out.name, ARCHIVE_PKG_PATH)
         log.info("Successfully downloaded new metadata package to {0}".format(
             ARCHIVE_PKG_PATH))
+        if hash:
+            log.debug('Removing outdated metadata: {0}'.format(metadata_dir))
+            shutil.rmtree(metadata_dir)
         return unpack_ui_package(ARCHIVE_PKG_PATH), True
     elif code == 304:
         log.info("Metadata package hash-sum hasn't changed, doing nothing")
-        return get_first_subdir(CACHE_DIR), False
+        return metadata_dir, False
     else:
-        raise RuntimeError('Unexpected response received: {0}'.format(code))
+        msq = 'Unexpected response received: {0}'.format(code)
+        if hash:
+            log.error('Using existing version of metadata '
+                      'which may be outdated due to: {0}'.format(msq))
+            return metadata_dir, False
+        raise RuntimeError(msq)
