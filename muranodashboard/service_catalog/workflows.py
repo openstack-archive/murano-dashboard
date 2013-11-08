@@ -45,7 +45,7 @@ class EditManifest(Action):
     service_display_name = forms.CharField(label=_('Service Name'),
                                            required=True)
     full_service_name = forms.CharField(
-        label=_('Fullly Qualified Service Name'), required=True)
+        label=_('Fully Qualified Service Name'), required=True)
     version = forms.IntegerField(label=_('Version'), initial=1)
     enabled = forms.BooleanField(label=_('Active'), initial=True,
                                  widget=CheckboxInput)
