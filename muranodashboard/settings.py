@@ -3,8 +3,6 @@ import os
 import sys
 
 from openstack_dashboard import exceptions
-from muranoclient.common import exceptions as muranoclient
-from metadataclient.common import exceptions as metadataclient
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 BIN_DIR = os.path.abspath(os.path.join(ROOT_PATH, '..', 'bin'))
@@ -39,36 +37,21 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 ROOT_URLCONF = 'openstack_dashboard.urls'
 
-RECOVERABLE_EXC = (muranoclient.HTTPException,
-                   muranoclient.CommunicationError,
-                   muranoclient.Forbidden,
-                   metadataclient.HTTPException,
-                   metadataclient.CommunicationError,
-                   metadataclient.Forbidden)
-EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(
-    exceptions.RECOVERABLE + RECOVERABLE_EXC)
-
-NOT_FOUND_EXC = (muranoclient.HTTPNotFound, muranoclient.EndpointNotFound,
-                 metadataclient.HTTPNotFound, metadataclient.EndpointNotFound)
-EXTENDED_NOT_FOUND_EXCEPTIONS = tuple(exceptions.NOT_FOUND + NOT_FOUND_EXC)
-
-UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized,
-                    metadataclient.HTTPUnauthorized)
-EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(
-    exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
-
-
 HORIZON_CONFIG = {
     'dashboards': ('project', 'admin', 'settings', 'murano'),
     'default_dashboard': 'murano',
     'user_home': 'muranodashboard.views.get_user_home',
     'ajax_queue_limit': 10,
+    'auto_fade_alerts': {
+        'delay': 3000,
+        'fade_duration': 1500,
+        'types': ['alert-success', 'alert-info']
+    },
     'help_url': "http://docs.openstack.org",
-    'exceptions': {'recoverable': EXTENDED_RECOVERABLE_EXCEPTIONS,
-                   'not_found': EXTENDED_NOT_FOUND_EXCEPTIONS,
-                   'unauthorized': EXTENDED_UNAUTHORIZED_EXCEPTIONS},
+    'exceptions': {'recoverable': exceptions.RECOVERABLE,
+                   'not_found': exceptions.NOT_FOUND,
+                   'unauthorized': exceptions.UNAUTHORIZED},
 }
-
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',

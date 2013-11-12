@@ -86,19 +86,6 @@ modify_horizon_config() {
 			log "Adding our data into \"$1\"..."
 			cat >> $1 << "EOF"
 #START_MURANO_DASHBOARD
-from muranoclient.common import exceptions as muranoclient
-RECOVERABLE_EXC = (muranoclient.HTTPException,
-                   muranoclient.CommunicationError,
-                   muranoclient.Forbidden)
-EXTENDED_RECOVERABLE_EXCEPTIONS = tuple(
-    exceptions.RECOVERABLE + RECOVERABLE_EXC)
-NOT_FOUND_EXC = (muranoclient.HTTPNotFound, muranoclient.EndpointNotFound)
-EXTENDED_NOT_FOUND_EXCEPTIONS = tuple(exceptions.NOT_FOUND + NOT_FOUND_EXC)
-UNAUTHORIZED_EXC = (muranoclient.HTTPUnauthorized, )
-EXTENDED_UNAUTHORIZED_EXCEPTIONS = tuple(exceptions.UNAUTHORIZED + UNAUTHORIZED_EXC)
-HORIZON_CONFIG['exceptions']['recoverable'] = EXTENDED_RECOVERABLE_EXCEPTIONS
-HORIZON_CONFIG['exceptions']['not_found'] = EXTENDED_NOT_FOUND_EXCEPTIONS
-HORIZON_CONFIG['exceptions']['unauthorized'] = EXTENDED_UNAUTHORIZED_EXCEPTIONS
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)

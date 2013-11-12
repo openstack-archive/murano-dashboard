@@ -13,6 +13,9 @@
 #    under the License.
 import horizon
 from django.utils.translation import ugettext_lazy as _
+from muranodashboard import exceptions
+# prevent pyflakes from fail
+assert exceptions
 
 
 class DeployPanels(horizon.PanelGroup):

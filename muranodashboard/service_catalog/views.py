@@ -14,8 +14,9 @@
 
 import logging
 
-from django.core.urlresolvers import reverse, reverse_lazy
-
+from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+from horizon import exceptions
 from horizon import tables
 from horizon.workflows import WorkflowView
 from horizon.forms.views import ModalFormView
@@ -25,7 +26,8 @@ from .forms import UploadServiceForm
 from .workflows import ComposeService
 
 from muranodashboard.environments.services.metadata import metadataclient
-
+from metadataclient.common.exceptions import CommunicationError, Unauthorized
+from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)
 
 
@@ -34,19 +36,34 @@ class ServiceCatalogView(tables.DataTableView):
     template_name = 'service_catalog/index.html'
 
     def get_data(self):
-        return metadataclient(self.request).metadata_admin.list_services()
+        available_services = []
+        try:
+            available_services = metadataclient(
+                self.request).metadata_admin.list_services()
+        except CommunicationError:
+            exceptions.handle(self.request,
+                              _('Unable to communicate to Murano Metadata '
+                              'Repository. Add MURANO_METADATA_URL to local_'
+                              'settings'))
+        except Unauthorized:
+            exceptions.handle(self.request, _('Configure Keystone in Murano '
+                                              'Repository Service'))
+        except HTTPInternalServerError:
+            exceptions.handle(self.request, _('There is a problem with Murano '
+                                              'Repository Service'))
+        return available_services
 
 
 class UploadServiceView(ModalFormView):
     form_class = UploadServiceForm
     template_name = 'service_catalog/upload.html'
     context_object_name = 'service_catalog'
-    success_url = reverse_lazy("horizon:murano:service_catalog:index")
+    success_url = reverse_lazy('horizon:murano:service_catalog:index')
 
 
 class ComposeServiceView(WorkflowView):
     workflow_class = ComposeService
-    success_url = reverse_lazy("horizon:murano:service_catalog:index")
+    success_url = reverse_lazy('horizon:murano:service_catalog:index')
 
     def get_context_data(self, **kwargs):
         context = super(ComposeServiceView, self).get_context_data(**kwargs)
@@ -55,23 +72,30 @@ class ComposeServiceView(WorkflowView):
         return context
 
     def get_initial(self):
-        full_service_name = self.kwargs['full_service_name']
-        objects_list = metadataclient(
-            self.request).metadata_admin.get_service_files('ui',
-                                                           full_service_name)
-        if full_service_name:
-            srvs = metadataclient(self.request).metadata_admin.list_services()
-            for service in srvs:
-                if full_service_name == service.id:
-                    return {
-                        'full_service_name': service.id,
-                        'service_display_name': service.service_display_name,
-                        'author': service.author,
-                        'version': service.version,
-                        'description': service.description,
-                        'enabled': service.enabled,
-                        'selected_files': objects_list
-                    }
-            raise RuntimeError('Not found service id')
-        else:
-            return {'selected_files': objects_list}
+        try:
+            full_service_name = self.kwargs['full_service_name']
+            objects_list = \
+                metadataclient(self.request).metadata_admin.get_service_files(
+                    'ui', full_service_name)
+            if full_service_name:
+                srvs = metadataclient(
+                    self.request).metadata_admin.list_services()
+                for service in srvs:
+                    if full_service_name == service.id:
+                        return {
+                            'full_service_name': service.id,
+                            'service_display_name':
+                            service.service_display_name,
+                            'author': service.author,
+                            'version': service.version,
+                            'description': service.description,
+                            'enabled': service.enabled,
+                            'selected_files': objects_list
+                        }
+                raise RuntimeError('Not found service id')
+            else:
+                return {'selected_files': objects_list}
+        except (HTTPInternalServerError, NotFound):
+            msg = _('Error with Murano Metadata Repository')
+            redirect = reverse_lazy('horizon:murano:service_catalog:index')
+            exceptions.handle(self.request, msg, redirect)
