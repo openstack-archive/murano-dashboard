@@ -63,7 +63,9 @@ class DownloadService(tables.Action):
             response['Content-Disposition'] = 'filename=data.tar.gz'
             return response
         except Exception:
-            exceptions.handle(request, _('Unable to download service.'))
+            exceptions.handle(request,
+                              _('Unable to download service.'),
+                              redirect='horizon:murano:service_catalog:index')
 
 
 class ToggleEnabled(tables.BatchAction):
@@ -97,7 +99,9 @@ class DeleteService(tables.DeleteAction):
         try:
             metadataclient(request).metadata_admin.delete_service(obj_id)
         except Exception:
-            exceptions.handle(request, _('Unable to remove service.'))
+            exceptions.handle(request,
+                              _('Unable to remove service.'),
+                              redirect='horizon:murano:service_catalog:index')
 
 
 class ServiceCatalogTable(tables.DataTable):
