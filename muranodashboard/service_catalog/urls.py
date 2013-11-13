@@ -17,6 +17,8 @@ from django.conf.urls import patterns, url
 from .views import ServiceCatalogView
 from .views import UploadServiceView
 from .views import ComposeServiceView
+from .views import ManageFilesView
+from .views import UploadFileView
 
 
 urlpatterns = patterns(
@@ -26,6 +28,12 @@ urlpatterns = patterns(
 
     url(r'^upload_service$', UploadServiceView.as_view(),
         name='upload_service'),
+
+    url(r'^manage_files/upload_file$', UploadFileView.as_view(),
+        name='upload_file'),
+
+    url(r'^manage_files', ManageFilesView.as_view(),
+        name='manage_files'),
 
     url(r'^compose_service/(?P<full_service_name>[^/]+)?$',
         ComposeServiceView.as_view(),

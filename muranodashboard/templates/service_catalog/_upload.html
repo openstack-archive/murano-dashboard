@@ -21,4 +21,5 @@
 
 {% block modal-footer %}
   <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Upload' %}' />
+     <a href="{% url 'horizon:murano:service_catalog:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

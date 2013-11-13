@@ -21,8 +21,8 @@ from horizon import tables
 from horizon.workflows import WorkflowView
 from horizon.forms.views import ModalFormView
 
-from .tables import ServiceCatalogTable
-from .forms import UploadServiceForm
+from .tables import ServiceCatalogTable, MetadataObjectsTable
+from .forms import UploadServiceForm, UploadFileForm
 from .workflows import ComposeService
 from .workflows import STEP_NAMES
 
@@ -42,14 +42,17 @@ class ServiceCatalogView(tables.DataTableView):
             available_services = metadataclient(
                 self.request).metadata_admin.list_services()
         except CommunicationError:
+            LOG.exception(CommunicationError)
             exceptions.handle(self.request,
                               _('Unable to communicate to Murano Metadata '
                               'Repository. Add MURANO_METADATA_URL to local_'
                               'settings'))
         except Unauthorized:
+            LOG.exception(Unauthorized)
             exceptions.handle(self.request, _('Configure Keystone in Murano '
                                               'Repository Service'))
         except HTTPInternalServerError:
+            LOG.exception(HTTPInternalServerError)
             exceptions.handle(self.request, _('There is a problem with Murano '
                                               'Repository Service'))
         return available_services
@@ -60,6 +63,29 @@ class UploadServiceView(ModalFormView):
     template_name = 'service_catalog/upload.html'
     context_object_name = 'service_catalog'
     success_url = reverse_lazy('horizon:murano:service_catalog:index')
+
+
+class ManageFilesView(tables.DataTableView):
+    table_class = MetadataObjectsTable
+    template_name = 'service_catalog/files.html'
+
+    def get_data(self):
+        ui_files = []
+        try:
+            ui_files = metadataclient(
+                self.request).metadata_admin.get_service_files('ui')
+        except CommunicationError:
+            exceptions.handle(self.request,
+                              _('Unable to communicate to Murano Metadata '
+                              'Repository. Add MURANO_METADATA_URL to local_'
+                              'settings'))
+        except Unauthorized:
+            exceptions.handle(self.request, _('Configure Keystone in Murano '
+                                              'Repository Service'))
+        except HTTPInternalServerError:
+            exceptions.handle(self.request, _('There is a problem with Murano '
+                                              'Repository Service'))
+        return ui_files
 
 
 class ComposeServiceView(WorkflowView):
@@ -97,8 +123,16 @@ class ComposeServiceView(WorkflowView):
                             ('enabled', service.enabled)] + files_dict.items())
                 raise RuntimeError('Not found service id')
             else:
-                return files_dict
-        except (HTTPInternalServerError, NotFound):
+                return {'selected_files': objects_list}
+        except (HTTPInternalServerError, NotFound) as e:
+            LOG.exception(e)
             msg = _('Error with Murano Metadata Repository')
             redirect = reverse_lazy('horizon:murano:service_catalog:index')
             exceptions.handle(self.request, msg, redirect)
+
+
+class UploadFileView(ModalFormView):
+    form_class = UploadFileForm
+    template_name = 'service_catalog/upload_file.html'
+    context_object_name = 'manage_files'
+    success_url = reverse_lazy('horizon:murano:service_catalog:manage_files')
