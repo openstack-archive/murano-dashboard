@@ -20,6 +20,7 @@ from horizon import tables
 from horizon import messages
 
 from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.environments.services.fields import Column, CheckColumn
 
 
 class ComposeService(tables.LinkAction):
@@ -168,8 +169,22 @@ class DeleteFile(tables.DeleteAction):
         pass
 
 
+def make_table_cls(field_name):
+    class MetadataObjectsTableNoActions(tables.DataTable):
+        filename = Column('filename', verbose_name=_('File Name'),
+                          table_name=field_name)
+        path = Column('path', verbose_name=_('Path'), table_name=field_name)
+        selected = CheckColumn('selected', verbose_name=_('Selected'),
+                               table_name=field_name)
+
+        class Meta:
+            template = 'common/form-fields/data-grid/data_table.html'
+
+    return MetadataObjectsTableNoActions
+
+
 class MetadataObjectsTable(tables.DataTable):
-    file_name = tables.Column('filename', verbose_name=_('File Name'))
+    filename = tables.Column('filename', verbose_name=_('File Name'))
     path = tables.Column('path', verbose_name=_('Path'))
     selected = tables.Column('selected', verbose_name=_('Selected'))
 
