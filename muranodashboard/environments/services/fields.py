@@ -219,11 +219,11 @@ def DataTableFactory(name, columns):
 
     class DataTableBase(tables.DataTable):
         def __init__(self, request, data, **kwargs):
-            if isinstance(data, object):
-                objects = data
-            else:
+            if len(data) and isinstance(data[0], dict):
                 objects = [Object(i, **item)
                            for (i, item) in enumerate(data, 1)]
+            else:
+                objects = data
             super(DataTableBase, self).__init__(request, objects, **kwargs)
 
     class Meta:
@@ -256,6 +256,7 @@ class TableWidget(floppyforms.widgets.Input):
                                      spec.get('title', None) or name.title()))
         self.table_class = table_class
         self.js_buttons = js_buttons
+        ignorable = kwargs.pop('widget', None)
         super(TableWidget, self).__init__(*args, **kwargs)
 
     def get_context(self, name, value, attrs=None):
