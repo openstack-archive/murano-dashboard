@@ -182,8 +182,7 @@ class InstanceCountField(IntegerField):
 class Column(tables.Column):
     template_name = 'common/form-fields/data-grid/input.html'
 
-    def __init__(self, transform, **kwargs):
-        table_name = kwargs.pop('table_name', False)
+    def __init__(self, transform, table_name=None, **kwargs):
         if hasattr(self, 'template_name'):
             def _transform(datum):
                 context = {'data': getattr(datum, self.name, None),
@@ -202,6 +201,22 @@ class CheckColumn(Column):
 
 class RadioColumn(Column):
     template_name = 'common/form-fields/data-grid/radio.html'
+
+
+# FixME: we need to have separated object until find out way to use the same
+# code for MS SQL Cluster datagrid
+class Object(object):
+    def __init__(self, id, **kwargs):
+        self.id = id
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
+
+    def as_dict(self):
+        item = {}
+        for key, value in self.__dict__.iteritems():
+            if key != 'id':
+                item[key] = value
+        return item
 
 
 def DataTableFactory(name, columns):
@@ -271,31 +286,43 @@ class TableWidget(floppyforms.widgets.Input):
         return ctx
 
     def value_from_datadict(self, data, files, name):
-        def extract_value(row_idx, col_id, col_cls):
+        def extract_value(row_key, col_id, col_cls):
             if col_cls == CheckColumn:
-                val = data.get("{0}@@{1}@@{2}".format(name, row_idx, col_id),
+                val = data.get("{0}@@{1}@@{2}".format(name, row_key, col_id),
                                False)
                 return val and val == 'on'
             elif col_cls == RadioColumn:
                 row_id = data.get("{0}@@@@{1}".format(name, col_id), False)
                 if row_id:
-                    return int(row_id) == row_idx
+                    return int(row_id) == row_key
                 return False
             else:
                 return data.get("{0}@@{1}@@{2}".format(
-                    name, row_idx, col_id), None)
+                    name, row_key, col_id), None)
+
+        def extract_keys():
+            keys = set()
+            for key in data.iterkeys():
+                match = re.match(r'^[^@]+@@([^@]*)@@.*$', key)
+                if match and match.group(1):
+                    keys.add(match.group(1))
+            return keys
 
         items = []
-        main_column, rest_columns = self.columns[0], self.columns[1:]
-        for row_index in itertools.count(1):
-            if not extract_value(row_index, *main_column[:2]):
-                break
+        if self.table_class:
+            columns = [(_name, column.__class__, unicode(column.verbose_name))
+                       for (_name, column)
+                       in self.table_class.base_columns.items()]
+        else:
+            columns = self.columns
+
+        for row_key in extract_keys():
             item = {}
-            for column_id, column_instance, column_name in self.columns:
-                value = extract_value(row_index, column_id, column_instance)
+            for column_id, column_instance, column_name in columns:
+                value = extract_value(row_key, column_id, column_instance)
                 item[column_id] = value
-            items.append(item)
-        print items
+            items.append(Object(row_key, **item))
+
         return items
 
     class Media:
@@ -311,6 +338,9 @@ class TableField(CustomPropertiesField):
     @with_request
     def update(self, request, **kwargs):
         self.widget.request = request
+
+    def clean(self, objects):
+        return [obj.as_dict() for obj in objects]
 
 
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):

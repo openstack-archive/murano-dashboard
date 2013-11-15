@@ -24,6 +24,7 @@ from horizon.forms.views import ModalFormView
 from .tables import ServiceCatalogTable
 from .forms import UploadServiceForm
 from .workflows import ComposeService
+from .workflows import STEP_NAMES
 
 from muranodashboard.environments.services.metadata import metadataclient
 from metadataclient.common.exceptions import CommunicationError, Unauthorized
@@ -74,27 +75,29 @@ class ComposeServiceView(WorkflowView):
     def get_initial(self):
         try:
             full_service_name = self.kwargs['full_service_name']
-            objects_list = \
-                metadataclient(self.request).metadata_admin.get_service_files(
-                    'ui', full_service_name)
+            metadata = metadataclient(self.request).metadata_admin
+            files_dict = {}
+            # FixME: get all services with a single call, should be faster
+            for field_name, ignorable in STEP_NAMES:
+                files_dict[field_name] = metadata.get_service_files(
+                    field_name, full_service_name)
+
             if full_service_name:
                 srvs = metadataclient(
                     self.request).metadata_admin.list_services()
                 for service in srvs:
                     if full_service_name == service.id:
-                        return {
-                            'full_service_name': service.id,
-                            'service_display_name':
-                            service.service_display_name,
-                            'author': service.author,
-                            'version': service.version,
-                            'description': service.description,
-                            'enabled': service.enabled,
-                            'selected_files': objects_list
-                        }
+                        return dict([
+                            ('full_service_name', service.id),
+                            ('service_display_name',
+                             service.service_display_name),
+                            ('author', service.author),
+                            ('version', service.version),
+                            ('description', service.description),
+                            ('enabled', service.enabled)] + files_dict.items())
                 raise RuntimeError('Not found service id')
             else:
-                return {'selected_files': objects_list}
+                return files_dict
         except (HTTPInternalServerError, NotFound):
             msg = _('Error with Murano Metadata Repository')
             redirect = reverse_lazy('horizon:murano:service_catalog:index')

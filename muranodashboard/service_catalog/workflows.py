@@ -21,13 +21,17 @@ from horizon import exceptions
 from horizon import forms
 from horizon import workflows
 
-from muranodashboard.environments import api
 from muranodashboard.environments.services.forms import UpdatableFieldsForm
 from muranodashboard.environments.services.fields import TableField
 
-from .tables import MetadataObjectsTable
+from .tables import make_table_cls
 
 log = logging.getLogger(__name__)
+
+
+STEP_NAMES = [('ui', _('UI Files')), ('workflows', _('Workflows')),
+              ('heat', _('Heat Templates')), ('agent', _('Agent Templates')),
+              ('scripts', _('Scripts'))]
 
 
 class CheckboxInput(forms.CheckboxInput):
@@ -70,20 +74,41 @@ class EditManifestStep(workflows.Step):
         css = {'all': ('muranodashboard/css/checkbox.css',)}
 
 
-class AddFile(Action):
-    selected_files = TableField(
-        label=_('Selected Files'),
-        table_class=MetadataObjectsTable,
-        js_buttons=False)
+def make_files_step(field_name, step_verbose_name):
+    field_instance = TableField(label=_('Selected Files'),
+                                table_class=make_table_cls(field_name),
+                                js_buttons=False)
+
+    class IntermediateAction(Action):
+        def handle(self, request, context):
+            files = []
+            for item in context[field_name]:
+                if item['selected']:
+                    if item.get('path'):
+                        files.append('{path}/{filename}'.format(**item))
+                    else:
+                        files.append(item['filename'])
+            return {field_name: files}
 
     class Meta:
-        name = _('UI Files')
+        name = step_verbose_name
+
+    # action class name should be different for every different form,
+    # otherwise they all look the same
+    action_cls = type('FinalAction__%s' % field_name, (IntermediateAction,),
+                      {field_name: field_instance,
+                       'Meta': Meta})
+
+    class AddFileStep(workflows.Step):
+        action_class = action_cls
+        template_name = 'service_catalog/_workflow_step_files.html'
+        contributes = (field_name,)
+
+    return AddFileStep
 
 
-class AddFileStep(workflows.Step):
-    action_class = AddFile
-    template_name = 'service_catalog/_workflow_step_files.html'
-    contributes = ('selected_files',)
+FILE_STEPS = [make_files_step(field_name, step_verbose_name)
+              for (field_name, step_verbose_name) in STEP_NAMES]
 
 
 class ComposeService(workflows.Workflow):
@@ -93,18 +118,19 @@ class ComposeService(workflows.Workflow):
     success_message = _('Service "%s" created.')
     failure_message = _('Unable to create service "%s".')
     success_url = "horizon:murano:service_catalog:index"
-    default_steps = (EditManifestStep, AddFileStep)
+    default_steps = (EditManifestStep,) + tuple(FILE_STEPS)
 
     def format_status_message(self, message):
-        name = self.context.get('name', 'noname')
+        name = self.context.get('service_display_name', 'noname')
         return message % name
 
     def handle(self, request, context):
         try:
-            api.environment_create(request, context)
+            # FixME: here we pass all data about service being
+            # composed/modified to metadataclient
             return True
         except Exception:
-            name = self.context.get('name', 'noname')
+            name = self.context.get('service_display_name', 'noname')
             log.error("Unable to create service {0}".format(name))
             exceptions.handle(request)
             return False
