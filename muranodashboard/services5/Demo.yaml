@@ -25,11 +25,10 @@ forms:
           label: Instance Count
           description: >-
             Murano can provision more then one instance of the service at a time.
-            For a demo scenario only 2 instances are allowed.
           attributeNames: units
           minValue: 1
           maxValue: 2
-          initial: 2
+          initial: 1
           helpText: Enter 1 and 2 value
         - name: unitNamingPattern
           type: string
