@@ -70,10 +70,10 @@ class ManageFilesView(tables.DataTableView):
     template_name = 'service_catalog/files.html'
 
     def get_data(self):
-        ui_files = []
+        files = []
         try:
-            ui_files = metadataclient(
-                self.request).metadata_admin.get_service_files('ui')
+            files = metadataclient(
+                self.request).metadata_admin.get_service_files()
         except CommunicationError:
             exceptions.handle(self.request,
                               _('Unable to communicate to Murano Metadata '
@@ -85,7 +85,7 @@ class ManageFilesView(tables.DataTableView):
         except HTTPInternalServerError:
             exceptions.handle(self.request, _('There is a problem with Murano '
                                               'Repository Service'))
-        return ui_files
+        return files
 
 
 class ComposeServiceView(WorkflowView):
@@ -113,17 +113,20 @@ class ComposeServiceView(WorkflowView):
                     self.request).metadata_admin.list_services()
                 for service in srvs:
                     if full_service_name == service.id:
-                        return dict([
-                            ('full_service_name', service.id),
-                            ('service_display_name',
-                             service.service_display_name),
-                            ('author', service.author),
-                            ('version', service.version),
-                            ('description', service.description),
-                            ('enabled', service.enabled)] + files_dict.items())
+                        # we know for sure 2 first params are always present
+                        files_dict.update({
+                            'full_service_name': service.id,
+                            'service_display_name':
+                            service.service_display_name,
+                            'author': getattr(service, 'author', ''),
+                            'version': getattr(service, 'version', 0.1),
+                            'description': getattr(service, 'description', ''),
+                            'enabled': getattr(service, 'enabled', False)
+                        })
+                        return files_dict
                 raise RuntimeError('Not found service id')
             else:
-                return {'selected_files': objects_list}
+                return files_dict
         except (HTTPInternalServerError, NotFound) as e:
             LOG.exception(e)
             msg = _('Error with Murano Metadata Repository')

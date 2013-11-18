@@ -239,19 +239,52 @@ def make_table_cls(field_name):
     return MetadataObjectsTableNoActions
 
 
+class FilterObjects(tables.FixedFilterAction):
+    def __init__(self, *args, **kwargs):
+        super(FilterObjects, self).__init__(*args, **kwargs)
+
+    def get_fixed_buttons(self):
+        # FixME: get types directly from murano-repository where they are
+        # defined
+        return [{'text': 'UI Files', 'icon': '', 'value': 'ui'},
+                {'text': 'XML Workflows', 'icon': '', 'value': 'workflows'},
+                {'text': 'Heat Templates', 'icon': '', 'value': 'heat'},
+                {'text': 'Agent Templates', 'icon': '', 'value': 'agent'},
+                {'text': 'Scripts', 'icon': '', 'value': 'scripts'},
+                ]
+
+    def categorize(self, table, files):
+        categorized_files = {}
+        for file in files:
+            data_type = file.data_type
+            if not data_type in categorized_files:
+                categorized_files[data_type] = []
+            categorized_files[data_type].append(file)
+
+        return categorized_files
+
+
+class FileRow(tables.Row):
+    def load_cells(self, image=None):
+        super(FileRow, self).load_cells(image)
+        self.classes.append('category-' + self.datum.data_type)
+
+
 class MetadataObjectsTable(tables.DataTable):
     file_name = tables.Column('filename', verbose_name=_('File Name'))
     path = tables.Column('path', verbose_name=_('Nested Path'))
-    selected = tables.Column('selected', verbose_name=_('Used by Service'))
+    selected = tables.Column('selected', verbose_name=_('Using'))
 
     def get_object_display(self, obj):
         return unicode(obj.filename)
 
     class Meta:
         name = 'manage_files'
+        row_class = FileRow
         verbose_name = _('Murano Repository Files')
         table_actions = (UploadFile,
                          DeleteFile,
+                         FilterObjects
                          )
 
         row_actions = (DownloadFile,
