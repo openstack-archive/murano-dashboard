@@ -54,7 +54,7 @@ class UploadFileForm(SelfHandlingForm):
         'workflows': 'Murano Conductor Workflow (*xml)',
         'heat': 'Heat template',
         'agent': 'Murano Agent template',
-        'script': 'Script for agent execution'
+        'scripts': 'Script for agent execution'
     }
 
     data_type = forms.ChoiceField(label=_('File data type'),

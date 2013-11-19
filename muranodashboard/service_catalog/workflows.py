@@ -16,33 +16,11 @@ import logging
 
 from django.utils.translation import ugettext as _
 from django.forms import MediaDefiningClass
-
+from .utils import Action, CheckboxInput, FILE_STEPS
 from horizon import exceptions
 from horizon import forms
 from horizon import workflows
-
-from muranodashboard.environments.services.forms import UpdatableFieldsForm
-from muranodashboard.environments.services.fields import TableField
-
-from .tables import make_table_cls
-
 log = logging.getLogger(__name__)
-
-
-STEP_NAMES = [('ui', _('UI Files')), ('workflows', _('Workflows')),
-              ('heat', _('Heat Templates')), ('agent', _('Agent Templates')),
-              ('scripts', _('Scripts'))]
-
-
-class CheckboxInput(forms.CheckboxInput):
-    def __init__(self):
-        super(CheckboxInput, self).__init__(attrs={'class': 'checkbox'})
-
-
-class Action(workflows.Action, UpdatableFieldsForm):
-    def __init__(self, request, context, *args, **kwargs):
-        super(Action, self).__init__(request, context, *args, **kwargs)
-        self.update_fields(request=request)
 
 
 class EditManifest(Action):
@@ -72,43 +50,6 @@ class EditManifestStep(workflows.Step):
     # to inject media directly to the step
     class Media:
         css = {'all': ('muranodashboard/css/checkbox.css',)}
-
-
-def make_files_step(field_name, step_verbose_name):
-    field_instance = TableField(label=_('Selected Files'),
-                                table_class=make_table_cls(field_name),
-                                js_buttons=False)
-
-    class IntermediateAction(Action):
-        def handle(self, request, context):
-            files = []
-            for item in context[field_name]:
-                if item['selected']:
-                    if item.get('path'):
-                        files.append('{path}/{filename}'.format(**item))
-                    else:
-                        files.append(item['filename'])
-            return {field_name: files}
-
-    class Meta:
-        name = step_verbose_name
-
-    # action class name should be different for every different form,
-    # otherwise they all look the same
-    action_cls = type('FinalAction__%s' % field_name, (IntermediateAction,),
-                      {field_name: field_instance,
-                       'Meta': Meta})
-
-    class AddFileStep(workflows.Step):
-        action_class = action_cls
-        template_name = 'service_catalog/_workflow_step_files.html'
-        contributes = (field_name,)
-
-    return AddFileStep
-
-
-FILE_STEPS = [make_files_step(field_name, step_verbose_name)
-              for (field_name, step_verbose_name) in STEP_NAMES]
 
 
 class ComposeService(workflows.Workflow):

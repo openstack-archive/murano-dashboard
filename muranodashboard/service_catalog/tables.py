@@ -11,6 +11,7 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import logging
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -21,9 +22,6 @@ from horizon import tables
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
 from muranodashboard.environments.services.metadata import metadataclient
-from muranodashboard.environments.services.fields import Column, CheckColumn
-
-
 LOG = logging.getLogger(__name__)
 
 
@@ -114,6 +112,15 @@ class DeleteService(tables.DeleteAction):
                               redirect='horizon:murano:service_catalog:index')
 
 
+class ManageServiceFiles(tables.LinkAction):
+    name = 'manage_service_files'
+    verbose_name = _('Manage Files')
+    url = 'horizon:murano:service_catalog:manage_service_files'
+
+    def allowed(self, request, environment):
+        return True
+
+
 class ManageFiles(tables.LinkAction):
     name = 'manage_files'
     verbose_name = _('Manage Files')
@@ -144,6 +151,7 @@ class ServiceCatalogTable(tables.DataTable):
                          ManageFiles)
 
         row_actions = (ModifyService,
+                       ManageServiceFiles,
                        DownloadService,
                        ToggleEnabled,
                        DeleteService)
@@ -223,20 +231,6 @@ class DownloadFile(tables.Action):
                 request,
                 _('Unable to download file: {0}'.format(obj_id)),
                 redirect=redirect)
-
-
-def make_table_cls(field_name):
-    class MetadataObjectsTableNoActions(tables.DataTable):
-        filename = Column('filename', verbose_name=_('File Name'),
-                          table_name=field_name)
-        path = Column('path', verbose_name=_('Path'), table_name=field_name)
-        selected = CheckColumn('selected', verbose_name=_('Selected'),
-                               table_name=field_name)
-
-        class Meta:
-            template = 'common/form-fields/data-grid/data_table.html'
-
-    return MetadataObjectsTableNoActions
 
 
 class FilterObjects(tables.FixedFilterAction):
