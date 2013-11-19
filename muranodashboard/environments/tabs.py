@@ -74,32 +74,33 @@ class OverviewTab(tabs.Tab):
 
         #check for deployed services so additional information can be added
         units = []
-        instance_name = None
         for unit in service_data.units:
-            if hasattr(unit, 'state'):
-                # unit_detail = {'Name': unit.name}
-                unit_detail = SortedDict()
-                instance_hostname = unit.state.hostname
-                if 'Hostname template' in detail_info:
-                    del detail_info['Hostname template']
-                unit_detail['Hostname'] = instance_hostname
-                instances = nova_api.server_list(request)
+            if not hasattr(unit, 'state'):
+                continue
 
-                # HEAT always adds e before instance name
-                instance_name = 'e' + environment_id + '.' + instance_hostname
+            unit_detail = SortedDict()
+            instance_hostname = unit.state.hostname
+            if 'Hostname template' in detail_info:
+                del detail_info['Hostname template']
 
-                for instance in instances:
-                    if instance._apiresource.name == instance_name:
-                        unit_detail['instance'] = {
-                            'id': instance._apiresource.id,
-                            'name': instance_name
-                        }
-                        break
+            unit_detail['Hostname'] = instance_hostname
+            instances = nova_api.server_list(request)[0]
 
-                if len(service_data.units) > 1:
-                    units.append(unit_detail)
-                else:
-                    detail_info.update(unit_detail)
+            # HEAT always adds e before instance name
+            instance_name = 'e' + environment_id + '.' + instance_hostname
+
+            for instance in instances:
+                if instance.name == instance_name:
+                    unit_detail['instance'] = {
+                        'id': instance.id,
+                        'name': instance_name
+                    }
+                    break
+
+            if len(service_data.units) > 1:
+                units.append(unit_detail)
+            else:
+                detail_info.update(unit_detail)
 
         return {'service': detail_info, 'units': units}
 
