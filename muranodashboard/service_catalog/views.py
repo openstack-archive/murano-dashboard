@@ -13,6 +13,7 @@
 #    under the License.
 
 import logging
+from functools import wraps
 
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -32,30 +33,44 @@ from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)
 
 
+def with_exception_handlers(default):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self):
+            value = default
+            try:
+                value = func(self)
+            except CommunicationError:
+                LOG.exception(CommunicationError)
+                exceptions.handle(
+                    self.request,
+                    _('Unable to communicate to Murano Metadata '
+                      'Repository. Add MURANO_METADATA_URL to local_'
+                      'settings'))
+            except Unauthorized:
+                LOG.exception(CommunicationError)
+                exceptions.handle(
+                    self.request, _('Configure Keystone in Murano '
+                                    'Repository Service'))
+            except HTTPInternalServerError:
+                LOG.exception(CommunicationError)
+                exceptions.handle(
+                    self.request, _('There is a problem with Murano '
+                                    'Repository Service'))
+            return value
+
+        return wrapper
+
+    return decorator
+
+
 class ServiceCatalogView(tables.DataTableView):
     table_class = ServiceCatalogTable
     template_name = 'service_catalog/index.html'
 
+    @with_exception_handlers([])
     def get_data(self):
-        available_services = []
-        try:
-            available_services = metadataclient(
-                self.request).metadata_admin.list_services()
-        except CommunicationError:
-            LOG.exception(CommunicationError)
-            exceptions.handle(self.request,
-                              _('Unable to communicate to Murano Metadata '
-                              'Repository. Add MURANO_METADATA_URL to local_'
-                              'settings'))
-        except Unauthorized:
-            LOG.exception(Unauthorized)
-            exceptions.handle(self.request, _('Configure Keystone in Murano '
-                                              'Repository Service'))
-        except HTTPInternalServerError:
-            LOG.exception(HTTPInternalServerError)
-            exceptions.handle(self.request, _('There is a problem with Murano '
-                                              'Repository Service'))
-        return available_services
+        return metadataclient(self.request).metadata_admin.list_services()
 
 
 class UploadServiceView(ModalFormView):
@@ -69,23 +84,9 @@ class ManageFilesView(tables.DataTableView):
     table_class = MetadataObjectsTable
     template_name = 'service_catalog/files.html'
 
+    @with_exception_handlers([])
     def get_data(self):
-        files = []
-        try:
-            files = metadataclient(
-                self.request).metadata_admin.get_service_files()
-        except CommunicationError:
-            exceptions.handle(self.request,
-                              _('Unable to communicate to Murano Metadata '
-                              'Repository. Add MURANO_METADATA_URL to local_'
-                              'settings'))
-        except Unauthorized:
-            exceptions.handle(self.request, _('Configure Keystone in Murano '
-                                              'Repository Service'))
-        except HTTPInternalServerError:
-            exceptions.handle(self.request, _('There is a problem with Murano '
-                                              'Repository Service'))
-        return files
+        return metadataclient(self.request).metadata_admin.get_service_files()
 
 
 class ComposeServiceView(WorkflowView):
