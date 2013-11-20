@@ -23,10 +23,10 @@ from horizon.workflows import WorkflowView
 from horizon.forms.views import ModalFormView
 
 from .tables import ServiceCatalogTable, MetadataObjectsTable
+from .utils import define_tables
+from .utils import STEP_NAMES
 from .forms import UploadServiceForm, UploadFileForm
 from .workflows import ComposeService
-from .workflows import STEP_NAMES
-
 from muranodashboard.environments.services.metadata import metadataclient
 from metadataclient.common.exceptions import CommunicationError, Unauthorized
 from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
@@ -140,3 +140,54 @@ class UploadFileView(ModalFormView):
     template_name = 'service_catalog/upload_file.html'
     context_object_name = 'manage_files'
     success_url = reverse_lazy('horizon:murano:service_catalog:manage_files')
+
+
+class ManageServiceFilesView(tables.MultiTableView):
+    table_classes = tuple([define_tables(name, step_verbose_name)
+                           for (name, step_verbose_name) in STEP_NAMES])
+    template_name = 'service_catalog/service_files.html'
+    failure_url = reverse_lazy('horizon:murano:service_catalog:index')
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageServiceFilesView,
+                        self).get_context_data(**kwargs)
+        full_service_name = kwargs['full_service_name']
+        context['full_service_name'] = full_service_name
+        return context
+
+    def get_file_list(self, data_type):
+        full_service_name = self.kwargs['full_service_name']
+        ui_files = []
+        try:
+            ui_files = metadataclient(self.request).metadata_admin. \
+                get_service_files(data_type, full_service_name)
+        except CommunicationError as e:
+            LOG.exception(e)
+            exceptions.handle(self.request,
+                              _('Unable to communicate to Murano Metadata '
+                                'Repository. Add MURANO_METADATA_URL to local_'
+                                'settings'))
+        except Unauthorized as e:
+            LOG.exception(e)
+            exceptions.handle(self.request, _('Configure Keystone in Murano '
+                                              'Repository Service'))
+        except HTTPInternalServerError as e:
+            LOG.exception(e)
+            exceptions.handle(self.request, _('There is a problem with Murano '
+                                              'Repository Service'))
+        return [file for file in ui_files if file.selected]
+
+    def get_ui_data(self):
+        return self.get_file_list('ui')
+
+    def get_scripts_data(self):
+        return self.get_file_list('scripts')
+
+    def get_heat_data(self):
+        return self.get_file_list('heat')
+
+    def get_agent_data(self):
+        return self.get_file_list('agent')
+
+    def get_workflows_data(self):
+        return self.get_file_list('workflows')
