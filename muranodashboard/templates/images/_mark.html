@@ -1,9 +1,10 @@
-{% extends 'horizon/common/_modal_form.html' %}
+{% extends 'common/_modal_form.html' %}
 {% load i18n %}
+{% load url from future %}
 
 {% block form_id %}add_murano_image_form{% endblock %}
 {% block form_attrs %}enctype='multipart/form-data'{% endblock %}
-{% block form_action %}mark_image{% endblock %}
+{% block form_action %}{% url 'horizon:murano:images:mark_image' %}{% endblock %}
 {% block modal-header %}{% trans 'Mark Image' %}{% endblock %}
 
 {% block modal-body %}
@@ -32,4 +33,5 @@
 
 {% block modal-footer %}
   <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Mark' %}' />
+      <a href="{% url 'horizon:murano:images:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

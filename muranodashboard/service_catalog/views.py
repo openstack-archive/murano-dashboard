@@ -75,7 +75,7 @@ class ServiceCatalogView(tables.DataTableView):
 
 class UploadServiceView(ModalFormView):
     form_class = UploadServiceForm
-    template_name = 'service_catalog/upload.html'
+    template_name = 'service_catalog/upload_service.html'
     context_object_name = 'service_catalog'
     success_url = reverse_lazy('horizon:murano:service_catalog:index')
 

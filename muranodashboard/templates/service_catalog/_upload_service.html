@@ -1,9 +1,10 @@
 {% extends 'common/_modal_form.html' %}
 {% load i18n %}
+{% load url from future %}
 
 {% block form_id %}upload_service_form{% endblock %}
 {% block form_attrs %}enctype='multipart/form-data'{% endblock %}
-{% block form_action %}upload_service{% endblock %}
+{% block form_action %}{% url 'horizon:murano:service_catalog:upload_service' %}{% endblock %}
 {% block modal-header %}{% trans 'Upload Service' %}{% endblock %}
 
 {% block modal-body %}
