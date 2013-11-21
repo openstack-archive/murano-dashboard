@@ -15,7 +15,6 @@ import logging
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-
 from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
@@ -60,7 +59,9 @@ class UploadFileForm(SelfHandlingForm):
     data_type = forms.ChoiceField(label=_('File data type'),
                                   choices=(supported_data_types.items()))
     file = forms.FileField(label=_('Murano Repository File'),
-                           required=True)
+                           required=True,
+                           error_messages=
+                           {'required': _('There is no file to upload')})
 
     def handle(self, request, data):
         log.debug('Uploading file to metadata repository {0}'.format(data))
@@ -79,3 +80,11 @@ class UploadFileForm(SelfHandlingForm):
                               _("Unable to upload {0} file of '{1}' "
                                 "type".format(filename, data['data_type'])),
                               redirect=redirect)
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file:
+            if file._size > 5 * 1024 * 1024:
+                raise forms.ValidationError(_('It is restricted to '
+                                              'upload files larger than 5MB.'))
+        return file
