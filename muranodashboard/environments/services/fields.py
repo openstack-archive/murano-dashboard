@@ -27,12 +27,24 @@ from django.template.defaultfilters import pluralize
 import copy
 import types
 import logging
-import itertools
+import yaql
 import horizon.tables as tables
 import floppyforms
 from django.template.loader import render_to_string
 
 log = logging.getLogger(__name__)
+
+
+YAQL_FUNCTIONS = {
+    'test': lambda self, pattern: re.match(pattern(), self()) is not None,
+}
+
+
+def create_yaql_context(functions=YAQL_FUNCTIONS):
+    context = yaql.create_context()
+    for name, func in functions.iteritems():
+        context.register_function(func, name)
+    return context
 
 
 def with_request(func):
@@ -54,7 +66,61 @@ def with_request(func):
     return update
 
 
+def make_yaql_validator(field, form, key, validator_property):
+    def validator_func(value):
+        data = getattr(form, 'cleaned_data', {})
+        data[key] = value
+        form.service.update_cleaned_data(form, data)
+        if not validator_property['expr'].__get__(field):
+            raise forms.ValidationError(
+                _(validator_property.get('message', '')))
+
+    return validator_func
+
+
+def get_regex_validator(expr):
+    try:
+        validator = expr['validators'][0]
+        if isinstance(validator, RegexValidator):
+            return validator
+    except (TypeError, KeyError, IndexError):
+        pass
+    return None
+
+
+# This function is needed if we don't want to change existing services
+# regexpValidators
+def wrap_regex_validator(validator, message):
+    def _validator(value):
+        try:
+            validator(value)
+        except forms.ValidationError as e:
+            e.messages = [message]
+            delattr(e, 'code')
+            raise e
+    return _validator
+
+
 class CustomPropertiesField(forms.Field):
+    def __init__(self, form=None, key=None, *args, **kwargs):
+        validators = []
+        for validator in kwargs.get('validators', []):
+            if hasattr(validator, '__call__'):  # single regexpValidator
+                validators.append(validator)
+            else:  # mixed list of regexpValidator-s and YAQL validators
+                expr = validator.get('expr')
+                regex_validator = get_regex_validator(expr)
+                if regex_validator:
+                    validators.append(wrap_regex_validator(
+                        regex_validator, validator.get('message', '')))
+                elif isinstance(expr, property):
+                    if form:
+                        validators.append(
+                            make_yaql_validator(self, form, key, validator))
+
+        kwargs['validators'] = validators
+        super(CustomPropertiesField, self).__init__(*args, **kwargs)
+
     def clean(self, value):
         """Skip all validators if field is disabled."""
         if getattr(self, 'enabled', True):
@@ -271,7 +337,10 @@ class TableWidget(floppyforms.widgets.Input):
                                      spec.get('title', None) or name.title()))
         self.table_class = table_class
         self.js_buttons = js_buttons
-        ignorable = kwargs.pop('widget', None)
+        # FixME: we need to use this hack because TableField passes all kwargs
+        # to TableWidget
+        for kwarg in ('widget', 'key', 'form'):
+            ignorable = kwargs.pop(kwarg, None)
         super(TableWidget, self).__init__(*args, **kwargs)
 
     def get_context(self, name, value, attrs=None):

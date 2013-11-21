@@ -79,6 +79,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         log.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
+        self.context = fields.create_yaql_context()
         self.insert_fields(self.fields_template)
         self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
@@ -145,7 +146,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             if isinstance(cls, types.TupleType):
                 cls, widget = cls
             kwargs = parse_spec(field_spec)[1]
-            kwargs['widget'] = process_widget(kwargs, cls, widget)
+            kwargs.update({
+                'widget': process_widget(kwargs, cls, widget),
+                'form': self,
+                'key': field_spec['name']
+            })
             cls = cls.push_properties(kwargs)
 
             self.init_attribute_mappings(field_spec['name'], kwargs)
@@ -218,11 +223,10 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     def get_data(self, expr, data=None):
         """First try to get value from cleaned data, if none
         found, use raw data."""
-        context = yaql.create_context()
         data = self.service.update_cleaned_data(
             self, data or getattr(self, 'cleaned_data', None))
         expr = self.get_yaql_expr(expr)
-        value = data and yaql.parse(expr).evaluate(data, context)
+        value = data and yaql.parse(expr).evaluate(data, self.context)
         return data != {}, value
 
     def get_unit_templates(self, data):
@@ -256,11 +260,10 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         else:
             cleaned_data = super(ServiceConfigurationForm, self).clean()
             all_data = self.service.update_cleaned_data(self, cleaned_data)
-            context = yaql.create_context()
             error_messages = []
             for validator in self.validators:
                 expr = self.get_yaql_expr(validator['expr'])
-                if not yaql.parse(expr).evaluate(all_data, context):
+                if not yaql.parse(expr).evaluate(all_data, self.context):
                     error_messages.append(_(validator.get('message', '')))
             if error_messages:
                 raise forms.ValidationError(error_messages)
