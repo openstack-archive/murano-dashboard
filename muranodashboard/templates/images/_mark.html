@@ -2,11 +2,11 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block form_id %}add_murano_image_form{% endblock %}
+{% block form_id %}mark_murano_image_form{% endblock %}
 {% block form_attrs %}enctype='multipart/form-data'{% endblock %}
 {% block form_action %}{% url 'horizon:murano:images:mark_image' %}{% endblock %}
 {% block modal-header %}{% trans 'Mark Image' %}{% endblock %}
-
+{% block modal_id %}mark_murano_image_form{% endblock %}
 {% block modal-body %}
 <div class='left'>
     <fieldset>
