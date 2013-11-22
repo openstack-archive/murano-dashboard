@@ -89,10 +89,10 @@ modify_horizon_config() {
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
-LOGGING['formatters'] = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
-LOGGING['handlers']['file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
-LOGGING['loggers']['muranodashboard'] = {'handlers': ['file'], 'level': 'DEBUG'}
-LOGGING['loggers']['muranoclient'] = {'handlers': ['file'], 'level': 'ERROR'}
+LOGGING['formatters'].update({'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}})
+LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
+LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
+LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
