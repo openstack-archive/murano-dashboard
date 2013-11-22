@@ -68,6 +68,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         'databaselist': fields.DatabaseListField,
         'table': fields.TableField,
         'flavor': fields.FlavorChoiceField,
+        'keypair': fields.KeyPairChoiceField,
         'image': fields.ImageChoiceField,
         'azone': fields.AZoneChoiceField,
         'text': (fields.CharField, forms.Textarea)
