@@ -10,4 +10,4 @@ django-pipeline
 django-floppyforms==1.1
 ordereddict
 yaql==0.2
-python-muranoclient>=0.2
+python-muranoclient==0.3
