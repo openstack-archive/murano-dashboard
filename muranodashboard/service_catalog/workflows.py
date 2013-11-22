@@ -20,6 +20,9 @@ from .utils import Action, CheckboxInput, FILE_STEPS
 from horizon import exceptions
 from horizon import forms
 from horizon import workflows
+
+from muranodashboard.environments.services.metadata import metadataclient
+
 log = logging.getLogger(__name__)
 
 
@@ -33,6 +36,14 @@ class EditManifest(Action):
                                  widget=CheckboxInput)
     description = forms.CharField(label=_('Description'),
                                   widget=forms.Textarea)
+
+    def __init__(self, request, context, *args, **kwargs):
+        super(EditManifest, self).__init__(request, context, *args, **kwargs)
+        # disable field with service_id for service being modified
+        if context and context.get('full_service_name'):
+            self.fields['full_service_name'].widget.attrs.update({
+                'disabled': True
+            })
 
     class Meta:
         name = _('Manifest')
@@ -58,8 +69,17 @@ class ComposeService(workflows.Workflow):
     finalize_button_name = _("Submit")
     success_message = _('Service "%s" created.')
     failure_message = _('Unable to create service "%s".')
+    modify_success_message = _('Service "%s" modified.')
+    modify_failure_message = _('Unable to modify service "%s".')
     success_url = "horizon:murano:service_catalog:index"
     default_steps = (EditManifestStep,) + tuple(FILE_STEPS)
+
+    def __init__(self, request=None, context_seed=None, *args, **kwargs):
+        if context_seed and context_seed.get('full_service_name'):
+            self.success_message = self.modify_success_message
+            self.failure_message = self.modify_failure_message
+        super(ComposeService, self).__init__(
+            request, context_seed, *args, **kwargs)
 
     def format_status_message(self, message):
         name = self.context.get('service_display_name', 'noname')
@@ -67,11 +87,10 @@ class ComposeService(workflows.Workflow):
 
     def handle(self, request, context):
         try:
-            # FixME: here we pass all data about service being
-            # composed/modified to metadataclient
-            return True
+            return metadataclient(request).metadata_admin.create_service(
+                context.get('full_service_name'), context)
         except Exception:
             name = self.context.get('service_display_name', 'noname')
-            log.error("Unable to create service {0}".format(name))
+            log.error("Unable to create/modify service {0}".format(name))
             exceptions.handle(request)
             return False
