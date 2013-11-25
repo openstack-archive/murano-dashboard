@@ -31,7 +31,7 @@ class EditManifest(Action):
                                            required=True)
     full_service_name = forms.CharField(
         label=_('Fully Qualified Service Name'), required=True)
-    version = forms.IntegerField(label=_('Version'), initial=1)
+    version = forms.CharField(label=_('Version'), initial='1')
     enabled = forms.BooleanField(label=_('Active'), initial=True,
                                  widget=CheckboxInput)
     description = forms.CharField(label=_('Description'),
@@ -61,6 +61,7 @@ class EditManifestStep(workflows.Step):
     # to inject media directly to the step
     class Media:
         css = {'all': ('muranodashboard/css/checkbox.css',)}
+        js = ('muranodashboard/js/submit-disabled.js',)
 
 
 class ComposeService(workflows.Workflow):

@@ -371,8 +371,9 @@ class TableWidget(floppyforms.widgets.Input):
 
         def extract_keys():
             keys = set()
+            regexp = re.compile('^{name}@@([^@]*)@@.*$'.format(name=name))
             for key in data.iterkeys():
-                match = re.match(r'^[^@]+@@([^@]*)@@.*$', key)
+                match = re.match(regexp, key)
                 if match and match.group(1):
                     keys.add(match.group(1))
             return keys
