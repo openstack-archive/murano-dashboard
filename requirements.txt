@@ -9,4 +9,4 @@ django-floppyforms==1.1
 ordereddict
 yaql==0.2
 python-muranoclient>=0.2
-murano-metadataclient==0.4.dev23.g95a95d9
+murano-metadataclient==0.4.dev28.g6d64a2b
