@@ -326,6 +326,7 @@ class TableWidget(floppyforms.widgets.Input):
              'checkbox': CheckColumn}
 
     def __init__(self, columns_spec=None, table_class=None, js_buttons=True,
+                 min_value=None, max_value=None, max_sync=None,
                  *args, **kwargs):
         assert columns_spec is not None or table_class is not None
         self.columns = []
@@ -337,6 +338,9 @@ class TableWidget(floppyforms.widgets.Input):
                                      spec.get('title', None) or name.title()))
         self.table_class = table_class
         self.js_buttons = js_buttons
+        self.min_value = min_value
+        self.max_value = max_value
+        self.max_sync = max_sync
         # FixME: we need to use this hack because TableField passes all kwargs
         # to TableWidget
         for kwarg in ('widget', 'key', 'form'):
@@ -350,8 +354,13 @@ class TableWidget(floppyforms.widgets.Input):
                 cls = self.table_class
             else:
                 cls = DataTableFactory(name, self.columns)
-            ctx['data_table'] = cls(self.request, value)
-            ctx['js_buttons'] = self.js_buttons
+            ctx.update({
+                'data_table': cls(self.request, value),
+                'js_buttons': self.js_buttons,
+                'min_value': self.min_value,
+                'max_value': self.max_value,
+                'max_sync': self.max_sync
+            })
         return ctx
 
     def value_from_datadict(self, data, files, name):
@@ -397,13 +406,15 @@ class TableWidget(floppyforms.widgets.Input):
 
     class Media:
         css = {'all': ('muranodashboard/css/tablefield.css',)}
-        js = ('muranodashboard/js/tablefield.js',)
 
 
 class TableField(CustomPropertiesField):
-    def __init__(self, columns=None, label=None, table_class=None, **kwargs):
+    def __init__(self, columns=None, label=None, table_class=None,
+                 initial=None,
+                 **kwargs):
         widget = TableWidget(columns, table_class, **kwargs)
-        super(TableField, self).__init__(label=label, widget=widget)
+        super(TableField, self).__init__(
+            label=label, widget=widget, initial=initial)
 
     @with_request
     def update(self, request, **kwargs):
