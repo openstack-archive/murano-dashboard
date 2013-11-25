@@ -185,9 +185,9 @@ class DeleteFile(tables.DeleteAction):
     data_type_singular = _('File')
 
     def delete(self, request, obj_id):
-        #TODO: Unhardcode data_type after other tabs implemented
         try:
-            metadataclient(request).metadata_admin.delete('ui', obj_id)
+            data_type, obj_id = obj_id.split('##')
+            metadataclient(request).metadata_admin.delete(data_type, obj_id)
         except HTTPException as e:
             LOG.exception(e)
             redirect = reverse('horizon:murano:service_catalog:manage_files')
@@ -215,9 +215,9 @@ class DownloadFile(tables.Action):
         return True
 
     def single(self, data_table, request, obj_id):
-        #TODO: Unhardcode data_type after other tabs implemented
         try:
-            body = metadataclient(request).metadata_admin.get_file('ui',
+            data_type, obj_id = obj_id.split('##')
+            body = metadataclient(request).metadata_admin.get_file(data_type,
                                                                    obj_id)
             response = HttpResponse(body,
                                     content_type='application/octet-stream')
