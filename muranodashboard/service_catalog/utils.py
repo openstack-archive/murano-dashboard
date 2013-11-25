@@ -13,7 +13,7 @@
 #    under the License.
 import logging
 from django.utils.translation import ugettext as _
-from .tables import UploadFile, DeleteFile, DownloadFile
+from .tables import DeleteFile, DownloadFile
 from horizon import tables, workflows, forms
 from muranodashboard.environments.services.forms import UpdatableFieldsForm
 from muranodashboard.environments.services.fields import TableField
@@ -48,8 +48,7 @@ def define_tables(table_name, step_verbose_name):
         class Meta:
             name = table_name
             verbose_name = step_verbose_name
-            table_actions = (UploadFile,
-                             DeleteFile,
+            table_actions = (DeleteFile,
                              )
 
             row_actions = (DownloadFile,
