@@ -23,7 +23,6 @@ PIPCMD=""
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-DASHBOARD_CACHE_DIR="/var/lib/murano-dashboard/cache"
 APACHE_USER=apache
 APACHE_GROUP=apache
 
@@ -246,8 +245,6 @@ CLONE_FROM_GIT=$1
 			log "$PIPCMD install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
 		fi
-		mkdir -p $DASHBOARD_CACHE_DIR
-		chown $APACHE_USER:$APACHE_GROUP $DASHBOARD_CACHE_DIR
 	else
 		log "$MRN_CND_SPY not found!"
 	fi
@@ -267,7 +264,6 @@ uninst()
 	if [ $? -eq 0 ]; then
 		log "Removing package \"$PYPKG\" with pip"
 		$PIPCMD uninstall $_pkg --yes
-		rm -rf $DASHBOARD_CACHE_DIR
 	else
 		log "Python package \"$PYPKG\" not found"
 	fi

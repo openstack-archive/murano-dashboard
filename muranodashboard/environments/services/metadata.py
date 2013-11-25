@@ -20,14 +20,7 @@ import tarfile
 import logging
 import shutil
 import hashlib
-
-
-CHUNK_SIZE = 1 << 20  # 1MB
-ARCHIVE_PKG_NAME = 'archive.tar.gz'
-CACHE_DIR = getattr(settings, 'UI_METADATA_CACHE_DIR',
-                    '/var/lib/murano-dashboard/cache')
-
-ARCHIVE_PKG_PATH = os.path.join(CACHE_DIR, ARCHIVE_PKG_NAME)
+from ..consts import CHUNK_SIZE, CACHE_DIR, ARCHIVE_PKG_PATH
 
 log = logging.getLogger(__name__)
 
@@ -35,6 +28,12 @@ log = logging.getLogger(__name__)
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
 from metadataclient.v1.client import Client
+
+
+if not os.path.exists(CACHE_DIR):
+    os.mkdir(CACHE_DIR)
+    log.info('Creating cache directory located at {dir}'.format(dir=CACHE_DIR))
+log.info('Using cache directory located at {dir}'.format(dir=CACHE_DIR))
 
 
 def get_endpoint(request):

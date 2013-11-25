@@ -24,10 +24,8 @@ import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
 import copy
-
+from ..consts import CACHE_REFRESH_SECONDS_INTERVAL
 import metadata
-
-CACHE_REFRESH_SECONDS_INTERVAL = 5
 
 log = logging.getLogger(__name__)
 _all_services = OrderedDict()
