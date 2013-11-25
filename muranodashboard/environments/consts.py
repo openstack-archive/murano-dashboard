@@ -11,6 +11,21 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import os
+import tempfile
+from django.conf import settings
+
+#---- Metadata Consts ----#
+CHUNK_SIZE = 1 << 20  # 1MB
+ARCHIVE_PKG_NAME = 'archive.tar.gz'
+CACHE_DIR = getattr(settings, 'METADATA_CACHE_DIR',
+                    os.path.join(tempfile.gettempdir(),
+                                 'muranodashboard-cache'))
+
+ARCHIVE_PKG_PATH = os.path.join(CACHE_DIR, ARCHIVE_PKG_NAME)
+CACHE_REFRESH_SECONDS_INTERVAL = 5
+
+#---- Forms Consts ----#
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'
 STATUS_ID_DEPLOYING = 'deploying'
@@ -48,6 +63,7 @@ DEPLOYMENT_STATUS_DISPLAY_CHOICES = (
     ('', 'Unknown'),
 )
 
+#---- Logs in Table Consts ----#
 LOG_LEVEL_TO_COLOR = {
     'warning': "DF7401",
     'error': "FF0000"
