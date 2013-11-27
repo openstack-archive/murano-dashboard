@@ -112,10 +112,10 @@ class DeleteService(tables.DeleteAction):
                               redirect='horizon:murano:service_catalog:index')
 
 
-class ManageServiceFiles(tables.LinkAction):
-    name = 'manage_service_files'
-    verbose_name = _('Manage Files')
-    url = 'horizon:murano:service_catalog:manage_service_files'
+class ManageService(tables.LinkAction):
+    name = 'manage_service'
+    verbose_name = _('Manage Service')
+    url = 'horizon:murano:service_catalog:manage_service'
 
     def allowed(self, request, environment):
         return True
@@ -151,7 +151,7 @@ class ServiceCatalogTable(tables.DataTable):
                          ManageFiles)
 
         row_actions = (ModifyService,
-                       ManageServiceFiles,
+                       ManageService,
                        DownloadService,
                        ToggleEnabled,
                        DeleteService)

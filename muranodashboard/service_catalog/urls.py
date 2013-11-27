@@ -17,7 +17,7 @@ from django.conf.urls import patterns, url
 from .views import ServiceCatalogView
 from .views import UploadServiceView
 from .views import ComposeServiceView
-from .views import ManageServiceFilesView
+from .views import ManageServiceView
 from .views import ManageFilesView
 from .views import UploadFileView
 
@@ -34,8 +34,8 @@ urlpatterns = patterns(
         name='upload_file'),
     #This should goes first
     url(r'^manage_files/(?P<full_service_name>[^/]+)?$',
-        ManageServiceFilesView.as_view(),
-        name='manage_service_files'),
+        ManageServiceView.as_view(),
+        name='manage_service'),
 
     url(r'^manage_files', ManageFilesView.as_view(),
         name='manage_files'),

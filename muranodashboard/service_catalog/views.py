@@ -17,6 +17,7 @@ from functools import wraps
 
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 from horizon import exceptions
 from horizon import tables
 from horizon.workflows import WorkflowView
@@ -142,17 +143,52 @@ class UploadFileView(ModalFormView):
     success_url = reverse_lazy('horizon:murano:service_catalog:manage_files')
 
 
-class ManageServiceFilesView(tables.MultiTableView):
+class ManageServiceView(tables.MultiTableView):
     table_classes = tuple([define_tables(name, step_verbose_name)
                            for (name, step_verbose_name) in STEP_NAMES])
     template_name = 'service_catalog/service_files.html'
     failure_url = reverse_lazy('horizon:murano:service_catalog:index')
 
+    def _get_data(self, full_service_name):
+        result = []
+        try:
+            result = metadataclient(self.request).metadata_admin.\
+                get_service_info(full_service_name)
+
+        except CommunicationError as e:
+            LOG.exception(e)
+            exceptions.handle(self.request,
+                              _('Unable to communicate to Murano Metadata '
+                                'Repository. Add MURANO_METADATA_URL to local_'
+                                'settings'))
+        except Unauthorized as e:
+            LOG.exception(e)
+            exceptions.handle(self.request, _('Configure Keystone in Murano '
+                                              'Repository Service'))
+        except HTTPInternalServerError as e:
+            LOG.exception(e)
+            exceptions.handle(self.request, _('There is a problem with Murano '
+                                              'Repository Service'))
+        else:
+            return result['service_info']
+        return result
+
     def get_context_data(self, **kwargs):
-        context = super(ManageServiceFilesView,
+        context = super(ManageServiceView,
                         self).get_context_data(**kwargs)
         full_service_name = kwargs['full_service_name']
-        context['full_service_name'] = full_service_name
+        service_info = self._get_data(full_service_name)
+        service_name = service_info.get('service_display_name', '-')
+        context['service_name'] = service_name
+        detail_info = SortedDict([
+            ('Name', service_name),
+            ('ID', service_info.get('full_service_name', '-')),
+            ('Version', service_info.get('version', '-')),
+            ('UI Description', service_info.get('description', '-')),
+            ('Author', service_info.get('author', '-')),
+            ('Service Version', service_info.get('service_version', '-')),
+            ('Active', service_info.get('enabled', '-'))])
+        context['service_info'] = detail_info
         return context
 
     def get_file_list(self, data_type):

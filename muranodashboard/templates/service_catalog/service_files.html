@@ -5,12 +5,14 @@
 {% block page_header %}
     <div class='page-header'>
 
-      <h2> {% blocktrans %}Manage Service: {{ full_service_name }} {% endblocktrans %}
+      <h2> {% blocktrans %}Manage Service: {{ service_name }} {% endblocktrans %}
       </h2>
     </div>
 {% endblock page_header %}
 
 {% block main %}
+  {% include "service_catalog/_detail_overview.html" %}
+  <hr>
   <div id="ui">
     {{ ui_table.render }}
   </div>
