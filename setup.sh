@@ -21,8 +21,8 @@ PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libx
 SERVICE_SRV_NAME="murano-dashboard"
 GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-APACHE_USER=www-data
-APACHE_GROUP=www-data
+APACHE_USER=horizon
+APACHE_GROUP=horizon
 LOG_DIR="/var/log/murano/"
 
 # Functions
@@ -255,7 +255,7 @@ postinst()
 	rebuildstatic
 	sleep 2
 	chown $APACHE_USER:$APACHE_GROUP $LOG_DIR/murano-dashboard.log
-	chown -R horizon:horizon /var/lib/openstack-dashboard
+	chown -R $APACHE_USER:$APACHE_GROUP /var/lib/openstack-dashboard
 	service apache2 restart
 }
 # Command line args'
