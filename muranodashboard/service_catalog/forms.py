@@ -47,28 +47,23 @@ class UploadServiceForm(SelfHandlingForm):
                               redirect=redirect)
 
 
-class UploadFileForm(SelfHandlingForm):
-    supported_data_types = {
-        'ui': 'UI Definition (*.yaml)',
-        'workflows': 'Murano Conductor Workflow (*xml)',
-        'heat': 'Heat template',
-        'agent': 'Murano Agent template',
-        'scripts': 'Script for agent execution'
-    }
-
-    data_type = forms.ChoiceField(label=_('File data type'),
-                                  choices=(supported_data_types.items()))
+class UploadFileKnownTypeForm(SelfHandlingForm):
     file = forms.FileField(label=_('Murano Repository File'),
                            required=True,
                            error_messages=
                            {'required': _('There is no file to upload')})
 
+    def __init__(self, request, data_type=None, *args, **kwargs):
+        self.data_type = data_type
+        super(UploadFileKnownTypeForm, self).__init__(request, *args, **kwargs)
+
     def handle(self, request, data):
         log.debug('Uploading file to metadata repository {0}'.format(data))
+        filename = data['file'].name
+        data_type = getattr(self, 'data_type', data['data_type'])
         try:
-            filename = data['file'].name
             result = metadataclient(request).metadata_admin.upload_file(
-                data['data_type'], data['file'], filename)
+                data_type, data['file'], filename)
             messages.success(request,
                              _("File '{filename}' uploaded".format(
                                  filename=filename)))
@@ -88,3 +83,16 @@ class UploadFileForm(SelfHandlingForm):
                 raise forms.ValidationError(_('It is restricted to '
                                               'upload files larger than 5MB.'))
         return file
+
+
+class UploadFileForm(UploadFileKnownTypeForm):
+    supported_data_types = {
+        'ui': 'UI Definition (*.yaml)',
+        'workflows': 'Murano Conductor Workflow (*xml)',
+        'heat': 'Heat template',
+        'agent': 'Murano Agent template',
+        'scripts': 'Script for agent execution'
+    }
+
+    data_type = forms.ChoiceField(label=_('File data type'),
+                                  choices=(supported_data_types.items()))

@@ -19,7 +19,7 @@ from .views import UploadServiceView
 from .views import ComposeServiceView
 from .views import ManageServiceView
 from .views import ManageFilesView
-from .views import UploadFileView
+from .views import UploadFileView, UploadFileView2
 
 
 urlpatterns = patterns(
@@ -29,6 +29,10 @@ urlpatterns = patterns(
 
     url(r'^upload_service$', UploadServiceView.as_view(),
         name='upload_service'),
+
+    url(r'^upload_file/(?P<data_type>[^/]+)$',
+        UploadFileView2.as_view(),
+        name='upload_file2'),
 
     url(r'^manage_files/upload_file$', UploadFileView.as_view(),
         name='upload_file'),

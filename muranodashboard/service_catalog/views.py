@@ -15,7 +15,7 @@
 import logging
 from functools import wraps
 
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from horizon import exceptions
@@ -26,7 +26,7 @@ from horizon.forms.views import ModalFormView
 from .tables import ServiceCatalogTable, MetadataObjectsTable
 from .utils import define_tables
 from .utils import STEP_NAMES
-from .forms import UploadServiceForm, UploadFileForm
+from .forms import UploadServiceForm, UploadFileForm, UploadFileKnownTypeForm
 from .workflows import ComposeService
 from muranodashboard.environments.services.metadata import metadataclient
 from metadataclient.common.exceptions import CommunicationError, Unauthorized
@@ -136,6 +136,17 @@ class ComposeServiceView(WorkflowView):
             exceptions.handle(self.request, msg, redirect)
 
 
+class UploadFileView2(ModalFormView):
+    template_name = 'service_catalog/upload_file.html'
+    form_class = UploadFileKnownTypeForm
+    success_url = reverse_lazy('horizon:murano:service_catalog:index')
+
+    def get_form_kwargs(self):
+        kwargs = super(UploadFileView2, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
+
 class UploadFileView(ModalFormView):
     form_class = UploadFileForm
     template_name = 'service_catalog/upload_file.html'
@@ -144,10 +155,17 @@ class UploadFileView(ModalFormView):
 
 
 class ManageServiceView(tables.MultiTableView):
-    table_classes = tuple([define_tables(name, step_verbose_name)
-                           for (name, step_verbose_name) in STEP_NAMES])
     template_name = 'service_catalog/service_files.html'
     failure_url = reverse_lazy('horizon:murano:service_catalog:index')
+
+    def __init__(self, *args, **kwargs):
+        # here we should move table_classes assignment into __init__ method
+        # because otherwise reverse() call inside define_tables() won't work
+        # (cannot query URL while they are being populated)
+        self.table_classes = tuple(
+            [define_tables(name, step_verbose_name)
+             for (name, step_verbose_name) in STEP_NAMES])
+        super(ManageServiceView, self).__init__(*args, **kwargs)
 
     def _get_data(self, full_service_name):
         result = []

@@ -13,7 +13,9 @@
 #    under the License.
 import logging
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse, reverse_lazy
 from .tables import DeleteFile, DownloadFile
+from .forms import UploadFileKnownTypeForm
 from horizon import tables, workflows, forms
 from muranodashboard.environments.services.forms import UpdatableFieldsForm
 from muranodashboard.environments.services.fields import TableField
@@ -38,6 +40,13 @@ class Action(workflows.Action, UpdatableFieldsForm):
 
 
 def define_tables(table_name, step_verbose_name):
+    class UploadFileDataType(tables.LinkAction):
+        name = 'upload_file2'
+        verbose_name = step_verbose_name
+        url = reverse('horizon:murano:service_catalog:upload_file2',
+                      args=(table_name,))
+        classes = ('ajax-modal', 'btn-create')
+
     class ObjectsTable(tables.DataTable):
         file_name = tables.Column('filename', verbose_name=_('File Name'))
         path = tables.Column('path', verbose_name=_('Nested Path'))
@@ -48,7 +57,8 @@ def define_tables(table_name, step_verbose_name):
         class Meta:
             name = table_name
             verbose_name = step_verbose_name
-            table_actions = (DeleteFile,
+            table_actions = (UploadFileDataType,
+                             DeleteFile,
                              )
 
             row_actions = (DownloadFile,
