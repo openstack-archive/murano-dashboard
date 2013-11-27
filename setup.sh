@@ -23,6 +23,7 @@ GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
 APACHE_USER=www-data
 APACHE_GROUP=www-data
+LOG_DIR="/var/log/murano/"
 
 # Functions
 # Logger function
@@ -74,16 +75,16 @@ modify_horizon_config() {
 			log "Removing our data from \"$1\"..."
 			sed -e '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ d' -i $1
 			if [ $? -ne 0 ];then
-                        	log "Can't modify \"$1\", check permissions or something else, exiting!!!"
+				log "Can't modify \"$1\", check permissions or something else, exiting!!!"
 				exit
-	                fi
+			fi
 		else
 			log "\"$1\" already has our data, you can change it manually and restart apache2 service"
 		fi
 	else
 		if [ -z $REMOVE ];then
 			log "Adding our data into \"$1\"..."
-			cat >> $1 << "EOF"
+			cat >> $1 << EOF
 #START_MURANO_DASHBOARD
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
@@ -91,9 +92,11 @@ MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
 verbose_formatter = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
 if 'formatters' in LOGGING: LOGGING['formatters'].update(verbose_formatter)
 else: LOGGING['formatters'] = verbose_formatter
-LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '/var/log/murano-dashboard.log'}
+LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '$LOG_DIR/murano-dashboard.log'}
 LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
 LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
+#MURANO_API_URL = "http://localhost:8082"
+#MURANO_METADATA_URL = "http://localhost:8084"
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
@@ -160,27 +163,37 @@ CLONE_FROM_GIT=$1
 	MRN_CND_SPY=$SERVICE_CONTENT_DIRECTORY/setup.py
 	if [ -e $MRN_CND_SPY ]; then
 		chmod +x $MRN_CND_SPY
-		log "$MRN_CND_SPY output:_____________________________________________________________"		
+		log "$MRN_CND_SPY output:_____________________________________________________________"
 ## Setup through pip
 		# Creating tarball
 		rm -rf $SERVICE_CONTENT_DIRECTORY/*.egg-info
 		cd $SERVICE_CONTENT_DIRECTORY && python $MRN_CND_SPY egg_info
-                if [ $? -ne 0 ];then
-                        log "\"$MRN_CND_SPY\" egg info creation FAILS, exiting!!!"
-                        exit 1
-                fi
-                rm -rf $SERVICE_CONTENT_DIRECTORY/dist
+		if [ $? -ne 0 ];then
+			log "\"$MRN_CND_SPY\" egg info creation FAILS, exiting!!!"
+			exit 1
+		fi
+		rm -rf $SERVICE_CONTENT_DIRECTORY/dist
 		cd $SERVICE_CONTENT_DIRECTORY && python $MRN_CND_SPY sdist
 		if [ $? -ne 0 ];then
 			log "\"$MRN_CND_SPY\" tarball creation FAILS, exiting!!!"
 			exit 1
 		fi
-		# Running tarball install
+# Running tarball install
 		TRBL_FILE=$(basename `ls $SERVICE_CONTENT_DIRECTORY/dist/*.tar.gz`)
 		pip install $SERVICE_CONTENT_DIRECTORY/dist/$TRBL_FILE
 		if [ $? -ne 0 ];then
 			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
 			exit 1
+		fi
+# Creating log directory for the murano
+		if [ ! -d $LOG_DIR ];then
+			log "Creating $LOG_DIR direcory..."
+			mkdir -p $LOG_DIR
+			if [ $? -ne 0 ];then
+				log "Can't create $LOG_DIR, exiting!!!"
+				exit 1
+			fi
+			chmod -R a+rw $LOG_DIR
 		fi
 	else
 		log "$MRN_CND_SPY not found!"
@@ -190,8 +203,8 @@ CLONE_FROM_GIT=$1
 # uninstall
 uninst()
 {
-	# Uninstall trough  pip
-	# looking up for python package installed
+# Uninstall trough  pip
+# looking up for python package installed
 	PYPKG=`echo $SERVICE_SRV_NAME | tr -d '-'`
 	pip freeze | grep $PYPKG
 	if [ $? -eq 0 ]; then
@@ -207,41 +220,42 @@ preinst()
 # check openstack-dashboard installed from system packages
 	_PKG=openstack-dashboard
 	dpkg -s $_PKG > /dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            log "Package \"$_PKG\" is not installed."
+	if [ $? -ne 0 ]; then
+		log "Package \"$_PKG\" is not installed."
 	fi
 }
 
 # rebuild static
 rebuildstatic()
 {
-    horizon_manage=$(dpkg-query -L openstack-dashboard | grep -E "*manage.py$")
-    if [ $? -ne 0 ]; then
-	log "openstack-dashboard manage.py not found, exiting!!!"
-	exit 1
-    fi
-    _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
-    if [ -d "$_old_murano_static" ];then
-        log "Our staic for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
-        rm -rf $_old_murano_static
-        if [ $? -ne 0 ]; then
-            log "Can't delete \"$_old_murano_static\, WARNING!!!"
-        fi
-    fi
-    log "Rebuilding STATIC...."
-    python $horizon_manage collectstatic --noinput
-    if [ $? -ne 0 ]; then
-	log "\"$horizon_manage\" collectstatic failed, exiting!!!"
-	exit 1
-    fi
+	horizon_manage=$(dpkg-query -L openstack-dashboard | grep -E "*manage.py$")
+	if [ $? -ne 0 ]; then
+		log "openstack-dashboard manage.py not found, exiting!!!"
+		exit 1
+	fi
+	_old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
+	if [ -d "$_old_murano_static" ];then
+		log "Our static for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
+		rm -rf $_old_murano_static
+		if [ $? -ne 0 ]; then
+			log "Can't delete \"$_old_murano_static\, WARNING!!!"
+		fi
+	fi
+	log "Rebuilding STATIC...."
+	python $horizon_manage collectstatic --noinput
+	if [ $? -ne 0 ]; then
+		log "\"$horizon_manage\" collectstatic failed, exiting!!!"
+		exit 1
+	fi
 }
-    
+
 # postinstall
 postinst()
 {
-        rebuildstatic
+	rebuildstatic
 	sleep 2
-	chown $APACHE_USER:$APACHE_GROUP /var/log/murano-dashboard.log
+	chown $APACHE_USER:$APACHE_GROUP $LOG_DIR/murano-dashboard.log
+	chown -R horizon:horizon /var/lib/openstack-dashboard
 	service apache2 restart
 }
 # Command line args'
