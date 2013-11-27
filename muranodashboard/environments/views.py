@@ -186,7 +186,7 @@ class Services(tables.DataTableView):
             context['environment_name'] = environment_name
 
         except:
-            msg = _('Sorry, this environment does\'t exist anymore')
+            msg = _("Sorry, this environment does't exist anymore")
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         return context
@@ -203,11 +203,15 @@ class Services(tables.DataTableView):
             exceptions.handle(self.request, msg, redirect=reverse(ns_url))
 
         except HTTPInternalServerError:
-            msg = _('Environment with id %s doesn\'t exist anymore'
+            msg = _("Environment with id %s doesn't exist anymore"
                     % self.environment_id)
             exceptions.handle(self.request, msg, redirect=reverse(ns_url))
         except HTTPUnauthorized:
             exceptions.handle(self.request)
+        except HTTPNotFound:
+            msg = _("Environment with id %s doesn't exist anymore"
+                    % self.environment_id)
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
         return services
 
 
@@ -302,7 +306,7 @@ class DeploymentsView(tables.DataTableView):
                 self.environment_id)
             context['environment_name'] = environment_name
         except:
-            msg = _('Sorry, this environment does\'t exist anymore')
+            msg = _("Sorry, this environment doesn't exist anymore")
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         return context
@@ -320,7 +324,7 @@ class DeploymentsView(tables.DataTableView):
             exceptions.handle(self.request, msg, redirect=reverse(ns_url))
 
         except HTTPInternalServerError:
-            msg = _('Environment with id %s doesn\'t exist anymore'
+            msg = _("Environment with id %s doesn't exist anymore"
                     % self.environment_id)
             exceptions.handle(self.request, msg, redirect=reverse(ns_url))
         return deployments
@@ -349,7 +353,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                                   self.environment_id,
                                                   self.deployment_id)
         except (HTTPInternalServerError, HTTPNotFound):
-            msg = _('Deployment with id %s doesn\'t exist anymore'
+            msg = _("Deployment with id %s doesn't exist anymore"
                     % self.deployment_id)
             redirect = reverse("horizon:murano:environments:deployments")
             exceptions.handle(self.request, msg, redirect=redirect)
