@@ -53,28 +53,37 @@ class UploadFileKnownTypeForm(SelfHandlingForm):
                            error_messages=
                            {'required': _('There is no file to upload')})
 
-    def __init__(self, request, data_type=None, *args, **kwargs):
+    def __init__(self, request,
+                 data_type=None,
+                 full_service_name=None,
+                 *args, **kwargs):
         self.data_type = data_type
+        self.service_id = full_service_name
         super(UploadFileKnownTypeForm, self).__init__(request, *args, **kwargs)
 
     def handle(self, request, data):
-        log.debug('Uploading file to metadata repository {0}'.format(data))
         filename = data['file'].name
-        data_type = getattr(self, 'data_type', data['data_type'])
+        log.debug('Uploading file to metadata repository {0} and assiging'
+                  ' it to {1} service'.format(filename, self.service_id))
         try:
-            result = metadataclient(request).metadata_admin.upload_file(
-                data_type, data['file'], filename)
+            result = metadataclient(request).metadata_admin.\
+                upload_file_to_service(self.data_type,
+                                       data['file'],
+                                       filename,
+                                       self.service_id)
             messages.success(request,
                              _("File '{filename}' uploaded".format(
                                  filename=filename)))
             return result
         except HTTPException as e:
-            redirect = reverse('horizon:murano:service_catalog:manage_files')
+            redirect = reverse('horizon:murano:service_catalog:manage_service',
+                               args=(self.service_id,))
             log.exception(e)
-            exceptions.handle(request,
-                              _("Unable to upload {0} file of '{1}' "
-                                "type".format(filename, data['data_type'])),
-                              redirect=redirect)
+            msg = _("Unable to upload {0} file of '{1}' type."
+                    " Error code: {2}".format(filename,
+                                              self.data_type,
+                                              e.code))
+            exceptions.handle(request, msg, redirect=redirect)
 
     def clean_file(self):
         file = self.cleaned_data.get('file')
@@ -96,3 +105,23 @@ class UploadFileForm(UploadFileKnownTypeForm):
 
     data_type = forms.ChoiceField(label=_('File data type'),
                                   choices=(supported_data_types.items()))
+
+    def handle(self, request, data):
+        log.debug('Uploading file to metadata repository {0}'.format(data))
+        filename = data['file'].name
+        data_type = data['data_type']
+        try:
+            result = metadataclient(request).metadata_admin.\
+                upload_file(data_type, data['file'], filename)
+            messages.success(request,
+                             _("File '{filename}' uploaded".format(
+                                 filename=filename)))
+            return result
+        except HTTPException as e:
+            redirect = reverse('horizon:murano:service_catalog:manage_files')
+            log.exception(e)
+            msg = _("Unable to upload {0} file of '{1}' type."
+                    " Error code: {2}".format(filename,
+                                              self.data_type,
+                                              e.code))
+            exceptions.handle(request, msg, redirect=redirect)

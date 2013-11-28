@@ -43,8 +43,7 @@ def define_tables(table_name, step_verbose_name):
     class UploadFileDataType(tables.LinkAction):
         name = 'upload_file2'
         verbose_name = step_verbose_name
-        url = reverse('horizon:murano:service_catalog:upload_file2',
-                      args=(table_name,))
+        url = None
         classes = ('ajax-modal', 'btn-create')
 
     class ObjectsTable(tables.DataTable):

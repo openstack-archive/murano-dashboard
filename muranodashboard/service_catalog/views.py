@@ -137,14 +137,24 @@ class ComposeServiceView(WorkflowView):
 
 
 class UploadFileView2(ModalFormView):
-    template_name = 'service_catalog/upload_file.html'
+    template_name = 'service_catalog/upload_file2.html'
     form_class = UploadFileKnownTypeForm
-    success_url = reverse_lazy('horizon:murano:service_catalog:index')
+    success_url = 'horizon:murano:service_catalog:manage_service'
+
+    def get_success_url(self):
+        return reverse(self.success_url,
+                       args=(self.kwargs['full_service_name'],))
 
     def get_form_kwargs(self):
         kwargs = super(UploadFileView2, self).get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadFileView2, self).get_context_data(**kwargs)
+        context['data_type'] = self.kwargs['data_type']
+        context['service_id'] = self.kwargs['full_service_name']
+        return context
 
 
 class UploadFileView(ModalFormView):
@@ -157,6 +167,17 @@ class UploadFileView(ModalFormView):
 class ManageServiceView(tables.MultiTableView):
     template_name = 'service_catalog/service_files.html'
     failure_url = reverse_lazy('horizon:murano:service_catalog:index')
+
+    def dispatch(self, request, *args, **kwargs):
+        service_id = kwargs['full_service_name']
+        for table in self.table_classes:
+            data_type = table._meta.name
+            table.base_actions['upload_file2'].url = \
+                reverse('horizon:murano:service_catalog:upload_file2',
+                        args=(data_type, service_id,))
+        return super(ManageServiceView, self).dispatch(request,
+                                                       *args,
+                                                       **kwargs)
 
     def __init__(self, *args, **kwargs):
         # here we should move table_classes assignment into __init__ method

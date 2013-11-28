@@ -30,14 +30,14 @@ urlpatterns = patterns(
     url(r'^upload_service$', UploadServiceView.as_view(),
         name='upload_service'),
 
-    url(r'^upload_file/(?P<data_type>[^/]+)$',
+    url(r'^upload_file/(?P<data_type>[^/]+)/(?P<full_service_name>[^/]+)$',
         UploadFileView2.as_view(),
         name='upload_file2'),
 
     url(r'^manage_files/upload_file$', UploadFileView.as_view(),
         name='upload_file'),
     #This should goes first
-    url(r'^manage_files/(?P<full_service_name>[^/]+)?$',
+    url(r'^manage_service/(?P<full_service_name>[^/]+)?$',
         ManageServiceView.as_view(),
         name='manage_service'),
 
