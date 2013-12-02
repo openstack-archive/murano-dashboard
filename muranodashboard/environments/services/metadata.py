@@ -101,11 +101,7 @@ def unpack_ui_package(archive_path):
     tar = tarfile.open(archive_path, 'r:gz')
     try:
         log.debug('Extracting metadata archive')
-        # extract files without containing folder
-        for tarinfo in tar:
-            if tarinfo.isreg():
-                tarinfo.name = os.path.basename(tarinfo.name)
-                tar.extract(tarinfo, dst_dir)
+        tar.extractall(dst_dir)
     finally:
         tar.close()
     return dst_dir

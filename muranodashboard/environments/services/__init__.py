@@ -64,7 +64,7 @@ class Service(object):
         return self.cleaned_data
 
 
-def import_service(filename, service_file):
+def import_service(full_service_name, service_file):
     from muranodashboard.environments.services.helpers import decamelize
     try:
         with open(service_file) as stream:
@@ -74,9 +74,9 @@ def import_service(filename, service_file):
                  " reason: {1!s}".format(service_file, e))
     else:
         service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
-        _all_services[filename] = Service(**service)
+        _all_services[full_service_name] = Service(**service)
         log.info("Added service '{0}' from '{1}'".format(
-            _all_services[filename].name, service_file))
+            _all_services[full_service_name].name, service_file))
 
 
 def import_all_services(request):
@@ -86,6 +86,13 @@ def import_all_services(request):
     times for each form in dynamicUI is inevitable, so to avoid significant
     delays all metadata-related stuff is actually performed no more often than
     each CACHE_REFRESH_SECONDS_INTERVAL.
+
+    Expected contents of metadata package is:
+      - <full_service_name1>/<form_definitionA>.yaml
+      - <full_service_name2>/<form_definitionB>.yaml
+      ...
+    If there is no YAMLs with form definitions inside <full_service_nameN>
+    dir, then <full_service_nameN> won't be shown in Create Service first step.
     """
     global _last_check_time
     global _all_services
@@ -94,10 +101,13 @@ def import_all_services(request):
         directory, modified = metadata.get_ui_metadata(request)
         if modified or not len(_all_services):
             _all_services = {}
-            for filename in os.listdir(directory):
-                if not filename.endswith('.yaml'):
-                    continue
-                import_service(filename, os.path.join(directory, filename))
+            for full_service_name in os.listdir(directory):
+                final_dir = os.path.join(directory, full_service_name)
+                if os.path.isdir(final_dir) and len(os.listdir(final_dir)):
+                    filename = os.listdir(final_dir)[0]
+                    if filename.endswith('.yaml'):
+                        import_service(full_service_name,
+                                       os.path.join(final_dir, filename))
 
 
 def iterate_over_services(request):
