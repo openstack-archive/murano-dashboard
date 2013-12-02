@@ -209,7 +209,7 @@ class ManageServiceView(tables.MultiTableView):
             exceptions.handle(self.request, _('There is a problem with Murano '
                                               'Repository Service'))
         else:
-            return result['service_info']
+            return result
         return result
 
     def get_context_data(self, **kwargs):

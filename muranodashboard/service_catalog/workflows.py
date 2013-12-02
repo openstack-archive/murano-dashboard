@@ -88,8 +88,9 @@ class ComposeService(workflows.Workflow):
 
     def handle(self, request, context):
         try:
-            return metadataclient(request).metadata_admin.create_service(
-                context.get('full_service_name'), context)
+            return metadataclient(request).metadata_admin.\
+                create_or_update_service(context.get('full_service_name'),
+                                         context)
         except Exception:
             name = self.context.get('service_display_name', 'noname')
             log.error("Unable to create/modify service {0}".format(name))
