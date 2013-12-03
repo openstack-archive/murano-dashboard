@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django import shortcuts
 
@@ -32,7 +32,6 @@ from consts import DEPLOYMENT_STATUS_DISPLAY_CHOICES
 class CreateService(tables.LinkAction):
     name = 'CreateService'
     verbose_name = _('Create Service')
-    url = 'horizon:murano:environments:create'
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, environment):
@@ -248,6 +247,17 @@ class ServicesTable(tables.DataTable):
 
     operation_updated = tables.Column('operation_updated',
                                       verbose_name=_('Time updated'))
+
+    def __init__(self, request, **kwargs):
+        # we need to update CreateService url here because by default actions
+        # are instantiated in DataTableMetaclass with no args
+        for action_id, action in self.base_actions.items():
+            if isinstance(action, CreateService):
+                self.base_actions[action_id] = CreateService(
+                    url=reverse('horizon:murano:environments:create',
+                                args=(kwargs.get('environment_id'),)))
+                break
+        super(ServicesTable, self).__init__(request, **kwargs)
 
     def get_object_id(self, datum):
         return datum.id

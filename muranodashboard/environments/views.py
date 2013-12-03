@@ -137,8 +137,10 @@ class Wizard(ModalFormMixin, LazyWizard):
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
-        context['service_descriptions'] = get_service_descriptions(
-            self.request)
+        context.update({
+            'service_descriptions': get_service_descriptions(self.request),
+            'environment_id': self.kwargs.get('environment_id')
+        })
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
             service_type = data['service']

@@ -37,7 +37,7 @@ urlpatterns = patterns(
     VIEW_MOD,
     url(r'^environments$', IndexView.as_view(), name='index'),
 
-    url(r'^create/$',
+    url(ENVIRONMENT_ID + r'/create/$',
         Wizard.as_view(
             make_forms_getter(initial_forms=initial_forms_maker),
             condition_dict=get_service_checkers),
