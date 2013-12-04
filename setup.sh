@@ -96,7 +96,7 @@ LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 
 LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
 LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
 #MURANO_API_URL = "http://localhost:8082"
-#MURANO_METADATA_URL = "http://localhost:8084"
+#MURANO_METADATA_URL = "http://localhost:8084/v1"
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
