@@ -132,7 +132,10 @@ class Wizard(ModalFormMixin, LazyWizard):
     def get_form_initial(self, step):
         init_dict = {}
         if step != 'service_choice':
-            init_dict['request'] = self.request
+            init_dict.update({
+                'request': self.request,
+                'environment_id': self.kwargs.get('environment_id')
+            })
         return self.initial_dict.get(step, init_dict)
 
     def get_context_data(self, form, **kwargs):
