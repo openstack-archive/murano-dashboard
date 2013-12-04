@@ -121,6 +121,8 @@ LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERR
 #MURANO_METADATA_URL = "http://localhost:8084/v1"
 #if murano-api set up with ssl uncomment next strings 
 #MURANO_API_INSECURE = True
+ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
+NETWORK_TOPOLOGY = 'routed'
 #END_MURANO_DASHBOARD
 EOF
 			if [ $? -ne 0 ];then

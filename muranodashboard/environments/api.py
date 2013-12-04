@@ -21,6 +21,8 @@ from muranoclient.v1.client import Client
 from muranodashboard.environments.services import get_service_name
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from consts import STATUS_ID_READY, STATUS_ID_NEW
+from .network import get_network_params
+
 log = logging.getLogger(__name__)
 
 
@@ -178,9 +180,10 @@ def environments_list(request):
 
 
 def environment_create(request, parameters):
+    body = get_network_params(request)
     #name is required param
-    name = parameters['name']
-    env = muranoclient(request).environments.create(name)
+    body['name'] = parameters['name']
+    env = muranoclient(request).environments.create(body)
     log.debug('Environment::Create {0}'.format(env))
     return env
 
