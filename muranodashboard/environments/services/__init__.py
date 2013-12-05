@@ -164,10 +164,16 @@ def get_service_type(wizard):
     return cleaned_data.get('service')
 
 
-def get_service_choices(request):
-    return [(srv_type, service.name) for srv_type, service, forms in
-            iterate_over_services(request)]
-
+def get_service_choices(request, filter_func=None):
+    filter_func = filter_func or (lambda srv: True, None)
+    filtered, not_filtered = [], []
+    for srv_type, service, forms in iterate_over_services(request):
+        has_filtered, message = filter_func(service, request)
+        if has_filtered:
+            filtered.append((srv_type, service.name))
+        else:
+            not_filtered.append((service.name, message))
+    return filtered, not_filtered
 
 get_forms = make_forms_getter()
 

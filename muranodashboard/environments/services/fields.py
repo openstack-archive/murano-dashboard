@@ -101,6 +101,30 @@ def wrap_regex_validator(validator, message):
     return _validator
 
 
+def get_murano_images(request):
+    images = []
+    try:
+        # public filter removed
+        images, _more = glance.image_list_detailed(request)
+    except:
+        log.error("Error to request image list from glance ")
+        exceptions.handle(request, _("Unable to retrieve public images."))
+    murano_images = []
+    for image in images:
+        murano_property = image.properties.get('murano_image_info')
+        if murano_property:
+            try:
+                murano_metadata = json.loads(murano_property)
+            except ValueError:
+                log.warning("JSON in image metadata is not valid. "
+                            "Check it in glance.")
+                messages.error(request, _("Invalid murano image metadata"))
+            else:
+                image.murano_property = murano_metadata
+                murano_images.append(image)
+    return murano_images
+
+
 class CustomPropertiesField(forms.Field):
     def __init__(self, form=None, key=None, *args, **kwargs):
         validators = []
@@ -465,40 +489,23 @@ class ImageChoiceField(ChoiceField):
 
     @with_request
     def update(self, request, **kwargs):
-        try:
-            # public filter removed
-            images, _more = glance.image_list_detailed(request)
-        except:
-            log.error("Error to request image list from glance ")
-            images = []
-            exceptions.handle(request, _("Unable to retrieve public images."))
-
         image_mapping, image_choices = {}, []
-        for image in images:
-            murano_property = image.properties.get('murano_image_info')
-            if murano_property:
-                try:
-                    murano_json = json.loads(murano_property)
-                except ValueError:
-                    log.warning("JSON in image metadata is not valid. "
-                                "Check it in glance.")
-                    messages.error(request, _("Invalid murano image metadata"))
-                else:
-                    title = murano_json.get('title', image.name)
-                    murano_json['name'] = image.name
+        murano_images = get_murano_images(request)
+        for image in murano_images:
+            murano_data = image.murano_property
+            title = murano_data.get('title', image.name)
+            murano_data['name'] = image.name
+            if self.image_type is not None:
+                itype = murano_data.get('type')
 
-                    if self.image_type is not None:
-                        itype = murano_json.get('type')
+                if not self.image_type and itype is None:
+                    continue
 
-                        if not self.image_type and itype is None:
-                            continue
-
-                        prefix = '{type}.'.format(type=self.image_type)
-                        if (not itype.startswith(prefix) and
-                                not self.image_type == itype):
-                            continue
-
-                    image_mapping[smart_text(title)] = json.dumps(murano_json)
+                prefix = '{type}.'.format(type=self.image_type)
+                if (not itype.startswith(prefix) and
+                        not self.image_type == itype):
+                    continue
+            image_mapping[smart_text(title)] = json.dumps(murano_data)
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))

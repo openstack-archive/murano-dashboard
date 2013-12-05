@@ -1,3 +1,7 @@
+<style>
+    .italic {font-style:italic;}
+</style>
+
 {% extends "common/_modal_form.html" %}
 {% load i18n humanize %}
 {% load url from future %} {# fix for django 1.4.9 on CentOS #}
@@ -19,6 +23,7 @@
         {% include "common/_form_fields.html" %}
     </fieldset>
 {% endif %}
+<p class='italic'>{% blocktrans %} {{ extended_description }} {% endblocktrans %}</p>
 </div>
 <div class="right">
     {% if wizard.steps.index > 0 %}
@@ -63,6 +68,8 @@
                 if ( selected ) {
                     $('p.switchable:not(#'+selected+')').css('display', 'none');
                     $('p.switchable#'+selected).css('display', 'block');
+                } else {
+                    $('.modal-body .right').css('display', 'none');
                 }
             });
             $('#id_service_choice-service').change();

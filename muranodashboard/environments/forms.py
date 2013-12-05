@@ -13,16 +13,57 @@
 #    under the License.
 
 import logging
+import json
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
-from muranodashboard.environments.services import get_service_choices
-
+from .services import get_service_choices
+from .services.fields import get_murano_images
 log = logging.getLogger(__name__)
 
 
+def filter_service_by_image_type(service, request):
+    def find_image_field():
+        for form_cls in service.forms:
+            for field in form_cls.fields_template:
+                if field.get('type') == 'image':
+                    return field
+        return None
+
+    filtered = False
+    image_field = find_image_field()
+    if not image_field:
+        message = "Please provide Image field description in UI definition"
+        return filtered, message
+    specified_image_type = image_field.get('imageType')
+    if not specified_image_type:
+        message = "Please provide 'imageType' parameter in Image field " \
+                  "description in UI definition"
+        return filtered, message
+
+    registered_murano_images = []
+    available_images = get_murano_images(request)
+    for image in available_images:
+        registered_murano_images.append(image.murano_property.get('type'))
+
+    for type in registered_murano_images:
+        if specified_image_type in type:
+            filtered = True
+            message = ''
+        else:
+            message = 'Murano image type "{0}" is not registered'.format(
+                specified_image_type)
+    return filtered, message
+
+
 def ChoiceServiceFormFactory(request):
+    filtered, not_filtered = get_service_choices(
+        request, filter_service_by_image_type)
+
     class _Class(forms.Form):
-        service = forms.ChoiceField(label=_('Service Type'),
-                                    choices=get_service_choices(request))
+        service = forms.ChoiceField(
+            label=_('Service Type'),
+            choices=filtered or [("", _("No services available"))])
+
+        description = forms.CharField(widget=forms.HiddenInput,
+                                      initial=json.dumps(not_filtered))
     return _Class

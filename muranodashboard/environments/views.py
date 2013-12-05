@@ -15,6 +15,7 @@
 import logging
 import re
 import copy
+import json
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -137,10 +138,6 @@ class Wizard(ModalFormMixin, LazyWizard):
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
-        context.update({
-            'service_descriptions': get_service_descriptions(self.request),
-            'environment_id': self.kwargs.get('environment_id')
-        })
         if self.steps.index > 0:
             data = self.get_cleaned_data_for_step('service_choice')
             service_type = data['service']
@@ -148,7 +145,28 @@ class Wizard(ModalFormMixin, LazyWizard):
                 self.request, service_type, self.steps.index - 1)
             service_name = get_service_name(self.request, service_type)
             context.update({'type': service_type,
-                            'service_name': service_name})
+                            'service_name': service_name,
+                            'environment_id': self.kwargs.get('environment_id')
+                            })
+        else:
+            extended_description = form.fields['description'].initial or ''
+            if extended_description:
+                data = json.loads(extended_description)
+                unavailable_services, reasons = zip(*data)
+                if unavailable_services:
+                    services_msg = ', '.join(unavailable_services)
+                    reasons_msg = '\n'.join(set(reasons))
+                    extended_description = 'Services {0} are not available. ' \
+                                           'Reasons: {1}'.format(services_msg,
+                                                                 reasons_msg)
+                else:
+                    extended_description = ''
+
+            context.update({
+                'service_descriptions': get_service_descriptions(self.request),
+                'extended_description': extended_description,
+                'environment_id': self.kwargs.get('environment_id')
+            })
         return context
 
 
