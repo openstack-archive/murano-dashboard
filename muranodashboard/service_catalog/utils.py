@@ -20,6 +20,7 @@ from horizon import tables, workflows, forms
 from muranodashboard.environments.services.forms import UpdatableFieldsForm
 from muranodashboard.environments.services.fields import TableField
 from muranodashboard.environments.services.fields import Column, CheckColumn
+from muranodashboard.environments.services.fields import RadioColumn
 LOG = logging.getLogger(__name__)
 
 
@@ -68,12 +69,17 @@ def define_tables(table_name, step_verbose_name):
 
 
 def make_table_cls(field_name):
+    if field_name == 'ui':
+        column_cls = RadioColumn
+    else:
+        column_cls = CheckColumn
+
     class MetadataObjectsTableNoActions(tables.DataTable):
         filename = Column('filename', verbose_name=_('File Name'),
                           table_name=field_name)
         path = Column('path', verbose_name=_('Path'), table_name=field_name)
-        selected = CheckColumn('selected', verbose_name=_('Selected'),
-                               table_name=field_name)
+        selected = column_cls('selected', verbose_name=_('Selected'),
+                              table_name=field_name)
 
         class Meta:
             template = 'common/form-fields/data-grid/data_table.html'

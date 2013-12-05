@@ -371,9 +371,7 @@ class TableWidget(floppyforms.widgets.Input):
                 return val and val == 'on'
             elif col_cls == RadioColumn:
                 row_id = data.get("{0}@@@@{1}".format(name, col_id), False)
-                if row_id:
-                    return int(row_id) == row_key
-                return False
+                return row_id == row_key
             else:
                 return data.get("{0}@@{1}@@{2}".format(
                     name, row_key, col_id), None)

@@ -60,7 +60,8 @@ class EditManifestStep(workflows.Step):
     # Workflow doesn't handle Media inner class of widgets for us, so we need
     # to inject media directly to the step
     class Media:
-        css = {'all': ('muranodashboard/css/checkbox.css',)}
+        css = {'all': ('muranodashboard/css/checkbox.css',
+                       'muranodashboard/css/tablefield.css')}
         js = ('muranodashboard/js/submit-disabled.js',)
 
 
