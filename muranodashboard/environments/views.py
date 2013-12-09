@@ -152,8 +152,8 @@ class Wizard(ModalFormMixin, LazyWizard):
             extended_description = form.fields['description'].initial or ''
             if extended_description:
                 data = json.loads(extended_description)
-                unavailable_services, reasons = data and zip(*data) or [], []
-                if unavailable_services:
+                if data:
+                    unavailable_services, reasons = zip(*data)
                     services_msg = ', '.join(unavailable_services)
                     reasons_msg = '\n'.join(set(reasons))
                     extended_description = 'Services {0} are not available. ' \
