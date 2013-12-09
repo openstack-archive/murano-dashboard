@@ -14,7 +14,6 @@
 import tempfile
 import re
 from django.conf import settings
-import os.path
 import os
 import tarfile
 import logging
@@ -60,7 +59,7 @@ def metadataclient(request):
     return Client(endpoint=endpoint, token=token_id)
 
 
-def _get_existing_hash():
+def get_existing_hash():
     for item in os.listdir(CACHE_DIR):
         if re.match(r'[a-f0-9]{40}', item):
             return item
@@ -113,7 +112,7 @@ def get_ui_metadata(request):
     occurred, returns None.
     """
     log.debug("Retrieving metadata from Repository")
-    hash = _get_existing_hash()
+    hash = get_existing_hash()
     if hash:
         metadata_dir = os.path.join(CACHE_DIR, hash)
 

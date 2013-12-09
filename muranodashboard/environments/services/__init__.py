@@ -30,6 +30,7 @@ import metadata
 log = logging.getLogger(__name__)
 _all_services = OrderedDict()
 _last_check_time = 0
+_current_cache_hash = None
 
 
 class Service(object):
@@ -79,6 +80,14 @@ def import_service(full_service_name, service_file):
             _all_services[full_service_name].name, service_file))
 
 
+def are_caches_in_sync():
+    are_in_sync = (_current_cache_hash == metadata.get_existing_hash())
+    if not are_in_sync:
+        log.debug('In-memory and on-disk caches are not in sync, '
+                  'invalidating in-memory cache')
+    return are_in_sync
+
+
 def import_all_services(request):
     """Tries to import all metadata from repository, this includes calculating
     hash-sum of local metadata package, making HTTP-request and unpacking
@@ -96,10 +105,11 @@ def import_all_services(request):
     """
     global _last_check_time
     global _all_services
+    global _current_cache_hash
     if time.time() - _last_check_time > CACHE_REFRESH_SECONDS_INTERVAL:
         _last_check_time = time.time()
         directory, modified = metadata.get_ui_metadata(request)
-        if modified or not len(_all_services):
+        if modified or not are_caches_in_sync():
             _all_services = {}
             for full_service_name in os.listdir(directory):
                 final_dir = os.path.join(directory, full_service_name)
@@ -108,6 +118,7 @@ def import_all_services(request):
                     if filename.endswith('.yaml'):
                         import_service(full_service_name,
                                        os.path.join(final_dir, filename))
+            _current_cache_hash = metadata.get_existing_hash()
 
 
 def iterate_over_services(request):
