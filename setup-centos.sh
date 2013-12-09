@@ -106,6 +106,8 @@ modify_horizon_config() {
 			log "Adding our data into \"$1\"..."
 			cat >> $1 << EOF
 #START_MURANO_DASHBOARD
+#TODO: should remove the next line once https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1243187 is fixed
+LOGOUT_URL = '/dashboard/auth/logout/'
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
