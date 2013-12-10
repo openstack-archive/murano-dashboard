@@ -159,12 +159,3 @@ except ImportError:
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
-
-ADVANCED_NETWORKING_CONFIG = {
-    # Maximum number of environments that can be processed simultaneously
-    'max_environments': 100,
-    # Maximum number of VMs per environment
-    'max_hosts': 250,
-    # Template IP address for generating environment subnet cidrs
-    'env_ip_template': '10.0.0.0'
-}

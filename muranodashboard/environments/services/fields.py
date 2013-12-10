@@ -16,10 +16,9 @@ import re
 import json
 from django import forms
 from django.core.validators import RegexValidator, validate_ipv4_address
-from netaddr import all_matching_cidrs, IPNetwork, IPAddress
+from netaddr import all_matching_cidrs
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_text
-from django.conf import settings
 from muranodashboard.environments import api
 from horizon import exceptions, messages
 from openstack_dashboard.api import glance
@@ -32,8 +31,6 @@ import yaql
 import horizon.tables as tables
 import floppyforms
 from django.template.loader import render_to_string
-
-from .network import NeutronSubnetGetter
 
 log = logging.getLogger(__name__)
 
@@ -56,10 +53,6 @@ def with_request(func):
     """
     def update(self, initial, request=None, **kwargs):
         initial_request = initial.get('request')
-        for key, value in initial.iteritems():
-            if key != 'request' and key not in kwargs:
-                kwargs[key] = value
-
         if initial_request:
             log.debug("Using 'request' value from initial dictionary")
             func(self, initial_request, **kwargs)
@@ -560,12 +553,8 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
 
 
 class ClusterIPField(CharField):
-    existing_subnet = None
-    network_topology = None
-    router_id = None
-
     @staticmethod
-    def make_nova_validator(request, ip_ranges):
+    def validate_cluster_ip(request, ip_ranges):
         def perform_checking(ip):
             validate_ipv4_address(ip)
             if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
@@ -592,64 +581,19 @@ class ClusterIPField(CharField):
                         _('Specified Cluster Static IP is already in use'))
         return perform_checking
 
-    def update_network_params(self, request, environment_id):
-        env = api.environment_get(request, environment_id)
-        net_info = getattr(env, 'networking', {})
-        self.network_topology = getattr(settings, 'NETWORK_TOPOLOGY', 'routed')
-
-        if net_info:
-            self.existing_subnet = net_info.get('cidr')
-            topology = net_info.get('topology')
-            if topology:
-                self.network_topology = topology
-            self.router_id = net_info.get('routerId')
-
-        if self.network_topology != 'nova' and not self.existing_subnet:
-            getter = NeutronSubnetGetter(request.user.tenant_id,
-                                         self.router_id,
-                                         request.user.token.id)
-            self.existing_subnet = getter.get_subnet(environment_id)
-            if self.existing_subnet:
-                networking = {
-                    'createNetwork': True,
-                    'cidr': self.existing_subnet
-                }
-                name = api.get_environment_name(request, environment_id)
-                api.environment_update(request, environment_id, name,
-                                       networking=networking)
-            else:
-                raise RuntimeError('Cannot get subnet')
-
-    def make_neutron_validator(self):
-        def perform_checking(ip):
-            validate_ipv4_address(ip)
-            if not IPAddress(ip) in IPNetwork(self.existing_subnet):
-                raise forms.ValidationError(
-                    _('Specified IP address should belong to {0} '
-                      'subnet'.format(self.existing_subnet)))
-
-        return perform_checking
-
     @with_request
-    def update(self, request, environment_id, **kwargs):
-        self.update_network_params(request, environment_id)
-
-        if self.network_topology == 'nova':
-            try:
-                network_list = novaclient(request).networks.list()
-                ip_ranges = [network.cidr for network in network_list]
-                ranges = ', '.join(ip_ranges)
-            except StandardError:
-                ip_ranges, ranges = [], ''
-            if ip_ranges:
-                self.help_text = _('Select IP from available range: ' + ranges)
-            else:
-                self.help_text = _('Specify valid fixed IP')
-            self.validators = [self.make_nova_validator(request, ip_ranges)]
-        elif self.network_topology == 'routed':
-            self.validators = [self.make_neutron_validator()]
-        else:  # 'flat' topology
-            raise NotImplementedError('Flat topology is not implemented yet')
+    def update(self, request, **kwargs):
+        try:
+            network_list = novaclient(request).networks.list()
+            ip_ranges = [network.cidr for network in network_list]
+            ranges = ', '.join(ip_ranges)
+        except StandardError:
+            ip_ranges, ranges = [], ''
+        if ip_ranges:
+            self.help_text = _('Select IP from available range: ' + ranges)
+        else:
+            self.help_text = _('Specify valid fixed IP')
+        self.validators = [self.validate_cluster_ip(request, ip_ranges)]
         self.error_messages['invalid'] = validate_ipv4_address.message
 
 
