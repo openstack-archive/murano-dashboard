@@ -207,8 +207,9 @@ def environment_deploy(request, environment_id):
     return env
 
 
-def environment_update(request, environment_id, name):
-    return muranoclient(request).environments.update(environment_id, name)
+def environment_update(request, environment_id, name, **kwargs):
+    return muranoclient(request).environments.update(
+        environment_id, name, **kwargs)
 
 
 def get_environment_name(request, environment_id):
