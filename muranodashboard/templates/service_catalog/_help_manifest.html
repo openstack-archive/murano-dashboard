@@ -1,2 +1,7 @@
 {% load i18n %}
-<p>{% blocktrans %} Here will be some info about manifest fields.{% endblocktrans %}</p>
+<p>{% blocktrans %}<strong>Service Name:</strong> is a human-readable service name.
+{% endblocktrans %}</p>
+<p>{% blocktrans %}<strong>Fully Qualified Service Name:</strong> is an internal service name. It should be unique and can contain only alphanumeric symbols and dots.{% endblocktrans %}</p>
+<p>{% blocktrans %}<strong>Version:</strong> is a service version.{% endblocktrans %}</p>
+<p>{% blocktrans %}<strong>Active:</strong> whether this service should be visible for users or not.{% endblocktrans %}</p>
+<p>{% blocktrans %}<strong>Description:</strong> add text information about service. It will appear in service creation form in the Environments panel.{% endblocktrans %}</p>

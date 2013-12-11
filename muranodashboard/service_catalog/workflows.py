@@ -15,7 +15,7 @@
 import logging
 
 from django.utils.translation import ugettext as _
-from django.forms import MediaDefiningClass
+from django.forms import MediaDefiningClass, RegexField
 from .utils import Action, CheckboxInput, FILE_STEPS
 from horizon import exceptions
 from horizon import forms
@@ -29,7 +29,8 @@ log = logging.getLogger(__name__)
 class EditManifest(Action):
     service_display_name = forms.CharField(label=_('Service Name'),
                                            required=True)
-    full_service_name = forms.CharField(
+    full_service_name = forms.RegexField(
+        r'^[a-zA-Z0-9.]+$',
         label=_('Fully Qualified Service Name'), required=True)
     version = forms.CharField(label=_('Version'), initial='1')
     enabled = forms.BooleanField(label=_('Active'), initial=True,
