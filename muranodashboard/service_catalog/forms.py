@@ -103,7 +103,7 @@ class UploadFileForm(UploadFileKnownTypeForm):
         'scripts': 'Script for agent execution'
     }
 
-    data_type = forms.ChoiceField(label=_('File data type'),
+    data_type = forms.ChoiceField(label=_('File Type'),
                                   choices=(supported_data_types.items()))
 
     def handle(self, request, data):
