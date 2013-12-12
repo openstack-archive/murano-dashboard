@@ -13,7 +13,7 @@ pylint==0.25.2
 selenium
 
 # Docs Requirements
-sphinx>=1.1.2
+sphinx>=1.1.2,<1.2
 docutils==0.9.1
 # for bug 1091333, remove after sphinx >1.1.3 is released.
 # docutils installs Django 1.5.2 and it's unappropriated
