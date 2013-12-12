@@ -1,6 +1,5 @@
 recursive-include muranodashboard/static *
 recursive-include muranodashboard/templates *
-include muranodashboard/services/*.yaml
 include tools/pip-requires
 include run_tests.sh
 include ChangeLog
@@ -9,6 +8,6 @@ include MANIFEST.in
 include AUTHORS
 include LICENSE
 include ChangeLog
-include babel.cfg
 include tox.ini
+recursive-include build_addons/rpm *.sh
 global-exclude *.pyc

@@ -19,7 +19,8 @@ import tarfile
 import logging
 import shutil
 import hashlib
-from ..consts import CHUNK_SIZE, CACHE_DIR, ARCHIVE_PKG_PATH
+from muranodashboard.environments.consts import CHUNK_SIZE, CACHE_DIR, \
+    ARCHIVE_PKG_PATH
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +28,11 @@ log = logging.getLogger(__name__)
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
 from metadataclient.v1.client import Client
+from metadataclient.common.exceptions import CommunicationError, Unauthorized
+from metadataclient.common.exceptions import HTTPInternalServerError
+from horizon import exceptions
+from django.utils.translation import ugettext_lazy as _
+from contextlib import contextmanager
 
 
 if not os.path.exists(CACHE_DIR):
@@ -106,6 +112,26 @@ def unpack_ui_package(archive_path):
     return dst_dir
 
 
+@contextmanager
+def metadata_exceptions(request):
+    """Handles all metadata-repository specific exceptions."""
+    try:
+        yield
+    except CommunicationError:
+        msg = _('Unable to communicate to Murano Metadata Repository. Add '
+                'MURANO_METADATA_URL to local_settings')
+        log.exception(msg)
+        exceptions.handle(request, msg)
+    except Unauthorized:
+        msg = _('Configure Keystone in Murano Repository Service')
+        log.exception(msg)
+        exceptions.handle(request, msg)
+    except HTTPInternalServerError:
+        msg = _('There is a problem with Murano Repository Service')
+        log.exception(msg)
+        exceptions.handle(request, msg)
+
+
 def get_ui_metadata(request):
     """Returns directory with unpacked definitions provided by Metadata
     Repository at `endpoint' URL or, if it was not found or some error has
@@ -116,9 +142,17 @@ def get_ui_metadata(request):
     if hash:
         metadata_dir = os.path.join(CACHE_DIR, hash)
 
-    #ToDO: Do we need to catch exception here?
-    response, body_iter = metadataclient(request).metadata_client.get_ui_data(
-        hash)
+    data = None
+    with metadata_exceptions(request):
+        data = metadataclient(request).metadata_client.get_ui_data(hash)
+
+    # mimic normal return value in case metadata repository exception has just
+    # been handled.
+    # TODO: it would be better to use redirect here
+    if data is None:
+        return None, False
+    response, body_iter = data
+
     code = response.status
     if code == 200:
         with tempfile.NamedTemporaryFile(delete=False) as out:
@@ -135,9 +169,14 @@ def get_ui_metadata(request):
         log.info("Metadata package hash-sum hasn't changed, doing nothing")
         return metadata_dir, False
     else:
-        msq = 'Unexpected response received: {0}'.format(code)
+        msg = 'Unexpected response received: {0}'.format(code)
         if hash:
             log.error('Using existing version of metadata '
-                      'which may be outdated due to: {0}'.format(msq))
+                      'which may be outdated due to: {0}'.format(msg))
             return metadata_dir, False
-        raise RuntimeError(msq)
+        else:
+            log.error('Unable to load any metadata due to: {0}'.format(msg))
+            exceptions.handle(
+                request,
+                _('There is a problem with Murano Repository Service'))
+            return None, False

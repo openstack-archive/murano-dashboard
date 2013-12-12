@@ -11,18 +11,3 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from horizon.middleware import HorizonMiddleware
-from horizon.exceptions import Http302
-import traceback
-import logging
-
-
-logger = logging.getLogger(__name__)
-
-
-class ExceptionMiddleware(HorizonMiddleware):
-    def process_exception(self, request, exception):
-        if not isinstance(exception, Http302):
-            logger.error(traceback.format_exc())
-        return super(ExceptionMiddleware, self).process_exception(
-            request, exception)

@@ -16,8 +16,8 @@ import logging
 import json
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from .services import get_service_choices
-from .services.fields import get_murano_images
+from muranodashboard.dynamic_ui.services import get_service_choices
+from muranodashboard.dynamic_ui.fields import get_murano_images
 log = logging.getLogger(__name__)
 
 

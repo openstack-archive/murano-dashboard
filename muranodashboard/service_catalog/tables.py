@@ -21,7 +21,7 @@ from horizon import exceptions
 from horizon import tables
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 LOG = logging.getLogger(__name__)
 
 
@@ -137,6 +137,8 @@ class ServiceCatalogTable(tables.DataTable):
 
     service_valid = tables.Column('valid', verbose_name=_('Valid'))
     service_author = tables.Column('author', verbose_name=_('Author'))
+    service_version = tables.Column('service_version',
+                                    verbose_name=_('Version'))
 
     def get_object_display(self, datum):
         return datum.service_display_name
@@ -194,6 +196,26 @@ class DeleteFile(tables.DeleteAction):
             exceptions.handle(
                 request,
                 _('Unable to remove file: {0}'.format(obj_id)),
+                redirect=redirect)
+
+
+class DeleteFileFromService(tables.DeleteAction):
+    name = 'delete_file_from_service'
+    data_type_singular = _('File')
+
+    def delete(self, request, obj_id):
+        service_id = self.table.kwargs.get('full_service_name')
+        try:
+            data_type, filename = obj_id.split('##')
+            metadataclient(request).metadata_admin.delete_from_service(
+                data_type, filename, service_id)
+        except HTTPException as e:
+            LOG.exception(e)
+            redirect = reverse('horizon:murano:service_catalog:manage_service',
+                               args=(service_id,))
+            exceptions.handle(
+                request,
+                _('Unable to remove file: {0}'.format(filename)),
                 redirect=redirect)
 
 

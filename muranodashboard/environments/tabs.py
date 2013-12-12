@@ -20,6 +20,7 @@ from horizon import tabs
 from muranodashboard.environments.consts import LOG_LEVEL_TO_COLOR
 from muranodashboard.environments.consts import LOG_LEVEL_TO_TEXT
 from openstack_dashboard.api import nova as nova_api
+from openstack_dashboard.api import heat as heat_api
 
 from muranodashboard.environments import api
 from muranodashboard.environments.tables import STATUS_DISPLAY_CHOICES
@@ -87,13 +88,24 @@ class OverviewTab(tabs.Tab):
             instances = nova_api.server_list(request)[0]
 
             # HEAT always adds e before instance name
-            instance_name = 'e' + environment_id + '.' + instance_hostname
+            instance_name = 'e' + environment_id + '-' + instance_hostname
 
             for instance in instances:
-                if instance.name == instance_name:
+                if instance_name in instance.name:
                     unit_detail['instance'] = {
                         'id': instance.id,
-                        'name': instance_name
+                        'name': instance.name
+                    }
+                    break
+
+            # add stack info
+            stack_name = 'e' + environment_id
+            existing_stacks = heat_api.stacks_list(request)
+            for stack in existing_stacks:
+                if stack.stack_name == stack_name:
+                    unit_detail['stack'] = {
+                        'id': stack.id,
+                        'name': stack.stack_name
                     }
                     break
 

@@ -19,7 +19,7 @@ from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 
 log = logging.getLogger(__name__)
 
@@ -38,16 +38,13 @@ class UploadServiceForm(SelfHandlingForm):
         except HTTPException as e:
             log.exception(e)
             redirect = reverse('horizon:murano:service_catalog:index')
-            if e.code == 400:
-                msg = 'File already exists'
-            else:
-                msg = e.details
-            exceptions.handle(request, _('Unable to upload service: '
-                                         '{0}'.format(msg)),
+            exceptions.handle(request,
+                              _('Unable to upload service. '
+                                'Error code: {0}'.format(e.code)),
                               redirect=redirect)
 
 
-class UploadFileKnownTypeForm(SelfHandlingForm):
+class UploadFileToService(SelfHandlingForm):
     file = forms.FileField(label=_('Murano Repository File'),
                            required=True,
                            error_messages=
@@ -59,7 +56,7 @@ class UploadFileKnownTypeForm(SelfHandlingForm):
                  *args, **kwargs):
         self.data_type = data_type
         self.service_id = full_service_name
-        super(UploadFileKnownTypeForm, self).__init__(request, *args, **kwargs)
+        super(UploadFileToService, self).__init__(request, *args, **kwargs)
 
     def handle(self, request, data):
         filename = data['file'].name
@@ -94,7 +91,7 @@ class UploadFileKnownTypeForm(SelfHandlingForm):
         return file
 
 
-class UploadFileForm(UploadFileKnownTypeForm):
+class UploadFileForm(UploadFileToService):
     supported_data_types = {
         'ui': 'UI Definition (*.yaml)',
         'workflows': 'Murano Conductor Workflow (*xml)',

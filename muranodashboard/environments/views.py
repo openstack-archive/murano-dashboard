@@ -16,12 +16,12 @@ import logging
 import re
 import copy
 import json
+from functools import update_wrapper
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect
-
 from horizon import exceptions
 from horizon import tabs
 from horizon import tables
@@ -32,18 +32,16 @@ from tables import EnvironmentsTable
 from tables import ServicesTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
-
 from workflows import CreateEnvironment, UpdateEnvironment
 from tabs import ServicesTabs, DeploymentTabs
-
 from . import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
-from functools import update_wrapper
 from django.utils.decorators import classonlymethod
-from services import get_service_descriptions
-from services import get_service_name
-from services import get_service_field_descriptions
+from muranodashboard.dynamic_ui.services import get_service_descriptions
+from muranodashboard.dynamic_ui.services import get_service_name
+from muranodashboard.dynamic_ui.services import get_service_field_descriptions
+
 
 LOG = logging.getLogger(__name__)
 
