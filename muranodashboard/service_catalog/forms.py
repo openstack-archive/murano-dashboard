@@ -38,12 +38,9 @@ class UploadServiceForm(SelfHandlingForm):
         except HTTPException as e:
             log.exception(e)
             redirect = reverse('horizon:murano:service_catalog:index')
-            if e.code == 400:
-                msg = 'File already exists'
-            else:
-                msg = e.details
-            exceptions.handle(request, _('Unable to upload service: '
-                                         '{0}'.format(msg)),
+            exceptions.handle(request,
+                              _('Unable to upload service. '
+                                'Error code: {0}'.format(e.code)),
                               redirect=redirect)
 
 
