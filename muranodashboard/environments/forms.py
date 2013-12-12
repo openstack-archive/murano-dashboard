@@ -49,7 +49,7 @@ def filter_service_by_image_type(service, request):
         for type in registered_murano_images:
             if specified_image_type in type:
                 filtered = True
-            break
+                break
     if not filtered:
         message = 'Murano image type "{0}" is not registered'.format(
             specified_image_type)
