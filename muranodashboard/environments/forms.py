@@ -45,13 +45,16 @@ def filter_service_by_image_type(service, request):
     for image in available_images:
         registered_murano_images.append(image.murano_property.get('type'))
 
-    for type in registered_murano_images:
-        if specified_image_type in type:
-            filtered = True
-            message = ''
-        else:
-            message = 'Murano image type "{0}" is not registered'.format(
-                specified_image_type)
+    if registered_murano_images:
+        for type in registered_murano_images:
+            if specified_image_type in type:
+                filtered = True
+                break
+    if not filtered:
+        message = 'Murano image type "{0}" is not registered'.format(
+            specified_image_type)
+    else:
+        message = ''
     return filtered, message
 
 
