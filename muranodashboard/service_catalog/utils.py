@@ -13,9 +13,7 @@
 #    under the License.
 import logging
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse, reverse_lazy
-from .tables import DeleteFile, DownloadFile
-from .forms import UploadFileKnownTypeForm
+from .tables import DeleteFileFromService, DownloadFile
 from horizon import tables, workflows, forms
 from muranodashboard.environments.services.forms import UpdatableFieldsForm
 from muranodashboard.environments.services.fields import TableField
@@ -58,11 +56,11 @@ def define_tables(table_name, step_verbose_name):
             name = table_name
             verbose_name = step_verbose_name
             table_actions = (UploadFileDataType,
-                             DeleteFile,
+                             DeleteFileFromService,
                              )
 
             row_actions = (DownloadFile,
-                           DeleteFile,
+                           DeleteFileFromService,
                            )
 
     return ObjectsTable

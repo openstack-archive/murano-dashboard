@@ -26,7 +26,7 @@ from horizon.forms.views import ModalFormView
 from .tables import ServiceCatalogTable, MetadataObjectsTable
 from .utils import define_tables
 from .utils import STEP_NAMES
-from .forms import UploadServiceForm, UploadFileForm, UploadFileKnownTypeForm
+from .forms import UploadServiceForm, UploadFileForm, UploadFileToService
 from .workflows import ComposeService
 from muranodashboard.environments.services.metadata import metadataclient
 from metadataclient.common.exceptions import CommunicationError, Unauthorized
@@ -138,7 +138,7 @@ class ComposeServiceView(WorkflowView):
 
 class UploadFileView2(ModalFormView):
     template_name = 'service_catalog/upload_file2.html'
-    form_class = UploadFileKnownTypeForm
+    form_class = UploadFileToService
     success_url = 'horizon:murano:service_catalog:manage_service'
 
     def get_success_url(self):

@@ -44,7 +44,7 @@ class UploadServiceForm(SelfHandlingForm):
                               redirect=redirect)
 
 
-class UploadFileKnownTypeForm(SelfHandlingForm):
+class UploadFileToService(SelfHandlingForm):
     file = forms.FileField(label=_('Murano Repository File'),
                            required=True,
                            error_messages=
@@ -56,7 +56,7 @@ class UploadFileKnownTypeForm(SelfHandlingForm):
                  *args, **kwargs):
         self.data_type = data_type
         self.service_id = full_service_name
-        super(UploadFileKnownTypeForm, self).__init__(request, *args, **kwargs)
+        super(UploadFileToService, self).__init__(request, *args, **kwargs)
 
     def handle(self, request, data):
         filename = data['file'].name
@@ -91,7 +91,7 @@ class UploadFileKnownTypeForm(SelfHandlingForm):
         return file
 
 
-class UploadFileForm(UploadFileKnownTypeForm):
+class UploadFileForm(UploadFileToService):
     supported_data_types = {
         'ui': 'UI Definition (*.yaml)',
         'workflows': 'Murano Conductor Workflow (*xml)',

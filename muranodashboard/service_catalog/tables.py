@@ -197,6 +197,26 @@ class DeleteFile(tables.DeleteAction):
                 redirect=redirect)
 
 
+class DeleteFileFromService(tables.DeleteAction):
+    name = 'delete_file_from_service'
+    data_type_singular = _('File')
+
+    def delete(self, request, obj_id):
+        service_id = self.table.kwargs.get('full_service_name')
+        try:
+            data_type, filename = obj_id.split('##')
+            metadataclient(request).metadata_admin.delete_from_service(
+                data_type, filename, service_id)
+        except HTTPException as e:
+            LOG.exception(e)
+            redirect = reverse('horizon:murano:service_catalog:manage_service',
+                               args=(service_id,))
+            exceptions.handle(
+                request,
+                _('Unable to remove file: {0}'.format(filename)),
+                redirect=redirect)
+
+
 class UploadFile(tables.LinkAction):
     name = 'upload_file'
     verbose_name = _('Upload File')
