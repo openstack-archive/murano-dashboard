@@ -137,6 +137,8 @@ class ServiceCatalogTable(tables.DataTable):
 
     service_valid = tables.Column('valid', verbose_name=_('Valid'))
     service_author = tables.Column('author', verbose_name=_('Author'))
+    service_version = tables.Column('service_version',
+                                    verbose_name=_('Version'))
 
     def get_object_display(self, datum):
         return datum.service_display_name

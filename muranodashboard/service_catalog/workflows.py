@@ -32,18 +32,21 @@ class EditManifest(Action):
     full_service_name = forms.RegexField(
         r'^[a-zA-Z0-9.]+$',
         label=_('Fully Qualified Service Name'), required=True)
-    version = forms.CharField(label=_('Version'), initial='1')
+    author = forms.CharField(label=_('Author'))
     enabled = forms.BooleanField(label=_('Active'), initial=True,
                                  widget=CheckboxInput)
     description = forms.CharField(label=_('Description'),
                                   widget=forms.Textarea)
+    service_version = forms.IntegerField(label=_('Version'), initial=0)
 
     def __init__(self, request, context, *args, **kwargs):
         super(EditManifest, self).__init__(request, context, *args, **kwargs)
         # disable field with service_id for service being modified
+        self.fields['service_version'].widget.attrs.update(
+            {'disabled': True, })
         if context and context.get('full_service_name'):
             self.fields['full_service_name'].widget.attrs.update({
-                'disabled': True
+                'disabled': True,
             })
 
     class Meta:
@@ -56,7 +59,7 @@ class EditManifestStep(workflows.Step):
     action_class = EditManifest
     template_name = 'service_catalog/_workflow_step.html'
     contributes = ('service_display_name', 'full_service_name',
-                   'version', 'enabled', 'description')
+                   'author', 'service_version', 'enabled', 'description')
 
     # Workflow doesn't handle Media inner class of widgets for us, so we need
     # to inject media directly to the step

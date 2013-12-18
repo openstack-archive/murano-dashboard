@@ -121,7 +121,8 @@ class ComposeServiceView(WorkflowView):
                             'service_display_name':
                             service.service_display_name,
                             'author': getattr(service, 'author', ''),
-                            'version': getattr(service, 'version', 0.1),
+                            'service_version': getattr(service,
+                                                       'service_version', 0),
                             'description': getattr(service, 'description', ''),
                             'enabled': getattr(service, 'enabled', False)
                         })
