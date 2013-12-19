@@ -18,12 +18,14 @@ import re
 import time
 import logging
 from muranodashboard.dynamic_ui import metadata
-from muranodashboard.dynamic_ui.helpers import decamelize
+from .helpers import decamelize, get_yaql_expr, create_yaql_context
+
 
 try:
     from collections import OrderedDict
 except ImportError:  # python2.6
     from ordereddict import OrderedDict
+import yaql
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
@@ -39,32 +41,45 @@ _current_cache_hash = None
 class Service(object):
     def __init__(self, **kwargs):
         import muranodashboard.dynamic_ui.forms as services
+        self.context = create_yaql_context()
+        self.cleaned_data = {}
         for key, value in kwargs.iteritems():
             if key == 'forms':
                 self.forms = []
                 for form_data in value:
                     form_name, form_data = self.extract_form_data(form_data)
-                    self.forms.append(
-                        type(form_name, (services.ServiceConfigurationForm,),
-                             {'service': self,
-                              'fields_template': form_data['fields'],
-                              'validators': form_data.get('validators', [])}))
+
+                    class Form(services.ServiceConfigurationForm):
+                        __metaclass__ = services.DynamicFormMetaclass
+                        service = self
+                        name = form_name
+                        field_specs = form_data['fields']
+                        validators = form_data.get('validators', [])
+
+                    self.forms.append(Form)
+
             else:
                 setattr(self, key, value)
-        self.cleaned_data = {}
 
     @staticmethod
     def extract_form_data(form_data):
         form_name = form_data.keys()[0]
         return form_name, form_data[form_name]
 
-    def update_cleaned_data(self, form, data):
+    def get_data(self, form_name, expr, data=None):
+        """First try to get value from cleaned data, if none
+        found, use raw data."""
         if data:
-            # match = re.match('^.*-(\d)+$', form.prefix)
-            # index = int(match.group(1)) if match else None
-            # if index is not None:
-            #     self.cleaned_data[index] = data
-            self.cleaned_data[form.__class__.__name__] = data
+            self.update_cleaned_data(data, form_name=form_name)
+        expr = get_yaql_expr(expr)
+        data = self.cleaned_data
+        value = data and yaql.parse(expr).evaluate(data, self.context)
+        return data != {}, value
+
+    def update_cleaned_data(self, data, form=None, form_name=None):
+        form_name = form_name or form.__class__.__name__
+        if data:
+            self.cleaned_data[form_name] = data
         return self.cleaned_data
 
 
@@ -166,10 +181,11 @@ def get_service_field_descriptions(request, service_id, index):
     def get_descriptions(service):
         form_cls = service.forms[index]
         descriptions = []
-        for field in form_cls.fields_template:
-            if 'description' in field:
-                title = field.get('descriptionTitle', field.get('label', ''))
-                descriptions.append((title, field['description']))
+        for field in form_cls.base_fields.itervalues():
+            title = field.description_title
+            description = field.description
+            if description:
+                descriptions.append((title, description))
         return descriptions
     return with_service(request, service_id, get_descriptions, [])
 
