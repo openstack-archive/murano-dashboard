@@ -18,6 +18,7 @@ import re
 import time
 import logging
 from muranodashboard.dynamic_ui import metadata
+from muranodashboard.dynamic_ui.helpers import decamelize
 
 try:
     from collections import OrderedDict
@@ -68,7 +69,6 @@ class Service(object):
 
 
 def import_service(full_service_name, service_file):
-    from muranodashboard.dynamic_ui.helpers import decamelize
     try:
         with open(service_file) as stream:
             yaml_desc = yaml.load(stream)
@@ -126,14 +126,14 @@ def import_all_services(request):
 def iterate_over_services(request):
     import_all_services(request)
     for service in sorted(_all_services.values(), key=lambda v: v.name):
-        yield service.type, service, service.forms
+        yield service.type, service
 
 
 def make_forms_getter(initial_forms=lambda request: copy.copy([])):
     def _get_forms(request):
         _forms = initial_forms(request)
-        for srv_type, service, forms in iterate_over_services(request):
-            for step, form in enumerate(forms):
+        for srv_type, service in iterate_over_services(request):
+            for step, form in enumerate(service.forms):
                 _forms.append(('{0}-{1}'.format(srv_type, step), form))
         return _forms
     return _get_forms
@@ -149,7 +149,7 @@ def service_type_from_id(service_id):
 
 def with_service(request, service_id, getter, default):
     service_type = service_type_from_id(service_id)
-    for srv_type, service, forms in iterate_over_services(request):
+    for srv_type, service in iterate_over_services(request):
         if srv_type == service_type:
             return getter(service)
     return default
@@ -180,7 +180,7 @@ def get_service_type(wizard):
 def get_service_choices(request, filter_func=None):
     filter_func = filter_func or (lambda srv: True, None)
     filtered, not_filtered = [], []
-    for srv_type, service, forms in iterate_over_services(request):
+    for srv_type, service in iterate_over_services(request):
         has_filtered, message = filter_func(service, request)
         if has_filtered:
             filtered.append((srv_type, service.name))
@@ -203,7 +203,7 @@ def get_service_checkers(request):
 
 def get_service_descriptions(request):
     descriptions = []
-    for srv_type, service, forms in iterate_over_services(request):
+    for srv_type, service in iterate_over_services(request):
         description = getattr(service, 'description', _("<b>Default service \
         description</b>. If you want to see here something meaningful, please \
         provide `description' field in service markup."))
