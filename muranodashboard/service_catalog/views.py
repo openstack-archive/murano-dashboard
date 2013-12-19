@@ -28,7 +28,7 @@ from .utils import define_tables
 from .utils import STEP_NAMES
 from .forms import UploadServiceForm, UploadFileForm, UploadFileToService
 from .workflows import ComposeService
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 from metadataclient.common.exceptions import CommunicationError, Unauthorized
 from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)

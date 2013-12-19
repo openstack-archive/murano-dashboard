@@ -19,7 +19,8 @@ import tarfile
 import logging
 import shutil
 import hashlib
-from ..consts import CHUNK_SIZE, CACHE_DIR, ARCHIVE_PKG_PATH
+from muranodashboard.environments.consts import CHUNK_SIZE, CACHE_DIR, \
+    ARCHIVE_PKG_PATH
 
 log = logging.getLogger(__name__)
 

@@ -15,10 +15,10 @@ import logging
 from django.utils.translation import ugettext as _
 from .tables import DeleteFileFromService, DownloadFile
 from horizon import tables, workflows, forms
-from muranodashboard.environments.services.forms import UpdatableFieldsForm
-from muranodashboard.environments.services.fields import TableField
-from muranodashboard.environments.services.fields import Column, CheckColumn
-from muranodashboard.environments.services.fields import RadioColumn
+from muranodashboard.dynamic_ui.forms import UpdatableFieldsForm
+from muranodashboard.dynamic_ui.fields import TableField
+from muranodashboard.dynamic_ui.fields import Column, CheckColumn
+from muranodashboard.dynamic_ui.fields import RadioColumn
 LOG = logging.getLogger(__name__)
 
 

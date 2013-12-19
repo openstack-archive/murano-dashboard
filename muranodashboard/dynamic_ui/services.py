@@ -12,10 +12,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+
 import os
 import re
 import time
 import logging
+from muranodashboard.dynamic_ui import metadata
+
 try:
     from collections import OrderedDict
 except ImportError:  # python2.6
@@ -24,8 +27,7 @@ import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
 import copy
-from ..consts import CACHE_REFRESH_SECONDS_INTERVAL
-import metadata
+from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
 
 log = logging.getLogger(__name__)
 _all_services = OrderedDict()
@@ -35,7 +37,7 @@ _current_cache_hash = None
 
 class Service(object):
     def __init__(self, **kwargs):
-        import muranodashboard.environments.services.forms as services
+        import muranodashboard.dynamic_ui.forms as services
         for key, value in kwargs.iteritems():
             if key == 'forms':
                 self.forms = []
@@ -66,7 +68,7 @@ class Service(object):
 
 
 def import_service(full_service_name, service_file):
-    from muranodashboard.environments.services.helpers import decamelize
+    from muranodashboard.dynamic_ui.helpers import decamelize
     try:
         with open(service_file) as stream:
             yaml_desc = yaml.load(stream)

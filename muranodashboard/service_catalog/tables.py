@@ -21,7 +21,7 @@ from horizon import exceptions
 from horizon import tables
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 LOG = logging.getLogger(__name__)
 
 

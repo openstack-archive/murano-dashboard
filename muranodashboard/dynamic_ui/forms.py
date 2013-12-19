@@ -14,13 +14,15 @@
 
 import re
 import logging
+import types
+
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-import muranodashboard.environments.services.fields as fields
-import muranodashboard.environments.services.helpers as helpers
+import muranodashboard.dynamic_ui.fields as fields
+import muranodashboard.dynamic_ui.helpers as helpers
 import yaql
-import types
+
 
 log = logging.getLogger(__name__)
 

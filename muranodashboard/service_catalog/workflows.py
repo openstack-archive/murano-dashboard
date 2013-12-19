@@ -21,7 +21,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import workflows
 
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 
 log = logging.getLogger(__name__)
 

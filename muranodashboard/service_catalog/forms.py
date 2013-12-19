@@ -19,7 +19,7 @@ from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.environments.services.metadata import metadataclient
+from muranodashboard.dynamic_ui.metadata import metadataclient
 
 log = logging.getLogger(__name__)
 
