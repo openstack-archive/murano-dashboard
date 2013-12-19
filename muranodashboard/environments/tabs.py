@@ -87,13 +87,13 @@ class OverviewTab(tabs.Tab):
             instances = nova_api.server_list(request)[0]
 
             # HEAT always adds e before instance name
-            instance_name = 'e' + environment_id + '.' + instance_hostname
+            instance_name = 'e' + environment_id + '-' + instance_hostname
 
             for instance in instances:
-                if instance.name == instance_name:
+                if instance_name in instance.name:
                     unit_detail['instance'] = {
                         'id': instance.id,
-                        'name': instance_name
+                        'name': instance.name
                     }
                     break
 
