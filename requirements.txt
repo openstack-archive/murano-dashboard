@@ -8,5 +8,5 @@ PyYAML>=3.1.0
 django-floppyforms==1.1
 ordereddict
 yaql==0.2
-http://tarballs.openstack.org/python-muranoclient/python-muranoclient-master.tar.gz#egg=muranoclient-0.4
-http://tarballs.openstack.org/murano-metadataclient/murano-metadataclient-master.tar.gz#egg=metadataclient-0.4
+python-muranoclient==0.4
+murano-metadataclient==0.4
