@@ -111,7 +111,10 @@ def import_all_services(request):
     if time.time() - _last_check_time > CACHE_REFRESH_SECONDS_INTERVAL:
         _last_check_time = time.time()
         directory, modified = metadata.get_ui_metadata(request)
-        if modified or not are_caches_in_sync():
+        # check directory here in case metadata service is not available
+        # and None is returned as directory value.
+        # TODO: it is better to use redirect for that purpose (if possible)
+        if modified or (directory and not are_caches_in_sync()):
             _all_services = {}
             for full_service_name in os.listdir(directory):
                 final_dir = os.path.join(directory, full_service_name)

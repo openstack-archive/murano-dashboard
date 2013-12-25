@@ -13,7 +13,6 @@
 #    under the License.
 
 import logging
-from functools import wraps
 
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
@@ -29,49 +28,21 @@ from .utils import STEP_NAMES
 from .forms import UploadServiceForm, UploadFileForm, UploadFileToService
 from .workflows import ComposeService
 from muranodashboard.dynamic_ui.metadata import metadataclient
-from metadataclient.common.exceptions import CommunicationError, Unauthorized
+from muranodashboard.dynamic_ui.metadata import metadata_exceptions
 from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)
-
-
-def with_exception_handlers(default):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(self):
-            value = default
-            try:
-                value = func(self)
-            except CommunicationError:
-                LOG.exception(CommunicationError)
-                exceptions.handle(
-                    self.request,
-                    _('Unable to communicate to Murano Metadata '
-                      'Repository. Add MURANO_METADATA_URL to local_'
-                      'settings'))
-            except Unauthorized:
-                LOG.exception(CommunicationError)
-                exceptions.handle(
-                    self.request, _('Configure Keystone in Murano '
-                                    'Repository Service'))
-            except HTTPInternalServerError:
-                LOG.exception(CommunicationError)
-                exceptions.handle(
-                    self.request, _('There is a problem with Murano '
-                                    'Repository Service'))
-            return value
-
-        return wrapper
-
-    return decorator
 
 
 class ServiceCatalogView(tables.DataTableView):
     table_class = ServiceCatalogTable
     template_name = 'service_catalog/index.html'
 
-    @with_exception_handlers([])
     def get_data(self):
-        return metadataclient(self.request).metadata_admin.list_services()
+        services, request = [], self.request
+        with metadata_exceptions(request):
+            services = metadataclient(request).metadata_admin.list_services()
+
+        return services
 
 
 class UploadServiceView(ModalFormView):
@@ -85,9 +56,12 @@ class ManageFilesView(tables.DataTableView):
     table_class = MetadataObjectsTable
     template_name = 'service_catalog/files.html'
 
-    @with_exception_handlers([])
     def get_data(self):
-        return metadataclient(self.request).metadata_admin.get_service_files()
+        files, request = [], self.request
+        with metadata_exceptions(request):
+            files = metadataclient(request).metadata_admin.get_service_files()
+
+        return files
 
 
 class ComposeServiceView(WorkflowView):
@@ -190,28 +164,12 @@ class ManageServiceView(tables.MultiTableView):
         super(ManageServiceView, self).__init__(*args, **kwargs)
 
     def _get_data(self, full_service_name):
-        result = []
-        try:
-            result = metadataclient(self.request).metadata_admin.\
-                get_service_info(full_service_name)
+        info, request = {}, self.request
+        with metadata_exceptions(request):
+            info = metadataclient(request).metadata_admin.get_service_info(
+                full_service_name)
 
-        except CommunicationError as e:
-            LOG.exception(e)
-            exceptions.handle(self.request,
-                              _('Unable to communicate to Murano Metadata '
-                                'Repository. Add MURANO_METADATA_URL to local_'
-                                'settings'))
-        except Unauthorized as e:
-            LOG.exception(e)
-            exceptions.handle(self.request, _('Configure Keystone in Murano '
-                                              'Repository Service'))
-        except HTTPInternalServerError as e:
-            LOG.exception(e)
-            exceptions.handle(self.request, _('There is a problem with Murano '
-                                              'Repository Service'))
-        else:
-            return result
-        return result
+        return info
 
     def get_context_data(self, **kwargs):
         context = super(ManageServiceView,
@@ -233,25 +191,13 @@ class ManageServiceView(tables.MultiTableView):
 
     def get_file_list(self, data_type):
         full_service_name = self.kwargs['full_service_name']
-        ui_files = []
-        try:
-            ui_files = metadataclient(self.request).metadata_admin. \
-                get_service_files(data_type, full_service_name)
-        except CommunicationError as e:
-            LOG.exception(e)
-            exceptions.handle(self.request,
-                              _('Unable to communicate to Murano Metadata '
-                                'Repository. Add MURANO_METADATA_URL to local_'
-                                'settings'))
-        except Unauthorized as e:
-            LOG.exception(e)
-            exceptions.handle(self.request, _('Configure Keystone in Murano '
-                                              'Repository Service'))
-        except HTTPInternalServerError as e:
-            LOG.exception(e)
-            exceptions.handle(self.request, _('There is a problem with Murano '
-                                              'Repository Service'))
-        return [file for file in ui_files if file.selected]
+
+        files, request = [], self.request
+        with metadata_exceptions(request):
+            files = metadataclient(request).metadata_admin.get_service_files(
+                data_type, full_service_name)
+
+        return [file for file in files if file.selected]
 
     def get_ui_data(self):
         return self.get_file_list('ui')
