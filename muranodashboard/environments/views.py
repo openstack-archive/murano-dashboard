@@ -201,10 +201,8 @@ class Services(tables.DataTableView):
         context = super(Services, self).get_context_data(**kwargs)
 
         try:
-            environment_name = api.get_environment_name(
-                self.request,
-                self.environment_id)
-            context['environment_name'] = environment_name
+            env = api.environment_get(self.request, self.environment_id)
+            context['environment_name'] = env.name
 
         except:
             msg = _("Sorry, this environment does't exist anymore")
@@ -244,8 +242,8 @@ class DetailServiceView(tabs.TabView):
         context = super(DetailServiceView, self).get_context_data(**kwargs)
         context["service"] = self.get_data()
         context["service_name"] = self.service.name
-        context["environment_name"] = \
-            api.get_environment_name(self.request, self.environment_id)
+        env = api.environment_get(self.request, self.environment_id)
+        context["environment_name"] = env.name
         return context
 
     def get_data(self):
@@ -321,11 +319,8 @@ class DeploymentsView(tables.DataTableView):
         context = super(DeploymentsView, self).get_context_data(**kwargs)
 
         try:
-            environment_name = api.get_environment_name(
-
-                self.request,
-                self.environment_id)
-            context['environment_name'] = environment_name
+            env = api.environment_get(self.request, self.environment_id)
+            context['environment_name'] = env.name
         except:
             msg = _("Sorry, this environment doesn't exist anymore")
             redirect = reverse("horizon:murano:environments:index")
@@ -359,8 +354,8 @@ class DeploymentDetailsView(tabs.TabbedTableView):
     def get_context_data(self, **kwargs):
         context = super(DeploymentDetailsView, self).get_context_data(**kwargs)
         context["environment_id"] = self.environment_id
-        context["environment_name"] = \
-            api.get_environment_name(self.request, self.environment_id)
+        env = api.environment_get(self.request, self.environment_id)
+        context["environment_name"] = env.name
         context["deployment_start_time"] = \
             api.get_deployment_start(self.request,
                                      self.environment_id,
