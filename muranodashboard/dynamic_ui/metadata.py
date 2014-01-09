@@ -20,7 +20,7 @@ import logging
 import shutil
 import hashlib
 from muranodashboard.environments.consts import CHUNK_SIZE, CACHE_DIR, \
-    ARCHIVE_PKG_PATH
+    ARCHIVE_PKG_NAME
 
 log = logging.getLogger(__name__)
 
@@ -65,8 +65,12 @@ def metadataclient(request):
     return Client(endpoint=endpoint, token=token_id)
 
 
-def get_existing_hash():
-    for item in os.listdir(CACHE_DIR):
+def get_tenant_dir(tenant_id):
+    return os.path.join(CACHE_DIR, tenant_id)
+
+
+def get_existing_hash(tenant_dir):
+    for item in os.listdir(tenant_dir):
         if re.match(r'[a-f0-9]{40}', item):
             return item
     return None
@@ -94,11 +98,11 @@ def get_hash(archive_path):
         return None
 
 
-def unpack_ui_package(archive_path):
+def unpack_ui_package(archive_path, tenant_dir):
     if not tarfile.is_tarfile(archive_path):
         raise RuntimeError('{0} is not valid tarfile!'.format(archive_path))
     hash = get_hash(archive_path)
-    dst_dir = os.path.join(CACHE_DIR, hash)
+    dst_dir = os.path.join(tenant_dir, hash)
     if not os.path.exists(dst_dir):
         os.mkdir(dst_dir)
     else:
@@ -138,9 +142,14 @@ def get_ui_metadata(request):
     occurred, returns None.
     """
     log.debug("Retrieving metadata from Repository")
-    hash = get_existing_hash()
+    tenant_dir = get_tenant_dir(request.user.tenant_id)
+    if not os.path.exists(tenant_dir):
+        os.makedirs(tenant_dir)
+
+    hash = get_existing_hash(tenant_dir)
+    metadata_dir = None
     if hash:
-        metadata_dir = os.path.join(CACHE_DIR, hash)
+        metadata_dir = os.path.join(tenant_dir, hash)
 
     data = None
     with metadata_exceptions(request):
@@ -158,19 +167,20 @@ def get_ui_metadata(request):
         with tempfile.NamedTemporaryFile(delete=False) as out:
             for chunk in body_iter:
                 out.write(chunk)
-        shutil.move(out.name, ARCHIVE_PKG_PATH)
+        archive_pkg_path = os.path.join(tenant_dir, ARCHIVE_PKG_NAME)
+        shutil.move(out.name, archive_pkg_path)
         log.info("Successfully downloaded new metadata package to {0}".format(
-            ARCHIVE_PKG_PATH))
+            archive_pkg_path))
         if hash:
             log.debug('Removing outdated metadata: {0}'.format(metadata_dir))
             shutil.rmtree(metadata_dir)
-        return unpack_ui_package(ARCHIVE_PKG_PATH), True
+        return unpack_ui_package(archive_pkg_path, tenant_dir), True
     elif code == 304:
         log.info("Metadata package hash-sum hasn't changed, doing nothing")
         return metadata_dir, False
     else:
         msg = 'Unexpected response received: {0}'.format(code)
-        if hash:
+        if metadata_dir:
             log.error('Using existing version of metadata '
                       'which may be outdated due to: {0}'.format(msg))
             return metadata_dir, False

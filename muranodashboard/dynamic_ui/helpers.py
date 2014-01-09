@@ -13,13 +13,28 @@
 #    under the License.
 
 import re
+from django.core.validators import RegexValidator
+import types
+import yaql
+
+_LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
+
+YAQL_FUNCTIONS = {
+    'test': lambda self, pattern: re.match(pattern(), self()) is not None,
+}
+
+
+def is_localizable(keys):
+    return set(keys).intersection(_LOCALIZABLE_KEYS)
 
 
 def camelize(name):
+    """Turns snake_case name into SnakeCase."""
     return ''.join([bit.capitalize() for bit in name.split('_')])
 
 
 def decamelize(name):
+    """Turns CamelCase/camelCase name into camel_case."""
     pat = re.compile(r'([A-Z]*[^A-Z]*)(.*)')
     bits = []
     while True:
@@ -33,6 +48,7 @@ def decamelize(name):
 
 
 def explode(string):
+    """Explodes a string into a list of one-character strings."""
     if not string:
         return string
     bits = []
@@ -44,3 +60,32 @@ def explode(string):
         else:
             break
     return bits
+
+
+def prepare_regexp(regexp):
+    """Converts regular expression string pattern into RegexValidator object.
+
+    Also /regexp/flags syntax is allowed, where flags is a string of
+    one-character flags that will be appended to the compiled regexp."""
+    if regexp.startswith('/'):
+        groups = re.match(r'^/(.*)/([A-Za-z]*)$', regexp).groups()
+        regexp, flags_str = groups
+        flags = 0
+        for flag in explode(flags_str):
+            flag = flag.upper()
+            if hasattr(re, flag):
+                flags |= getattr(re, flag)
+        return RegexValidator(re.compile(regexp, flags))
+    else:
+        return RegexValidator(re.compile(regexp))
+
+
+def get_yaql_expr(expr):
+    return isinstance(expr, types.DictType) and expr.get('YAQL', None)
+
+
+def create_yaql_context(functions=YAQL_FUNCTIONS):
+    context = yaql.create_context()
+    for name, func in functions.iteritems():
+        context.register_function(func, name)
+    return context

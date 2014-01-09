@@ -36,7 +36,9 @@ class CreateService(tables.LinkAction):
 
     def allowed(self, request, environment):
         environment_id = self.table.kwargs['environment_id']
-        status, = api.get_environment_data(request, environment_id, 'status')
+        env = api.environment_get(request, environment_id)
+        status = getattr(env, 'status', None)
+
         if status not in [STATUS_ID_DEPLOYING]:
             return True
         return False
@@ -94,7 +96,8 @@ class DeleteService(tables.DeleteAction):
 
     def allowed(self, request, service=None):
         environment_id = self.table.kwargs.get('environment_id')
-        status, = api.get_environment_data(request, environment_id, 'status')
+        env = api.environment_get(request, environment_id)
+        status = getattr(env, 'status', None)
 
         return False if status == STATUS_ID_DEPLOYING else True
 
@@ -145,8 +148,10 @@ class DeployThisEnvironment(tables.Action):
 
     def allowed(self, request, service):
         environment_id = self.table.kwargs['environment_id']
-        status, version = api.get_environment_data(request, environment_id,
-                                                   'status', 'version')
+        env = api.environment_get(request, environment_id)
+        status = getattr(env, 'status', None)
+        version = getattr(env, 'version', None)
+
         if status == STATUS_ID_DEPLOYING:
             return False
         services = self.table.data

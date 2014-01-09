@@ -51,7 +51,7 @@ function install_prerequisites()
             if [ $? -eq 1 ]; then
                 retval=1
                 return $retval
-            fi
+	fi
             find /var/lib/apt/lists/ -name "*cloud.archive*" | grep -q "havana_main"
             if [ $? -ne 0 ]; then
                 add-apt-repository -y cloud-archive:havana >> $LOGFILE 2>&1
@@ -98,11 +98,11 @@ function make_tarball()
         chmod +x $setuppy
         rm -rf $RUN_DIR/*.egg-info
         cd $RUN_DIR && python $setuppy egg_info > /dev/null 2>&1
-        if [ $? -ne 0 ];then
+		if [ $? -ne 0 ];then
             log "...\"$setuppy\" egg info creation fails, exiting!!!"
             retval=1
             exit 1
-        fi
+		fi
         rm -rf $RUN_DIR/dist/*
         log "...\"setup.py sdist\" output will be recorded in \"$LOGFILE\""
         cd $RUN_DIR && $setuppy sdist >> $LOGFILE 2>&1
@@ -110,7 +110,7 @@ function make_tarball()
             log "...\"$setuppy\" tarball creation fails, exiting!!!"
             retval=1
             exit 1
-        fi
+	fi
         #TRBL_FILE=$(basename $(ls $RUN_DIR/dist/*.tar.gz | head -n 1))
         TRBL_FILE=$(ls $RUN_DIR/dist/*.tar.gz | head -n 1)
         if [ ! -e "$TRBL_FILE" ]; then
@@ -137,33 +137,33 @@ function run_pip_install()
         log "...pip install fails, exiting!"
         retval=1
         exit 1
-    fi
+	fi
     return $retval
 }
 modify_horizon_config()
 {
     INFILE=$1
-    REMOVE=$2
+	REMOVE=$2
     PATTERN='from openstack_dashboard import policy'
     TMPFILE="./tmpfile"
     retval=0
     if [ -f $INFILE ]; then
         lines=$(sed -ne '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ =' $INFILE)
-        if [ -n "$lines" ]; then
-            if [ ! -z $REMOVE ]; then
+	if [ -n "$lines" ]; then
+		if [ ! -z $REMOVE ]; then
                 log "Removing $APPLICATION_NAME data from \"$INFILE\"..."
                 sed -e '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ d' -i $INFILE
-                if [ $? -ne 0 ];then
+			if [ $? -ne 0 ];then
                     log "...can't modify \"$INFILE\", check permissions or something else, exiting!!!"
                     retval=1
                     return $retval
                 else
                     log "...success"
-                fi
-            else
+			fi
+		else
                 log "\"$INFILE\" already has $APPLICATION_NAME data, you can change it manually and restart apache2/httpd service"
-            fi
-        else
+		fi
+	else
             if [ -z "$REMOVE" ]; then
                 log "Adding $APPLICATION_NAME data to \"$INFILE\"..."
                 rm -f $TMPFILE
@@ -197,38 +197,38 @@ NETWORK_TOPOLOGY = 'routed'
 #END_MURANO_DASHBOARD
 EOF
             sed -ne "/$PATTERN/r  $TMPFILE" -e 1x  -e '2,${x;p}' -e '${x;p}' -i $INFILE
-            if [ $? -ne 0 ];then
+			if [ $? -ne 0 ];then
                 log "Can't modify \"$INFILE\", check permissions or something else, exiting!!!"
             else
                 rm -f $TMPFILE
                 log "...success"
-            fi
-        fi
-    fi
-    else
-        echo "File \"$1\" not found, exiting!!!"
+			fi
+		fi
+	fi
+	else
+		echo "File \"$1\" not found, exiting!!!"
         retval=1
-    fi
+	fi
     return $retval
 }
 function find_horizon_config()
 {
     retval=0
     for cfg_file in $(echo $HORIZON_CONFIGS | sed 's/,/ /')
-    do
+	do
         if [ -e "$cfg_file" ]; then
-            log "Horizon config found at \"$cfg_file\""
-            modify_horizon_config $cfg_file $1
+			log "Horizon config found at \"$cfg_file\""
+			modify_horizon_config $cfg_file $1
             retval=0
             break
         else
             retval=1
-        fi
-    done
+		fi
+	done
     if [ $retval -eq 1 ]; then
-        log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
+		log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
         #exit 1
-    fi
+	fi
     return $retval
 }
 
@@ -244,7 +244,7 @@ function prepare_db()
         retval=1
     else
         log "..success"
-    fi
+		fi
     return $retval
 }
 function rebuildstatic()
@@ -264,15 +264,15 @@ function rebuildstatic()
         log "...openstack-dashboard manage.py not found, exiting!!!"
         retval=1
         return $retval
-    fi
+	fi
     _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
     if [ -d "$_old_murano_static" ];then
         log "...$APPLICATION_NAME static for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
         rm -rf $_old_murano_static
         if [ $? -ne 0 ]; then
             log "...can't delete \"$_old_murano_static\, WARNING!!!"
-        fi
-    fi
+	fi
+		fi
     log "Rebuilding STATIC output will be recorded in \"$LOGFILE\""
     #python $horizon_manage collectstatic --noinput >> $LOGFILE 2>&1
     chmod a+rw $LOGFILE
@@ -280,9 +280,9 @@ function rebuildstatic()
     if [ $? -ne 0 ]; then
         log "...\"$horizon_manage\" collectstatic failed, exiting!!!"
         retval=1
-    else
+	else
         log "...success"
-    fi
+	fi
     prepare_db "$horizon_manage" || retval=$?
     return $retval
 }
@@ -291,15 +291,15 @@ function run_pip_uninstall()
     find_pip
     retval=0
     pack_to_del=$(is_py_package_installed "$APPLICATION_NAME")
-    if [ $? -eq 0 ]; then
+	if [ $? -eq 0 ]; then
         log "Running \"$PIPCMD uninstall $PIPARGS $APPLICATION_NAME\" output will be recorded in \"$LOGFILE\""
         $PIPCMD uninstall $pack_to_del --yes >> $LOGFILE 2>&1
         if [ $? -ne 0 ]; then
             log "...can't uninstall $APPLICATION_NAME with $PIPCMD"
             retval=1
-        else
+	else
             log "...success"
-        fi
+	fi
     else
         log "Python package for \"$APPLICATION_NAME\" not found"
     fi
@@ -337,13 +337,13 @@ function install_application()
     mk_dir "$APPLICATION_LOG_DIR" "$WEB_SERVICE_USER" "$WEB_SERVICE_GROUP" || exit $?
     mk_dir "$APPLICATION_CACHE_DIR" "$WEB_SERVICE_USER" "$WEB_SERVICE_GROUP" || exit $?
     horizon_etc_cfg=$(find /etc/openstack-dashboard -name "local_setting*" | head -n 1)
-     if [ $? -ne 0 ]; then
+	if [ $? -ne 0 ]; then
         log "Can't find horizon config under \"/etc/openstack-dashboard...\""
         retval=1
     else
         iniset '' 'ALLOWED_HOSTS' "'*'" $horizon_etc_cfg
         iniset '' 'DEBUG' 'True' $horizon_etc_cfg
-    fi
+	fi
     return $retval
 }
 function uninstall_application()
@@ -355,7 +355,7 @@ function uninstall_application()
 function postinst()
 {
     rebuildstatic || exit $?
-    sleep 2
+	sleep 2
     chown -R $WEB_SERVICE_USER:$WEB_SERVICE_GROUP /var/lib/openstack-dashboard
     service $WEB_SERVICE_SYSNAME restart
 }
@@ -381,17 +381,17 @@ case $COMMAND in
         install_application || exit $?
         postinst || exit $?
         log "...success"
-        ;;
+		;;
 
-    uninstall )
+	uninstall )
         log "Uninstalling \"$APPLICATION_NAME\" from system..."
         uninstall_application || exit $?
         postuninst
         log "Software uninstalled, application logs located at \"$APPLICATION_LOG_DIR\", cache files - at \"$APPLICATION_CACHE_DIR'\" ."
-        ;;
+		;;
 
-    * )
+	* )
         echo -e "Usage: $(basename "$0") [command] \nCommands:\n\tinstall - Install \"$APPLICATION_NAME\" software\n\tuninstall - Uninstall \"$APPLICATION_NAME\" software"
-        exit 1
-        ;;
+		exit 1
+		;;
 esac

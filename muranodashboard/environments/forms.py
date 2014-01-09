@@ -17,15 +17,16 @@ import json
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from muranodashboard.dynamic_ui.services import get_service_choices
-from muranodashboard.dynamic_ui.fields import get_murano_images
+from muranodashboard.dynamic_ui.fields import get_murano_images, \
+    ImageChoiceField
 log = logging.getLogger(__name__)
 
 
 def filter_service_by_image_type(service, request):
     def find_image_field():
         for form_cls in service.forms:
-            for field in form_cls.fields_template:
-                if field.get('type') == 'image':
+            for field in form_cls.base_fields.itervalues():
+                if isinstance(field, ImageChoiceField):
                     return field
         return None
 
@@ -34,7 +35,7 @@ def filter_service_by_image_type(service, request):
     if not image_field:
         message = "Please provide Image field description in UI definition"
         return filtered, message
-    specified_image_type = image_field.get('imageType')
+    specified_image_type = getattr(image_field, 'image_type', None)
     if not specified_image_type:
         message = "Please provide 'imageType' parameter in Image field " \
                   "description in UI definition"

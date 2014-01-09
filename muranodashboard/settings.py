@@ -1,5 +1,6 @@
 import logging
 import os
+import tempfile
 import sys
 
 from openstack_dashboard import exceptions
@@ -13,10 +14,13 @@ if ROOT_PATH not in sys.path:
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+METADATA_CACHE_DIR = os.path.join(tempfile.gettempdir(),
+                                  'muranodashboard-cache')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.abspath(os.path.join(ROOT_PATH, 'dashboard.sqlite'))
+        'NAME': os.path.join(METADATA_CACHE_DIR, 'openstack-dashboard.sqlite')
     }
 }
 
@@ -126,7 +130,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 AUTHENTICATION_BACKENDS = ('openstack_auth.backend.KeystoneBackend',)
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = False
