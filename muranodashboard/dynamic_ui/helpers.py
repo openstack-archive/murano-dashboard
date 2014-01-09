@@ -17,10 +17,15 @@ from django.core.validators import RegexValidator
 import types
 import yaql
 
+_LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
 
 YAQL_FUNCTIONS = {
     'test': lambda self, pattern: re.match(pattern(), self()) is not None,
 }
+
+
+def is_localizable(keys):
+    return set(keys).intersection(_LOCALIZABLE_KEYS)
 
 
 def camelize(name):
