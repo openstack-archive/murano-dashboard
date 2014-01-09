@@ -104,11 +104,11 @@ class ComposeServiceView(WorkflowView):
                 raise RuntimeError('Not found service id')
             else:
                 return files_dict
-        except (HTTPInternalServerError, NotFound) as e:
-            LOG.exception(e)
-            msg = _('Error with Murano Metadata Repository')
+        except (HTTPInternalServerError, NotFound):
+            err_msg = _('Error with Murano Metadata Repository')
+            LOG.exception(err_msg)
             redirect = reverse_lazy('horizon:murano:service_catalog:index')
-            exceptions.handle(self.request, msg, redirect)
+            exceptions.handle(self.request, err_msg, redirect)
 
 
 class UploadFileView2(ModalFormView):
