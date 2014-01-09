@@ -108,6 +108,15 @@ modify_horizon_config() {
 #START_MURANO_DASHBOARD
 #TODO: should remove the next line once https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1243187 is fixed
 LOGOUT_URL = '/dashboard/auth/logout/'
+import tempfile
+METADATA_CACHE_DIR = os.path.join(tempfile.gettempdir(), 'muranodashboard-cache')
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(METADATA_CACHE_DIR, 'openstack-dashboard.sqlite')
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
@@ -185,6 +194,12 @@ rebuildstatic()
 	python $horizon_manage collectstatic --noinput
 	if [ $? -ne 0 ]; then
 		log "\"$horizon_manage\" collectstatic failed, exiting!!!"
+		exit 1
+	fi
+	log "Creating db for storing sessions..."
+	python $horizon_manage syncdb --noinput
+	if [ $? -ne 0 ]; then
+		log "\"$horizon_manage\" syncdb failed, exiting!!!"
 		exit 1
 	fi
 }
