@@ -195,7 +195,8 @@ def environment_delete(request, environment_id):
 
 def environment_get(request, environment_id):
     session_id = Session.get(request, environment_id)
-    log.debug('Environment::Get <Id: {0}>'.format(environment_id))
+    log.debug('Environment::Get <Id: {0}, SessionId: {1}>'.
+              format(environment_id, session_id))
     env = muranoclient(request).environments.get(environment_id, session_id)
     log.debug('Environment::Get {0}'.format(env))
     return env
@@ -212,29 +213,6 @@ def environment_deploy(request, environment_id):
 
 def environment_update(request, environment_id, name):
     return muranoclient(request).environments.update(environment_id, name)
-
-
-def get_environment_name(request, environment_id):
-    session_id = Session.get(request, environment_id)
-    environment = muranoclient(request).environments.get(environment_id,
-                                                         session_id)
-    log.debug('Return environment name')
-    return environment.name
-
-
-def get_environment_data(request, environment_id, *args):
-    """
-    For given list of environment attributes return a values
-    :return list
-    """
-
-    session_id = Session.get(request, environment_id)
-    environment = muranoclient(request).environments.get(environment_id,
-                                                         session_id)
-    result = []
-    for attr in args:
-        result.append(getattr(environment, attr, None))
-    return result
 
 
 def services_list(request, environment_id):
