@@ -43,8 +43,6 @@ TYPES = {
 
 
 def _collect_fields(field_specs, form_name, service):
-    LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
-
     def process_widget(kwargs, cls, widget):
         widget = kwargs.get('widget', widget)
         if widget is None:
@@ -64,10 +62,10 @@ def _collect_fields(field_specs, form_name, service):
             del kwargs['widget_attrs']
         return widget
 
-    def is_localizable(keys):
-        return set(keys).intersection(LOCALIZABLE_KEYS)
+    def parse_spec(spec, keys=None):
+        if keys is None:
+            keys = []
 
-    def parse_spec(spec, keys=[]):
         if not isinstance(keys, types.ListType):
             keys = [keys]
         key = keys and keys[-1] or None
@@ -78,14 +76,14 @@ def _collect_fields(field_specs, form_name, service):
             for k, v in spec.iteritems():
                 if not k in ('type', 'name'):
                     k = helpers.decamelize(k)
-                    newKey, v = parse_spec(v, keys + [k])
-                    if newKey:
-                        k = newKey
+                    new_key, v = parse_spec(v, keys + [k])
+                    if new_key:
+                        k = new_key
                     items.append((k, v))
             return key, dict(items)
         elif isinstance(spec, types.ListType):
             return key, [parse_spec(_spec, keys)[1] for _spec in spec]
-        elif isinstance(spec, basestring) and is_localizable(keys):
+        elif isinstance(spec, basestring) and helpers.is_localizable(keys):
             return key, _(spec)
         else:
             if key == 'type':
