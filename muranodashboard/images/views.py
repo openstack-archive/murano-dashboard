@@ -13,21 +13,15 @@
 #    under the License.
 
 import logging
-import json
-
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 from openstack_dashboard.api import glance
 from horizon import exceptions
 from horizon import tables
-from horizon import messages
 from horizon.forms.views import ModalFormView
 from .tables import MarkedImagesTable
-
-from .forms import MarkImageForm
-
-LOG = logging.getLogger(__name__)
+from .forms import MarkImageForm, filter_murano_images
 
 
 class MarkedImagesView(tables.DataTableView):
@@ -43,23 +37,7 @@ class MarkedImagesView(tables.DataTableView):
             uri = reverse('horizon:murano:images:index')
 
             exceptions.handle(self.request, msg, redirect=uri)
-
-        marked_images = []
-        for image in images:
-            metadata = image.properties.get('murano_image_info')
-            if metadata:
-                try:
-                    metadata = json.loads(metadata)
-                except ValueError:
-                    msg = _('Invalid metadata for image: {0}'.format(image.id))
-                    LOG.warn(msg)
-                    messages.error(self.request, msg)
-                else:
-                    image.title = metadata.get('title', 'No Title')
-                    image.type = metadata.get('type', 'No Type')
-
-                marked_images.append(image)
-        return marked_images
+        return filter_murano_images(images, request=self.request)
 
 
 class MarkImageView(ModalFormView):

@@ -38,7 +38,8 @@ TYPES = {
     'keypair': fields.KeyPairChoiceField,
     'image': fields.ImageChoiceField,
     'azone': fields.AZoneChoiceField,
-    'text': (fields.CharField, forms.Textarea)
+    'text': (fields.CharField, forms.Textarea),
+    'floatingip': fields.FloatingIpBooleanField
 }
 
 

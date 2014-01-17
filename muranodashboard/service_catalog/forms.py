@@ -39,8 +39,7 @@ class UploadServiceForm(SelfHandlingForm):
             log.exception(_('Uploading service failed'))
             redirect = reverse('horizon:murano:service_catalog:index')
             exceptions.handle(request,
-                              _('Unable to upload service. '
-                                'Error code: {0}'.format(e.code)),
+                              _('Unable to upload service'),
                               redirect=redirect)
 
 
@@ -76,10 +75,8 @@ class UploadFileToService(SelfHandlingForm):
             redirect = reverse('horizon:murano:service_catalog:manage_service',
                                args=(self.service_id,))
             log.exception(_('Uploading file failed'))
-            msg = _("Unable to upload {0} file of '{1}' type."
-                    " Error code: {2}".format(filename,
-                                              self.data_type,
-                                              e.code))
+            msg = _("Unable to upload {0} file of "
+                    "'{1}' type".format(filename, self.data_type))
             exceptions.handle(request, msg, redirect=redirect)
 
     def clean_file(self):
@@ -118,8 +115,6 @@ class UploadFileForm(UploadFileToService):
             redirect = reverse('horizon:murano:service_catalog:manage_files')
             log.exception(_('Uploading file or '
                             'modifying service manifest file failed'))
-            msg = _("Unable to upload {0} file of '{1}' type."
-                    " Error code: {2}".format(filename,
-                                              self.data_type,
-                                              e.code))
+            msg = _("Unable to upload {0} file "
+                    "of '{1}' type.".format(filename, self.data_type))
             exceptions.handle(request, msg, redirect=redirect)
