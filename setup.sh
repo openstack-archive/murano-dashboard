@@ -1,5 +1,5 @@
-#!/bin/sh
-#    Copyright (c) 2013 Mirantis, Inc.
+#!/bin/bash
+#    Copyright (c) 2014 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -13,282 +13,385 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-#    Ubuntu script.
-
-LOGLVL=1
-SERVICE_CONTENT_DIRECTORY=`cd $(dirname "$0") && pwd`
-PREREQ_PKGS="wget make git python-pip python-dev python-mysqldb libxml2-dev libxslt-dev unzip libffi-dev"
-SERVICE_SRV_NAME="murano-dashboard"
-GIT_CLONE_DIR=`echo $SERVICE_CONTENT_DIRECTORY | sed -e "s/$SERVICE_SRV_NAME//"`
+RUN_DIR=$(cd $(dirname "$0") && pwd)
+INC_FILE="$RUN_DIR/common.inc"
+if [ -f "$INC_FILE" ]; then
+    source "$INC_FILE"
+else
+    echo "Can't load \"$INC_FILE\" or file not found, exiting!"
+    exit 1
+fi
+#
+WEB_SERVICE_SYSNAME=${WEB_SERVICE_SYSNAME:-httpd}
+WEB_SERVICE_USER=${WEB_SERVICE_USER:-apache}
+WEB_SERVICE_GROUP=${WEB_SERVICE_GROUP:-apache}
+APPLICATION_NAME="murano-dashboard"
+APPLICATION_LOG_DIR="/var/log/$APPLICATION_NAME"
+APPLICATION_CACHE_DIR="/var/cache/$APPLICATION_NAME"
+APPLICATION_DB_DIR="/var/lib/openstack-dashboard"
+LOGFILE="/tmp/${APPLICATION_NAME}_install.log"
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-APACHE_USER=horizon
-APACHE_GROUP=horizon
-LOG_DIR="/var/log/murano/"
+common_pkgs="wget git make gcc python-pip python-setuptools unzip"
+# Distro-specific package namings
+debian_pkgs="python-dev python-mysqldb libxml2-dev libxslt1-dev libffi-dev mysql-client memcached apache2 libapache2-mod-wsgi openstack-dashboard"
+redhat_pkgs="python-devel MySQL-python libxml2-devel libxslt-devel libffi-devel mysql memcached httpd python-memcached mod_wsgi openstack-dashboard python-netaddr"
+#
+get_os
+eval req_pkgs="\$$(lowercase $DISTRO_BASED_ON)_pkgs"
+REQ_PKGS="$common_pkgs $req_pkgs"
 
-# Functions
-# Logger function
-log()
+function install_prerequisites()
 {
-	MSG=$1
-	if [ $LOGLVL -gt 0 ]; then
-		echo "LOG:> $MSG"
-	fi
+    retval=0
+    _dist=$(lowercase $DISTRO_BASED_ON)
+    log "Adding Extra repos, updating..."
+    case $_dist in
+        "debian")
+            find_or_install "python-software-properties"
+            if [ $? -eq 1 ]; then
+                retval=1
+                return $retval
+            fi
+            find /var/lib/apt/lists/ -name "*cloud.archive*" | grep -q "havana_main"
+            if [ $? -ne 0 ]; then
+                add-apt-repository -y cloud-archive:havana >> $LOGFILE 2>&1
+                if [ $? -ne 0 ]; then
+                    log "... can't enable \"cloud-archive:havana\", exiting !"
+                    retval=1
+                    return $retval
+                fi
+                apt-get update -y
+                apt-get upgrade -y
+                log "..success"
+            fi
+            ;;
+        "redhat")
+            $(yum repolist | grep -qoE "epel") || rpm -ivh "http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm" >> $LOGFILE 2>&1
+            $(yum repolist | grep -qoE "openstack-havana") || rpm -ivh "http://rdo.fedorapeople.org/openstack-havana/rdo-release-havana.rpm" >> $LOGFILE 2>&1
+            if [ $? -ne 0 ]; then
+                log "... can't enable EPEL6 or RDO, exiting!"
+                retval=1
+                return $retval
+            fi
+            yum --quiet makecache
+            log "..success"
+            ;;
+    esac
+    for pack in $REQ_PKGS
+    do
+        find_or_install "$pack"
+        if [ $? -eq 1 ]; then
+            retval=1
+            break
+        else
+            retval=0
+        fi
+    done
+    return $retval
 }
-
-# Check or install package
-in_sys_pkg()
+function make_tarball()
 {
-	PKG=$1
-	dpkg -s $PKG > /dev/null 2>&1
-	if [ $? -eq 0 ]; then
-	    log "Package \"$PKG\" already installed"
-	else
-		log "Installing \"$PKG\"..."
-		apt-get install $PKG --yes > /dev/null 2>&1
-		if [ $? -ne 0 ];then
-			log "installation fails, exiting!!!"
-			exit
-		fi
-	fi
+    retval=0
+    log "Preparing tarball package..."
+    setuppy="$RUN_DIR/setup.py"
+    if [ -e "$setuppy" ]; then
+        chmod +x $setuppy
+        rm -rf $RUN_DIR/*.egg-info
+        cd $RUN_DIR && python $setuppy egg_info > /dev/null 2>&1
+        if [ $? -ne 0 ];then
+            log "...\"$setuppy\" egg info creation fails, exiting!!!"
+            retval=1
+            exit 1
+        fi
+        rm -rf $RUN_DIR/dist/*
+        log "...\"setup.py sdist\" output will be recorded in \"$LOGFILE\""
+        cd $RUN_DIR && $setuppy sdist >> $LOGFILE 2>&1
+        if [ $? -ne 0 ];then
+            log "...\"$setuppy\" tarball creation fails, exiting!!!"
+            retval=1
+            exit 1
+        fi
+        #TRBL_FILE=$(basename $(ls $RUN_DIR/dist/*.tar.gz | head -n 1))
+        TRBL_FILE=$(ls $RUN_DIR/dist/*.tar.gz | head -n 1)
+        if [ ! -e "$TRBL_FILE" ]; then
+            log "...tarball not found, exiting!"
+            retval=1
+        else
+            log "...success, tarball created as \"$TRBL_FILE\""
+            retval=0
+        fi
+    else
+        log "...\"$setuppy\" not found, exiting!"
+        retval=1
+    fi
+    return $retval
 }
-
-# git clone
-gitclone()
+function run_pip_install()
 {
-	FROM=$1
-	CLONEROOT=$2
-	log "Cloning from \"$FROM\" repo to \"$CLONEROOT\""
-	cd $CLONEROOT && git clone $FROM > /dev/null 2>&1
-	if [ $? -ne 0 ];then
-	    log "cloning from \"$FROM\" fails, exiting!!!"
-	    exit
-	fi
+    find_pip
+    retval=0
+    tarball_file=${1:-$TRBL_FILE}
+    log "Running \"$PIPCMD install $PIPARGS $tarball_file\" output will be recorded in \"$LOGFILE\""
+    $PIPCMD install $PIPARGS $tarball_file >> $LOGFILE 2>&1
+    if [ $? -ne 0 ]; then
+        log "...pip install fails, exiting!"
+        retval=1
+        exit 1
+    fi
+    return $retval
 }
-
-# patching horizon configuration
-modify_horizon_config() {
-	REMOVE=$2
-	if [ -f $1 ]; then
-	lines=$(sed -ne '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ =' $1)
-	if [ -n "$lines" ]; then
-		if [ ! -z $REMOVE ]; then
-			log "Removing our data from \"$1\"..."
-			sed -e '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ d' -i $1
-			if [ $? -ne 0 ];then
-				log "Can't modify \"$1\", check permissions or something else, exiting!!!"
-				exit
-			fi
-		else
-			log "\"$1\" already has our data, you can change it manually and restart apache2 service"
-		fi
-	else
-		if [ -z $REMOVE ];then
-			log "Adding our data into \"$1\"..."
-			cat >> $1 << EOF
+modify_horizon_config()
+{
+    INFILE=$1
+    REMOVE=$2
+    PATTERN='from openstack_dashboard import policy'
+    TMPFILE="./tmpfile"
+    retval=0
+    if [ -f $INFILE ]; then
+        lines=$(sed -ne '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ =' $INFILE)
+        if [ -n "$lines" ]; then
+            if [ ! -z $REMOVE ]; then
+                log "Removing $APPLICATION_NAME data from \"$INFILE\"..."
+                sed -e '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ d' -i $INFILE
+                if [ $? -ne 0 ];then
+                    log "...can't modify \"$INFILE\", check permissions or something else, exiting!!!"
+                    retval=1
+                    return $retval
+                else
+                    log "...success"
+                fi
+            else
+                log "\"$INFILE\" already has $APPLICATION_NAME data, you can change it manually and restart apache2/httpd service"
+            fi
+        else
+            if [ -z "$REMOVE" ]; then
+                log "Adding $APPLICATION_NAME data to \"$INFILE\"..."
+                rm -f $TMPFILE
+                cat >> $TMPFILE << EOF
 #START_MURANO_DASHBOARD
 #TODO: should remove the next line once https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1243187 is fixed
 LOGOUT_URL = '/horizon/auth/logout/'
+METADATA_CACHE_DIR = '$APPLICATION_CACHE_DIR'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join('$APPLICATION_DB_DIR', 'openstack-dashboard.sqlite')
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 HORIZON_CONFIG['dashboards'] += ('murano',)
 INSTALLED_APPS += ('muranodashboard','floppyforms',)
 MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
 verbose_formatter = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
 if 'formatters' in LOGGING: LOGGING['formatters'].update(verbose_formatter)
 else: LOGGING['formatters'] = verbose_formatter
-LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '$LOG_DIR/murano-dashboard.log'}
+LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '$APPLICATION_LOG_DIR/murano-dashboard.log'}
 LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
 LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
+ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
+NETWORK_TOPOLOGY = 'routed'
 #MURANO_API_URL = "http://localhost:8082"
 #MURANO_METADATA_URL = "http://localhost:8084/v1"
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
-ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
-NETWORK_TOPOLOGY = 'routed'
 #END_MURANO_DASHBOARD
 EOF
-			if [ $? -ne 0 ];then
-				log "Can't modify \"$1\", check permissions or something else, exiting!!!"
-			fi
-		fi
-	fi
-	else
-		echo "File \"$1\" not found, exiting!!!"
-		exit 1
-	fi
+            sed -ne "/$PATTERN/r  $TMPFILE" -e 1x  -e '2,${x;p}' -e '${x;p}' -i $INFILE
+            if [ $? -ne 0 ];then
+                log "Can't modify \"$INFILE\", check permissions or something else, exiting!!!"
+            else
+                rm -f $TMPFILE
+                log "...success"
+            fi
+        fi
+    fi
+    else
+        echo "File \"$1\" not found, exiting!!!"
+        retval=1
+    fi
+    return $retval
+}
+function find_horizon_config()
+{
+    retval=0
+    for cfg_file in $(echo $HORIZON_CONFIGS | sed 's/,/ /')
+    do
+        if [ -e "$cfg_file" ]; then
+            log "Horizon config found at \"$cfg_file\""
+            modify_horizon_config $cfg_file $1
+            retval=0
+            break
+        else
+            retval=1
+        fi
+    done
+    if [ $retval -eq 1 ]; then
+        log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
+        #exit 1
+    fi
+    return $retval
 }
 
-# searching horizon configuration
-find_horizon_config()
+function prepare_db()
 {
-	FOUND=0
-	for cfg_file in $(echo $HORIZON_CONFIGS | sed 's/,/ /' )
-	do
-		if [ -e $cfg_file ];then
-			log "Horizon config found at \"$cfg_file\""
-			modify_horizon_config $cfg_file $1
-			FOUND=1
-		fi
-	done
-	if [ $FOUND -eq 0 ];then
-		log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
-		exit 1
-	fi
+    horizon_manage=$1
+    retval=0
+    log "Creating db for storing sessions..."
+    #python $horizon_manage syncdb --noinput
+    su -c "python $horizon_manage syncdb --noinput >> $LOGFILE 2>&1" -s /bin/bash $WEB_SERVICE_USER
+    if [ $? -ne 0 ]; then
+        log "...\"$horizon_manage\" syncdb failed, exiting!!!"
+        retval=1
+    else
+        log "..success"
+    fi
+    return $retval
+}
+function rebuildstatic()
+{
+    retval=0
+    _dist=$(lowercase $DISTRO_BASED_ON)
+    log "Running collectstatic..."
+    case $_dist in
+        "debian")
+            horizon_manage=$(dpkg-query -L openstack-dashboard | grep -E "*manage.py$")
+            ;;
+        "redhat")
+            horizon_manage=$(rpm -ql openstack-dashboard | grep -E "*manage.py$")
+            ;;
+    esac
+    if [ -z "$horizon_manage" ]; then
+        log "...openstack-dashboard manage.py not found, exiting!!!"
+        retval=1
+        return $retval
+    fi
+    _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
+    if [ -d "$_old_murano_static" ];then
+        log "...$APPLICATION_NAME static for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
+        rm -rf $_old_murano_static
+        if [ $? -ne 0 ]; then
+            log "...can't delete \"$_old_murano_static\, WARNING!!!"
+        fi
+    fi
+    log "Rebuilding STATIC output will be recorded in \"$LOGFILE\""
+    #python $horizon_manage collectstatic --noinput >> $LOGFILE 2>&1
+    chmod a+rw $LOGFILE
+    su -c "python $horizon_manage collectstatic --noinput >> $LOGFILE 2>&1" -s /bin/bash $WEB_SERVICE_USER
+    if [ $? -ne 0 ]; then
+        log "...\"$horizon_manage\" collectstatic failed, exiting!!!"
+        retval=1
+    else
+        log "...success"
+    fi
+    prepare_db "$horizon_manage" || retval=$?
+    return $retval
+}
+function run_pip_uninstall()
+{
+    find_pip
+    retval=0
+    pack_to_del=$(is_py_package_installed "$APPLICATION_NAME")
+    if [ $? -eq 0 ]; then
+        log "Running \"$PIPCMD uninstall $PIPARGS $APPLICATION_NAME\" output will be recorded in \"$LOGFILE\""
+        $PIPCMD uninstall $pack_to_del --yes >> $LOGFILE 2>&1
+        if [ $? -ne 0 ]; then
+            log "...can't uninstall $APPLICATION_NAME with $PIPCMD"
+            retval=1
+        else
+            log "...success"
+        fi
+    else
+        log "Python package for \"$APPLICATION_NAME\" not found"
+    fi
+    return $retval
+}
+function install_application()
+{
+    install_prerequisites || exit 1
+    make_tarball || exit $?
+    run_pip_install || exit $?
+    log "Configuring HORIZON..."
+    find_horizon_config || exit $?
+    _dist=$(lowercase $DISTRO_BASED_ON)
+    log "Configuring system..."
+    case $_dist in
+        "debian")
+            WEB_SERVICE_SYSNAME="apache2"
+            WEB_SERVICE_USER="horizon"
+            WEB_SERVICE_GROUP="horizon"
+            dpkg --purge openstack-dashboard-ubuntu-theme
+            ;;
+        "redhat")
+            WEB_SERVICE_SYSNAME="httpd"
+            WEB_SERVICE_USER="apache"
+            WEB_SERVICE_GROUP="apache"
+            log "Disabling firewall and selinux..."
+            service iptables stop
+            chkconfig iptables off
+            setenforce 0
+            iniset '' 'SELINUX' 'permissive' '/etc/selinux/config'
+            chkconfig $WEB_SERVICE_SYSNAME on
+            ;;
+    esac
+    log "Creating required directories..."
+    mk_dir "$APPLICATION_LOG_DIR" "$WEB_SERVICE_USER" "$WEB_SERVICE_GROUP" || exit $?
+    mk_dir "$APPLICATION_CACHE_DIR" "$WEB_SERVICE_USER" "$WEB_SERVICE_GROUP" || exit $?
+    horizon_etc_cfg=$(find /etc/openstack-dashboard -name "local_setting*" | head -n 1)
+     if [ $? -ne 0 ]; then
+        log "Can't find horizon config under \"/etc/openstack-dashboard...\""
+        retval=1
+    else
+        iniset '' 'ALLOWED_HOSTS' "'*'" $horizon_etc_cfg
+        iniset '' 'DEBUG' 'True' $horizon_etc_cfg
+    fi
+    return $retval
+}
+function uninstall_application()
+{
+    run_pip_uninstall || exit $?
+    find_horizon_config remove || exit $?
 }
 
-# install
-inst()
+function postinst()
 {
-CLONE_FROM_GIT=$1
-# Checking packages
-	for PKG in $PREREQ_PKGS
-	do
-		in_sys_pkg $PKG
-	done 
-
-# If clone from git set
-	if [ ! -z $CLONE_FROM_GIT ]; then
-# Preparing clone root directory
-	if [ ! -d $GIT_CLONE_DIR ];then
-		log "Creating $GIT_CLONE_DIR direcory..."
-		mkdir -p $GIT_CLONE_DIR
-		if [ $? -ne 0 ];then
-			log "Can't create $GIT_CLONE_DIR, exiting!!!" 
-			exit
-		fi
-	fi
-# Cloning from GIT
-		GIT_WEBPATH_PRFX="https://github.com/stackforge/"
-		gitclone "$GIT_WEBPATH_PRFX$SERVICE_SRV_NAME.git" $GIT_CLONE_DIR
-# End clone from git section 
-	fi
-
-# Installing...
-	log "Running setup.py"
-	#MRN_CND_SPY=$GIT_CLONE_DIR/$SERVICE_SRV_NAME/setup.py
-	MRN_CND_SPY=$SERVICE_CONTENT_DIRECTORY/setup.py
-	if [ -e $MRN_CND_SPY ]; then
-		chmod +x $MRN_CND_SPY
-		log "$MRN_CND_SPY output:_____________________________________________________________"
-## Setup through pip
-		# Creating tarball
-		rm -rf $SERVICE_CONTENT_DIRECTORY/*.egg-info
-		cd $SERVICE_CONTENT_DIRECTORY && python $MRN_CND_SPY egg_info
-		if [ $? -ne 0 ];then
-			log "\"$MRN_CND_SPY\" egg info creation FAILS, exiting!!!"
-			exit 1
-		fi
-		rm -rf $SERVICE_CONTENT_DIRECTORY/dist
-		cd $SERVICE_CONTENT_DIRECTORY && python $MRN_CND_SPY sdist
-		if [ $? -ne 0 ];then
-			log "\"$MRN_CND_SPY\" tarball creation FAILS, exiting!!!"
-			exit 1
-		fi
-# Running tarball install
-		TRBL_FILE=$(basename `ls $SERVICE_CONTENT_DIRECTORY/dist/*.tar.gz`)
-		pip install $SERVICE_CONTENT_DIRECTORY/dist/$TRBL_FILE
-		if [ $? -ne 0 ];then
-			log "pip install \"$TRBL_FILE\" FAILS, exiting!!!"
-			exit 1
-		fi
-# Creating log directory for the murano
-		if [ ! -d $LOG_DIR ];then
-			log "Creating $LOG_DIR direcory..."
-			mkdir -p $LOG_DIR
-			if [ $? -ne 0 ];then
-				log "Can't create $LOG_DIR, exiting!!!"
-				exit 1
-			fi
-			chmod -R a+rw $LOG_DIR
-		fi
-	else
-		log "$MRN_CND_SPY not found!"
-	fi
+    rebuildstatic || exit $?
+    sleep 2
+    chown -R $WEB_SERVICE_USER:$WEB_SERVICE_GROUP /var/lib/openstack-dashboard
+    service $WEB_SERVICE_SYSNAME restart
 }
-
-# uninstall
-uninst()
+function postuninst()
 {
-# Uninstall trough  pip
-# looking up for python package installed
-	PYPKG=`echo $SERVICE_SRV_NAME | tr -d '-'`
-	pip freeze | grep $PYPKG
-	if [ $? -eq 0 ]; then
-		log "Removing package \"$PYPKG\" with pip"
-		pip uninstall $PYPKG --yes
-	else
-		log "Python package \"$PYPKG\" not found"
-	fi
-}
-# preinstall
-preinst()
-{
-# check openstack-dashboard installed from system packages
-	_PKG=openstack-dashboard
-	dpkg -s $_PKG > /dev/null 2>&1
-	if [ $? -ne 0 ]; then
-		log "Package \"$_PKG\" is not installed."
-	fi
-}
-
-# rebuild static
-rebuildstatic()
-{
-	horizon_manage=$(dpkg-query -L openstack-dashboard | grep -E "*manage.py$")
-	if [ $? -ne 0 ]; then
-		log "openstack-dashboard manage.py not found, exiting!!!"
-		exit 1
-	fi
-	_old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
-	if [ -d "$_old_murano_static" ];then
-		log "Our static for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
-		rm -rf $_old_murano_static
-		if [ $? -ne 0 ]; then
-			log "Can't delete \"$_old_murano_static\, WARNING!!!"
-		fi
-	fi
-	log "Rebuilding STATIC...."
-	python $horizon_manage collectstatic --noinput
-	if [ $? -ne 0 ]; then
-		log "\"$horizon_manage\" collectstatic failed, exiting!!!"
-		exit 1
-	fi
-}
-
-# postinstall
-postinst()
-{
-	rebuildstatic
-	sleep 2
-	chown $APACHE_USER:$APACHE_GROUP $LOG_DIR/murano-dashboard.log
-	chown -R $APACHE_USER:$APACHE_GROUP /var/lib/openstack-dashboard
-	service apache2 restart
+    _dist=$(lowercase $DISTRO_BASED_ON)
+    case $_dist in
+        "debian")
+            WEB_SERVICE_SYSNAME="apache2"
+            ;;
+        "redhat")
+            WEB_SERVICE_SYSNAME="httpd"
+            ;;
+    esac
+    service $WEB_SERVICE_SYSNAME restart
 }
 # Command line args'
 COMMAND="$1"
 case $COMMAND in
-	install )
-		preinst
-		inst
-		find_horizon_config
-		postinst
-		;;
+    install)
+        rm -rf $LOGFILE
+        log "Installing \"$APPLICATION_NAME\" to system..."
+        install_application || exit $?
+        postinst || exit $?
+        log "...success"
+        ;;
 
-	installfromgit )
-		preinst
-		inst "yes"
-		find_horizon_config
-		postinst
-		;;
+    uninstall )
+        log "Uninstalling \"$APPLICATION_NAME\" from system..."
+        uninstall_application || exit $?
+        postuninst
+        log "Software uninstalled, application logs located at \"$APPLICATION_LOG_DIR\", cache files - at \"$APPLICATION_CACHE_DIR'\" ."
+        ;;
 
-	uninstall )
-		log "Uninstalling \"$SERVICE_SRV_NAME\" from system..."
-		uninst
-		find_horizon_config remove
-		service apache2 restart
-		;;
-
-	* )
-		echo "Usage: $(basename "$0") command \nCommands:\n\tinstall - Install $SERVICE_SRV_NAME software\n\tuninstall - Uninstall $SERVICE_SRV_NAME software"
-		exit 1
-		;;
+    * )
+        echo -e "Usage: $(basename "$0") [command] \nCommands:\n\tinstall - Install \"$APPLICATION_NAME\" software\n\tuninstall - Uninstall \"$APPLICATION_NAME\" software"
+        exit 1
+        ;;
 esac
-
