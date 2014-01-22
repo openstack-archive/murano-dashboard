@@ -496,11 +496,12 @@ class FlavorChoiceField(ChoiceField):
 
 
 class KeyPairChoiceField(ChoiceField):
-    " This widget allows to select Key Pair for VMs "
+    " This widget allows to select keypair for VMs "
     @with_request
     def update(self, request, **kwargs):
-        self.choices = [(keypair.name, keypair.name) for keypair in
-                        novaclient(request).keypairs.list()]
+        self.choices = [('', _('No keypair'))]
+        for keypair in novaclient(request).keypairs.list():
+            self.choices.append((keypair.name, keypair.name))
 
 
 class ImageChoiceField(ChoiceField):
