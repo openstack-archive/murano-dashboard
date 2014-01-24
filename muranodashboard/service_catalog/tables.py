@@ -66,8 +66,8 @@ class DownloadService(tables.Action):
             response['Content-Disposition'] = 'filename={name}.tar.gz'.format(
                 name=service_id)
             return response
-        except HTTPException as e:
-            LOG.exception(e)
+        except HTTPException:
+            LOG.exception(_('Something went wrong during service downloading'))
             redirect = reverse('horizon:murano:service_catalog:index')
             exceptions.handle(request,
                               _('Unable to download service.'),
@@ -85,8 +85,9 @@ class ToggleEnabled(tables.BatchAction):
         for obj_id in obj_ids:
             try:
                 metadataclient(request).metadata_admin.toggle_enabled(obj_id)
-            except HTTPException as e:
-                LOG.exception(e)
+            except HTTPException:
+                LOG.exception(_('Toggling service state in manifest file in '
+                                'metadata repository failed'))
                 exceptions.handle(request,
                                   _('Unable to toggle service state.'))
             else:
@@ -94,7 +95,7 @@ class ToggleEnabled(tables.BatchAction):
                 obj.enabled = not obj.enabled
                 messages.success(
                     request,
-                    _("Service '{service} successfully toggled".format(
+                    _("Service '{service}' successfully toggled".format(
                         service=obj_id)))
 
 
@@ -105,8 +106,9 @@ class DeleteService(tables.DeleteAction):
     def delete(self, request, obj_id):
         try:
             metadataclient(request).metadata_admin.delete_service(obj_id)
-        except HTTPException as e:
-            LOG.exception(e)
+        except HTTPException:
+            LOG.exception(_('Unable to delete service'
+                            ' in Murano Metadata server'))
             exceptions.handle(request,
                               _('Unable to remove service.'),
                               redirect='horizon:murano:service_catalog:index')
@@ -159,29 +161,6 @@ class ServiceCatalogTable(tables.DataTable):
                        DeleteService)
 
 
-class ToggleEnabled(tables.BatchAction):
-    name = 'toggle_enabled'
-    data_type_singular = _('Active')
-    data_type_plural = _('Active')
-    action_present = _('Toggle')
-    action_past = _('Toggled')
-
-    def handle(self, table, request, obj_ids):
-        for obj_id in obj_ids:
-            try:
-                metadataclient(request).metadata_admin.toggle_enabled(obj_id)
-            except HTTPException as e:
-                LOG.exception(e)
-                exceptions.handle(request,
-                                  _('Unable to toggle service state.'))
-            else:
-                obj = table.get_object_by_id(obj_id)
-                obj.enabled = not obj.enabled
-                messages.success(request,
-                                 _("Service '{service} successfully "
-                                   "toggled".format(service=obj_id)))
-
-
 class DeleteFile(tables.DeleteAction):
     name = 'delete_file'
     data_type_singular = _('File')
@@ -190,8 +169,8 @@ class DeleteFile(tables.DeleteAction):
         try:
             data_type, obj_id = obj_id.split('##')
             metadataclient(request).metadata_admin.delete(data_type, obj_id)
-        except HTTPException as e:
-            LOG.exception(e)
+        except HTTPException:
+            LOG.exception(_('Deleting file on Metadata'))
             redirect = reverse('horizon:murano:service_catalog:manage_files')
             exceptions.handle(
                 request,
@@ -209,8 +188,9 @@ class DeleteFileFromService(tables.DeleteAction):
             data_type, filename = obj_id.split('##')
             metadataclient(request).metadata_admin.delete_from_service(
                 data_type, filename, service_id)
-        except HTTPException as e:
-            LOG.exception(e)
+        except HTTPException:
+            LOG.exception(_('Deleting manifest or file connected '
+                            'with it failed in Metadata Service'))
             redirect = reverse('horizon:murano:service_catalog:manage_service',
                                args=(service_id,))
             exceptions.handle(
@@ -246,8 +226,9 @@ class DownloadFile(tables.Action):
             response['Content-Disposition'] = 'filename={name}'.format(name=
                                                                        obj_id)
             return response
-        except HTTPException as e:
-            LOG.exception(e)
+        except HTTPException:
+            LOG.exception(_('Error during downloading file '
+                            'from Murano Metadata Repository'))
             redirect = reverse('horizon:murano:service_catalog:manage_files')
             exceptions.handle(
                 request,

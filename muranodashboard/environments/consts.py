@@ -22,7 +22,6 @@ CACHE_DIR = getattr(settings, 'METADATA_CACHE_DIR',
                     os.path.join(tempfile.gettempdir(),
                                  'muranodashboard-cache'))
 
-ARCHIVE_PKG_PATH = os.path.join(CACHE_DIR, ARCHIVE_PKG_NAME)
 CACHE_REFRESH_SECONDS_INTERVAL = 5
 
 #---- Forms Consts ----#

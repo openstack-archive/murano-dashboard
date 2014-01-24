@@ -36,7 +36,7 @@ class UploadServiceForm(SelfHandlingForm):
             messages.success(request, _('Service uploaded.'))
             return result
         except HTTPException as e:
-            log.exception(e)
+            log.exception(_('Uploading service failed'))
             redirect = reverse('horizon:murano:service_catalog:index')
             exceptions.handle(request,
                               _('Unable to upload service. '
@@ -60,8 +60,8 @@ class UploadFileToService(SelfHandlingForm):
 
     def handle(self, request, data):
         filename = data['file'].name
-        log.debug('Uploading file to metadata repository {0} and assiging'
-                  ' it to {1} service'.format(filename, self.service_id))
+        log.debug(_('Uploading file to metadata repository {0} and assigning'
+                    ' it to {1} service'.format(filename, self.service_id)))
         try:
             result = metadataclient(request).metadata_admin.\
                 upload_file_to_service(self.data_type,
@@ -75,7 +75,7 @@ class UploadFileToService(SelfHandlingForm):
         except HTTPException as e:
             redirect = reverse('horizon:murano:service_catalog:manage_service',
                                args=(self.service_id,))
-            log.exception(e)
+            log.exception(_('Uploading file failed'))
             msg = _("Unable to upload {0} file of '{1}' type."
                     " Error code: {2}".format(filename,
                                               self.data_type,
@@ -116,7 +116,8 @@ class UploadFileForm(UploadFileToService):
             return result
         except HTTPException as e:
             redirect = reverse('horizon:murano:service_catalog:manage_files')
-            log.exception(e)
+            log.exception(_('Uploading file or '
+                            'modifying service manifest file failed'))
             msg = _("Unable to upload {0} file of '{1}' type."
                     " Error code: {2}".format(filename,
                                               self.data_type,

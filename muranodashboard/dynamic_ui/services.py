@@ -18,12 +18,14 @@ import re
 import time
 import logging
 from muranodashboard.dynamic_ui import metadata
-from muranodashboard.dynamic_ui.helpers import decamelize
+from .helpers import decamelize, get_yaql_expr, create_yaql_context
+
 
 try:
     from collections import OrderedDict
 except ImportError:  # python2.6
     from ordereddict import OrderedDict
+import yaql
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
@@ -31,44 +33,98 @@ import copy
 from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
 
 log = logging.getLogger(__name__)
-_all_services = OrderedDict()
-_last_check_time = 0
-_current_cache_hash = None
 
 
 class Service(object):
-    def __init__(self, **kwargs):
-        import muranodashboard.dynamic_ui.forms as services
-        for key, value in kwargs.iteritems():
-            if key == 'forms':
-                self.forms = []
-                for form_data in value:
-                    form_name, form_data = self.extract_form_data(form_data)
-                    self.forms.append(
-                        type(form_name, (services.ServiceConfigurationForm,),
-                             {'service': self,
-                              'fields_template': form_data['fields'],
-                              'validators': form_data.get('validators', [])}))
-            else:
-                setattr(self, key, value)
+    """Class for keeping service persistent data, the most important are two:
+    ``self.forms`` list of service's steps (as Django form classes) and
+    ``self.cleaned_data`` dictionary of data from service validated steps.
+
+    Attribute ``self.cleaned_data`` is needed for, e.g. ServiceA.Step2, be
+    able to reference data at ServiceA.Step1 while actual form instance
+    representing Step1 is already gone.
+
+    Because the need to store this data per-user, sessions must be employed
+    (actually, they are not the _only_ way of doing this, but the most simple
+    one), and because every Django session backend uses pickle serialization,
+    __getstate__/__setstate__ methods for custom pickle serialization must be
+    implemented.
+    """
+    NON_SERIALIZABLE_ATTRS = ('forms', 'context')
+
+    def __init__(self, forms=None, **kwargs):
+        self.context = create_yaql_context()
         self.cleaned_data = {}
+        self.forms = []
+        self._forms = []
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
+
+        if forms:
+            for data in forms:
+                name, field_specs, validators = self.extract_form_data(data)
+                self._add_form(name, field_specs, validators)
+
+                # for pickling/unpickling
+                self._forms.append((name, field_specs, validators))
+
+    def __getstate__(self):
+        log.debug("Pickling service '{service.type}'".format(
+            service=self))
+        dct = dict((k, v) for (k, v) in self.__dict__.iteritems()
+                   if not k in self.NON_SERIALIZABLE_ATTRS)
+        return dct
+
+    def __setstate__(self, d):
+        log.debug("Unpickling service '{type}'".format(**d))
+        for k, v in d.iteritems():
+            setattr(self, k, v)
+        # dealing with the attributes which cannot be serialized (see
+        # http://tinyurl.com/kxx3tam on pickle restrictions )
+        # yaql context is not serializable because it contains lambda functions
+        self.context = create_yaql_context()
+        # form classes are not serializable 'cause they are defined dynamically
+        self.forms = []
+        for name, field_specs, validators in d.get('_forms', []):
+            self._add_form(name, field_specs, validators)
+
+    def _add_form(self, _name, _specs, _validators):
+        import muranodashboard.dynamic_ui.forms as forms
+
+        class Form(forms.ServiceConfigurationForm):
+            __metaclass__ = forms.DynamicFormMetaclass
+
+            service = self
+            name = _name
+            field_specs = _specs
+            validators = _validators
+
+        self.forms.append(Form)
 
     @staticmethod
     def extract_form_data(form_data):
         form_name = form_data.keys()[0]
-        return form_name, form_data[form_name]
+        form_data = form_data[form_name]
+        return form_name, form_data['fields'], form_data.get('validators', [])
 
-    def update_cleaned_data(self, form, data):
+    def get_data(self, form_name, expr, data=None):
+        """First try to get value from cleaned data, if none
+        found, use raw data."""
         if data:
-            # match = re.match('^.*-(\d)+$', form.prefix)
-            # index = int(match.group(1)) if match else None
-            # if index is not None:
-            #     self.cleaned_data[index] = data
-            self.cleaned_data[form.__class__.__name__] = data
+            self.update_cleaned_data(data, form_name=form_name)
+        expr = get_yaql_expr(expr)
+        data = self.cleaned_data
+        value = data and yaql.parse(expr).evaluate(data, self.context)
+        return data != {}, value
+
+    def update_cleaned_data(self, data, form=None, form_name=None):
+        form_name = form_name or form.__class__.__name__
+        if data:
+            self.cleaned_data[form_name] = data
         return self.cleaned_data
 
 
-def import_service(full_service_name, service_file):
+def import_service(services, full_service_name, service_file):
     try:
         with open(service_file) as stream:
             yaml_desc = yaml.load(stream)
@@ -77,17 +133,9 @@ def import_service(full_service_name, service_file):
                  " reason: {1!s}".format(service_file, e))
     else:
         service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
-        _all_services[full_service_name] = Service(**service)
+        services[full_service_name] = Service(**service)
         log.info("Added service '{0}' from '{1}'".format(
-            _all_services[full_service_name].name, service_file))
-
-
-def are_caches_in_sync():
-    are_in_sync = (_current_cache_hash == metadata.get_existing_hash())
-    if not are_in_sync:
-        log.debug('In-memory and on-disk caches are not in sync, '
-                  'invalidating in-memory cache')
-    return are_in_sync
+            services[full_service_name].name, service_file))
 
 
 def import_all_services(request):
@@ -105,30 +153,30 @@ def import_all_services(request):
     If there is no YAMLs with form definitions inside <full_service_nameN>
     dir, then <full_service_nameN> won't be shown in Create Service first step.
     """
-    global _last_check_time
-    global _all_services
-    global _current_cache_hash
-    if time.time() - _last_check_time > CACHE_REFRESH_SECONDS_INTERVAL:
-        _last_check_time = time.time()
+    last_check_time = request.session.get('last_check_time', 0)
+    if time.time() - last_check_time > CACHE_REFRESH_SECONDS_INTERVAL:
+        request.session['last_check_time'] = time.time()
         directory, modified = metadata.get_ui_metadata(request)
+        session_is_empty = not request.session.get('services', {})
         # check directory here in case metadata service is not available
         # and None is returned as directory value.
         # TODO: it is better to use redirect for that purpose (if possible)
-        if modified or (directory and not are_caches_in_sync()):
-            _all_services = {}
+        if directory is not None and (modified or session_is_empty):
+            request.session['services'] = {}
             for full_service_name in os.listdir(directory):
                 final_dir = os.path.join(directory, full_service_name)
                 if os.path.isdir(final_dir) and len(os.listdir(final_dir)):
                     filename = os.listdir(final_dir)[0]
                     if filename.endswith('.yaml'):
-                        import_service(full_service_name,
+                        import_service(request.session['services'],
+                                       full_service_name,
                                        os.path.join(final_dir, filename))
-            _current_cache_hash = metadata.get_existing_hash()
 
 
 def iterate_over_services(request):
     import_all_services(request)
-    for service in sorted(_all_services.values(), key=lambda v: v.name):
+    services = request.session.get('services', {})
+    for service in sorted(services.values(), key=lambda v: v.name):
         yield service.type, service
 
 
@@ -166,10 +214,11 @@ def get_service_field_descriptions(request, service_id, index):
     def get_descriptions(service):
         form_cls = service.forms[index]
         descriptions = []
-        for field in form_cls.fields_template:
-            if 'description' in field:
-                title = field.get('descriptionTitle', field.get('label', ''))
-                descriptions.append((title, field['description']))
+        for field in form_cls.base_fields.itervalues():
+            title = field.description_title
+            description = field.description
+            if description:
+                descriptions.append((title, description))
         return descriptions
     return with_service(request, service_id, get_descriptions, [])
 

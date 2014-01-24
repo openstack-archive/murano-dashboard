@@ -45,6 +45,11 @@ def define_tables(table_name, step_verbose_name):
         url = None
         classes = ('ajax-modal', 'btn-create')
 
+        def allowed(self, request, service):
+            if self.table.name == 'ui' and self.table.data:
+                return False
+            return True
+
     class ObjectsTable(tables.DataTable):
         file_name = tables.Column('filename', verbose_name=_('File Name'))
         path = tables.Column('path', verbose_name=_('Nested Path'))

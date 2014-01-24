@@ -36,18 +36,6 @@ from django.template.loader import render_to_string
 log = logging.getLogger(__name__)
 
 
-YAQL_FUNCTIONS = {
-    'test': lambda self, pattern: re.match(pattern(), self()) is not None,
-}
-
-
-def create_yaql_context(functions=YAQL_FUNCTIONS):
-    context = yaql.create_context()
-    for name, func in functions.iteritems():
-        context.register_function(func, name)
-    return context
-
-
 def with_request(func):
     """The decorator is meant to be used together with `UpdatableFieldsForm':
     apply it to the `update' method of fields inside that form.
@@ -75,7 +63,7 @@ def make_yaql_validator(field, form, key, validator_property):
     def validator_func(value):
         data = getattr(form, 'cleaned_data', {})
         data[key] = value
-        form.service.update_cleaned_data(form, data)
+        form.service.update_cleaned_data(data, form=form)
         if not validator_property['expr'].__get__(field):
             raise forms.ValidationError(
                 _(validator_property.get('message', '')))
@@ -130,8 +118,31 @@ def get_murano_images(request):
     return murano_images
 
 
+class RawProperty(object):
+    def __init__(self, key, spec):
+        self.key = key
+        self.spec = spec
+
+    def finalize(self, form_name, service):
+        def _get(field):
+            data_ready, value = service.get_data(form_name, self.spec)
+            return value if data_ready else field.__dict__[self.key]
+
+        def _set(field, value):
+            field.__dict__[self.key] = value
+
+        def _del(field):
+            del field.__dict__[self.key]
+        return property(_get, _set, _del)
+
+
 class CustomPropertiesField(forms.Field):
-    def __init__(self, form=None, key=None, *args, **kwargs):
+    def __init__(self, description=None, description_title=None,
+                 *args, **kwargs):
+        self.description = description
+        self.description_title = (description_title or
+                                  unicode(kwargs.get('label', '')))
+
         validators = []
         for validator in kwargs.get('validators', []):
             if hasattr(validator, '__call__'):  # single regexpValidator
@@ -142,31 +153,33 @@ class CustomPropertiesField(forms.Field):
                 if regex_validator:
                     validators.append(wrap_regex_validator(
                         regex_validator, validator.get('message', '')))
-                elif isinstance(expr, property):
-                    if form:
-                        validators.append(
-                            make_yaql_validator(self, form, key, validator))
-
+                elif isinstance(expr, RawProperty):
+                    validators.append(validator)
         kwargs['validators'] = validators
+
         super(CustomPropertiesField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
         """Skip all validators if field is disabled."""
+        # form is assigned in ServiceConfigurationForm.finalize_fields()
+        form = self.form
+        # the only place to ensure that Service object has up-to-date
+        # cleaned_data
+        form.service.update_cleaned_data(form.cleaned_data, form=form)
         if getattr(self, 'enabled', True):
             return super(CustomPropertiesField, self).clean(value)
         else:
             return super(CustomPropertiesField, self).to_python(value)
 
     @classmethod
-    def push_properties(cls, kwargs):
+    def finalize_properties(cls, kwargs, form_name, service):
         props = {}
-        for key, value in kwargs.iteritems():
-            if isinstance(value, property):
-                props[key] = value
-        for key in props.keys():
-            del kwargs[key]
+        for key, value in kwargs.items():
+            if isinstance(value, RawProperty):
+                props[key] = value.finalize(form_name, service)
+                del kwargs[key]
         if props:
-            return type('cls_with_props', (cls,), props)
+            return type(cls.__name__, (cls,), props)
         else:
             return cls
 
@@ -213,14 +226,17 @@ class PasswordField(CharField):
             if err_msg.get('required'):
                 error_messages['required'] = err_msg.get('required')
 
-        super(PasswordField, self).__init__(
-            min_length=7,
-            max_length=255,
-            validators=[self.validate_password],
-            label=label,
-            error_messages=error_messages,
-            help_text=help_text,
-            widget=self.PasswordInput(render_value=True))
+        kwargs.update({
+            'min_length': 7,
+            'max_length': 255,
+            'validators': [self.validate_password],
+            'label': label,
+            'error_messages': error_messages,
+            'help_text': help_text,
+            'widget': self.PasswordInput(render_value=True),
+        })
+
+        super(PasswordField, self).__init__(*args, **kwargs)
 
     def __deepcopy__(self, memo):
         result = super(PasswordField, self).__deepcopy__(memo)
@@ -372,7 +388,7 @@ class TableWidget(floppyforms.widgets.Input):
         self.max_sync = max_sync
         # FixME: we need to use this hack because TableField passes all kwargs
         # to TableWidget
-        for kwarg in ('widget', 'key', 'form'):
+        for kwarg in ('widget', 'description', 'description_title'):
             ignorable = kwargs.pop(kwarg, None)
         super(TableWidget, self).__init__(*args, **kwargs)
 
@@ -480,11 +496,12 @@ class FlavorChoiceField(ChoiceField):
 
 
 class KeyPairChoiceField(ChoiceField):
-    " This widget allows to select Key Pair for VMs "
+    " This widget allows to select keypair for VMs "
     @with_request
     def update(self, request, **kwargs):
-        self.choices = [(keypair.name, keypair.name) for keypair in
-                        novaclient(request).keypairs.list()]
+        self.choices = [('', _('No keypair'))]
+        for keypair in novaclient(request).keypairs.list():
+            self.choices.append((keypair.name, keypair.name))
 
 
 class ImageChoiceField(ChoiceField):
