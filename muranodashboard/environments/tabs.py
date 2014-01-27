@@ -73,6 +73,9 @@ class OverviewTab(tabs.Tab):
         if hasattr(service_data, 'uri'):
             detail_info['Load Balancer URI'] = service_data.uri
 
+        if hasattr(service_data, 'floatingip'):
+            detail_info['Floating IP'] = service_data.floatingip
+
         #check for deployed services so additional information can be added
         units = []
         for unit in service_data.units:
