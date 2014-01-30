@@ -652,6 +652,7 @@ class ClusterIPField(CharField):
                 self.help_text = _('Specify valid fixed IP')
             self.validators = [self.make_nova_validator(request, ip_ranges)]
         elif self.network_topology == 'routed':
+            self.widget.attrs['placeholder'] = self.existing_subnet
             self.validators = [self.make_neutron_validator()]
         else:  # 'flat' topology
             raise NotImplementedError('Flat topology is not implemented yet')
