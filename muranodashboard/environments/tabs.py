@@ -112,11 +112,12 @@ class OverviewTab(tabs.Tab):
                     }
                     break
 
+            unit_detail['Floating IP'] = unit.get('floatingip')
+
             if len(service_data.units) > 1:
                 units.append(unit_detail)
             else:
                 detail_info.update(unit_detail)
-
         return {'service': detail_info, 'units': units}
 
 

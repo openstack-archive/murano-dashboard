@@ -574,6 +574,15 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
+class FloatingIpBooleanField(BooleanField):
+    @with_request
+    def update(self, request, environment_id, **kwargs):
+        env = api.environment_get(request, environment_id)
+        network_topology = env.networking.get('topology')
+        if network_topology != 'routed':
+            self.widget.is_hidden = True
+
+
 class ClusterIPField(CharField):
     existing_subnet = None
     network_topology = None
