@@ -13,15 +13,35 @@
 #    under the License.
 
 import logging
+import json
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.forms import ValidationError
 from horizon.forms import SelfHandlingForm
 from horizon import messages, exceptions
 from openstack_dashboard.api import glance
-import json
-
 
 log = logging.getLogger(__name__)
+
+
+def filter_murano_images(images, request=None):
+    marked_images = []
+    for image in images:
+        metadata = image.properties.get('murano_image_info')
+        if metadata:
+            try:
+                metadata = json.loads(metadata)
+            except ValueError:
+                msg = _('Invalid metadata for image: {0}'.format(image.id))
+                log.warn(msg)
+                if request:
+                    exceptions.handle(request, msg)
+            else:
+                image.title = metadata.get('title', 'No Title')
+                image.type = metadata.get('type', 'No Type')
+
+            marked_images.append(image)
+    return marked_images
 
 
 class MarkImageForm(SelfHandlingForm):
@@ -34,6 +54,7 @@ class MarkImageForm(SelfHandlingForm):
     image = forms.ChoiceField(label='Image')
     title = forms.CharField(max_length="255", label=_("Title"))
     type = forms.ChoiceField(label="Type", choices=_metadata.items())
+    existing_titles = forms.CharField(widget=forms.HiddenInput)
 
     def __init__(self, request, *args, **kwargs):
         super(MarkImageForm, self).__init__(request, *args, **kwargs)
@@ -46,6 +67,8 @@ class MarkImageForm(SelfHandlingForm):
             exceptions.handle(request, _('Unable to retrieve list of images'))
 
         self.fields['image'].choices = [(i.id, i.name) for i in images]
+        self.fields['existing_titles'].initial = \
+            [image.title for image in filter_murano_images(images)]
 
     def handle(self, request, data):
         log.debug('Marking image with specified metadata: {0}'.format(data))
@@ -65,3 +88,13 @@ class MarkImageForm(SelfHandlingForm):
         except Exception:
             exceptions.handle(request, _('Unable to mark image'),
                               redirect='horizon:murano:images:index')
+
+    def clean_title(self):
+        cleaned_data = super(MarkImageForm, self).clean()
+        title = cleaned_data.get('title')
+        existing_titles = self.fields['existing_titles'].initial
+        if title in existing_titles:
+            raise ValidationError(_('Specified title already in use.'
+                                    ' Please choose another one.'))
+
+        return title
