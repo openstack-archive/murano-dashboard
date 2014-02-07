@@ -7,5 +7,5 @@ PyYAML>=3.1.0
 django-floppyforms==1.1
 ordereddict
 yaql==0.2
-python-muranoclient==0.4
-murano-metadataclient==0.4.1.dev41.g8378813
+python-muranoclient==0.4.1
+murano-metadataclient==0.4.1
