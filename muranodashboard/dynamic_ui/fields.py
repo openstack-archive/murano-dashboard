@@ -679,3 +679,11 @@ class DatabaseListField(CharField):
         super(DatabaseListField, self).validate(value)
         for db_name in value:
             self.validate_mssql_identifier(db_name)
+
+
+class PostgreSqlChoiceField(ChoiceField):
+    @with_request
+    def update(self, request, environment_id, **kwargs):
+        self.choices = [('', _('(No Database)'))]
+        psql = api.service_list_by_type(request, environment_id, 'postgreSql')
+        self.choices.extend([(srv.id, srv.name) for srv in psql])

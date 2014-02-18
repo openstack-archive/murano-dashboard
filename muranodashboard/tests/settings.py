@@ -1,6 +1,6 @@
 import socket
 
-from dashboard.settings import *
+from muranodashboard.settings import *
 
 socket.setdefaulttimeout(1)
 
