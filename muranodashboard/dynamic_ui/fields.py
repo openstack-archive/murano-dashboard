@@ -473,11 +473,8 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
 
 class DomainChoiceField(ChoiceField):
     @with_request
-    def update(self, request, **kwargs):
+    def update(self, request, environment_id, **kwargs):
         self.choices = [("", "Not in domain")]
-        link = request.__dict__['META']['HTTP_REFERER']
-        environment_id = re.search(
-            'murano/(\w+)', link).group(0)[7:]
         domains = api.service_list_by_type(request, environment_id,
                                            'activeDirectory')
         self.choices.extend(
