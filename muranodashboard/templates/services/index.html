@@ -5,7 +5,11 @@
 {% block page_header %}
   {% include "services/_page_header.html" %}
 {% endblock page_header %}
-
 {% block main %}
-  {{ table.render }}
+<div class="row-fluid">
+  <div class="span12">
+  {{ tab_group.render }}
+  </div>
+</div>
 {% endblock %}
+

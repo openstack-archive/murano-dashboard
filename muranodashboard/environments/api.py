@@ -14,6 +14,7 @@
 
 import logging
 import bunch
+import json
 from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
@@ -22,6 +23,8 @@ from muranodashboard.dynamic_ui.services import get_service_name
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
+
+from muranodashboard.environments import format
 
 log = logging.getLogger(__name__)
 
@@ -330,3 +333,68 @@ def get_deployment_descr(request, environment_id, deployment_id):
                         request, service['type'])
             return descr
     return None
+
+
+def load_environment_data(request, environment_id):
+    environment = environment_get(request, environment_id)
+    return render_d3_data(environment, environment.services)
+
+
+def render_d3_data(environment, services):
+    ext_net_name = None
+    d3_data = {"nodes": [], "environment": {}}
+    if environment:
+        environment_image = '/static/dashboard/img/stack-green.svg'
+        in_progress, status_message = \
+            format.get_environment_status_message(environment)
+        environment_node = format.create_empty_node()
+        environment_node['id'] = environment.id
+        environment_node['name'] = environment.name
+        environment_node['status'] = status_message
+        environment_node['image'] = environment_image
+        environment_node['in_progress'] = in_progress
+        environment_node['info_box'] = \
+            format.environment_info(environment, status_message)
+        d3_data['environment'] = environment_node
+
+    if services:
+        for service in services:
+            service_image = '/static/dashboard/img/stack-green.svg'
+            in_progress, status_message = \
+                format.get_environment_status_message(service)
+            required_by = None
+            if service.get('assignFloatingIP', False):
+                if ext_net_name:
+                    required_by = ext_net_name
+                else:
+                    ext_net_name = 'External_Network'
+                    d3_data['nodes'].append(format.create_ext_network_node(
+                        ext_net_name))
+                    required_by = ext_net_name
+            service_node = format.create_empty_node()
+            service_node['name'] = service['name']
+            service_node['status'] = status_message
+            service_node['image'] = service_image
+            service_node['link_type'] = "unit"
+            service_node['in_progress'] = in_progress
+            service_node['info_box'] = format.appication_info(service,
+                                                              service_image,
+                                                              status_message)
+            if required_by:
+                service_node['required_by'] = [required_by]
+            d3_data['nodes'].append(service_node)
+
+            for unit in service['units']:
+                unit_image = '/static/dashboard/img/server-green.svg'
+                node = format.create_empty_node()
+                node['name'] = unit['name']
+                node['id'] = unit['id']
+                node['required_by'] = [service['name']]
+                node['flavor'] = service['flavor']
+                node['info_box'] = \
+                    format.unit_info(service, unit, unit_image)
+                node['image'] = unit_image
+                node['link_type'] = "unit"
+                node['in_progress'] = in_progress
+                d3_data['nodes'].append(node)
+    return json.dumps(d3_data)
