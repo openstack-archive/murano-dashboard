@@ -39,7 +39,8 @@ TYPES = {
     'image': fields.ImageChoiceField,
     'azone': fields.AZoneChoiceField,
     'text': (fields.CharField, forms.Textarea),
-    'floatingip': fields.FloatingIpBooleanField
+    'floatingip': fields.FloatingIpBooleanField,
+    'psqlDatabase': fields.PostgreSqlChoiceField
 }
 
 
