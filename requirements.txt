@@ -1,10 +1,10 @@
-pbr>=0.5.21,<1.0
+pbr>=0.6,<1.0
 anyjson>=0.3.3
 bunch
 iso8601>=0.1.8
-six>=1.4.1
+six>=1.5.2
 PyYAML>=3.1.0
-django-floppyforms==1.1
+django-floppyforms>=1.1
 ordereddict
 yaql==0.2
 python-muranoclient==0.4.1
