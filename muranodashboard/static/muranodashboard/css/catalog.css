@@ -1,0 +1,78 @@
+.app-list .app-icon {
+    display:block;
+    background-color:#ccc;
+    width:50px;
+    height:50px;
+    border-radius:25px;
+    margin: 0 20px 20px 0;
+}
+.app-list .actions {
+    border-top:1px #ccc solid;
+    padding-top:15px;
+    margin-top:15px;
+}
+.app-row {
+    overflow: hidden;
+}
+.centering{
+    width: 100%;
+    text-align: center;
+}
+/*.well {*/
+   /*border: 1px solid #aaa;*/
+   /*-moz-box-shadow: inset 1px 2px 8px #222;*/
+    /*-webkit-box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
+    /*box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
+  /**/
+/*}*/
+/*.well:hover {*/
+    /*float: none;*/
+    /*border: 1px solid #aaa;*/
+    /*background: #ccc;*/
+    /*-o-transform: scale(1.2);*/
+    /*-moz-transform: scale(1.2);*/
+    /*-webkit-transform: scale(1.2);*/
+    /*transform: scale(1.2);*/
+    /*-moz-box-shadow: inset 1px 2px 8px #222;*/
+    /*-webkit-box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
+    /*box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
+    /*-o-transition: all .15s;*/
+    /*-moz-transition: all .15s ease-out;*/
+    /*-webkit-transition: all .15s ease-out;*/
+    /*transition: all .15s ease-out;*/
+/*}*/
+.row.app-list {
+    margin-top: 20px;
+    margin-bottom:20px;
+}
+a.btn-add {
+    position:relative;
+    padding-left:23px;
+}
+a.btn-add:before {
+    display: inline-block;
+    content: "";
+    width: 18px;
+    height: 20px;
+    margin-top: 1px;
+    margin-right: .3em;
+    line-height: 14px;
+    background-image: url('/static/bootstrap/img/glyphicons-halflings.png');
+    background-position: 0px -92px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0px;
+    left: 5px;
+}
+.header.dropdown {
+    display:inline-block;
+}
+.header.dropdown ul {
+     font-size:14px;
+}
+.nav-tabs {
+    margin-top:20px;
+}
+.well.app-meta {
+    margin-top:30px;
+}

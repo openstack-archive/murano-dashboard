@@ -64,5 +64,4 @@ urlpatterns = patterns(
 
     url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
         DeploymentDetailsView.as_view(), name='deployment_details'),
-
 )
