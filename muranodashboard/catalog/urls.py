@@ -27,5 +27,5 @@ urlpatterns = patterns(
         name='index'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),
-    url(r'^images/.+', image.get_image, name="images")
+    url(r'^images/(?P<image_name>[^/]*)', image.get_image, name="images")
 )

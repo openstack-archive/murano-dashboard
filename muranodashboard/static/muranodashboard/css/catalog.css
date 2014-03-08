@@ -76,3 +76,116 @@ a.btn-add:before {
 .well.app-meta {
     margin-top:30px;
 }
+
+a.trigger.first {
+top: 80px; right: 0;
+}
+a.trigger.second {
+top: 135px; right: 0;
+}
+
+a.trigger{
+position: absolute;
+width: 60px;
+text-decoration: none;
+font-size: 16px;
+letter-spacing:-1px;
+font-family: verdana, helvetica, arial, sans-serif;
+color:#fff;
+padding: 20px 40px 20px 15px;
+font-weight: 700;
+background:#ccc url(images/plus.png) 85% 55% no-repeat;
+border:1px solid #ddd
+-moz-border-radius-topleft: 20px;
+-webkit-border-top-left-radius: 20px;
+-moz-border-radius-bottomleft: 20px;
+-webkit-border-bottom-left-radius: 20px;
+
+display: block;
+}
+
+a.active.trigger {
+ background: #222222 url(images/minus.png) 15% 55% no-repeat;
+}
+
+a.trigger:hover{
+position: absolute;
+text-decoration: none;
+font-size: 16px;
+letter-spacing:-1px;
+font-family: verdana, helvetica, arial, sans-serif;
+color:#fff;
+padding: 20px 40px 20px 20px;
+font-weight: 700;
+background:#ccc url(images/plus.png) 85% 55% no-repeat;
+
+border:1px solid #ddd;
+-moz-border-radius-topleft: 20px;
+-webkit-border-top-left-radius: 20px;
+-moz-border-radius-bottomleft: 20px;
+-webkit-border-bottom-left-radius: 20px;
+display: block;
+}
+
+.murano-side-panel {
+position: absolute;
+top: 250px;
+right: 0;
+display: none;
+background: #000000;
+border:1px solid #111111;
+-moz-border-radius-topleft: 20px;
+-webkit-border-top-left-radius: 20px;
+-moz-border-radius-bottomleft: 20px;
+-webkit-border-bottom-left-radius: 20px;
+width: 330px;
+height: auto;
+padding: 30px 130px 30px 30px;
+filter: alpha(opacity=85);
+opacity: .85;
+}
+
+.murano-side-panel p{
+margin: 0 0 15px 0;
+padding: 0;
+color: #cccccc;
+}
+
+.murano-side-panel a, .murano-side-panel a:visited{
+margin: 0;
+padding: 0;
+color: #9FC54E;
+text-decoration: none;
+border-bottom: 1px solid #9FC54E;
+}
+
+.murano-side-panel a:hover, .murano-side-panel a:visited:hover{
+margin: 0;
+padding: 0;
+color: #ffffff;
+text-decoration: none;
+border-bottom: 1px solid #ffffff;
+}
+
+.panel-visible{
+display: block;
+}
+
+.columns{
+clear: both;
+width: 330px;
+padding: 0 0 20px 0;
+line-height: 22px;
+}
+
+.colleft{
+float: left;
+width: 150px;
+line-height: 22px;
+}
+
+.colright{
+float: right;
+width: 150px;
+line-height: 22px;
+}

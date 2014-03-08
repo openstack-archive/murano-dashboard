@@ -118,11 +118,12 @@ class AppCatalogModel(object):
 
 
 class Categories(object):
-    def all(self, n=10):
-        cat_list = []
-        for i in range(1, n):
-            cat_list.append('Category #{0}'.format(i))
-        return cat_list
+    _categories = ['DataBases', 'WebServers', 'Java Servlet Containers',
+                   'Microsoft Services', 'SAP', 'Message Queues',
+                   'Load Balancers', 'DB Tier', 'BigData', 'KeyValue Storage']
+
+    def all(self, count=10):
+        return self._categories[:count]
 
 
 class ApplicationImageModel(object):

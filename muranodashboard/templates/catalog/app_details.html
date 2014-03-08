@@ -15,7 +15,7 @@
      {{ tab_group.render }}
  <div class="well app-meta">
      <div class="app-icon pull-left">
-       <img src="/murano/appcatalog/catalog/images/{{ application.image }}" width="70px" height="70px"/>
+       <img src="{% url 'horizon:murano:catalog:images' application.image %}" width="70px" height="70px"/>
      </div>
      <div class="">
        <ul>
