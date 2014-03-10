@@ -1,0 +1,3 @@
+{% for srv in api_servers %}
+        {% include "stats/_srv_instance.html" with server=srv %}
+{% endfor %}
