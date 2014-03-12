@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{% trans "Environments" %}{% endblock %}
+
+{% block page_header %}
+
+<link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
+  {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
+{% endblock page_header %}
+
+{% block main %}
+<h3>Latest Apps</h3>
+<div class="app-row app-list">
+    {% for app in latest_list %}
+       <div class="span4">
+        <div class="well app">
+            <div class="app-icon pull-left">
+               <img src="images/{{ app.image }}"/>
+            </div>
+            <div class="app-summary">
+                <h4>{{ app.title }}</h4>
+                <p>{{ app.description }}</p>
+            </div>
+            <div class="app-actions">
+                <a href="#" class="btn btn-small btn-add">Add</a>
+                <a href="
+                {% url 'horizon:murano:catalog:application_details' app.id %}" class="pull-right">More info &raquo;</a>
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<h3>App Category: <div class="header dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    {{ current_category_name }}<b class="caret"></b></a>
+  <ul class="dropdown-menu">
+      {% for cat_slug, cat_name in categories.items %}
+        <li><a tabindex="-1" href="
+        {% url 'horizon:murano:catalog:index' cat_slug page_obj.number %}">
+            {{ cat_name }}</a></li>
+      {% endfor %}
+  </ul>
+</div>
+</h3>
+
+<div class="app-row app-list">
+    {% for app in object_list %}
+        <div class="span4">
+            <div class="well">
+                <div class="app-icon pull-left">
+                    <img src="images/{{ app.image }}"/>
+                </div>
+                <div class="app-summary">
+                    <h4>{{ app.title }}</h4>
+                    <p>{{ app.description }}</p>
+                </div>
+                <div class="app-actions">
+                <a href="install/{{ app.id }}" class="btn btn-small btn-add">Add</a>
+                <a href="application_details/{{ app.id }}" class="pull-right">More info &raquo;</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+    <div class="btn-toolbar centering">
+      <div class="btn-group">
+          {% if page_obj.has_previous %}
+           <a class="btn btn-default"
+              href="
+              {% url 'horizon:murano:catalog:index' current_category page_obj.previous_page_number %}">
+               Previous</a>
+          {% else %}
+           <a class="btn btn-default disabled" href="#">Previous</a>
+          {% endif %}
+
+          <a class="btn btn-default disabled"
+             href="
+             {% url 'horizon:murano:catalog:index' current_category page_obj.number %}">
+              {{ page_obj.number }}</a>
+
+          {% if page_obj.has_next %}
+           <a class="btn btn-default"
+              href="
+              {% url 'horizon:murano:catalog:index' current_category page_obj.next_page_number %}">
+               Next</a>
+          {% else %}
+           <a  class="btn btn-default disabled"  href="#">Next</a>
+          {% endif %}
+      </div>
+    </div>
+{% endif %}
+
+{% endblock %}

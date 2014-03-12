@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n sizeformat %}
+{% block title %}{% trans "Application Details" %}{% endblock %}
+
+{% block page_header %}
+    {% include "catalog/_details_page_header.html" %}
+{% endblock page_header %}
+
+{% block main %}
+<div class="table_wrapper">
+<div class="row-fluid">
+ <div class="span12">
+    <a href="#" class="btn btn-add pull-right">Add to Environment</a>
+    <h3>{{ application.title }}</h3>
+     {{ tab_group.render }}
+ <div class="well app-meta">
+     <div class="app-icon pull-left">
+       <img src="/murano/appcatalog/catalog/images/{{ application.image }}" width="70px" height="70px"/>
+     </div>
+     <div class="">
+       <ul>
+        <li><strong>Fully Qualified Service Name:</strong> {{ application.fqdn }}</li>
+        <li><strong>Author:</strong> {{ application.author }}</li>
+        <li><strong>Active:</strong> {{ application.active }}</li>
+        <li><strong>Version:</strong> {{ application.version }}</li>
+        </ul>
+     </div>
+
+</div>
+</div>
+</div>
+    </div>
+{% endblock %}

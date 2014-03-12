@@ -1,4 +1,4 @@
-#    Copyright (c) 2013 Mirantis, Inc.
+#    Copyright (c) 2014 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -11,31 +11,15 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import horizon
 from django.utils.translation import ugettext_lazy as _
-from muranodashboard import exceptions
-# prevent pyflakes from fail
-assert exceptions
+from muranodashboard import dashboard
 
 
-class DeployPanels(horizon.PanelGroup):
-    slug = 'deployment_group'
-    name = _('Deployment')
-    panels = ('environments', 'catalog')
+class AppCatalog(horizon.Panel):
+    name = _('Application Catalog')
+    slug = 'catalog'
 
 
-class ManagePanels(horizon.PanelGroup):
-    slug = 'manage_metadata'
-    name = _('Manage')
-    panels = ('images', 'service_catalog')
-
-
-class Murano(horizon.Dashboard):
-    name = _('Murano')
-    slug = 'murano'
-    panels = (DeployPanels, ManagePanels)
-    default_panel = 'environments'
-    supports_tenants = True
-
-
-horizon.register(Murano)
+dashboard.Murano.register(AppCatalog)

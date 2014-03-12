@@ -21,6 +21,9 @@ ARCHIVE_PKG_NAME = 'archive.tar.gz'
 CACHE_DIR = getattr(settings, 'METADATA_CACHE_DIR',
                     os.path.join(tempfile.gettempdir(),
                                  'muranodashboard-cache'))
+IMAGE_CACHE_DIR = getattr(settings, 'IMAGE_CACHE_DIR',
+                          os.path.join(tempfile.gettempdir(),
+                                       'muranodashboard-image-cache'))
 
 CACHE_REFRESH_SECONDS_INTERVAL = 5
 
