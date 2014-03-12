@@ -20,11 +20,6 @@ import logging
 from muranodashboard.dynamic_ui import metadata
 from .helpers import decamelize, get_yaql_expr, create_yaql_context
 
-
-try:
-    from collections import OrderedDict
-except ImportError:  # python2.6
-    from ordereddict import OrderedDict
 import yaql
 import yaml
 from yaml.scanner import ScannerError
