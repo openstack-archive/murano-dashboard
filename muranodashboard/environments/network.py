@@ -31,7 +31,7 @@ class NeutronSubnetGetter(object):
         self.address = conf.get('env_ip_template', '10.0.0.0')
 
         self.tenant_id = tenant_id
-        self.router_id = router_id
+        self._router_id = router_id
 
         cacert = getattr(settings, 'OPENSTACK_SSL_CACERT', None)
         insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
@@ -114,8 +114,14 @@ class NeutronSubnetGetter(object):
 
     def get_subnet(self, environment_id=None):
         # TODO: should use environment_id for getting cidr in future
-        router_id = self.router_id or self._get_router_id()
-        return self._get_subnet(router_id)[0]
+        if not self._router_id:
+            self._router_id = self._get_router_id()
+        return self._get_subnet(self._router_id)[0]
+
+    def get_router_id(self):
+        if not self._router_id:
+            self._router_id = self._get_router_id()
+        return self._router_id
 
 
 def get_network_params(request):
@@ -128,7 +134,8 @@ def get_network_params(request):
         if existing_subnet:
             return {'networking': {'topology': network_topology,
                                    'createNetwork': True,
-                                   'cidr': existing_subnet}}
+                                   'cidr': existing_subnet,
+                                   'routerId': getter.get_router_id()}}
         else:
             log.error('Cannot get subnet')
             return {'networking': {'topology': network_topology}}
