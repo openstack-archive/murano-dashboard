@@ -11,28 +11,36 @@
   {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
 {% endblock page_header %}
 
-{% block main %}
+{% block js %}
+    {% include "horizon/_scripts.html" %}
 
     <script type="text/javascript">
-
-    function toggleCategoryPanel(){
-     var panel = document.getElementById("MuranoSidePanel");
-     var toggle = document.getElementById("MuranoLeftPanelToggle");
-     panel.style.top = parseInt(toggle.offsetTop) +'px';
-     panel.classList.toggle("panel-visible");
-     toggle.classList.toggle("active")
+    var allPanelIds = ['#MuranoCategoriesPanel', '#MuranoSearchPanel',
+        '#MuranoDefaultEnvPanel'];
+    function bindPanelToggle(panelId) {
+        var toggler = $(panelId + 'Toggle'), panel = $(panelId);
+        toggler.click(function(event) {
+            panel.css('top', toggler.offset().top);
+            panel.toggleClass('panel-visible');
+            allPanelIds.forEach(function(panId) {
+                if ( panId != panelId ) {
+                    $(panId).removeClass('panel-visible');
+                    $(panId + 'Toggle').removeClass('active');
+                }
+            });
+            toggler.toggleClass('active');
+        })
     }
-    function toggleSearchPanel(){
-     var panel = document.getElementById("MuranoSearchPanel");
-     var toggle = document.getElementById("MuranoSearchPanelToggle");
-     panel.style.top = parseInt(toggle.offsetTop) +'px';
-     panel.classList.toggle("panel-visible");
-     toggle.classList.toggle("active")
-    }
+    $(function() {
+        bindPanelToggle('#MuranoCategoriesPanel');
+        bindPanelToggle('#MuranoSearchPanel');
+        bindPanelToggle('#MuranoDefaultEnvPanel');
+    })
     </script>
+{% endblock %}
 
+{% block main %}
 <div class="table_wrapper">
-
 <h3>Latest Apps</h3>
 <div class="app-row app-list">
     {% for app in latest_list %}
@@ -115,7 +123,43 @@
     </div>
 {% endif %}
 
-<div class="murano-side-panel" id="MuranoSidePanel">
+<div class="murano-side-panel" id="MuranoDefaultEnvPanel">
+      <div id="environment_switcher" class="dropdown switcher_bar"
+       tabindex="1">
+    {% with num_of_envs=available_environments|length %}
+        {% if num_of_envs > 1 %}
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#environment_switcher">
+        {% endif %}
+        <h3 class="link">
+            {% trans "Environment:" %}
+            {% if environment %}
+                {{ environment.name }}
+            {% else %}
+                {% trans "No Environments" %}
+            {% endif %}
+           {% if num_of_envs > 1 %}
+               <span class="caret"></span>
+           {% endif %}
+        </h3>
+    {% if num_of_envs > 1 %}
+        </a>
+        <ul id="environment_list" class="dropdown-menu">
+        <li class='divider'></li>
+            {% for env in available_environments %}
+            {% if env.id != environment.id %}
+              <li><a href="{% url 'horizon:murano:catalog:switch_env' env.id %}?next={% url 'horizon:murano:catalog:index' %}">
+                  {{ env.name }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+</div>
+<a class="trigger third" href="#" id="MuranoDefaultEnvPanelToggle">Environment</a>
+
+<div class="murano-side-panel" id="MuranoCategoriesPanel">
     <h3>Categories</h3>
 
 <div style="clear:both;"></div>
@@ -137,7 +181,8 @@
     </div>
 </div>
 </div>
- <a class="trigger second" href="#" onclick="toggleCategoryPanel()" id="MuranoLeftPanelToggle">Category</a>
+<a class="trigger second" href="#" id="MuranoCategoriesPanelToggle">Category</a>
+
 <div class="murano-side-panel" id="MuranoSearchPanel">
     <h3>Search</h3>
     <form class="search">
@@ -145,7 +190,7 @@
         <button class="btn_search">Go</button>
     </form>
 </div>
- <a class="trigger first" href="#" onclick="toggleSearchPanel()" id="MuranoSearchPanelToggle">Search</a>
+<a class="trigger first" href="#" id="MuranoSearchPanelToggle">Search</a>
 </div>
 
 {% endblock %}

@@ -17,10 +17,45 @@ from django.template import defaultfilters as filters
 from django.utils import datastructures
 from horizon import tabs
 
+from django import shortcuts
+from django.conf import settings
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import login_required
+from django.utils.http import is_safe_url
+
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.catalog import models
+from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
+
+
+class DictToObj(object):
+    def __init__(self, **kwargs):
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
+
+
+def get_available_environments(request):
+    envs = []
+    for env in api.environments_list(request):
+        obj = DictToObj(id=env.id, name=env.name, status=env.status)
+        envs.append(obj)
+
+    return envs
+
+
+@login_required
+def switch(request, environment_id, redirect_field_name=REDIRECT_FIELD_NAME):
+    redirect_to = request.REQUEST.get(redirect_field_name, '')
+    if not is_safe_url(url=redirect_to, host=request.get_host()):
+        redirect_to = settings.LOGIN_REDIRECT_URL
+
+    for env in get_available_environments(request):
+        if env.id == environment_id:
+            request.session['environment'] = env
+            break
+    return shortcuts.redirect(redirect_to)
 
 
 class IndexView(list.ListView):
@@ -33,6 +68,16 @@ class IndexView(list.ListView):
 
     def get_template_names(self):
         return ['catalog/index.html']
+
+    def get_environments_context(self):
+        envs = get_available_environments(self.request)
+        context = {'available_environments': envs}
+        environment = self.request.session.get('environment')
+        if environment:
+            context['environment'] = environment
+        elif envs:
+            context['environment'] = envs[0]
+        return context
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -48,6 +93,8 @@ class IndexView(list.ListView):
         context['categories'] = categories
         context['current_category'] = current_category
         context['current_category_name'] = current_category_name
+
+        context.update(self.get_environments_context())
 
         return context
 
