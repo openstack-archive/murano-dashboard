@@ -21,7 +21,9 @@ from functools import update_wrapper
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.formtools.wizard.views import SessionWizardView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect  # noqa
+from django.http import HttpResponse  # noqa
+from django.views import generic
 from horizon import exceptions
 from horizon import tabs
 from horizon import tables
@@ -33,7 +35,7 @@ from tables import ServicesTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
 from workflows import CreateEnvironment, UpdateEnvironment
-from tabs import ServicesTabs, DeploymentTabs
+from tabs import ServicesTabs, DeploymentTabs, EnvironmentDetailsTabs
 from . import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
@@ -193,45 +195,23 @@ class IndexView(tables.DataTableView):
         return environments
 
 
-class Services(tables.DataTableView):
-    table_class = ServicesTable
+class EnvironmentDetails(tabs.TabbedTableView):
+    tab_group_class = EnvironmentDetailsTabs
     template_name = 'services/index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Services, self).get_context_data(**kwargs)
+        context = super(EnvironmentDetails, self).get_context_data(**kwargs)
 
         try:
+            self.environment_id = self.kwargs['environment_id']
             env = api.environment_get(self.request, self.environment_id)
             context['environment_name'] = env.name
 
         except:
-            msg = _("Sorry, this environment does't exist anymore")
+            msg = _("Sorry, this environment doesn't exist anymore")
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         return context
-
-    def get_data(self):
-        services = []
-        self.environment_id = self.kwargs['environment_id']
-        ns_url = "horizon:murano:environments:index"
-        try:
-            services = api.services_list(self.request, self.environment_id)
-        except HTTPForbidden:
-            msg = _('Unable to retrieve list of services. This environment '
-                    'is deploying or already deployed by other user.')
-            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
-
-        except HTTPInternalServerError:
-            msg = _("Environment with id %s doesn't exist anymore"
-                    % self.environment_id)
-            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
-        except HTTPUnauthorized:
-            exceptions.handle(self.request)
-        except HTTPNotFound:
-            msg = _("Environment with id %s doesn't exist anymore"
-                    % self.environment_id)
-            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
-        return services
 
 
 class DetailServiceView(tabs.TabView):
@@ -396,3 +376,12 @@ class DeploymentDetailsView(tabs.TabbedTableView):
 
         return self.tab_group_class(request, deployment=deployment, logs=logs,
                                     **kwargs)
+
+
+class JSONView(generic.View):
+
+    def get(self, request, **kwargs):
+        self.environment_id = kwargs['environment_id']
+        data = api.load_environment_data(request, self.environment_id)
+        return HttpResponse(data,
+                            content_type="application/json")

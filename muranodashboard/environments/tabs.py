@@ -14,17 +14,21 @@
 
 import logging
 
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
+from horizon import exceptions
 from horizon import tabs
-from muranodashboard.environments.consts import LOG_LEVEL_TO_COLOR
-from muranodashboard.environments.consts import LOG_LEVEL_TO_TEXT
+
 from openstack_dashboard.api import nova as nova_api
 from openstack_dashboard.api import heat as heat_api
 
+from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
+from muranodashboard.environments.consts import LOG_LEVEL_TO_COLOR
+from muranodashboard.environments.consts import LOG_LEVEL_TO_TEXT
 from muranodashboard.environments.tables import STATUS_DISPLAY_CHOICES
-from muranodashboard.environments.tables import EnvConfigTable
+from muranodashboard.environments.tables import EnvConfigTable, ServicesTable
 
 LOG = logging.getLogger(__name__)
 
@@ -164,6 +168,54 @@ class EnvConfigTab(tabs.TableTab):
     def get_environment_configuration_data(self):
         deployment = self.tab_group.kwargs['deployment']
         return deployment.get('services')
+
+
+class EnvironmentTopologyTab(tabs.Tab):
+    name = _("Topology")
+    slug = "topology"
+    template_name = "services/_detail_topology.html"
+    preload = False
+
+    def get_context_data(self, request):
+        context = {}
+        environment_id = self.tab_group.kwargs['environment_id']
+        context['environment_id'] = environment_id
+        d3_data = api.load_environment_data(self.request, environment_id)
+        context['d3_data'] = d3_data
+        return context
+
+
+class EnvironmentServicesTab(tabs.TableTab):
+    name = _("Services")
+    slug = "serviceslist"
+    table_classes = (ServicesTable,)
+    template_name = "services/_service_list.html"
+    preload = False
+
+    def get_services_data(self):
+        services = []
+        self.environment_id = self.tab_group.kwargs['environment_id']
+        ns_url = "horizon:murano:environments:index"
+        try:
+            services = api.services_list(self.request, self.environment_id)
+        except exc.HTTPForbidden:
+            msg = _('Unable to retrieve list of services. This environment '
+                    'is deploying or already deployed by other user.')
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
+
+        except (exc.HTTPInternalServerError, exc.HTTPNotFound):
+            msg = _("Environment with id %s doesn't exist anymore"
+                    % self.environment_id)
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
+        except exc.HTTPUnauthorized:
+            exceptions.handle(self.request)
+
+        return services
+
+
+class EnvironmentDetailsTabs(tabs.TabGroup):
+    slug = "environemnt_details"
+    tabs = (EnvironmentServicesTab, EnvironmentTopologyTab)
 
 
 class ServicesTabs(tabs.TabGroup):

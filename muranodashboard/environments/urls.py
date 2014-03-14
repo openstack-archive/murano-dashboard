@@ -15,7 +15,7 @@
 from django.conf.urls import patterns, url
 
 from views import IndexView, DeploymentDetailsView
-from views import Services
+from views import JSONView, EnvironmentDetails
 from views import CreateEnvironmentView
 from views import DetailServiceView
 from views import DeploymentsView
@@ -50,8 +50,11 @@ urlpatterns = patterns(
         EditEnvironmentView.as_view(),
         name='update_environment'),
 
-    url(ENVIRONMENT_ID + r'/services$', Services.as_view(),
+    url(ENVIRONMENT_ID + r'/services$', EnvironmentDetails.as_view(),
         name='services'),
+
+    url(ENVIRONMENT_ID + r'/services/get_d3_data$',
+        JSONView.as_view(), name='d3_data'),
 
     url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
         DetailServiceView.as_view(),

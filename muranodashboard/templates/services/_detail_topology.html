@@ -1,0 +1,10 @@
+{% load i18n sizeformat %}
+{% load static %}
+<div id="resource_container">
+<script type="text/javascript" src="{% static 'muranodashboard/js/horizon.muranotopology.js' %}"></script>
+    <div id="info_box"></div>
+    <div id="stack_box"></div>
+    <div id="murano_application_topology"></div>
+    <div id="environment_id" data-environment_id="{{ environment_id }}"></div>
+    <div id="d3_data" data-d3_data="{{ d3_data }}"></div>
+</div>
