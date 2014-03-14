@@ -10,7 +10,7 @@
 <div class="table_wrapper">
 <div class="row-fluid">
  <div class="span12">
-    <a href="#" class="btn btn-add pull-right">Add to Environment</a>
+    <a href="{% url 'horizon:murano:catalog:add' environment.id application.id %}" class="btn btn-add pull-right ajax-modal">Add to Environment</a>
     <h3>{{ application.title }}</h3>
      {{ tab_group.render }}
  <div class="well app-meta">

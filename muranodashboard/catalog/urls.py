@@ -28,6 +28,9 @@ urlpatterns = patterns(
     url(r'^switch_environment/(?P<environment_id>[^/]+)$',
         'switch',
         name='switch_env'),
+    url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
+        views.AddApplicationView.as_view(),
+        name='add'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),
     url(r'^images/(?P<image_name>[^/]*)', image.get_image, name="images")

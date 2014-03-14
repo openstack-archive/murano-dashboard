@@ -16,6 +16,7 @@ from django.views.generic import list
 from django.template import defaultfilters as filters
 from django.utils import datastructures
 from horizon import tabs
+from horizon import workflows
 
 from django import shortcuts
 from django.conf import settings
@@ -25,6 +26,7 @@ from django.utils.http import is_safe_url
 
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.catalog import models
+from muranodashboard.catalog import workflows as murano_workflows
 from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
@@ -43,6 +45,17 @@ def get_available_environments(request):
         envs.append(obj)
 
     return envs
+
+
+def get_environments_context(request):
+    envs = get_available_environments(request)
+    context = {'available_environments': envs}
+    environment = request.session.get('environment')
+    if environment:
+        context['environment'] = environment
+    elif envs:
+        context['environment'] = envs[0]
+    return context
 
 
 @login_required
@@ -69,16 +82,6 @@ class IndexView(list.ListView):
     def get_template_names(self):
         return ['catalog/index.html']
 
-    def get_environments_context(self):
-        envs = get_available_environments(self.request)
-        context = {'available_environments': envs}
-        environment = self.request.session.get('environment')
-        if environment:
-            context['environment'] = environment
-        elif envs:
-            context['environment'] = envs[0]
-        return context
-
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['latest_list'] = self.apps.last_objects
@@ -94,7 +97,7 @@ class IndexView(list.ListView):
         context['current_category'] = current_category
         context['current_category_name'] = current_category_name
 
-        context.update(self.get_environments_context())
+        context.update(get_environments_context(self.request))
 
         return context
 
@@ -117,8 +120,22 @@ class AppDetailsView(tabs.TabView):
         LOG.debug('AppDetailsView get_context called with kwargs: {0}'.
                   format(kwargs))
         context['application'] = self.app
+
+        context.update(get_environments_context(self.request))
+
         return context
 
     def get_tabs(self, request, *args, **kwargs):
         app = self.get_data(**kwargs)
         return self.tab_group_class(request, application=app, **kwargs)
+
+
+class AddApplicationView(workflows.WorkflowView):
+    workflow_class = murano_workflows.AddApplication
+    template_name = 'environments/create.html'
+
+    def get_initial(self):
+        initial = super(AddApplicationView, self).get_initial()
+        initial.update({'environment_id': self.kwargs.get('environment_id'),
+                        'app_id': self.kwargs.get('app_id')})
+        return initial
