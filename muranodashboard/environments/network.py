@@ -132,7 +132,8 @@ def get_network_params(request):
                                      request.user.token.id)
         existing_subnet = getter.get_subnet()
         if existing_subnet:
-            return {'networking': {'topology': network_topology,
+            # when providing router_id, 'topology' should be set to 'manual'
+            return {'networking': {'topology': 'manual',
                                    'createNetwork': True,
                                    'cidr': existing_subnet,
                                    'routerId': getter.get_router_id()}}
