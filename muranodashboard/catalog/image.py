@@ -18,9 +18,9 @@ from muranodashboard import catalog
 from muranodashboard.catalog import models
 
 
-def get_image(request):
+def get_image(request, image_name):
     path = os.path.basename(request.path)
-    if path != '':
+    if path:
         cache = catalog.get_image_cache()
         data = cache.get_entry(path)
         if data:
@@ -31,6 +31,8 @@ def get_image(request):
             cache.put_cache(path, path)
             response = generate_response(models.get_image(path))
             return response
+    else:
+        return HttpResponse()
 
 
 def generate_response(data):

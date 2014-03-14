@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-
+{% load custom_filters %}
 
 {% block title %}{% trans "Environments" %}{% endblock %}
 
@@ -9,16 +9,38 @@
 
 <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
   {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
+
 {% endblock page_header %}
 
 {% block main %}
+
+    <script type="text/javascript">
+
+    function toggleCategoryPanel(){
+     var panel = document.getElementById("MuranoSidePanel");
+     var toggle = document.getElementById("MuranoLeftPanelToggle");
+     panel.style.top = parseInt(toggle.offsetTop) +'px';
+     panel.classList.toggle("panel-visible");
+     toggle.classList.toggle("active")
+    }
+    function toggleSearchPanel(){
+     var panel = document.getElementById("MuranoSearchPanel");
+     var toggle = document.getElementById("MuranoSearchPanelToggle");
+     panel.style.top = parseInt(toggle.offsetTop) +'px';
+     panel.classList.toggle("panel-visible");
+     toggle.classList.toggle("active")
+    }
+    </script>
+
+<div class="table_wrapper">
+
 <h3>Latest Apps</h3>
 <div class="app-row app-list">
     {% for app in latest_list %}
        <div class="span4">
         <div class="well app">
             <div class="app-icon pull-left">
-               <img src="images/{{ app.image }}"/>
+               <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
             </div>
             <div class="app-summary">
                 <h4>{{ app.title }}</h4>
@@ -51,7 +73,7 @@
         <div class="span4">
             <div class="well">
                 <div class="app-icon pull-left">
-                    <img src="images/{{ app.image }}"/>
+                    <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
                 </div>
                 <div class="app-summary">
                     <h4>{{ app.title }}</h4>
@@ -59,7 +81,7 @@
                 </div>
                 <div class="app-actions">
                 <a href="install/{{ app.id }}" class="btn btn-small btn-add">Add</a>
-                <a href="application_details/{{ app.id }}" class="pull-right">More info &raquo;</a>
+                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="pull-right">More info &raquo;</a>
                 </div>
             </div>
         </div>
@@ -94,5 +116,38 @@
       </div>
     </div>
 {% endif %}
+
+<div class="murano-side-panel" id="MuranoSidePanel">
+    <h3>Categories</h3>
+
+<div style="clear:both;"></div>
+<div class="columns">
+    <div class="colleft">
+        <ul>
+            {% for slug, category in categories.items|firsthalf %}
+            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="colright">
+        <ul>
+            {% for slug, category in categories.items|lasthalf %}
+            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+</div>
+ <a class="trigger second" href="#" onclick="toggleCategoryPanel()" id="MuranoLeftPanelToggle">Category</a>
+<div class="murano-side-panel" id="MuranoSearchPanel">
+    <h3>Search</h3>
+    <form class="search">
+        <input class="text"/>
+        <button class="btn_search">Go</button>
+    </form>
+</div>
+ <a class="trigger first" href="#" onclick="toggleSearchPanel()" id="MuranoSearchPanelToggle">Search</a>
+</div>
 
 {% endblock %}

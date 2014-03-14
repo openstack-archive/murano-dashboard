@@ -39,7 +39,7 @@ class IndexView(list.ListView):
         context['latest_list'] = self.apps.last_objects
         categories = datastructures.SortedDict(
             ((filters.slugify(category), category) for category in
-             self.categories.all(5)))
+             self.categories.all()))
 
         current_category = self.kwargs.get('category')
         current_category_name = categories.get(current_category)
