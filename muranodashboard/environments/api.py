@@ -37,7 +37,7 @@ def get_endpoint(request):
         try:
             endpoint = url_for(request, 'murano')
         except ServiceCatalogException:
-            endpoint = 'http://localhost:8082'
+            endpoint = 'http://localhost:8082/v1'
             log.warning('Murano API location could not be found in Service '
                         'Catalog, using default: {0}'.format(endpoint))
     return endpoint
