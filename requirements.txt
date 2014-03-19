@@ -5,7 +5,6 @@ iso8601>=0.1.8
 six>=1.5.2
 PyYAML>=3.1.0
 django-floppyforms>=1.1
-ordereddict
 yaql==0.2
 python-muranoclient==0.4.1
 murano-metadataclient==0.4.1
