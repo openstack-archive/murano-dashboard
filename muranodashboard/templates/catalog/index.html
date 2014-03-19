@@ -54,7 +54,7 @@
                 <p>{{ app.description }}</p>
             </div>
             <div class="app-actions">
-                <a href="#" class="btn btn-small btn-add">Add</a>
+                <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="btn btn-small btn-add ajax-modal">Add</a>
                 <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
             </div>
             </div>
@@ -86,7 +86,7 @@
                     <p>{{ app.description }}</p>
                 </div>
                 <div class="app-actions">
-                <a href="#" class="btn btn-small btn-add">Add</a>
+                <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="btn btn-small btn-add ajax-modal">Add</a>
                 <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
                 </div>
             </div>
