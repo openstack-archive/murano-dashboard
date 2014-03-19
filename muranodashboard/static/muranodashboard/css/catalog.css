@@ -17,9 +17,19 @@
 .app-row {
     overflow: hidden;
 }
-.centering{
+.centering {
     width: 100%;
     text-align: center;
+}
+h3.link {
+    color: yellow;
+    opacity: 0.5;
+}
+h3.link:hover {
+    opacity: 1;
+}
+h3.link .caret {
+    border-top: 4px solid yellow !important;
 }
 /*.well {*/
    /*border: 1px solid #aaa;*/
@@ -85,6 +95,9 @@ top: 80px; right: 0;
 }
 a.trigger.second {
 top: 135px; right: 0;
+}
+a.trigger.third {
+top: 190px; right: 0;
 }
 
 a.trigger{

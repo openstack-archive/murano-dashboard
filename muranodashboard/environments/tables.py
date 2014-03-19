@@ -29,19 +29,38 @@ from consts import STATUS_ID_NEW
 from consts import DEPLOYMENT_STATUS_DISPLAY_CHOICES
 
 
+def creation_allowed(self, request, environment):
+    environment_id = self.table.kwargs['environment_id']
+    env = api.environment_get(request, environment_id)
+    status = getattr(env, 'status', None)
+
+    if status not in [STATUS_ID_DEPLOYING]:
+        return True
+    return False
+
+
 class CreateService(tables.LinkAction):
     name = 'CreateService'
     verbose_name = _('Create Service')
     classes = ('btn-launch', 'ajax-modal')
 
     def allowed(self, request, environment):
-        environment_id = self.table.kwargs['environment_id']
-        env = api.environment_get(request, environment_id)
-        status = getattr(env, 'status', None)
+        return creation_allowed(self, request, environment)
 
-        if status not in [STATUS_ID_DEPLOYING]:
-            return True
-        return False
+
+class AddApplication(tables.LinkAction):
+    name = 'AddApplication'
+    verbose_name = _('Add Application')
+    classes = ('btn-launch',)
+
+    def allowed(self, request, environment):
+        return creation_allowed(self, request, environment)
+
+    def get_link_url(self, datum=None):
+        base_url = reverse('horizon:murano:catalog:switch_env',
+                           args=(self.table.kwargs['environment_id'],))
+        redirect_url = reverse('horizon:murano:catalog:index')
+        return '{0}?next={1}'.format(base_url, redirect_url)
 
 
 class CreateEnvironment(tables.LinkAction):
@@ -272,7 +291,8 @@ class ServicesTable(tables.DataTable):
         verbose_name = _('Services')
         status_columns = ['status']
         row_class = UpdateServiceRow
-        table_actions = (CreateService, DeleteService, DeployThisEnvironment)
+        table_actions = (AddApplication, CreateService, DeleteService,
+                         DeployThisEnvironment)
         row_actions = (DeleteService,)
 
 

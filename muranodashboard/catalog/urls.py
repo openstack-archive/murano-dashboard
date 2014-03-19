@@ -25,6 +25,9 @@ urlpatterns = patterns(
     url(r'^index/(?P<category>[^/]+)/(?P<page>\d+)$',
         views.IndexView.as_view(),
         name='index'),
+    url(r'^switch_environment/(?P<environment_id>[^/]+)$',
+        'switch',
+        name='switch_env'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),
     url(r'^images/(?P<image_name>[^/]*)', image.get_image, name="images")
