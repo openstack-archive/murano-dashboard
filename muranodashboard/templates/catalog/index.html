@@ -9,7 +9,6 @@
 
 <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
   {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
-
 {% endblock page_header %}
 
 {% block main %}
@@ -48,8 +47,7 @@
             </div>
             <div class="app-actions">
                 <a href="#" class="btn btn-small btn-add">Add</a>
-                <a href="
-                {% url 'horizon:murano:catalog:application_details' app.id %}" class="pull-right">More info &raquo;</a>
+                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
             </div>
             </div>
         </div>
@@ -80,8 +78,8 @@
                     <p>{{ app.description }}</p>
                 </div>
                 <div class="app-actions">
-                <a href="install/{{ app.id }}" class="btn btn-small btn-add">Add</a>
-                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="pull-right">More info &raquo;</a>
+                <a href="#" class="btn btn-small btn-add">Add</a>
+                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
                 </div>
             </div>
         </div>

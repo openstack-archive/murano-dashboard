@@ -11,6 +11,9 @@
     padding-top:15px;
     margin-top:15px;
 }
+.btn-link {
+    padding: 5px 9px;
+}
 .app-row {
     overflow: hidden;
 }
