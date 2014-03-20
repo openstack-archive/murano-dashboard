@@ -43,7 +43,8 @@ from django.utils.decorators import classonlymethod
 from muranodashboard.dynamic_ui.services import get_service_descriptions
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
-
+import muranodashboard.dynamic_ui.services as services
+import muranodashboard.dynamic_ui.helpers as helpers
 
 LOG = logging.getLogger(__name__)
 
@@ -109,8 +110,9 @@ class Wizard(ModalFormMixin, LazyWizard):
         service_type = step0_data.get('service', '')
         attributes = {'type': service_type}
 
-        for form in form_list[1:]:
-            form.extract_attributes(attributes)
+        service = form_list[1].service
+        attributes.update(service.extract_attributes())
+        attributes = helpers.insert_hidden_ids(attributes)
 
         try:
             api.service_create(self.request, environment_id, attributes)

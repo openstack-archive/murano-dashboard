@@ -18,6 +18,7 @@ import re
 import time
 import logging
 from muranodashboard.dynamic_ui import metadata
+from muranodashboard.dynamic_ui import helpers
 from .helpers import decamelize, get_yaql_expr, create_yaql_context
 
 import yaql
@@ -26,6 +27,7 @@ from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
 import copy
 from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
+from muranodashboard.dynamic_ui import version
 
 log = logging.getLogger(__name__)
 
@@ -47,7 +49,14 @@ class Service(object):
     """
     NON_SERIALIZABLE_ATTRS = ('forms', 'context')
 
-    def __init__(self, forms=None, **kwargs):
+    def __init__(self, forms=None, templates=None, application=None, **kwargs):
+        self.templates = templates or {}
+
+        if application is None:
+            raise ValueError('Application section is required')
+        else:
+            self.application = helpers.parse(application)
+
         self.context = create_yaql_context()
         self.cleaned_data = {}
         self.forms = []
@@ -102,6 +111,13 @@ class Service(object):
         form_data = form_data[form_name]
         return form_name, form_data['fields'], form_data.get('validators', [])
 
+    def extract_attributes(self):
+        self.context.set_data(self.cleaned_data)
+        for name, template in self.templates.iteritems():
+            self.context.set_data(helpers.parse(template), name)
+
+        return helpers.evaluate(self.application, self.context)
+
     def get_data(self, form_name, expr, data=None):
         """First try to get value from cleaned data, if none
         found, use raw data."""
@@ -122,13 +138,14 @@ class Service(object):
 def import_service(services, full_service_name, service_file):
     try:
         with open(service_file) as stream:
-            yaml_desc = yaml.load(stream)
+            desc = yaml.load(stream)
     except (OSError, ScannerError) as e:
         log.warn("Failed to import service definition from {0},"
                  " reason: {1!s}".format(service_file, e))
     else:
-        service = dict((decamelize(k), v) for (k, v) in yaml_desc.iteritems())
-        services[full_service_name] = Service(**service)
+        version.check_version(desc.pop('Version', 1))
+        desc = dict((decamelize(k), v) for (k, v) in desc.iteritems())
+        services[full_service_name] = Service(**desc)
         log.info("Added service '{0}' from '{1}'".format(
             services[full_service_name].name, service_file))
 

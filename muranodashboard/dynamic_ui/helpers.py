@@ -12,16 +12,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import copy
 import re
+import uuid
 from django.core.validators import RegexValidator
 import types
 import yaql
+import yaql.context as ctx
+from yaql import utils as yaql_utils
 
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
-
-YAQL_FUNCTIONS = {
-    'test': lambda self, pattern: re.match(pattern(), self()) is not None,
-}
 
 
 def is_localizable(keys):
@@ -84,8 +84,90 @@ def get_yaql_expr(expr):
     return isinstance(expr, types.DictType) and expr.get('YAQL', None)
 
 
+def recursive_apply(predicate, transformer, value, *args):
+    def rec(val):
+        if predicate(val, *args):
+            return rec(transformer(val, *args))
+        elif isinstance(val, types.DictType):
+            return dict((rec(k), rec(v)) for (k, v) in val.iteritems())
+        elif isinstance(val, types.ListType):
+            return [rec(v) for v in val]
+        elif isinstance(val, types.TupleType):
+            return tuple([rec(v) for v in val])
+        elif isinstance(val, types.GeneratorType):
+            return rec(yaql_utils.limit(val))
+        else:
+            return val
+
+    return rec(value)
+
+
+def evaluate(value, context):
+    return recursive_apply(
+        lambda v, _ctx: hasattr(v, 'evaluate'),
+        lambda v, _ctx: v.evaluate(context=_ctx),
+        value, context)
+
+
+def parse(value):
+    return recursive_apply(
+        get_yaql_expr,
+        lambda v: yaql.parse(get_yaql_expr(v)),
+        value)
+
+
+def insert_hidden_ids(application):
+    def wrap(k, v):
+        if k == '?':
+            v['id'] = str(uuid.uuid4())
+            return k, v
+        else:
+            return rec(k), rec(v)
+
+    def rec(val):
+        if isinstance(val, types.DictType):
+            return dict(wrap(k, v) for k, v in val.iteritems())
+        elif isinstance(val, types.ListType):
+            return [rec(v) for v in val]
+        else:
+            return val
+
+    return rec(application)
+
+
+@ctx.ContextAware()
+def _repeat(context, template, start, end):
+    # context.data = copy.deepcopy(context.parent_context.data)
+    for i in xrange(start(), end()):
+        context.set_data(i, '$index')
+        yield evaluate(template(), context)
+
+
+def _interpolate(template, number):
+    return template().replace('#', '{0}').format(number())
+
+
+def _coalesce(arg, *args):
+    arg = arg()
+    if arg is None:
+        for arg in args:
+            arg = arg()
+            if arg is not None:
+                return arg
+    else:
+        return arg
+
+
+YAQL_FUNCTIONS = [
+    ('test', lambda self, pattern: re.match(pattern(), self()) is not None,),
+    ('repeat', _repeat,),
+    ('interpolate', _interpolate),
+    ('coalesce', _coalesce),
+]
+
+
 def create_yaql_context(functions=YAQL_FUNCTIONS):
     context = yaql.create_context()
-    for name, func in functions.iteritems():
+    for name, func in functions:
         context.register_function(func, name)
     return context

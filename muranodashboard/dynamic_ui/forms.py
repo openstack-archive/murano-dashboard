@@ -27,7 +27,6 @@ log = logging.getLogger(__name__)
 TYPES = {
     'string': fields.CharField,
     'boolean': fields.BooleanField,
-    'instance': fields.InstanceCountField,
     'clusterip': fields.ClusterIPField,
     'domain': fields.DomainChoiceField,
     'password': fields.PasswordField,
@@ -178,60 +177,6 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     v = fields.make_yaql_validator(field, self, field_name, v)
                 validators.append(v)
             field.validators = validators
-
-            self.init_attribute_mapping(field_name, field)
-
-    def init_attribute_mapping(self, field_name, field):
-        def set_mapping(name, value):
-            """Spawns new dictionaries for each dot found in name."""
-            bits = name.split('.')
-            head, tail, mapping = bits[0], bits[1:], self.attribute_mappings
-            while tail:
-                if not head in mapping:
-                    mapping[head] = {}
-                head, tail, mapping = tail[0], tail[1:], mapping[head]
-            mapping[head] = value
-
-        attr_names = field.attribute_names
-        if attr_names is not None:
-            if isinstance(attr_names, types.ListType):
-                # allow pushing field value to multiple attributes
-                for attr_name in attr_names:
-                    set_mapping(attr_name, field_name)
-            elif attr_names:
-                # if attributeNames = false, do not push field value
-                set_mapping(attr_names, field_name)
-        else:
-            # default mapping: field to attr with same name
-            # do not spawn new dictionaries for any dot in field_name
-            self.attribute_mappings[field_name] = field_name
-        del field.attribute_names
-
-    def get_unit_templates(self, data):
-        def parse_spec(spec):
-            if helpers.get_yaql_expr(spec):
-                data_ready, value = self.service.get_data(
-                    self.__class__.__name__, spec, data)
-                return value
-            elif isinstance(spec, types.ListType):
-                return [parse_spec(_spec) for _spec in spec]
-            elif isinstance(spec, types.DictType):
-                return dict(
-                    (parse_spec(k), parse_spec(v))
-                    for (k, v) in spec.iteritems())
-            else:
-                return spec
-        unit_templates = getattr(self.service, 'unit_templates', [])
-        return [parse_spec(spec) for spec in unit_templates]
-
-    def extract_attributes(self, attributes):
-        def get_attr(name):
-            if isinstance(name, types.DictType):
-                return dict((k, get_attr(v)) for (k, v) in name.iteritems())
-            else:
-                return self.cleaned_data[name]
-        for attr_name, field_name in self.attribute_mappings.iteritems():
-            attributes[attr_name] = get_attr(field_name)
 
     def clean(self):
         if self._errors:

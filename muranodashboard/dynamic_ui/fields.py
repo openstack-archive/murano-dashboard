@@ -260,36 +260,6 @@ class IntegerField(forms.IntegerField, CustomPropertiesField):
     pass
 
 
-class InstanceCountField(IntegerField):
-    def clean(self, value):
-        self.value = super(InstanceCountField, self).clean(value)
-        return self.value
-
-    def postclean(self, form, data):
-        value = []
-        if hasattr(self, 'value'):
-            templates = form.get_unit_templates(data)
-            for dc in range(self.value):
-                if dc < len(templates) - 1:
-                    template = templates[dc]
-                else:
-                    template = templates[-1]
-                value.append(self.interpolate_number(template, dc + 1))
-            return value
-
-    @staticmethod
-    def interpolate_number(spec, number):
-        """Replaces all '#' occurrences with given number."""
-        def interpolate(spec):
-            if isinstance(spec, types.DictType):
-                return dict((k, interpolate(v)) for (k, v) in spec.iteritems())
-            elif isinstance(spec, basestring) and '#' in spec:
-                return spec.replace('#', '{0}').format(number)
-            else:
-                return spec
-        return interpolate(spec)
-
-
 class Column(tables.Column):
     template_name = 'common/form-fields/data-grid/input.html'
 
