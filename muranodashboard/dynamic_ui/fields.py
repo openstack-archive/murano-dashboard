@@ -577,7 +577,7 @@ class FloatingIpBooleanField(BooleanField):
         env = api.environment_get(request, environment_id)
         network_topology = env.networking.get('topology')
         if network_topology not in ('routed', 'manual'):
-            self.widget.is_hidden = True
+            self.widget.attrs['disabled'] = True
 
 
 class ClusterIPField(CharField):
