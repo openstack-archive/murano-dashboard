@@ -51,7 +51,7 @@ def get_environments_context(request):
     envs = get_available_environments(request)
     context = {'available_environments': envs}
     environment = request.session.get('environment')
-    if environment:
+    if environment and environment in envs:
         context['environment'] = environment
     elif envs:
         context['environment'] = envs[0]

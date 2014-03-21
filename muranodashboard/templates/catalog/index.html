@@ -54,8 +54,15 @@
                 <p>{{ app.description }}</p>
             </div>
             <div class="app-actions">
-                <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="btn btn-small btn-add ajax-modal">Add</a>
+            {% with class='btn btn-small btn-add ajax-modal' %}
+                {% trans "Add" as label %}
+                {% if environment %}
+                    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
+                {% else %}
+                    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
+                {% endif %}
                 <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
+            {% endwith %}
             </div>
             </div>
         </div>
@@ -86,8 +93,16 @@
                     <p>{{ app.description }}</p>
                 </div>
                 <div class="app-actions">
-                <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="btn btn-small btn-add ajax-modal">Add</a>
+                {% with class='btn btn-small btn-add ajax-modal' %}
+                    {% trans "Add" as label %}
+
+                {% if environment %}
+                    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
+                {% else %}
+                    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
+                {% endif %}
                 <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
+                {% endwith %}
                 </div>
             </div>
         </div>
@@ -135,7 +150,7 @@
             {% if environment %}
                 {{ environment.name }}
             {% else %}
-                {% trans "No Environments" %}
+                <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="ajax-modal">{% trans "No Environments" %}</a>
             {% endif %}
            {% if num_of_envs > 1 %}
                <span class="caret"></span>
