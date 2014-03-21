@@ -1,0 +1,22 @@
+{% load custom_filters %}
+
+<h3>Categories</h3>
+
+<div style="clear:both;"></div>
+<div class="columns">
+    <div class="colleft">
+        <ul>
+            {% for slug, category in categories.items|firsthalf %}
+            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="colright">
+        <ul>
+            {% for slug, category in categories.items|lasthalf %}
+            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

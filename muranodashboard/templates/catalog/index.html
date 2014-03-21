@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% load custom_filters %}
 
 {% block title %}{% trans "Environments" %}{% endblock %}
 
@@ -44,28 +43,7 @@
 <h3>Latest Apps</h3>
 <div class="app-row app-list">
     {% for app in latest_list %}
-       <div class="span4">
-        <div class="well app">
-            <div class="app-icon pull-left">
-               <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
-            </div>
-            <div class="app-summary">
-                <h4>{{ app.title }}</h4>
-                <p>{{ app.description }}</p>
-            </div>
-            <div class="app-actions">
-            {% with class='btn btn-small btn-add ajax-modal' %}
-                {% trans "Add" as label %}
-                {% if environment %}
-                    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
-                {% else %}
-                    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
-                {% endif %}
-                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
-            {% endwith %}
-            </div>
-            </div>
-        </div>
+        {% include 'catalog/app_tile.html' %}
     {% endfor %}
 </div>
 <h3>App Category: <div class="header dropdown">
@@ -83,29 +61,7 @@
 
 <div class="app-row app-list">
     {% for app in object_list %}
-        <div class="span4">
-            <div class="well">
-                <div class="app-icon pull-left">
-                    <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
-                </div>
-                <div class="app-summary">
-                    <h4>{{ app.title }}</h4>
-                    <p>{{ app.description }}</p>
-                </div>
-                <div class="app-actions">
-                {% with class='btn btn-small btn-add ajax-modal' %}
-                    {% trans "Add" as label %}
-
-                {% if environment %}
-                    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
-                {% else %}
-                    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
-                {% endif %}
-                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
-                {% endwith %}
-                </div>
-            </div>
-        </div>
+        {% include 'catalog/app_tile.html' %}
     {% endfor %}
 </div>
 
@@ -139,62 +95,12 @@
 {% endif %}
 
 <div class="murano-side-panel" id="MuranoDefaultEnvPanel">
-      <div id="environment_switcher" class="dropdown switcher_bar"
-       tabindex="1">
-    {% with num_of_envs=available_environments|length %}
-        {% if num_of_envs > 1 %}
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#environment_switcher">
-        {% endif %}
-        <h3 class="link">
-            {% trans "Environment:" %}
-            {% if environment %}
-                {{ environment.name }}
-            {% else %}
-                <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="ajax-modal">{% trans "No Environments" %}</a>
-            {% endif %}
-           {% if num_of_envs > 1 %}
-               <span class="caret"></span>
-           {% endif %}
-        </h3>
-    {% if num_of_envs > 1 %}
-        </a>
-        <ul id="environment_list" class="dropdown-menu">
-        <li class='divider'></li>
-            {% for env in available_environments %}
-            {% if env.id != environment.id %}
-              <li><a href="{% url 'horizon:murano:catalog:switch_env' env.id %}?next={% url 'horizon:murano:catalog:index' %}">
-                  {{ env.name }}</a></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-  </div>
-
+    {% include 'catalog/env_switcher.html' %}
 </div>
 <a class="trigger third" href="#" id="MuranoDefaultEnvPanelToggle">Environment</a>
 
 <div class="murano-side-panel" id="MuranoCategoriesPanel">
-    <h3>Categories</h3>
-
-<div style="clear:both;"></div>
-<div class="columns">
-    <div class="colleft">
-        <ul>
-            {% for slug, category in categories.items|firsthalf %}
-            <li><a href="#{{ slug }}">{{ category }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div class="colright">
-        <ul>
-            {% for slug, category in categories.items|lasthalf %}
-            <li><a href="#{{ slug }}">{{ category }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
+    {% include 'catalog/categories.html' %}
 </div>
 <a class="trigger second" href="#" id="MuranoCategoriesPanelToggle">Category</a>
 
@@ -206,6 +112,7 @@
     </form>
 </div>
 <a class="trigger first" href="#" id="MuranoSearchPanelToggle">Search</a>
+
 </div>
 
 {% endblock %}
