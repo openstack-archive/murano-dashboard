@@ -39,15 +39,6 @@ def creation_allowed(self, request, environment):
     return False
 
 
-class CreateService(tables.LinkAction):
-    name = 'CreateService'
-    verbose_name = _('Create Service')
-    classes = ('btn-launch', 'ajax-modal')
-
-    def allowed(self, request, environment):
-        return creation_allowed(self, request, environment)
-
-
 class AddApplication(tables.LinkAction):
     name = 'AddApplication'
     verbose_name = _('Add Application')
@@ -272,17 +263,6 @@ class ServicesTable(tables.DataTable):
     operation_updated = tables.Column('operation_updated',
                                       verbose_name=_('Time updated'))
 
-    def __init__(self, request, **kwargs):
-        # we need to update CreateService url here because by default actions
-        # are instantiated in DataTableMetaclass with no args
-        for action_id, action in self.base_actions.items():
-            if isinstance(action, CreateService):
-                self.base_actions[action_id] = CreateService(
-                    url=reverse('horizon:murano:environments:create',
-                                args=(kwargs.get('environment_id'),)))
-                break
-        super(ServicesTable, self).__init__(request, **kwargs)
-
     def get_object_id(self, datum):
         return datum.id
 
@@ -291,7 +271,7 @@ class ServicesTable(tables.DataTable):
         verbose_name = _('Services')
         status_columns = ['status']
         row_class = UpdateServiceRow
-        table_actions = (AddApplication, CreateService, DeleteService,
+        table_actions = (AddApplication, DeleteService,
                          DeployThisEnvironment)
         row_actions = (DeleteService,)
 

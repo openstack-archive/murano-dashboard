@@ -13,9 +13,7 @@
 #    under the License.
 
 import logging
-import re
 import copy
-import json
 from functools import update_wrapper
 
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -31,7 +29,6 @@ from horizon import workflows
 from horizon import messages
 from horizon.forms.views import ModalFormMixin
 from tables import EnvironmentsTable
-from tables import ServicesTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
 from workflows import CreateEnvironment, UpdateEnvironment
@@ -40,11 +37,10 @@ from . import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
 from django.utils.decorators import classonlymethod
-from muranodashboard.dynamic_ui.services import get_service_descriptions
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
-import muranodashboard.dynamic_ui.services as services
-import muranodashboard.dynamic_ui.helpers as helpers
+from muranodashboard.catalog import models
+from muranodashboard.dynamic_ui import helpers
 
 LOG = logging.getLogger(__name__)
 
@@ -72,12 +68,9 @@ class LazyWizard(SessionWizardView):
         def view(request, *args, **kwargs):
             forms = initforms
             if hasattr(initforms, '__call__'):
-                forms = initforms(request)
-            condition_dict = initkwargs.get('condition_dict', False)
+                forms = initforms(request, kwargs)
             _kwargs = copy.copy(initkwargs)
-            if condition_dict and hasattr(condition_dict, '__call__'):
-                _kwargs.update(
-                    {'condition_dict': dict(condition_dict(request))})
+
             _kwargs = cls.get_initkwargs(forms, *initargs, **_kwargs)
             self = cls(**_kwargs)
             if hasattr(self, 'get') and not hasattr(self, 'head'):
@@ -100,17 +93,14 @@ class Wizard(ModalFormMixin, LazyWizard):
     template_name = 'services/wizard_create.html'
 
     def done(self, form_list, **kwargs):
-        link = self.request.__dict__['META']['HTTP_REFERER']
-
-        environment_id = re.search('murano/(\w+)', link).group(0)[7:]
+        environment_id = kwargs.get('environment_id')
         url = reverse('horizon:murano:environments:services',
                       args=(environment_id,))
 
-        step0_data = form_list[0].cleaned_data
-        service_type = step0_data.get('service', '')
-        attributes = {'type': service_type}
+        app_id = kwargs.get('app_id')
+        attributes = {'app_id': app_id}
 
-        service = form_list[1].service
+        service = form_list[0].service
         attributes.update(service.extract_attributes())
         attributes = helpers.insert_hidden_ids(attributes)
 
@@ -128,7 +118,7 @@ class Wizard(ModalFormMixin, LazyWizard):
                               redirect=redirect)
         else:
             message = "The %s service successfully created." % \
-                      get_service_name(self.request, service_type)
+                      get_service_name(self.request, app_id)
             messages.success(self.request, message)
             return HttpResponseRedirect(url)
 
@@ -143,35 +133,15 @@ class Wizard(ModalFormMixin, LazyWizard):
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
-        if self.steps.index > 0:
-            data = self.get_cleaned_data_for_step('service_choice')
-            service_type = data['service']
-            context['field_descriptions'] = get_service_field_descriptions(
-                self.request, service_type, self.steps.index - 1)
-            service_name = get_service_name(self.request, service_type)
-            context.update({'type': service_type,
-                            'service_name': service_name,
-                            'environment_id': self.kwargs.get('environment_id')
-                            })
-        else:
-            extended_description = form.fields['description'].initial or ''
-            if extended_description:
-                data = json.loads(extended_description)
-                if data:
-                    unavailable_services, reasons = zip(*data)
-                    services_msg = ', '.join(unavailable_services)
-                    reasons_msg = '\n'.join(set(reasons))
-                    extended_description = 'Services {0} are not available. ' \
-                                           'Reasons: {1}'.format(services_msg,
-                                                                 reasons_msg)
-                else:
-                    extended_description = ''
-
-            context.update({
-                'service_descriptions': get_service_descriptions(self.request),
-                'extended_description': extended_description,
-                'environment_id': self.kwargs.get('environment_id')
-            })
+        app_id = self.kwargs.get('app_id')
+        app = models.AppCatalogModel().objects.get(app_id=app_id)
+        context['field_descriptions'] = get_service_field_descriptions(
+            self.request, app_id, self.steps.index)
+        context.update({'type': app.fqn,
+                        'service_name': app.name,
+                        'app_id': app_id,
+                        'environment_id': self.kwargs.get('environment_id')
+                        })
         return context
 
 

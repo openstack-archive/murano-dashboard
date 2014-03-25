@@ -16,7 +16,6 @@ from django.views.generic import list
 from django.template import defaultfilters as filters
 from django.utils import datastructures
 from horizon import tabs
-from horizon import workflows
 
 from django import shortcuts
 from django.conf import settings
@@ -26,7 +25,6 @@ from django.utils.http import is_safe_url
 
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.catalog import models
-from muranodashboard.catalog import workflows as murano_workflows
 from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
@@ -135,14 +133,3 @@ class AppDetailsView(tabs.TabView):
     def get_tabs(self, request, *args, **kwargs):
         app = self.get_data(**kwargs)
         return self.tab_group_class(request, application=app, **kwargs)
-
-
-class AddApplicationView(workflows.WorkflowView):
-    workflow_class = murano_workflows.AddApplication
-    template_name = 'environments/create.html'
-
-    def get_initial(self):
-        initial = super(AddApplicationView, self).get_initial()
-        initial.update({'environment_id': self.kwargs.get('environment_id'),
-                        'app_id': self.kwargs.get('app_id')})
-        return initial

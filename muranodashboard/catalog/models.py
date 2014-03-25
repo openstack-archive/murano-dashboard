@@ -13,11 +13,12 @@
 #    under the License.
 
 import copy
+import json
 import logging
 import os
 import random
-import uuid
-
+import urllib2
+import yaml
 from django.utils import datastructures
 
 from muranodashboard.image_cache import cache as image_utils
@@ -28,11 +29,11 @@ LOG = logging.getLogger(__name__)
 
 class Application(object):
     def __init__(self, dct):
-        self.id = unicode(uuid.uuid4())
+        self.id = dct.pop('id')
         self.update(dct)
 
     def __repr__(self):
-        return getattr(self, 'title', 'No Title')
+        return getattr(self, 'name', 'No Name')
 
     def update(self, dct):
         for k, v in dct.items():
@@ -57,21 +58,40 @@ def get_image(name):
 
 
 class AppCatalogObjects(object):
-    def __init__(self, n=20):
-        dct = {'description': 'A simple description with not very long text. '
-                              'Like MySQL database'}
+    def __init__(self, url):
         self.app_list = datastructures.SortedDict()
-        for i in range(1, n):
-            dct['title'] = 'Test App {0}'.format(i)
+        self.url = url
+        string = self.query(url)
+        data = json.loads(string)
+        for dct in data['packages']:
             dct['image'] = get_image_name()
             app = Application(dct)
             self.app_list[app.id] = app
 
+    @staticmethod
+    def query(url):
+        request = urllib2.Request(url)
+        return urllib2.urlopen(request).read()
+
     def all(self, n=20):
-        return self.app_list.values()[1:n]
+        return self.app_list.values()[:n]
+
+    def get(self, **kwargs):
+        return self.app_list[kwargs.pop('app_id')]
+
+    def get_ui(self, **kwargs):
+        app_id = kwargs.pop('app_id')
+        url = '{0}/{1}/ui'.format(self.url, app_id)
+        yaml_desc = None
+        try:
+            yaml_desc = yaml.load(self.query(url))
+        except (OSError, yaml.ScannerError) as e:
+            LOG.warn("Failed to import service definition from {0},"
+                     " reason: {1!s}".format(url, e))
+        return yaml_desc
 
     def get_items(self, count):
-        return self.app_list.values()[1:count]
+        return self.app_list.values()[:count]
 
     def get_application(self, app_id):
         return self.app_list.get(app_id)
@@ -98,9 +118,7 @@ class AppCatalogObjects(object):
                        'the specific language governing permissions and '
                        'limitations under the License.',
             'version': '1.0.1.2',
-            'author': 'Test Author, Inc.',
             'active': 'Yes',
-            'fqdn': 'com.openstack.murano.TestApp'
         }
 
         LOG.debug('Current storage: {0}'.format(self.app_list))
@@ -109,7 +127,8 @@ class AppCatalogObjects(object):
         details.update(dct)
         return details
 
-perm_objects = AppCatalogObjects()
+perm_objects = AppCatalogObjects(
+    'http://muranorepositoryapi.apiary-mock.com/v2/catalog/packages')
 
 
 class AppCatalogModel(object):

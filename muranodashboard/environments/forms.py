@@ -16,7 +16,6 @@ import logging
 import json
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from muranodashboard.dynamic_ui.services import get_service_choices
 from muranodashboard.dynamic_ui.fields import get_murano_images, \
     ImageChoiceField
 log = logging.getLogger(__name__)
@@ -57,17 +56,3 @@ def filter_service_by_image_type(service, request):
     else:
         message = ''
     return filtered, message
-
-
-def ChoiceServiceFormFactory(request):
-    filtered, not_filtered = get_service_choices(
-        request, filter_service_by_image_type)
-
-    class _Class(forms.Form):
-        service = forms.ChoiceField(
-            label=_('Service Type'),
-            choices=filtered or [("", _("No services available"))])
-
-        description = forms.CharField(widget=forms.HiddenInput,
-                                      initial=json.dumps(not_filtered))
-    return _Class

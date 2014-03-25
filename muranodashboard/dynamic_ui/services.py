@@ -25,7 +25,7 @@ import yaql
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
-import copy
+from muranodashboard.catalog import models
 from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
 from muranodashboard.dynamic_ui import version
 
@@ -73,14 +73,11 @@ class Service(object):
                 self._forms.append((name, field_specs, validators))
 
     def __getstate__(self):
-        log.debug("Pickling service '{service.type}'".format(
-            service=self))
         dct = dict((k, v) for (k, v) in self.__dict__.iteritems()
                    if not k in self.NON_SERIALIZABLE_ATTRS)
         return dct
 
     def __setstate__(self, d):
-        log.debug("Unpickling service '{type}'".format(**d))
         for k, v in d.iteritems():
             setattr(self, k, v)
         # dealing with the attributes which cannot be serialized (see
@@ -192,14 +189,24 @@ def iterate_over_services(request):
         yield service.type, service
 
 
-def make_forms_getter(initial_forms=lambda request: copy.copy([])):
-    def _get_forms(request):
-        _forms = initial_forms(request)
-        for srv_type, service in iterate_over_services(request):
-            for step, form in enumerate(service.forms):
-                _forms.append(('{0}-{1}'.format(srv_type, step), form))
-        return _forms
-    return _get_forms
+def import_app(request, app_id):
+    if not request.session.get('apps'):
+        request.session['apps'] = {}
+    services = request.session['apps']
+
+    app = services.get(app_id)
+    if not app:
+        ui_desc = models.AppCatalogModel().objects.get_ui(app_id=app_id)
+        service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
+        services[app_id] = Service(**service)
+        app = services[app_id]
+
+    return app
+
+
+def get_app_forms(request, kwargs):
+    app = import_app(request, kwargs.get('app_id'))
+    return app.forms
 
 
 def service_type_from_id(service_id):
@@ -210,66 +217,19 @@ def service_type_from_id(service_id):
         return service_id
 
 
-def with_service(request, service_id, getter, default):
-    service_type = service_type_from_id(service_id)
-    for srv_type, service in iterate_over_services(request):
-        if srv_type == service_type:
-            return getter(service)
-    return default
+def get_service_name(request, app_id):
+    app = models.AppCatalogModel().objects.get(app_id=app_id)
+    return app.name
 
 
-def get_service_name(request, service_id):
-    return with_service(request, service_id, lambda service: service.name, '')
+def get_service_field_descriptions(request, app_id, index):
+    app = import_app(request, app_id)
 
-
-def get_service_field_descriptions(request, service_id, index):
-    def get_descriptions(service):
-        form_cls = service.forms[index]
-        descriptions = []
-        for field in form_cls.base_fields.itervalues():
-            title = field.description_title
-            description = field.description
-            if description:
-                descriptions.append((title, description))
-        return descriptions
-    return with_service(request, service_id, get_descriptions, [])
-
-
-def get_service_type(wizard):
-    cleaned_data = wizard.get_cleaned_data_for_step('service_choice') \
-        or {'service': 'none'}
-    return cleaned_data.get('service')
-
-
-def get_service_choices(request, filter_func=None):
-    filter_func = filter_func or (lambda srv: True, None)
-    filtered, not_filtered = [], []
-    for srv_type, service in iterate_over_services(request):
-        has_filtered, message = filter_func(service, request)
-        if has_filtered:
-            filtered.append((srv_type, service.name))
-        else:
-            not_filtered.append((service.name, message))
-    return filtered, not_filtered
-
-get_forms = make_forms_getter()
-
-
-def get_service_checkers(request):
-    def make_comparator(srv_id):
-        def compare(wizard):
-            return service_type_from_id(srv_id) == get_service_type(wizard)
-        return compare
-
-    return [(srv_id, make_comparator(srv_id)) for srv_id, form
-            in get_forms(request)]
-
-
-def get_service_descriptions(request):
+    form_cls = app.forms[index]
     descriptions = []
-    for srv_type, service in iterate_over_services(request):
-        description = getattr(service, 'description', _("<b>Default service \
-        description</b>. If you want to see here something meaningful, please \
-        provide `description' field in service markup."))
-        descriptions.append((srv_type, description))
+    for field in form_cls.base_fields.itervalues():
+        title = field.description_title
+        description = field.description
+        if description:
+            descriptions.append((title, description))
     return descriptions

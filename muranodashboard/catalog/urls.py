@@ -16,6 +16,8 @@ from django.conf.urls import patterns, url
 from muranodashboard.catalog import views
 from muranodashboard.catalog import image
 
+from muranodashboard.environments import views as env_views
+from muranodashboard.dynamic_ui import services
 
 VIEW_MOD = 'muranodashboard.catalog.views'
 
@@ -29,7 +31,7 @@ urlpatterns = patterns(
         'switch',
         name='switch_env'),
     url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
-        views.AddApplicationView.as_view(),
+        env_views.Wizard.as_view(services.get_app_forms),
         name='add'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),

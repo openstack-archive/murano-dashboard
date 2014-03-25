@@ -5,7 +5,7 @@
 {% extends "common/_modal_form.html" %}
 {% load i18n humanize %}
 {% load url from future %} {# fix for django 1.4.9 on CentOS #}
-{% block form_action %}{% url 'horizon:murano:environments:create' environment_id %}{% endblock %}
+{% block form_action %}{% url 'horizon:murano:catalog:add' environment_id app_id %}{% endblock %}
 {% block form_id %}create_service_form{% endblock %}
 {% block modal_id %}create_service{% endblock %}
 {% block modal-header %}{% trans "Create Service" %}{% endblock %}
@@ -26,68 +26,30 @@
 <p class='italic'>{% blocktrans %} {{ extended_description }} {% endblocktrans %}</p>
 </div>
 <div class="right">
-    {% if wizard.steps.index > 0 %}
-        <h3> {% blocktrans %} {{ service_name }} Service{% endblocktrans %} </h3>
-        {% for title, description in field_descriptions %}
-            <p>
-            {% if title %}
-                <strong>{% blocktrans %}{{ title }}:{% endblocktrans %}</strong>
-            {% endif %}
-            {% blocktrans %}{{ description }}{% endblocktrans %}
-            </p>
-        {% endfor %}
-    {% else %}
-        <h3>{% trans "Description" %}:</h3>
-        {% for service_type, description in service_descriptions %}
-            <p class="switchable" id="{{ service_type }}">
-                {% autoescape off %} {% blocktrans %}
-                    {{ description }}
-                {% endblocktrans %} {% endautoescape %}</p>
-        {% endfor %}
-        <p>{% blocktrans %} If you want your services to work with AD you should create The Active Directory Service first {% endblocktrans %}</p>
-    {% endif %}
+    <h3> {% blocktrans %} {{ service_name }} Service{% endblocktrans %} </h3>
+    {% for title, description in field_descriptions %}
+        <p>
+        {% if title %}
+            <strong>{% blocktrans %}{{ title }}:{% endblocktrans %}</strong>
+        {% endif %}
+        {% blocktrans %}{{ description }}{% endblocktrans %}
+        </p>
+    {% endfor %}
 </div>
 {% endblock %}
 
 {% block modal-footer %}
     <script type="text/javascript">
         $(function() {
-            function get_selection(elem) {
-                var children = $(elem).prop('children'),
-                        selected;
-                if ( children ) {
-                    for ( var i = 0, len = children.length; i < len; i++ )
-                        if ( children[i].selected)
-                            selected = children[i].value;
-                }
-                return selected;
-            }
-
-            $('#id_service_choice-service').change(function(event) {
-                var selected = get_selection(event.target);
-                if ( selected ) {
-                    $('p.switchable:not(#'+selected+')').css('display', 'none');
-                    $('p.switchable#'+selected).css('display', 'block');
-                } else {
-                    $('.modal-body .right').css('display', 'none');
-                }
-            });
-            $('#id_service_choice-service').change();
-
             $(".btn-wizard").click(function() {
-                var step = get_selection($('#id_service_choice-service'));
-                if ( step ) {
-                    $('.btn-wizard').val(step);
-                } else {
-                    $('#wizard_goto_step').val('{{ wizard.steps.prev }}')
-                }
+                $('#wizard_goto_step').val('{{ wizard.steps.prev }}')
             });
         });
     </script>
     {{ wizard.form.media }}
 
     <input type="hidden" name="wizard_goto_step" id="wizard_goto_step"/>
-    {% if wizard.steps.next or wizard.steps.index == 0 %}
+    {% if wizard.steps.next %}
         {% trans "Next" as next %}
     {% else %}
         {% trans "Create" as next %}

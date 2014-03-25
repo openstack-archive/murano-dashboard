@@ -19,29 +19,16 @@ from views import JSONView, EnvironmentDetails
 from views import CreateEnvironmentView
 from views import DetailServiceView
 from views import DeploymentsView
-from views import Wizard, EditEnvironmentView
-from forms import ChoiceServiceFormFactory
-from muranodashboard.dynamic_ui.services import get_service_checkers
-from muranodashboard.dynamic_ui.services import make_forms_getter
+from views import EditEnvironmentView
 from openstack_dashboard.dashboards.project.instances.views import DetailView
 
 VIEW_MOD = 'muranodashboard.environments.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
 
-def initial_forms_maker(request):
-    return [('service_choice', ChoiceServiceFormFactory(request))]
-
-
 urlpatterns = patterns(
     VIEW_MOD,
     url(r'^environments$', IndexView.as_view(), name='index'),
-
-    url(ENVIRONMENT_ID + r'/create/$',
-        Wizard.as_view(
-            make_forms_getter(initial_forms=initial_forms_maker),
-            condition_dict=get_service_checkers),
-        name='create'),
 
     url(r'^create_environment$', CreateEnvironmentView.as_view(),
         name='create_environment'),

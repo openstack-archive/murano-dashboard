@@ -237,7 +237,7 @@ def services_list(request, environment_id):
     for service_item in environment.services:
         service_data = service_item
         service_data['full_service_name'] = get_service_name(
-            request, service_data['type'])
+            request, service_data['app_id'])
 
         if service_data['id'] in reports and reports[service_data['id']]:
             last_operation = strip(str(reports[service_data['id']].text))
@@ -268,7 +268,7 @@ def service_create(request, environment_id, parameters):
     # we should be able to delete session
     # if we what add new services to this environment
     session_id = Session.get_or_create_or_delete(request, environment_id)
-    log.debug('Service::Create {0}'.format(parameters['type']))
+    log.debug('Service::Create {0}'.format(parameters['app_id']))
     return muranoclient(request).services.post(environment_id,
                                                path='/',
                                                data=parameters,
@@ -330,7 +330,7 @@ def get_deployment_descr(request, environment_id, deployment_id):
             if 'services' in descr:
                 for service in descr['services']:
                     service['full_service_name'] = get_service_name(
-                        request, service['type'])
+                        request, service['app_id'])
             return descr
     return None
 
