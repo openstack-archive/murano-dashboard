@@ -47,11 +47,18 @@ def get_available_environments(request):
     return envs
 
 
+def is_valid_environment(environment, valid_environments):
+    for env in valid_environments:
+        if environment.id == env.id:
+            return True
+    return False
+
+
 def get_environments_context(request):
     envs = get_available_environments(request)
     context = {'available_environments': envs}
     environment = request.session.get('environment')
-    if environment and environment in envs:
+    if environment and is_valid_environment(environment, envs):
         context['environment'] = environment
     elif envs:
         context['environment'] = envs[0]
