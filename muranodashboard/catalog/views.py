@@ -119,7 +119,7 @@ class AppDetailsView(tabs.TabView):
         context = super(AppDetailsView, self).get_context_data(**kwargs)
         LOG.debug('AppDetailsView get_context called with kwargs: {0}'.
                   format(kwargs))
-        context['application'] = self.app
+        context['app'] = self.app
 
         context.update(get_environments_context(self.request))
 

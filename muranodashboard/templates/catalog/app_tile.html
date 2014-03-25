@@ -11,14 +11,9 @@
     </div>
     <div class="app-actions">
     {% with class='btn btn-small btn-add ajax-modal' %}
-        {% trans "Add" as label %}
-        {% if environment %}
-            <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
-        {% else %}
-            <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
-        {% endif %}
-        <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
+        {% include 'catalog/add_app.html' %}
     {% endwith %}
+    <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
     </div>
     </div>
 </div>
