@@ -27,10 +27,10 @@ from django.template.defaultfilters import pluralize
 import copy
 import types
 import logging
-import yaql
 import horizon.tables as tables
 import floppyforms
 from django.template.loader import render_to_string
+from muranoclient.common import exceptions as muranoclient_exc
 
 
 log = logging.getLogger(__name__)
@@ -576,7 +576,7 @@ class FloatingIpBooleanField(BooleanField):
     def update(self, request, environment_id, **kwargs):
         env = api.environment_get(request, environment_id)
         network_topology = env.networking.get('topology')
-        if network_topology != 'routed':
+        if network_topology not in ('routed', 'manual'):
             self.widget.is_hidden = True
 
 
@@ -648,7 +648,10 @@ class ClusterIPField(CharField):
             else:
                 self.help_text = _('Specify valid fixed IP')
             self.validators = [self.make_nova_validator(request, ip_ranges)]
-        elif self.network_topology == 'routed':
+        elif self.network_topology in ('routed', 'manual'):
+            if self.network_topology == 'manual' and self.router_id is None:
+                raise muranoclient_exc.NotFound(_(
+                    'Router is not found. You should create one explicitly.'))
             self.widget.attrs['placeholder'] = self.existing_subnet
             self.validators = [self.make_neutron_validator()]
         else:  # 'flat' topology
