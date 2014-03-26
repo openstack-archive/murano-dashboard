@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import collections
 import logging
 import types
 
@@ -24,7 +25,14 @@ import yaql
 
 log = logging.getLogger(__name__)
 
-TYPES = {
+
+class AnyFieldDict(collections.defaultdict):
+    def __missing__(self, key):
+        return fields.make_select_cls(key)
+
+
+TYPES = AnyFieldDict()
+TYPES.update({
     'string': fields.CharField,
     'boolean': fields.BooleanField,
     'clusterip': fields.ClusterIPField,
@@ -40,7 +48,7 @@ TYPES = {
     'text': (fields.CharField, forms.Textarea),
     'floatingip': fields.FloatingIpBooleanField,
     'psqlDatabase': fields.PostgreSqlChoiceField
-}
+})
 
 
 def _collect_fields(field_specs, form_name, service):

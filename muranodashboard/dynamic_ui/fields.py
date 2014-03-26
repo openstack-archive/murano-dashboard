@@ -28,6 +28,7 @@ import copy
 import types
 import logging
 import horizon.tables as tables
+import horizon.forms as hz_forms
 import floppyforms
 from django.template.loader import render_to_string
 from muranoclient.common import exceptions as muranoclient_exc
@@ -657,3 +658,23 @@ class PostgreSqlChoiceField(ChoiceField):
         self.choices = [('', _('(No Database)'))]
         psql = api.service_list_by_type(request, environment_id, 'postgreSql')
         self.choices.extend([(srv.id, srv.name) for srv in psql])
+
+
+def make_select_cls(fqn):
+    class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
+        def __init__(self, *args, **kwargs):
+            super(DynamicSelect, self).__init__(*args, **kwargs)
+            self.widget.add_item_link = 'horizon:murano:catalog:add'
+
+        @with_request
+        def update(self, request, environment_id, **kwargs):
+            app_id = api.app_id_by_fqn(request, fqn)
+            if app_id is None:
+                msg = "Application with FQN='{0}' doesn't exist"
+                raise KeyError(msg.format(fqn))
+            self.widget.add_item_link_args = (environment_id, app_id)
+            self.choices = [('', _('Select Application'))]
+            apps = api.service_list_by_id(request, environment_id, app_id)
+            self.choices.extend([(app.id, app.name) for app in apps])
+
+    return DynamicSelect

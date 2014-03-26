@@ -25,6 +25,7 @@ from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
 
 from muranodashboard.environments import format
+from muranodashboard.catalog import models
 
 log = logging.getLogger(__name__)
 
@@ -258,11 +259,15 @@ def services_list(request, environment_id):
     return [bunch.bunchify(service) for service in services]
 
 
-def service_list_by_type(request, environment_id, service_type):
+def app_id_by_fqn(request, fqn):
+    apps = models.AppCatalogModel().objects.filter(fqn=fqn)
+    return apps[0].id if apps else None
+
+
+def service_list_by_id(request, environment_id, app_id):
     services = services_list(request, environment_id)
     log.debug('Service::Instances::List')
-    return [service for service in services
-            if service['type'] == service_type]
+    return [service for service in services if service['app_id'] == app_id]
 
 
 def service_create(request, environment_id, parameters):

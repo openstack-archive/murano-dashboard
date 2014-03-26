@@ -79,6 +79,15 @@ class AppCatalogObjects(object):
     def get(self, **kwargs):
         return self.app_list[kwargs.pop('app_id')]
 
+    def filter(self, **kwargs):
+        def filter_func(_app):
+            for key, value in kwargs.iteritems():
+                if not hasattr(_app, key) or getattr(_app, key) != value:
+                    return False
+            return True
+
+        return [app for app in self.app_list.itervalues() if filter_func(app)]
+
     def get_ui(self, **kwargs):
         app_id = kwargs.pop('app_id')
         url = '{0}/{1}/ui'.format(self.url, app_id)

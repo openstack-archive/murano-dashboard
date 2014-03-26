@@ -6,5 +6,5 @@ six>=1.5.2
 PyYAML>=3.1.0
 django-floppyforms>=1.1
 yaql==0.2
-python-muranoclient==0.4.1
+http://tarballs.openstack.org/python-muranoclient/python-muranoclient-master.tar.gz#egg=muranoclient-0.5
 murano-metadataclient==0.4.1

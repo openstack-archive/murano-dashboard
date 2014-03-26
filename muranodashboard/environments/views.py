@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
 import logging
 import copy
 from functools import update_wrapper
@@ -27,7 +28,7 @@ from horizon import tabs
 from horizon import tables
 from horizon import workflows
 from horizon import messages
-from horizon.forms.views import ModalFormMixin
+from horizon.forms import views as hz_views
 from tables import EnvironmentsTable
 from tables import DeploymentsTable
 from tables import EnvConfigTable
@@ -41,6 +42,7 @@ from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
 from muranodashboard.catalog import models
 from muranodashboard.dynamic_ui import helpers
+from muranodashboard import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -89,8 +91,13 @@ class LazyWizard(SessionWizardView):
         return view
 
 
-class Wizard(ModalFormMixin, LazyWizard):
+class Wizard(hz_views.ModalFormMixin, LazyWizard):
     template_name = 'services/wizard_create.html'
+
+    def get_prefix(self, *args, **kwargs):
+        base = super(Wizard, self).get_prefix(*args, **kwargs)
+        fmt = utils.BlankFormatter()
+        return fmt.format('{0}_{environment_id}_{app_id}', base, **kwargs)
 
     def done(self, form_list, **kwargs):
         environment_id = kwargs.get('environment_id')
@@ -105,22 +112,35 @@ class Wizard(ModalFormMixin, LazyWizard):
         attributes = helpers.insert_hidden_ids(attributes)
 
         try:
-            api.service_create(self.request, environment_id, attributes)
+            srv = api.service_create(self.request, environment_id, attributes)
         except HTTPForbidden:
-            msg = _('Sorry, you can\'t create service right now.'
-                    'The environment is deploying.')
+            msg = _("Sorry, you can\'t add application right now."
+                    "The environment is deploying.")
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         except Exception:
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request,
-                              _('Sorry, you can\'t create service right now.'),
+                              _("Sorry, you can't add application right now."),
                               redirect=redirect)
         else:
             message = "The %s service successfully created." % \
                       get_service_name(self.request, app_id)
             messages.success(self.request, message)
-            return HttpResponseRedirect(url)
+
+            return self.create_hacked_response(srv.id, attributes['name'])
+            #return HttpResponseRedirect(url)
+
+    def create_hacked_response(self, obj_id, obj_name):
+        # copy-paste from horizon.forms.views.ModalFormView; should be done
+        # that way until we move here from django Wizard to horizon workflow
+        if hz_views.ADD_TO_FIELD_HEADER in self.request.META:
+            field_id = self.request.META[hz_views.ADD_TO_FIELD_HEADER]
+            response = HttpResponse(json.dumps([obj_id, obj_name]))
+            response["X-Horizon-Add-To-Field"] = field_id
+            return response
+        else:
+            return HttpResponse('Done')
 
     def get_form_initial(self, step):
         init_dict = {}
@@ -140,7 +160,8 @@ class Wizard(ModalFormMixin, LazyWizard):
         context.update({'type': app.fqn,
                         'service_name': app.name,
                         'app_id': app_id,
-                        'environment_id': self.kwargs.get('environment_id')
+                        'environment_id': self.kwargs.get('environment_id'),
+                        'prefix': self.prefix
                         })
         return context
 
