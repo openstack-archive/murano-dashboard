@@ -11,6 +11,9 @@
     padding-top:15px;
     margin-top:15px;
 }
+.app-description {
+    height: 80px;
+}
 .btn-link {
     padding: 5px 9px;
 }

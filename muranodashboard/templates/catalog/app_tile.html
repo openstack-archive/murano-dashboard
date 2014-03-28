@@ -2,12 +2,14 @@
 
 <div class="span4">
 <div class="well app">
-    <div class="app-icon pull-left">
-       <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
-    </div>
-    <div class="app-summary">
-        <h4>{{ app.title }}</h4>
-        <p>{{ app.description }}</p>
+    <div class="app-description">
+        <div class="app-icon pull-left">
+           <img src="{% url 'horizon:murano:catalog:images' app.image %}"/>
+        </div>
+        <div class="app-summary">
+            <h4>{{ app.title }}</h4>
+            <p>{{ app.description|truncatechars:110 }}</p>
+        </div>
     </div>
     <div class="app-actions">
     {% with class='btn btn-small btn-add ajax-modal' %}
