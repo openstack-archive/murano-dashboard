@@ -13,76 +13,63 @@
 #    under the License.
 import logging
 from django import forms
+from django.core.files import uploadedfile
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.dynamic_ui.metadata import metadataclient
+from muranodashboard.environments import api
 
 log = logging.getLogger(__name__)
 
 
+MAX_FILE_SIZE_SPEC = (5 * 1024 * 1024, '5', _('MB'))
+
+
+def split_post_data(post):
+    data, files = {}, {}
+    for key, value in post.iteritems():
+        if isinstance(value, uploadedfile.InMemoryUploadedFile):
+            files[key] = value
+        else:
+            data[key] = value
+    return data, files
+
+
 class UploadPackageForm(SelfHandlingForm):
-    file = forms.FileField(label=_('Service .tag.gz package'),
-                           required=True)
+    package = forms.FileField(label=_('Application .zip package'),
+                              required=True)
+    categories = forms.ChoiceField(label=_('Application Category'))
+
+    def __init__(self, request, **kwargs):
+        super(UploadPackageForm, self).__init__(request, **kwargs)
+        categories = api.muranoclient(request).packages.categories()
+        self.fields['categories'].choices = [(c, c) for c in categories]
+
+    def clean_package(self):
+        package = self.cleaned_data.get('package')
+        if package:
+            max_size, size_in_units, unit_spec = MAX_FILE_SIZE_SPEC
+            if package.size > max_size:
+                msg = _('It is restricted to upload files larger than '
+                        '{0}{1}.'.format(size_in_units, unit_spec))
+                log.error(msg)
+                raise forms.ValidationError(msg)
+        return package
 
     def handle(self, request, data):
-        log.debug('Uploading .tag.gz package {0}'.format(data))
+        log.debug('Uploading package {0}'.format(data))
         try:
-            result = metadataclient(request).metadata_admin.upload_service(
-                data['file'])
+            data['categories'] = [data['categories']]
+            data, files = split_post_data(data)
+            result = api.muranoclient(request).packages.create(data, files)
             messages.success(request, _('Package uploaded.'))
             return result
-        except HTTPException as e:
+        except HTTPException:
             log.exception(_('Uploading package failed'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to upload package'),
                               redirect=redirect)
-
-
-class UploadFileToService(SelfHandlingForm):
-    file = forms.FileField(label=_('Murano Repository File'),
-                           required=True,
-                           error_messages=
-                           {'required': _('There is no file to upload')})
-
-    def __init__(self, request,
-                 data_type=None,
-                 full_service_name=None,
-                 *args, **kwargs):
-        self.data_type = data_type
-        self.service_id = full_service_name
-        super(UploadFileToService, self).__init__(request, *args, **kwargs)
-
-    def handle(self, request, data):
-        filename = data['file'].name
-        log.debug(_('Uploading file to metadata repository {0} and assigning'
-                    ' it to {1} service'.format(filename, self.service_id)))
-        try:
-            result = metadataclient(request).metadata_admin.\
-                upload_file_to_service(self.data_type,
-                                       data['file'],
-                                       filename,
-                                       self.service_id)
-            messages.success(request,
-                             _("File '{filename}' uploaded".format(
-                                 filename=filename)))
-            return result
-        except HTTPException as e:
-            redirect = reverse('horizon:murano:service_catalog:manage_service',
-                               args=(self.service_id,))
-            log.exception(_('Uploading file failed'))
-            msg = _("Unable to upload {0} file of "
-                    "'{1}' type".format(filename, self.data_type))
-            exceptions.handle(request, msg, redirect=redirect)
-
-    def clean_file(self):
-        file = self.cleaned_data.get('file')
-        if file:
-            if file._size > 5 * 1024 * 1024:
-                raise forms.ValidationError(_('It is restricted to '
-                                              'upload files larger than 5MB.'))
-        return file

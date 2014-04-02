@@ -16,12 +16,12 @@ import logging
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-
+from django.template import defaultfilters
 from horizon import exceptions
 from horizon import tables
 from horizon import messages
 from metadataclient.common.exceptions import HTTPException
-from muranodashboard.dynamic_ui.metadata import metadataclient
+from muranodashboard.environments import api
 LOG = logging.getLogger(__name__)
 
 
@@ -42,14 +42,24 @@ class DownloadPackage(tables.Action):
     def allowed(self, request, image):
         return True
 
-    def single(self, data_table, request, service_id):
+    @staticmethod
+    def get_package_name(data_table, app_id):
+        # TODO(tsufiev): should use more optimal search here
+        name = None
+        for pkg in data_table.data:
+            if pkg.id == app_id:
+                name = defaultfilters.slugify(pkg.name)
+                break
+        return name if name is not None else app_id
+
+    def single(self, data_table, request, app_id):
         try:
-            body = metadataclient(request).metadata_admin.download_service(
-                service_id)
-            response = HttpResponse(body,
-                                    content_type='application/octet-stream')
-            response['Content-Disposition'] = 'filename={name}.tar.gz'.format(
-                name=service_id)
+            body = api.muranoclient(request).packages.download(app_id)
+
+            content_type = 'application/octet-stream'
+            response = HttpResponse(body, content_type=content_type)
+            response['Content-Disposition'] = 'filename={name}.package'.format(
+                name=self.get_package_name(data_table, app_id))
             return response
         except HTTPException:
             LOG.exception(_('Something went wrong during package downloading'))
@@ -69,7 +79,8 @@ class ToggleEnabled(tables.BatchAction):
     def handle(self, table, request, obj_ids):
         for obj_id in obj_ids:
             try:
-                metadataclient(request).metadata_admin.toggle_enabled(obj_id)
+                pass
+                # metadataclient(request).metadata_admin.toggle_enabled(obj_id)
             except HTTPException:
                 LOG.exception(_('Toggling package state in package '
                                 'repository failed'))
@@ -90,7 +101,7 @@ class DeletePackage(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            metadataclient(request).metadata_admin.delete_service(obj_id)
+            api.muranoclient(request).packages.delete(obj_id)
         except HTTPException:
             LOG.exception(_('Unable to delete package in murano-api server'))
             exceptions.handle(request,
@@ -108,14 +119,13 @@ class ModifyPackage(tables.LinkAction):
 
 
 class PackageDefinitionsTable(tables.DataTable):
-    name = tables.Column('service_display_name',
-                         verbose_name=_('Package Name'))
+    name = tables.Column('name', verbose_name=_('Package Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
 
     def get_object_display(self, datum):
-        return datum.service_display_name
+        return datum.name
 
     class Meta:
         name = 'packages'

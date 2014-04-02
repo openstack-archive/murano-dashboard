@@ -26,6 +26,7 @@ from .tables import PackageDefinitionsTable
 from .utils import STEP_NAMES
 from .forms import UploadPackageForm
 from .workflows import ComposeService
+from muranodashboard.environments import api
 from muranodashboard.dynamic_ui.metadata import metadataclient
 from muranodashboard.dynamic_ui.metadata import metadata_exceptions
 from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
@@ -37,11 +38,7 @@ class PackageDefinitionsView(tables.DataTableView):
     template_name = 'packages/index.html'
 
     def get_data(self):
-        services, request = [], self.request
-        with metadata_exceptions(request):
-            services = metadataclient(request).metadata_admin.list_services()
-
-        return services
+        return api.muranoclient(self.request).packages.list()
 
 
 class UploadPackageView(ModalFormView):
