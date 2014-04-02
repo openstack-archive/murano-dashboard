@@ -22,10 +22,9 @@ from horizon import tables
 from horizon.workflows import WorkflowView
 from horizon.forms.views import ModalFormView
 
-from .tables import ServiceCatalogTable, MetadataObjectsTable
-from .utils import define_tables
+from .tables import PackageDefinitionsTable
 from .utils import STEP_NAMES
-from .forms import UploadServiceForm, UploadFileForm, UploadFileToService
+from .forms import UploadPackageForm
 from .workflows import ComposeService
 from muranodashboard.dynamic_ui.metadata import metadataclient
 from muranodashboard.dynamic_ui.metadata import metadata_exceptions
@@ -33,8 +32,8 @@ from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)
 
 
-class ServiceCatalogView(tables.DataTableView):
-    table_class = ServiceCatalogTable
+class PackageDefinitionsView(tables.DataTableView):
+    table_class = PackageDefinitionsTable
     template_name = 'packages/index.html'
 
     def get_data(self):
@@ -45,103 +44,16 @@ class ServiceCatalogView(tables.DataTableView):
         return services
 
 
-class UploadServiceView(ModalFormView):
-    form_class = UploadServiceForm
-    template_name = 'packages/upload_service.html'
-    context_object_name = 'service_catalog'
-    success_url = reverse_lazy('horizon:murano:service_catalog:index')
+class UploadPackageView(ModalFormView):
+    form_class = UploadPackageForm
+    template_name = 'packages/upload_package.html'
+    context_object_name = 'packages'
+    success_url = reverse_lazy('horizon:murano:packages:index')
 
 
-class ManageFilesView(tables.DataTableView):
-    table_class = MetadataObjectsTable
-    template_name = 'packages/files.html'
-
-    def get_data(self):
-        files, request = [], self.request
-        with metadata_exceptions(request):
-            files = metadataclient(request).metadata_admin.get_service_files()
-
-        return files
-
-
-class ComposeServiceView(WorkflowView):
-    workflow_class = ComposeService
-    success_url = reverse_lazy('horizon:murano:service_catalog:index')
-
-    def get_context_data(self, **kwargs):
-        context = super(ComposeServiceView, self).get_context_data(**kwargs)
-        full_service_name = kwargs['full_service_name']
-        context['full_service_name'] = full_service_name
-        return context
-
-    def get_initial(self):
-        try:
-            full_service_name = self.kwargs['full_service_name']
-            metadata = metadataclient(self.request).metadata_admin
-            files_dict = {}
-            # FixME: get all services with a single call, should be faster
-            for field_name, ignorable in STEP_NAMES:
-                files_dict[field_name] = metadata.get_service_files(
-                    field_name, full_service_name)
-
-            if full_service_name:
-                srvs = metadataclient(
-                    self.request).metadata_admin.list_services()
-                for service in srvs:
-                    if full_service_name == service.id:
-                        # we know for sure 2 first params are always present
-                        files_dict.update({
-                            'full_service_name': service.id,
-                            'service_display_name':
-                            service.service_display_name,
-                            'author': getattr(service, 'author', ''),
-                            'service_version': getattr(service,
-                                                       'service_version', 0),
-                            'description': getattr(service, 'description', ''),
-                            'enabled': getattr(service, 'enabled', False)
-                        })
-                        return files_dict
-                raise RuntimeError('Not found service id')
-            else:
-                return files_dict
-        except (HTTPInternalServerError, NotFound):
-            err_msg = _('Error with Murano Metadata Repository')
-            LOG.exception(err_msg)
-            redirect = reverse_lazy('horizon:murano:service_catalog:index')
-            exceptions.handle(self.request, err_msg, redirect)
-
-
-class UploadFileView2(ModalFormView):
-    template_name = 'packages/upload_file2.html'
-    form_class = UploadFileToService
-    success_url = 'horizon:murano:service_catalog:manage_service'
-
-    def get_success_url(self):
-        return reverse(self.success_url,
-                       args=(self.kwargs['full_service_name'],))
-
-    def get_form_kwargs(self):
-        kwargs = super(UploadFileView2, self).get_form_kwargs()
-        kwargs.update(self.kwargs)
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(UploadFileView2, self).get_context_data(**kwargs)
-        context['data_type'] = self.kwargs['data_type']
-        context['service_id'] = self.kwargs['full_service_name']
-        return context
-
-
-class UploadFileView(ModalFormView):
-    form_class = UploadFileForm
-    template_name = 'packages/upload_file.html'
-    context_object_name = 'manage_files'
-    success_url = reverse_lazy('horizon:murano:service_catalog:manage_files')
-
-
-class ManageServiceView(tables.MultiTableView):
+class ModifyPackageView(tables.MultiTableView):
     template_name = 'packages/service_files.html'
-    failure_url = reverse_lazy('horizon:murano:service_catalog:index')
+    failure_url = reverse_lazy('horizon:murano:packages:index')
 
     def dispatch(self, request, *args, **kwargs):
         service_id = kwargs['full_service_name']
@@ -150,18 +62,9 @@ class ManageServiceView(tables.MultiTableView):
             table.base_actions['upload_file2'].url = \
                 reverse('horizon:murano:service_catalog:upload_file2',
                         args=(data_type, service_id,))
-        return super(ManageServiceView, self).dispatch(request,
+        return super(ModifyPackageView, self).dispatch(request,
                                                        *args,
                                                        **kwargs)
-
-    def __init__(self, *args, **kwargs):
-        # here we should move table_classes assignment into __init__ method
-        # because otherwise reverse() call inside define_tables() won't work
-        # (cannot query URL while they are being populated)
-        self.table_classes = tuple(
-            [define_tables(name, step_verbose_name)
-             for (name, step_verbose_name) in STEP_NAMES])
-        super(ManageServiceView, self).__init__(*args, **kwargs)
 
     def _get_data(self, full_service_name):
         info, request = {}, self.request
@@ -172,7 +75,7 @@ class ManageServiceView(tables.MultiTableView):
         return info
 
     def get_context_data(self, **kwargs):
-        context = super(ManageServiceView,
+        context = super(ModifyPackageView,
                         self).get_context_data(**kwargs)
         full_service_name = kwargs['full_service_name']
         service_info = self._get_data(full_service_name)
@@ -188,28 +91,3 @@ class ManageServiceView(tables.MultiTableView):
             ('Active', service_info.get('enabled', '-'))])
         context['service_info'] = detail_info
         return context
-
-    def get_file_list(self, data_type):
-        full_service_name = self.kwargs['full_service_name']
-
-        files, request = [], self.request
-        with metadata_exceptions(request):
-            files = metadataclient(request).metadata_admin.get_service_files(
-                data_type, full_service_name)
-
-        return [file for file in files if file.selected]
-
-    def get_ui_data(self):
-        return self.get_file_list('ui')
-
-    def get_scripts_data(self):
-        return self.get_file_list('scripts')
-
-    def get_heat_data(self):
-        return self.get_file_list('heat')
-
-    def get_agent_data(self):
-        return self.get_file_list('agent')
-
-    def get_workflows_data(self):
-        return self.get_file_list('workflows')

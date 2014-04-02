@@ -17,9 +17,9 @@ from django.utils.translation import ugettext_lazy as _
 from muranodashboard import dashboard
 
 
-class ServiceCatalog(horizon.Panel):
-    name = _("Service Definitions")
+class PackageDefinitions(horizon.Panel):
+    name = _("Package Definitions")
     slug = 'packages'
 
 
-dashboard.Murano.register(ServiceCatalog)
+dashboard.Murano.register(PackageDefinitions)

@@ -13,7 +13,6 @@
 #    under the License.
 import logging
 from django.utils.translation import ugettext as _
-from .tables import DeleteFileFromService, DownloadFile
 from horizon import tables, workflows, forms
 from muranodashboard.dynamic_ui.forms import UpdatableFieldsForm
 from muranodashboard.dynamic_ui.fields import TableField
@@ -36,39 +35,6 @@ class Action(workflows.Action, UpdatableFieldsForm):
     def __init__(self, request, context, *args, **kwargs):
         super(Action, self).__init__(request, context, *args, **kwargs)
         self.update_fields(request=request)
-
-
-def define_tables(table_name, step_verbose_name):
-    class UploadFileDataType(tables.LinkAction):
-        name = 'upload_file2'
-        verbose_name = step_verbose_name
-        url = None
-        classes = ('ajax-modal', 'btn-create')
-
-        def allowed(self, request, service):
-            if self.table.name == 'ui' and self.table.data:
-                return False
-            return True
-
-    class ObjectsTable(tables.DataTable):
-        file_name = tables.Column('filename', verbose_name=_('File Name'))
-        path = tables.Column('path', verbose_name=_('Nested Path'))
-
-        def get_object_display(self, obj):
-            return unicode(obj.filename)
-
-        class Meta:
-            name = table_name
-            verbose_name = step_verbose_name
-            table_actions = (UploadFileDataType,
-                             DeleteFileFromService,
-                             )
-
-            row_actions = (DownloadFile,
-                           DeleteFileFromService,
-                           )
-
-    return ObjectsTable
 
 
 def make_table_cls(field_name):

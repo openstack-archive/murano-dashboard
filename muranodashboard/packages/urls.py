@@ -14,38 +14,21 @@
 
 from django.conf.urls import patterns, url
 
-from .views import ServiceCatalogView
-from .views import UploadServiceView
-from .views import ComposeServiceView
-from .views import ManageServiceView
-from .views import ManageFilesView
-from .views import UploadFileView, UploadFileView2
+from .views import PackageDefinitionsView
+from .views import UploadPackageView
+from .views import ModifyPackageView
 
 
 urlpatterns = patterns(
     '',
-    url(r'^$', ServiceCatalogView.as_view(),
+    url(r'^$', PackageDefinitionsView.as_view(),
         name='index'),
 
-    url(r'^upload_service$', UploadServiceView.as_view(),
-        name='upload_service'),
+    url(r'^upload$', UploadPackageView.as_view(),
+        name='upload'),
 
-    url(r'^upload_file/(?P<data_type>[^/]+)/(?P<full_service_name>[^/]+)$',
-        UploadFileView2.as_view(),
-        name='upload_file2'),
-
-    url(r'^manage_files/upload_file$', UploadFileView.as_view(),
-        name='upload_file'),
-    #This should goes first
-    url(r'^manage_service/(?P<full_service_name>[^/]+)?$',
-        ManageServiceView.as_view(),
-        name='manage_service'),
-
-    url(r'^manage_files', ManageFilesView.as_view(),
-        name='manage_files'),
-
-    url(r'^compose_service/(?P<full_service_name>[^/]+)?$',
-        ComposeServiceView.as_view(),
-        name='compose_service'),
+    url(r'^modify/(?P<full_service_name>[^/]+)?$',
+        ModifyPackageView.as_view(),
+        name='modify'),
 
 )

@@ -24,7 +24,7 @@ from muranodashboard.dynamic_ui.metadata import metadataclient
 log = logging.getLogger(__name__)
 
 
-class UploadServiceForm(SelfHandlingForm):
+class UploadPackageForm(SelfHandlingForm):
     file = forms.FileField(label=_('Service .tag.gz package'),
                            required=True)
 
@@ -33,13 +33,13 @@ class UploadServiceForm(SelfHandlingForm):
         try:
             result = metadataclient(request).metadata_admin.upload_service(
                 data['file'])
-            messages.success(request, _('Service uploaded.'))
+            messages.success(request, _('Package uploaded.'))
             return result
         except HTTPException as e:
-            log.exception(_('Uploading service failed'))
-            redirect = reverse('horizon:murano:service_catalog:index')
+            log.exception(_('Uploading package failed'))
+            redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
-                              _('Unable to upload service'),
+                              _('Unable to upload package'),
                               redirect=redirect)
 
 
@@ -86,35 +86,3 @@ class UploadFileToService(SelfHandlingForm):
                 raise forms.ValidationError(_('It is restricted to '
                                               'upload files larger than 5MB.'))
         return file
-
-
-class UploadFileForm(UploadFileToService):
-    supported_data_types = {
-        'ui': 'UI Definition (*.yaml)',
-        'workflows': 'Murano Conductor Workflow (*xml)',
-        'heat': 'Heat template',
-        'agent': 'Murano Agent template',
-        'scripts': 'Script for agent execution'
-    }
-
-    data_type = forms.ChoiceField(label=_('File Type'),
-                                  choices=(supported_data_types.items()))
-
-    def handle(self, request, data):
-        log.debug('Uploading file to metadata repository {0}'.format(data))
-        filename = data['file'].name
-        data_type = data['data_type']
-        try:
-            result = metadataclient(request).metadata_admin.\
-                upload_file(data_type, data['file'], filename)
-            messages.success(request,
-                             _("File '{filename}' uploaded".format(
-                                 filename=filename)))
-            return result
-        except HTTPException as e:
-            redirect = reverse('horizon:murano:service_catalog:manage_files')
-            log.exception(_('Uploading file or '
-                            'modifying service manifest file failed'))
-            msg = _("Unable to upload {0} file "
-                    "of '{1}' type.".format(filename, self.data_type))
-            exceptions.handle(request, msg, redirect=redirect)

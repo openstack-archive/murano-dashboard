@@ -2,12 +2,12 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block form_id %}upload_service_form{% endblock %}
+{% block form_id %}upload_package_form{% endblock %}
 {% block form_attrs %}enctype='multipart/form-data'{% endblock %}
-{% block form_action %}{% url 'horizon:murano:service_catalog:upload_service' %}{% endblock %}
+{% block form_action %}{% url 'horizon:murano:packages:upload' %}{% endblock %}
 
-{% block modal-header %}{% trans 'Upload Service' %}{% endblock %}
-{% block modal_id %}upload_service_modal{% endblock %}
+{% block modal-header %}{% trans 'Upload Package' %}{% endblock %}
+{% block modal_id %}upload_package_modal{% endblock %}
 {% block modal-body %}
 <div class='left'>
     <fieldset>
@@ -16,12 +16,12 @@
 </div>
 <div class='right'>
     <h3>{% trans 'Description:' %}</h3>
-    <p>{% blocktrans %}Choose service archive to upload.{% endblocktrans %}</p>
+    <p>{% blocktrans %}Choose package archive to upload.{% endblocktrans %}</p>
     <p>{% blocktrans %}Files could be nested and should not be exist in the server.{% endblocktrans %}</p>
 </div>
 {% endblock %}
 
 {% block modal-footer %}
   <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Upload' %}' />
-     <a href="{% url 'horizon:murano:service_catalog:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
+     <a href="{% url 'horizon:murano:packages:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}
