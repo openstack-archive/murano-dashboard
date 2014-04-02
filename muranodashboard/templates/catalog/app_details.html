@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% load i18n sizeformat %}
+{% load static %}
 {% block title %}{% trans "Application Details" %}{% endblock %}
 
 {% block page_header %}
+<link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
+<link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
     {% include "catalog/_details_page_header.html" %}
 {% endblock page_header %}
 
@@ -17,7 +20,7 @@
      {{ tab_group.render }}
  <div class="well app-meta">
      <div class="app-icon pull-left">
-       <img src="{% url 'horizon:murano:catalog:images' app.id %}" width="70px" height="70px"/>
+       <img src="{% url 'horizon:murano:catalog:images' app.id %}" />
      </div>
      <div class="">
        <ul>

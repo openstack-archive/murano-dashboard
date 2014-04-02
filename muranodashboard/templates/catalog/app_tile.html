@@ -1,21 +1,26 @@
 {% load i18n %}
 
-<div class="span4">
-<div class="well app">
+
+<div class="span4 well app">
     <div class="app-description">
-        <div class="app-icon pull-left">
-           <img src="{% url 'horizon:murano:catalog:images' app.id %}"/>
+        <div class="span1 app-icon">
+            <img src="{% url 'horizon:murano:catalog:images' app.id %}"/>
         </div>
-        <div class="app-summary">
-            <h4>{{ app.name }}</h4>
-                <p>{{ app.description|truncatechars:95 }}</p>
-            </div>
+    <div class="span3 app-summary description">
+        <h4>{{ app.name }}</h4>
+        <p>{{ app.description|truncatechars:110 }}</p>
+    </div>
+
+    <div class="app-actions">
+		<div class="span3 btn-group">
+            {% with class='btn btn-small ajax-modal' %}
+                {% include 'catalog/add_app.html' %}
+            {% endwith %}
+            {% with class='btn btn-small ajax-modal' %}
+                {% include 'catalog/quick_deploy.html' %}
+            {% endwith %}
         </div>
-        <div class="app-actions">
-        {% with class='btn btn-small btn-add ajax-modal' %}
-            {% include 'catalog/add_app.html' %}
-        {% endwith %}
-        <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">More info &raquo;</a>
-        </div>
+        <div class="span1"><a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link pull-right">Details &raquo;</a></div>
+    </div>
     </div>
 </div>

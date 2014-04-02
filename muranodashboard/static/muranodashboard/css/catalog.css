@@ -1,11 +1,3 @@
-.app-list .app-icon {
-    display:block;
-    background-color:#ccc;
-    width:50px;
-    height:50px;
-    border-radius:25px;
-    margin: 0 20px 20px 0;
-}
 .app-list .actions {
     border-top:1px #ccc solid;
     padding-top:15px;
@@ -15,7 +7,7 @@
     height: 80px;
 }
 .btn-link {
-    padding: 5px 9px;
+    padding: 5px 0;
 }
 .app-row {
     overflow: hidden;
@@ -61,89 +53,87 @@ h3.link .caret {
     margin-top: 20px;
     margin-bottom:20px;
 }
-a.btn-add {
-    position:relative;
-    padding-left:23px;
+.app-list .app {
+	min-height:120px;
+	position:relative;
 }
-a.btn-add:before {
-    display: inline-block;
-    content: "";
-    width: 18px;
-    height: 20px;
-    margin-top: 1px;
-    margin-right: .3em;
-    line-height: 14px;
-    background-image: url('/static/bootstrap/img/glyphicons-halflings.png');
-    background-position: 0px -92px;
-    background-repeat: no-repeat;
-    position: absolute;
-    top: 0px;
-    left: 5px;
+.app-list .app > div {
+	margin:0;
+}
+.app-list .app div.description {
+	padding-left:20px;
+}
+.app-list .app .app-actions {
+	position:absolute;
+	bottom: 20px;
+	left:0px;
 }
 .header.dropdown {
     display:inline-block;
 }
 .header.dropdown ul {
      font-size:14px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .nav-tabs {
     margin-top:20px;
 }
-.well.app-meta {
+.app-meta {
     margin-top:30px;
 }
-
+.app-icon {
+	line-height:0;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	background: #ccc;
+	overflow:hidden;
+}
+.app-meta .app-icon {
+	margin-right:30px;
+	width:70px;
+	height:70px
+}
+.app-icon img {
+	width:100%;
+	height:auto;
+	margin:1px;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+}
 a.trigger.first {
-top: 80px; right: 0;
+top: 110px; right: 0;
 }
 a.trigger.second {
-top: 135px; right: 0;
+top: 165px; right: 0;
 }
 a.trigger.third {
-top: 190px; right: 0;
+top: 220px; right: 0;
 }
 
 a.trigger{
 position: absolute;
-width: 60px;
 text-decoration: none;
-font-size: 16px;
-letter-spacing:-1px;
+font-size: 24px;
+width:24px;
 font-family: verdana, helvetica, arial, sans-serif;
 color:#fff;
-padding: 20px 40px 20px 15px;
+padding: 15px;
 font-weight: 700;
-background:#ccc url(images/plus.png) 85% 55% no-repeat;
-border:1px solid #ddd
--moz-border-radius-topleft: 20px;
--webkit-border-top-left-radius: 20px;
--moz-border-radius-bottomleft: 20px;
--webkit-border-bottom-left-radius: 20px;
-
+background:#d93c27;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
 display: block;
 }
-
 a.active.trigger {
- background: #222222 url(images/minus.png) 15% 55% no-repeat;
+ background: #222222;
 }
 
 a.trigger:hover{
-position: absolute;
-text-decoration: none;
-font-size: 16px;
-letter-spacing:-1px;
-font-family: verdana, helvetica, arial, sans-serif;
-color:#fff;
-padding: 20px 40px 20px 20px;
-font-weight: 700;
-background:#ccc url(images/plus.png) 85% 55% no-repeat;
-
-border:1px solid #ddd;
--moz-border-radius-topleft: 20px;
--webkit-border-top-left-radius: 20px;
--moz-border-radius-bottomleft: 20px;
--webkit-border-bottom-left-radius: 20px;
-display: block;
+background:#ccc;
 }
 
 .murano-side-panel {
@@ -151,41 +141,25 @@ position: absolute;
 top: 250px;
 right: 0;
 display: none;
-background: #000000;
-border:1px solid #111111;
--moz-border-radius-topleft: 20px;
--webkit-border-top-left-radius: 20px;
--moz-border-radius-bottomleft: 20px;
--webkit-border-bottom-left-radius: 20px;
+background: #ffffff;
+border:1px solid #ccc;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
 width: 330px;
 height: auto;
 padding: 30px 130px 30px 30px;
-filter: alpha(opacity=85);
-opacity: .85;
 }
 
 .murano-side-panel p{
 margin: 0 0 15px 0;
 padding: 0;
-color: #cccccc;
 }
-
-.murano-side-panel a, .murano-side-panel a:visited{
-margin: 0;
-padding: 0;
-color: #9FC54E;
-text-decoration: none;
-border-bottom: 1px solid #9FC54E;
+#environment_switcher {
+	border:1px solid #ccc;
+	padding:0 10px;
 }
-
-.murano-side-panel a:hover, .murano-side-panel a:visited:hover{
-margin: 0;
-padding: 0;
-color: #ffffff;
-text-decoration: none;
-border-bottom: 1px solid #ffffff;
-}
-
 .panel-visible{
 display: block;
 }

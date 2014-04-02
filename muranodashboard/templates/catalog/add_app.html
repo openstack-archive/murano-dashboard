@@ -1,8 +1,8 @@
 {% load i18n %}
 
-{% trans "Add to environment" as label %}
+{% trans "Add to Env" as label %}
 {% if environment %}
-    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}">{{ label }}</a>
+    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}"><i class="fa fa-plus-circle"></i>  {{ label }}</a>
 {% else %}
-    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}">{{ label }}</a>
+    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {{ label }}</a>
 {% endif %}

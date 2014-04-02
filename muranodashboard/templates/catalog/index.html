@@ -7,6 +7,7 @@
 {% block page_header %}
 
 <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
+<link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
   {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
 {% endblock page_header %}
 
@@ -40,13 +41,13 @@
 
 {% block main %}
 <div class="table_wrapper">
-<h3>Latest Apps</h3>
-<div class="app-row app-list">
+<h3 class="quota-heading">Latest Apps</h3>
+<div class="app-row app-list row">
     {% for app in latest_list %}
         {% include 'catalog/app_tile.html' %}
     {% endfor %}
 </div>
-<h3>App Category: <div class="header dropdown">
+<h3 class="quota-heading">App Category: <div class="header dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     {{ current_category }}<b class="caret"></b></a>
   <ul class="dropdown-menu">
@@ -59,7 +60,7 @@
 </div>
 </h3>
 
-<div class="app-row app-list">
+<div class="app-row app-list row">
     {% for app in object_list %}
         {% include 'catalog/app_tile.html' %}
     {% endfor %}
@@ -97,21 +98,21 @@
 <div class="murano-side-panel" id="MuranoDefaultEnvPanel">
     {% include 'catalog/env_switcher.html' %}
 </div>
-<a class="trigger third" href="#" id="MuranoDefaultEnvPanelToggle">Environment</a>
+<a class="trigger third" href="#" id="MuranoDefaultEnvPanelToggle"><i class="fa fa-desktop"></i></a>
 
 <div class="murano-side-panel" id="MuranoCategoriesPanel">
     {% include 'catalog/categories.html' %}
 </div>
-<a class="trigger second" href="#" id="MuranoCategoriesPanelToggle">Category</a>
+<a class="trigger second" href="#" id="MuranoCategoriesPanelToggle"><i class="fa fa-th-list"></i></a>
 
 <div class="murano-side-panel" id="MuranoSearchPanel">
     <h3>Search</h3>
     <form class="search">
-        <input class="text"/>
-        <button class="btn_search">Go</button>
+        <input class="text input-medium search-query"/>
+        <button class="btn_search btn">Go</button>
     </form>
 </div>
-<a class="trigger first" href="#" id="MuranoSearchPanelToggle">Search</a>
+<a class="trigger first" href="#" id="MuranoSearchPanelToggle"><i class="fa fa-search"></i></a>
 
 </div>
 
