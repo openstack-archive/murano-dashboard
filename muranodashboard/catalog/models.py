@@ -62,7 +62,10 @@ class AppCatalogObjects(object):
         self.app_list = datastructures.SortedDict()
         self.url = url
         string = self.query(url)
-        data = json.loads(string)
+        try:
+            data = json.loads(string)
+        except:
+            data = {'packages': []}
         for dct in data['packages']:
             dct['image'] = get_image_name()
             app = Application(dct)
