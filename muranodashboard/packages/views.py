@@ -35,7 +35,7 @@ LOG = logging.getLogger(__name__)
 
 class ServiceCatalogView(tables.DataTableView):
     table_class = ServiceCatalogTable
-    template_name = 'service_catalog/index.html'
+    template_name = 'packages/index.html'
 
     def get_data(self):
         services, request = [], self.request
@@ -47,14 +47,14 @@ class ServiceCatalogView(tables.DataTableView):
 
 class UploadServiceView(ModalFormView):
     form_class = UploadServiceForm
-    template_name = 'service_catalog/upload_service.html'
+    template_name = 'packages/upload_service.html'
     context_object_name = 'service_catalog'
     success_url = reverse_lazy('horizon:murano:service_catalog:index')
 
 
 class ManageFilesView(tables.DataTableView):
     table_class = MetadataObjectsTable
-    template_name = 'service_catalog/files.html'
+    template_name = 'packages/files.html'
 
     def get_data(self):
         files, request = [], self.request
@@ -112,7 +112,7 @@ class ComposeServiceView(WorkflowView):
 
 
 class UploadFileView2(ModalFormView):
-    template_name = 'service_catalog/upload_file2.html'
+    template_name = 'packages/upload_file2.html'
     form_class = UploadFileToService
     success_url = 'horizon:murano:service_catalog:manage_service'
 
@@ -134,13 +134,13 @@ class UploadFileView2(ModalFormView):
 
 class UploadFileView(ModalFormView):
     form_class = UploadFileForm
-    template_name = 'service_catalog/upload_file.html'
+    template_name = 'packages/upload_file.html'
     context_object_name = 'manage_files'
     success_url = reverse_lazy('horizon:murano:service_catalog:manage_files')
 
 
 class ManageServiceView(tables.MultiTableView):
-    template_name = 'service_catalog/service_files.html'
+    template_name = 'packages/service_files.html'
     failure_url = reverse_lazy('horizon:murano:service_catalog:index')
 
     def dispatch(self, request, *args, **kwargs):
