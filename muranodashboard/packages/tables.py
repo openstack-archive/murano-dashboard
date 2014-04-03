@@ -79,8 +79,7 @@ class ToggleEnabled(tables.BatchAction):
     def handle(self, table, request, obj_ids):
         for obj_id in obj_ids:
             try:
-                pass
-                # metadataclient(request).metadata_admin.toggle_enabled(obj_id)
+                api.muranoclient(request).packages.toggle_active(obj_id)
             except HTTPException:
                 LOG.exception(_('Toggling package state in package '
                                 'repository failed'))
@@ -113,6 +112,7 @@ class ModifyPackage(tables.LinkAction):
     name = 'modify_package'
     verbose_name = _('Modify Package')
     url = 'horizon:murano:packages:modify'
+    classes = ('ajax-modal',)
 
     def allowed(self, request, environment):
         return True

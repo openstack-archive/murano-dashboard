@@ -1,0 +1,30 @@
+{% extends 'common/_modal_form.html' %}
+{% load i18n %}
+{% load url from future %}
+
+{% block form_id %}{% endblock %}
+{% block form_action %}{% url 'horizon:murano:packages:modify' app_id %}{% endblock %}
+
+{% block modal-header %}{% trans 'Modify Package' %}{% endblock %}
+{% block modal_id %}modify_package_modal{% endblock %}
+{% block modal-body %}
+<div class='left'>
+    <fieldset>
+    {% include 'horizon/common/_form_fields.html' %}
+    </fieldset>
+</div>
+<div class='right'>
+    <h3>{% trans 'Description:' %}</h3>
+    <p>{% blocktrans %}<strong>Name</strong> is a human-readable name of a package.{% endblocktrans %}</p>
+    <p>{% blocktrans %}<strong>Categories</strong> are a predefined set of values used to filter the packages.{% endblocktrans %}</p>
+    <p>{% blocktrans %}<strong>Tags</strong> are an arbitrary comma-separated values also used to filter the packages.{% endblocktrans %}</p>
+    <p>{% blocktrans %}<strong>Public</strong> defines whether or not should be package shown to the other tenants.{% endblocktrans %}</p>
+    <p>{% blocktrans %}<strong>Active</strong> is used for temporarily disabling a package.{% endblocktrans %}</p>
+    <p>{% blocktrans %}<strong>Description</strong> consists of several sentences about the package's purpose.{% endblocktrans %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Submit' %}' />
+     <a href="{% url 'horizon:murano:packages:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}

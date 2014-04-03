@@ -27,7 +27,7 @@ urlpatterns = patterns(
     url(r'^upload$', UploadPackageView.as_view(),
         name='upload'),
 
-    url(r'^modify/(?P<full_service_name>[^/]+)?$',
+    url(r'^modify/(?P<app_id>[^/]+)?$',
         ModifyPackageView.as_view(),
         name='modify'),
 

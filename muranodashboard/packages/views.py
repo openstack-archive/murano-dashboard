@@ -16,20 +16,13 @@ import logging
 
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
-from django.utils.datastructures import SortedDict
 from horizon import exceptions
 from horizon import tables
-from horizon.workflows import WorkflowView
 from horizon.forms.views import ModalFormView
 
 from .tables import PackageDefinitionsTable
-from .utils import STEP_NAMES
-from .forms import UploadPackageForm
-from .workflows import ComposeService
+from muranodashboard.packages import forms
 from muranodashboard.environments import api
-from muranodashboard.dynamic_ui.metadata import metadataclient
-from muranodashboard.dynamic_ui.metadata import metadata_exceptions
-from metadataclient.common.exceptions import HTTPInternalServerError, NotFound
 LOG = logging.getLogger(__name__)
 
 
@@ -42,49 +35,33 @@ class PackageDefinitionsView(tables.DataTableView):
 
 
 class UploadPackageView(ModalFormView):
-    form_class = UploadPackageForm
+    form_class = forms.UploadPackageForm
     template_name = 'packages/upload_package.html'
     context_object_name = 'packages'
     success_url = reverse_lazy('horizon:murano:packages:index')
-
-
-class ModifyPackageView(tables.MultiTableView):
-    template_name = 'packages/service_files.html'
     failure_url = reverse_lazy('horizon:murano:packages:index')
 
-    def dispatch(self, request, *args, **kwargs):
-        service_id = kwargs['full_service_name']
-        for table in self.table_classes:
-            data_type = table._meta.name
-            table.base_actions['upload_file2'].url = \
-                reverse('horizon:murano:service_catalog:upload_file2',
-                        args=(data_type, service_id,))
-        return super(ModifyPackageView, self).dispatch(request,
-                                                       *args,
-                                                       **kwargs)
 
-    def _get_data(self, full_service_name):
-        info, request = {}, self.request
-        with metadata_exceptions(request):
-            info = metadataclient(request).metadata_admin.get_service_info(
-                full_service_name)
+class ModifyPackageView(ModalFormView):
+    form_class = forms.ModifyPackageForm
+    template_name = 'packages/modify_package.html'
+    success_url = reverse_lazy('horizon:murano:packages:index')
+    failure_url = reverse_lazy('horizon:murano:packages:index')
 
-        return info
+    def get_initial(self):
+        app_id = self.kwargs['app_id']
+        package = api.muranoclient(self.request).packages.get(app_id)
+        return {
+            'name': package.name,
+            'enabled': package.enabled,
+            'description': package.description,
+            'categories': package.categories,
+            'tags': ','.join(package.tags),
+            'is_public': package.is_public,
+            'app_id': app_id
+        }
 
     def get_context_data(self, **kwargs):
-        context = super(ModifyPackageView,
-                        self).get_context_data(**kwargs)
-        full_service_name = kwargs['full_service_name']
-        service_info = self._get_data(full_service_name)
-        service_name = service_info.get('service_display_name', '-')
-        context['service_name'] = service_name
-        detail_info = SortedDict([
-            ('Name', service_name),
-            ('ID', service_info.get('full_service_name', '-')),
-            ('Version', service_info.get('version', '-')),
-            ('UI Description', service_info.get('description', '-')),
-            ('Author', service_info.get('author', '-')),
-            ('Service Version', service_info.get('service_version', '-')),
-            ('Active', service_info.get('enabled', '-'))])
-        context['service_info'] = detail_info
+        context = super(ModifyPackageView, self).get_context_data(**kwargs)
+        context['app_id'] = self.kwargs['app_id']
         return context

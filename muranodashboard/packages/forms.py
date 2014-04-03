@@ -41,7 +41,8 @@ def split_post_data(post):
 class UploadPackageForm(SelfHandlingForm):
     package = forms.FileField(label=_('Application .zip package'),
                               required=True)
-    categories = forms.ChoiceField(label=_('Application Category'))
+    categories = forms.MultipleChoiceField(label=_('Application Category'),
+                                           required=True)
 
     def __init__(self, request, **kwargs):
         super(UploadPackageForm, self).__init__(request, **kwargs)
@@ -62,7 +63,6 @@ class UploadPackageForm(SelfHandlingForm):
     def handle(self, request, data):
         log.debug('Uploading package {0}'.format(data))
         try:
-            data['categories'] = [data['categories']]
             data, files = split_post_data(data)
             result = api.muranoclient(request).packages.create(data, files)
             messages.success(request, _('Package uploaded.'))
@@ -72,4 +72,37 @@ class UploadPackageForm(SelfHandlingForm):
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to upload package'),
+                              redirect=redirect)
+
+
+class ModifyPackageForm(SelfHandlingForm):
+    name = forms.CharField(label=_('Name'))
+    categories = forms.MultipleChoiceField(label=_('Categories'))
+    tags = forms.CharField(label=_('Tags'), required=False)
+    is_public = forms.BooleanField(label=_('Public'), required=False)
+    enabled = forms.BooleanField(label=_('Active'), required=False)
+    description = forms.CharField(label=_('Description'),
+                                  widget=forms.Textarea,
+                                  required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(ModifyPackageForm, self).__init__(request, *args, **kwargs)
+        category_values = api.muranoclient(request).packages.categories()
+        categories = self.fields['categories']
+        categories.choices = [(c, c) for c in category_values]
+        categories.initial = kwargs.get('initial', {}).get('categories')
+
+    def handle(self, request, data):
+        app_id = self.initial.get('app_id')
+        log.debug('Updating package {0} with {1}'.format(app_id, data))
+        try:
+            data['tags'] = [t.strip() for t in data['tags'].split(',')]
+            result = api.muranoclient(request).packages.update(app_id, data)
+            messages.success(request, _('Package modified.'))
+            return result
+        except HTTPException:
+            log.exception(_('Modifying package failed'))
+            redirect = reverse('horizon:murano:packages:index')
+            exceptions.handle(request,
+                              _('Unable to modify package'),
                               redirect=redirect)
