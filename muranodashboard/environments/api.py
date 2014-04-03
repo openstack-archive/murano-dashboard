@@ -25,7 +25,6 @@ from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
 
 from muranodashboard.environments import format
-from muranodashboard.catalog import models
 
 log = logging.getLogger(__name__)
 
@@ -260,7 +259,7 @@ def services_list(request, environment_id):
 
 
 def app_id_by_fqn(request, fqn):
-    apps = models.AppCatalogModel().objects.filter(fqn=fqn)
+    apps = muranoclient(request).packages.filter(fqn=fqn)
     return apps[0].id if apps else None
 
 

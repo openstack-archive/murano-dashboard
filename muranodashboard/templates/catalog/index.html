@@ -48,12 +48,12 @@
 </div>
 <h3>App Category: <div class="header dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    {{ current_category_name }}<b class="caret"></b></a>
+    {{ current_category }}<b class="caret"></b></a>
   <ul class="dropdown-menu">
-      {% for cat_slug, cat_name in categories.items %}
+      {% for category in categories %}
         <li><a tabindex="-1" href="
-        {% url 'horizon:murano:catalog:index' cat_slug page_obj.number %}">
-            {{ cat_name }}</a></li>
+        {% url 'horizon:murano:catalog:index' category page_obj.number %}">
+            {{ category }}</a></li>
       {% endfor %}
   </ul>
 </div>

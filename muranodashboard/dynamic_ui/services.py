@@ -25,7 +25,6 @@ import yaql
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
-from muranodashboard.catalog import models
 from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
 from muranodashboard.dynamic_ui import version
 
@@ -190,13 +189,15 @@ def iterate_over_services(request):
 
 
 def import_app(request, app_id):
+    from muranodashboard.environments import api
+
     if not request.session.get('apps'):
         request.session['apps'] = {}
     services = request.session['apps']
 
     app = services.get(app_id)
     if not app:
-        ui_desc = models.AppCatalogModel().objects.get_ui(app_id=app_id)
+        ui_desc = api.muranoclient(request).packages.get_ui(app_id)
         service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
         services[app_id] = Service(**service)
         app = services[app_id]
@@ -218,7 +219,8 @@ def service_type_from_id(service_id):
 
 
 def get_service_name(request, app_id):
-    app = models.AppCatalogModel().objects.get(app_id=app_id)
+    from muranodashboard.environments import api
+    app = api.muranoclient(request).packages.get(app_id)
     return app.name
 
 

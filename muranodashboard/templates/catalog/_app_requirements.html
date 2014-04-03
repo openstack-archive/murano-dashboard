@@ -4,7 +4,11 @@
 
 <div class="status row-fluid detail app_requirements">
     <p>
-        {{ application.requirements }}
+        {% if application.requirements %}
+            {{ application.requirements }}
+        {% else %}
+            {% trans 'No requirements' %}
+        {% endif %}
     </p>
 
 </div>

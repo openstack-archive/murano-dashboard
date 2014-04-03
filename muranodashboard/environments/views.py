@@ -40,7 +40,6 @@ from muranoclient.common.exceptions import HTTPUnauthorized, \
 from django.utils.decorators import classonlymethod
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
-from muranodashboard.catalog import models
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard import utils
 
@@ -154,10 +153,10 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         app_id = self.kwargs.get('app_id')
-        app = models.AppCatalogModel().objects.get(app_id=app_id)
+        app = api.muranoclient(self.request).packages.get(app_id)
         context['field_descriptions'] = get_service_field_descriptions(
             self.request, app_id, self.steps.index)
-        context.update({'type': app.fqn,
+        context.update({'type': app.fully_qualified_name,
                         'service_name': app.name,
                         'app_id': app_id,
                         'environment_id': self.kwargs.get('environment_id'),

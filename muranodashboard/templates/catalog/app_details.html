@@ -13,18 +13,22 @@
     {% with class='btn btn-small btn-add ajax-modal pull-right' %}
         {% include 'catalog/add_app.html' %}
     {% endwith %}
-    <h3>{{ app.title }}</h3>
+    <h3>{{ app.name }}</h3>
      {{ tab_group.render }}
  <div class="well app-meta">
      <div class="app-icon pull-left">
-       <img src="{% url 'horizon:murano:catalog:images' app.image %}" width="70px" height="70px"/>
+       <img src="{% url 'horizon:murano:catalog:images' app.id %}" width="70px" height="70px"/>
      </div>
      <div class="">
        <ul>
-        <li><strong>Fully Qualified Service Name:</strong> {{ app.fqdn }}</li>
+        <li><strong>Fully Qualified Service Name:</strong> {{ app.fully_qualified_name }}</li>
         <li><strong>Author:</strong> {{ app.author }}</li>
-        <li><strong>Active:</strong> {{ app.active }}</li>
-        <li><strong>Version:</strong> {{ app.version }}</li>
+        <li><strong>Active:</strong> {{ app.enabled }}</li>
+        <li><strong>Public:</strong> {{ app.is_public }}</li>
+        <li><strong>Type:</strong> {{ app.type }}</li>
+        <li><strong>Tags:</strong> {% for tag in app.tags %} {{ tag }} {% endfor %}</li>
+        <li><strong>Categories:</strong> {% for category in app.categories %} {{ category }} {% endfor %}</li>
+
         </ul>
      </div>
 

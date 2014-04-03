@@ -13,8 +13,6 @@
 #    under the License.
 import logging
 from django.views.generic import list
-from django.template import defaultfilters as filters
-from django.utils import datastructures
 from horizon import tabs
 
 from django import shortcuts
@@ -24,7 +22,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.http import is_safe_url
 
 from muranodashboard.catalog import tabs as catalog_tabs
-from muranodashboard.catalog import models
 from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
@@ -77,30 +74,24 @@ def switch(request, environment_id, redirect_field_name=REDIRECT_FIELD_NAME):
 
 
 class IndexView(list.ListView):
-    apps = models.AppCatalogModel()
-    categories = models.Categories()
     paginate_by = 6
 
     def get_queryset(self):
-        return self.apps.objects.all()
+        return api.muranoclient(self.request).packages.list()
 
     def get_template_names(self):
         return ['catalog/index.html']
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['latest_list'] = self.apps.last_objects
-        categories = datastructures.SortedDict(
-            ((filters.slugify(category), category) for category in
-             self.categories.all()))
+        context['latest_list'] = []
 
-        current_category = self.kwargs.get('category')
-        current_category_name = categories.get(current_category)
-        if current_category_name is None and categories:
-            current_category_name = categories.values()[0]
+        categories = api.muranoclient(self.request).packages.categories()
+        if not categories:
+            categories = ['-']
+        current_category = self.kwargs.get('category', categories[0])
         context['categories'] = categories
         context['current_category'] = current_category
-        context['current_category_name'] = current_category_name
 
         context.update(get_environments_context(self.request))
 
@@ -111,13 +102,12 @@ class AppDetailsView(tabs.TabView):
     tab_group_class = catalog_tabs.ApplicationTabs
     template_name = 'catalog/app_details.html'
 
-    app_model = models.AppCatalogModel.objects
     app = None
 
     def get_data(self, **kwargs):
         LOG.debug(('AppDetailsView get_data: {0}'.format(kwargs)))
         app_id = kwargs.get('application_id')
-        self.app = self.app_model.get_info(app_id)
+        self.app = api.muranoclient(self.request).packages.get(app_id)
         return self.app
 
     def get_context_data(self, **kwargs):

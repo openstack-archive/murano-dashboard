@@ -4,19 +4,23 @@
 
 <div style="clear:both;"></div>
 <div class="columns">
+{% if categories|slice:"1:" %}
     <div class="colleft">
         <ul>
-            {% for slug, category in categories.items|firsthalf %}
-            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% for category in categories|firsthalf %}
+            <li><a href="{% url 'horizon:murano:catalog:index' category page_obj.number %}">{{ category }}</a></li>
             {% endfor %}
         </ul>
     </div>
 
     <div class="colright">
         <ul>
-            {% for slug, category in categories.items|lasthalf %}
-            <li><a href="#{{ slug }}">{{ category }}</a></li>
+            {% for category in categories|lasthalf %}
+            <li><a href="{% url 'horizon:murano:catalog:index' category page_obj.number %}">{{ category }}</a></li>
             {% endfor %}
         </ul>
     </div>
+{% else %}
+    <a href="{% url 'horizon:murano:catalog:index' categories.0 page_obj.number %}">{{ categories.0 }}</a>
+{% endif %}
 </div>

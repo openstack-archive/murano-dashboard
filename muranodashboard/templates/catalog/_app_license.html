@@ -4,7 +4,11 @@
 
 <div class="status row-fluid detail app_overview">
     <p>
-        {{ application.license }}
+        {% if application.license %}
+            {{ application.license }}
+        {% else %}
+            {% trans 'No license' %}
+        {% endif %}
     </p>
 
 </div>

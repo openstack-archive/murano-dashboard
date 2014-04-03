@@ -12,32 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import os
 from django.http import HttpResponse
-from muranodashboard import catalog
-from muranodashboard.catalog import models
+from muranodashboard.environments import api
 
 
-def get_image(request, image_name):
-    path = os.path.basename(request.path)
-    if path:
-        cache = catalog.get_image_cache()
-        data = cache.get_entry(path)
-        if data:
-            response = generate_response(data)
-            return response
-        else:
-            #TODO(gokrokve) emulate download from API
-            cache.put_cache(path, path)
-            response = generate_response(models.get_image(path))
-            return response
-    else:
-        return HttpResponse()
-
-
-def generate_response(data):
-    response = HttpResponse(content_type='image/png')
-    for buf in data:
-        response.write(buf)
-    response['Cache-Control'] = "max-age=604800, public"
-    return response
+def get_image(request, app_id):
+    content = api.muranoclient(request).packages.get_logo(app_id)
+    return HttpResponse(content=content, content_type='image/png')
