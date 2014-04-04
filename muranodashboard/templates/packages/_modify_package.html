@@ -10,7 +10,7 @@
 {% block modal-body %}
 <div class='left'>
     <fieldset>
-    {% include 'horizon/common/_form_fields.html' %}
+    {% include 'common/_form_fields.html' %}
     </fieldset>
 </div>
 <div class='right'>
@@ -25,6 +25,7 @@
 {% endblock %}
 
 {% block modal-footer %}
-  <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Submit' %}' />
-     <a href="{% url 'horizon:murano:packages:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
+    {{ form.media }}
+    <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Submit' %}' />
+    <a href="{% url 'horizon:murano:packages:index' %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

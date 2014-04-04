@@ -75,12 +75,24 @@ class UploadPackageForm(SelfHandlingForm):
                               redirect=redirect)
 
 
+class CheckboxInput(forms.CheckboxInput):
+    def __init__(self):
+        super(CheckboxInput, self).__init__(attrs={'class': 'checkbox'})
+
+    class Media:
+        css = {'all': ('muranodashboard/css/checkbox.css',)}
+
+
 class ModifyPackageForm(SelfHandlingForm):
     name = forms.CharField(label=_('Name'))
     categories = forms.MultipleChoiceField(label=_('Categories'))
     tags = forms.CharField(label=_('Tags'), required=False)
-    is_public = forms.BooleanField(label=_('Public'), required=False)
-    enabled = forms.BooleanField(label=_('Active'), required=False)
+    is_public = forms.BooleanField(label=_('Public'),
+                                   required=False,
+                                   widget=CheckboxInput)
+    enabled = forms.BooleanField(label=_('Active'),
+                                 required=False,
+                                 widget=CheckboxInput)
     description = forms.CharField(label=_('Description'),
                                   widget=forms.Textarea,
                                   required=False)

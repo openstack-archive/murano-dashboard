@@ -20,7 +20,9 @@
     {% endfor %}
 {% else %}
     <fieldset>
+    {% with form=wizard.form %}
         {% include "common/_form_fields.html" %}
+    {% endwith %}
     </fieldset>
 {% endif %}
 <p class='italic'>{% blocktrans %} {{ extended_description }} {% endblocktrans %}</p>
