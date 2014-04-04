@@ -264,7 +264,7 @@ class ServicesTable(tables.DataTable):
                                       verbose_name=_('Time updated'))
 
     def get_object_id(self, datum):
-        return datum.id
+        return datum['?']['id']
 
     class Meta:
         name = 'services'

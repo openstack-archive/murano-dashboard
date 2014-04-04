@@ -1,8 +1,4 @@
 {% load i18n %}
 
 {% trans "Quick Deploy" as label %}
-{% if environment %}
-    <a href="{% url 'horizon:murano:catalog:add' environment.id app.id %}" class="{{ class }}"><i class="fa fa-rocket"></i> {{ label }}</a>
-{% else %}
-    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}"><i class="fa fa-rocket"></i> {{ label }}</a>
-{% endif %}
+<a href="{% url 'horizon:murano:catalog:quick_add' app.id %}" class="{{ class }}"><i class="fa fa-rocket"></i> {{ label }}</a>

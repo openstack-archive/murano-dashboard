@@ -23,6 +23,9 @@ from django.utils.http import is_safe_url
 
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.environments import api
+from muranodashboard.environments import views
+from muranodashboard.dynamic_ui import services
+import re
 
 LOG = logging.getLogger(__name__)
 
@@ -73,8 +76,33 @@ def switch(request, environment_id, redirect_field_name=REDIRECT_FIELD_NAME):
     return shortcuts.redirect(redirect_to)
 
 
+def create_quick_environment(request):
+    quick_env_prefix = 'quick-env-'
+    quick_env_re = re.compile('^' + quick_env_prefix + '([\d]+)$')
+
+    def parse_number(env):
+        match = re.match(quick_env_re, env.name)
+        return int(match.group(1)) if match else 0
+
+    numbers = [parse_number(e) for e in api.environments_list(request)]
+    new_env_number = 1
+    if numbers:
+        numbers.sort()
+        new_env_number = numbers[-1] + 1
+
+    params = {'name': quick_env_prefix + str(new_env_number)}
+    return api.environment_create(request, params)
+
+
+@login_required
+def quick_deploy(request, app_id):
+    env = create_quick_environment(request)
+    return views.Wizard.as_view(services.get_app_forms, do_redirect=True)(
+        request, app_id=app_id, environment_id=env.id)
+
+
 class IndexView(list.ListView):
-    paginate_by = 6
+    paginate_by = 12
 
     def get_queryset(self):
         return api.muranoclient(self.request).packages.list()

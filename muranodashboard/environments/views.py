@@ -92,6 +92,7 @@ class LazyWizard(SessionWizardView):
 
 class Wizard(hz_views.ModalFormMixin, LazyWizard):
     template_name = 'services/wizard_create.html'
+    do_redirect = False
 
     def get_prefix(self, *args, **kwargs):
         base = super(Wizard, self).get_prefix(*args, **kwargs)
@@ -127,8 +128,11 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
                       get_service_name(self.request, app_id)
             messages.success(self.request, message)
 
-            return self.create_hacked_response(srv.id, attributes['name'])
-            #return HttpResponseRedirect(url)
+            if self.do_redirect:
+                return HttpResponseRedirect(url)
+            else:
+                srv_id = getattr(srv, '?')['id']
+                return self.create_hacked_response(srv_id, attributes['name'])
 
     def create_hacked_response(self, obj_id, obj_name):
         # copy-paste from horizon.forms.views.ModalFormView; should be done
@@ -160,7 +164,8 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
                         'service_name': app.name,
                         'app_id': app_id,
                         'environment_id': self.kwargs.get('environment_id'),
-                        'prefix': self.prefix
+                        'prefix': self.prefix,
+                        'do_redirect': self.do_redirect
                         })
         return context
 

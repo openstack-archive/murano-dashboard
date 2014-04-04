@@ -33,6 +33,12 @@ urlpatterns = patterns(
     url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
         env_views.Wizard.as_view(services.get_app_forms),
         name='add'),
+    url(r'^add_redirect/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
+        env_views.Wizard.as_view(services.get_app_forms, do_redirect=True),
+        name='add_redirect'),
+    url(r'^quick-add/(?P<app_id>[^/]+)$',
+        'quick_deploy',
+        name='quick_add'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),
     url(r'^images/(?P<app_id>[^/]*)', image.get_image, name="images")

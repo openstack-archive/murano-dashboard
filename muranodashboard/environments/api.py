@@ -237,16 +237,20 @@ def services_list(request, environment_id):
 
     for service_item in environment.services:
         service_data = service_item
+        service_id = service_data['?']['id']
         service_data['full_service_name'] = get_service_name(
             request, service_data['app_id'])
 
-        if service_data['id'] in reports and reports[service_data['id']]:
-            last_operation = strip(str(reports[service_data['id']].text))
-            time = reports[service_data['id']].updated.replace('T', ' ')
+        if service_id in reports and reports[service_id]:
+            last_operation = strip(str(reports[service_id].text))
+            time = reports[service_id].updated.replace('T', ' ')
         else:
             last_operation = 'Service draft created' \
                 if environment.version == 0 else ''
-            time = service_data['updated'].replace('T', ' ')[:-7]
+            try:
+                time = service_data['updated'].replace('T', ' ')[:-7]
+            except KeyError:
+                time = None
 
         service_data['environment_id'] = environment_id
         service_data['environment_version'] = environment.version
