@@ -107,8 +107,8 @@
 
 <div class="murano-side-panel" id="MuranoSearchPanel">
     <h3>Search</h3>
-    <form class="search">
-        <input class="text input-medium search-query"/>
+    <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' current_category 1 %}">
+        <input name="search" class="text input-medium search-query"/>
         <button class="btn_search btn">Go</button>
     </form>
 </div>
