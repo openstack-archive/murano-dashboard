@@ -28,6 +28,7 @@ from muranodashboard.dynamic_ui import services
 import re
 
 LOG = logging.getLogger(__name__)
+ALL_CATEGORY_NAME = 'All'
 
 
 class DictToObj(object):
@@ -102,10 +103,15 @@ def quick_deploy(request, app_id):
 
 
 class IndexView(list.ListView):
-    paginate_by = 12
+    paginate_by = 2
 
     def get_queryset(self):
-        return api.muranoclient(self.request).packages.list()
+        category = self.kwargs.get('category', ALL_CATEGORY_NAME)
+        packages = api.muranoclient(self.request).packages
+        if category == ALL_CATEGORY_NAME:
+            return packages.list()
+        else:
+            return packages.filter(category=category)
 
     def get_template_names(self):
         return ['catalog/index.html']
@@ -115,8 +121,8 @@ class IndexView(list.ListView):
         context['latest_list'] = []
 
         categories = api.muranoclient(self.request).packages.categories()
-        if not categories:
-            categories = ['-']
+        if not ALL_CATEGORY_NAME in categories:
+            categories.insert(0, ALL_CATEGORY_NAME)
         current_category = self.kwargs.get('category', categories[0])
         context['categories'] = categories
         context['current_category'] = current_category
