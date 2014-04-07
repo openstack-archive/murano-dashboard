@@ -108,10 +108,14 @@ class IndexView(list.ListView):
     def get_queryset(self):
         category = self.kwargs.get('category', ALL_CATEGORY_NAME)
         packages = api.muranoclient(self.request).packages
-        if category == ALL_CATEGORY_NAME:
-            return packages.list()
-        else:
-            return packages.filter(category=category)
+        query_params = {}
+        if category != ALL_CATEGORY_NAME:
+            query_params['category'] = category
+        search = self.request.GET.get('search')
+        if search:
+            query_params['search'] = search
+
+        return packages.filter(**query_params)
 
     def get_template_names(self):
         return ['catalog/index.html']
