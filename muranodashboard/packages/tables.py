@@ -20,7 +20,7 @@ from django.template import defaultfilters
 from horizon import exceptions
 from horizon import tables
 from horizon import messages
-from metadataclient.common.exceptions import HTTPException
+from muranoclient.common.exceptions import HTTPException
 from muranodashboard.environments import api
 LOG = logging.getLogger(__name__)
 
