@@ -23,7 +23,7 @@ import muranodashboard.dynamic_ui.helpers as helpers
 import yaql
 
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 class AnyFieldDict(collections.defaultdict):
@@ -166,7 +166,7 @@ class UpdatableFieldsForm(forms.Form):
 
 class ServiceConfigurationForm(UpdatableFieldsForm):
     def __init__(self, *args, **kwargs):
-        log.info("Creating form {0}".format(self.__class__.__name__))
+        LOG.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
         self.attribute_mappings = {}
         self.context = helpers.create_yaql_context()
@@ -210,7 +210,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     value = field.postclean(self, cleaned_data)
                     if value:
                         cleaned_data[name] = value
-                        log.debug("Update cleaned data in postclean method")
+                        LOG.debug("Update cleaned data in postclean method")
 
             self.service.update_cleaned_data(cleaned_data, form=self)
             return cleaned_data

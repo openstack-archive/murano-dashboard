@@ -34,7 +34,7 @@ from django.template.loader import render_to_string
 from muranoclient.common import exceptions as muranoclient_exc
 
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 def with_request(func):
@@ -48,13 +48,13 @@ def with_request(func):
                 kwargs[key] = value
 
         if initial_request:
-            log.debug("Using 'request' value from initial dictionary")
+            LOG.debug("Using 'request' value from initial dictionary")
             func(self, initial_request, **kwargs)
         elif request:
-            log.debug("Using direct 'request' value")
+            LOG.debug("Using direct 'request' value")
             func(self, request, **kwargs)
         else:
-            log.error("No 'request' value passed neither via initial "
+            LOG.error("No 'request' value passed neither via initial "
                       "dictionary, nor directly")
             raise forms.ValidationError("Can't get a request information")
     return update
@@ -101,7 +101,7 @@ def get_murano_images(request):
         # public filter removed
         images, _more = glance.image_list_detailed(request)
     except:
-        log.error("Error to request image list from glance ")
+        LOG.error("Error to request image list from glance ")
         exceptions.handle(request, _("Unable to retrieve public images."))
     murano_images = []
     for image in images:
@@ -110,7 +110,7 @@ def get_murano_images(request):
             try:
                 murano_metadata = json.loads(murano_property)
             except ValueError:
-                log.warning("JSON in image metadata is not valid. "
+                LOG.warning("JSON in image metadata is not valid. "
                             "Check it in glance.")
                 messages.error(request, _("Invalid murano image metadata"))
             else:
@@ -566,7 +566,7 @@ class ClusterIPField(CharField):
             try:
                 ip_info = novaclient(request).fixed_ips.get(ip)
             except exceptions.UNAUTHORIZED:
-                log.error("Error to get information about IP address"
+                LOG.error("Error to get information about IP address"
                           " using novaclient")
                 exceptions.handle(
                     request, _("Unable to retrieve information "
@@ -574,7 +574,7 @@ class ClusterIPField(CharField):
                     ignore=True)
             except exceptions.NOT_FOUND:
                 msg = "Could not found fixed ips for ip %s" % (ip,)
-                log.error(msg)
+                LOG.error(msg)
                 exceptions.handle(
                     request, _(msg),
                     ignore=True)

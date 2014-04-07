@@ -20,7 +20,7 @@ from netaddr.strategy import ipv4
 from neutronclient.v2_0 import client as neutronclient
 import logging
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 class NeutronSubnetGetter(object):
@@ -138,5 +138,5 @@ def get_network_params(request):
                                    'cidr': existing_subnet,
                                    'routerId': getter.get_router_id()}}
         else:
-            log.error('Cannot get subnet')
+            LOG.error('Cannot get subnet')
             return {'networking': {'topology': network_topology}}

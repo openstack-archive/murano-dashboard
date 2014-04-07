@@ -26,7 +26,7 @@ from .network import get_network_params
 
 from muranodashboard.environments import format
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 def get_endpoint(request):
@@ -38,7 +38,7 @@ def get_endpoint(request):
             endpoint = url_for(request, 'murano')
         except ServiceCatalogException:
             endpoint = 'http://localhost:8082'
-            log.warning('Murano API location could not be found in Service '
+            LOG.warning('Murano API location could not be found in Service '
                         'Catalog, using default: {0}'.format(endpoint))
     return endpoint
 
@@ -48,7 +48,7 @@ def muranoclient(request):
     insecure = getattr(settings, 'MURANO_API_INSECURE', False)
 
     token_id = request.user.token.id
-    log.debug('Murano::Client <Url: {0}, '
+    LOG.debug('Murano::Client <Url: {0}, '
               'TokenId: {1}>'.format(endpoint, token_id))
 
     return client.Client(
@@ -58,7 +58,7 @@ def muranoclient(request):
 def get_status_messages_for_service(request, service_id, environment_id):
     deployments = muranoclient(request).deployments. \
         list(environment_id)
-    log.debug('Deployment::List {0}'.format(deployments))
+    LOG.debug('Deployment::List {0}'.format(deployments))
 
     result = '\n'
     #TODO: Add updated time to logs
@@ -126,21 +126,21 @@ class Session(object):
                     muranoclient(request).sessions.get(environment_id, id)
             except HTTPForbidden:
                 del sessions[environment_id]
-                log.debug("The environment is deploying by other user."
+                LOG.debug("The environment is deploying by other user."
                           "Creating a new session "
                           "for the environment {0}".format(environment_id))
                 return create_session(request, environment_id)
             else:
                 if session_data.state == "deployed":
                     del sessions[environment_id]
-                    log.debug("The existent session has status 'deployed'."
+                    LOG.debug("The existent session has status 'deployed'."
                               " Creating a new session "
                               "for the environment {0}".format(environment_id))
                     return create_session(request, environment_id)
         else:
-            log.debug("Creating a new session")
+            LOG.debug("Creating a new session")
             return create_session(request, environment_id)
-        log.debug("Found active session "
+        LOG.debug("Found active session "
                   "for the environment {0}".format(environment_id))
         return id
 
@@ -159,17 +159,17 @@ class Session(object):
         session_id = sessions[environment_id] \
             if environment_id in sessions else None
         if session_id:
-            log.debug("Using session_id {0} for the environment {1}".format(
+            LOG.debug("Using session_id {0} for the environment {1}".format(
                 session_id, environment_id))
         else:
-            log.debug("Session for the environment {0} not found".format(
+            LOG.debug("Session for the environment {0} not found".format(
                 environment_id))
         return session_id
 
 
 def environments_list(request):
     environments = muranoclient(request).environments.list()
-    log.debug('Environment::List {0}'.format(environments))
+    LOG.debug('Environment::List {0}'.format(environments))
     for index, env in enumerate(environments):
         environments[index].has_services = False
         environment = environment_get(request, env.id)
@@ -188,29 +188,29 @@ def environment_create(request, parameters):
     #name is required param
     body['name'] = parameters['name']
     env = muranoclient(request).environments.create(body)
-    log.debug('Environment::Create {0}'.format(env))
+    LOG.debug('Environment::Create {0}'.format(env))
     return env
 
 
 def environment_delete(request, environment_id):
-    log.debug('Environment::Delete <Id: {0}>'.format(environment_id))
+    LOG.debug('Environment::Delete <Id: {0}>'.format(environment_id))
     return muranoclient(request).environments.delete(environment_id)
 
 
 def environment_get(request, environment_id):
     session_id = Session.get(request, environment_id)
-    log.debug('Environment::Get <Id: {0}, SessionId: {1}>'.
+    LOG.debug('Environment::Get <Id: {0}, SessionId: {1}>'.
               format(environment_id, session_id))
     env = muranoclient(request).environments.get(environment_id, session_id)
-    log.debug('Environment::Get {0}'.format(env))
+    LOG.debug('Environment::Get {0}'.format(env))
     return env
 
 
 def environment_deploy(request, environment_id):
     session_id = Session.get(request, environment_id)
-    log.debug('Session::Get <Id: {0}>'.format(session_id))
+    LOG.debug('Session::Get <Id: {0}>'.format(session_id))
     env = muranoclient(request).sessions.deploy(environment_id, session_id)
-    log.debug('Environment::Deploy <EnvId: {0}, SessionId: {1}>'
+    LOG.debug('Environment::Deploy <EnvId: {0}, SessionId: {1}>'
               ''.format(environment_id, session_id))
     return env
 
@@ -258,7 +258,7 @@ def services_list(request, environment_id):
         service_data['operation_updated'] = time
         services.append(service_data)
 
-    log.debug('Service::List')
+    LOG.debug('Service::List')
     return [bunch.bunchify(service) for service in services]
 
 
@@ -269,7 +269,7 @@ def app_id_by_fqn(request, fqn):
 
 def service_list_by_id(request, environment_id, app_id):
     services = services_list(request, environment_id)
-    log.debug('Service::Instances::List')
+    LOG.debug('Service::Instances::List')
     return [service for service in services if service['app_id'] == app_id]
 
 
@@ -277,7 +277,7 @@ def service_create(request, environment_id, parameters):
     # we should be able to delete session
     # if we what add new services to this environment
     session_id = Session.get_or_create_or_delete(request, environment_id)
-    log.debug('Service::Create {0}'.format(parameters['app_id']))
+    LOG.debug('Service::Create {0}'.format(parameters['app_id']))
     return muranoclient(request).services.post(environment_id,
                                                path='/',
                                                data=parameters,
@@ -285,7 +285,7 @@ def service_create(request, environment_id, parameters):
 
 
 def service_delete(request, environment_id, service_id):
-    log.debug('Service::Delete <SrvId: {0}>'.format(service_id))
+    LOG.debug('Service::Delete <SrvId: {0}>'.format(service_id))
     session_id = Session.get_or_create_or_delete(request, environment_id)
     return muranoclient(request).services.delete(environment_id,
                                                  '/' + service_id,
@@ -294,14 +294,14 @@ def service_delete(request, environment_id, service_id):
 
 def service_get(request, environment_id, service_id):
     services = services_list(request, environment_id)
-    log.debug("Return service detail for a specified id")
+    LOG.debug("Return service detail for a specified id")
     for service in services:
         if service.id == service_id:
             return service
 
 
 def deployments_list(request, environment_id):
-    log.debug('Deployments::List')
+    LOG.debug('Deployments::List')
     deployments = muranoclient(request).deployments.list(environment_id)
     for deployment in deployments:
         if deployment.started:
@@ -309,21 +309,21 @@ def deployments_list(request, environment_id):
         if deployment.finished:
             deployment.finished = deployment.finished.replace('T', ' ')
 
-    log.debug('Environment::List {0}'.format(deployments))
+    LOG.debug('Environment::List {0}'.format(deployments))
     return deployments
 
 
 def deployment_reports(request, environment_id, deployment_id):
-    log.debug('Deployment::Reports::List')
+    LOG.debug('Deployment::Reports::List')
     reports = muranoclient(request).deployments.reports(environment_id,
                                                         deployment_id)
-    log.debug('Deployment::Reports::List {0}'.format(reports))
+    LOG.debug('Deployment::Reports::List {0}'.format(reports))
     return reports
 
 
 def get_deployment_start(request, environment_id, deployment_id):
     deployments = muranoclient(request).deployments.list(environment_id)
-    log.debug('Get deployment start time')
+    LOG.debug('Get deployment start time')
     for deployment in deployments:
         if deployment.id == deployment_id:
             return deployment.started.replace('T', ' ')
@@ -332,7 +332,7 @@ def get_deployment_start(request, environment_id, deployment_id):
 
 def get_deployment_descr(request, environment_id, deployment_id):
     deployments = muranoclient(request).deployments.list(environment_id)
-    log.debug('Get deployment description')
+    LOG.debug('Get deployment description')
     for deployment in deployments:
         if deployment.id == deployment_id:
             descr = deployment.description

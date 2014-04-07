@@ -22,7 +22,7 @@ from horizon import messages
 from muranoclient.common.exceptions import HTTPException
 from muranodashboard.environments import api
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 MAX_FILE_SIZE_SPEC = (5 * 1024 * 1024, '5', _('MB'))
@@ -56,19 +56,19 @@ class UploadPackageForm(SelfHandlingForm):
             if package.size > max_size:
                 msg = _('It is restricted to upload files larger than '
                         '{0}{1}.'.format(size_in_units, unit_spec))
-                log.error(msg)
+                LOG.error(msg)
                 raise forms.ValidationError(msg)
         return package
 
     def handle(self, request, data):
-        log.debug('Uploading package {0}'.format(data))
+        LOG.debug('Uploading package {0}'.format(data))
         try:
             data, files = split_post_data(data)
             result = api.muranoclient(request).packages.create(data, files)
             messages.success(request, _('Package uploaded.'))
             return result
         except HTTPException:
-            log.exception(_('Uploading package failed'))
+            LOG.exception(_('Uploading package failed'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to upload package'),
@@ -106,14 +106,14 @@ class ModifyPackageForm(SelfHandlingForm):
 
     def handle(self, request, data):
         app_id = self.initial.get('app_id')
-        log.debug('Updating package {0} with {1}'.format(app_id, data))
+        LOG.debug('Updating package {0} with {1}'.format(app_id, data))
         try:
             data['tags'] = [t.strip() for t in data['tags'].split(',')]
             result = api.muranoclient(request).packages.update(app_id, data)
             messages.success(request, _('Package modified.'))
             return result
         except HTTPException:
-            log.exception(_('Modifying package failed'))
+            LOG.exception(_('Modifying package failed'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to modify package'),

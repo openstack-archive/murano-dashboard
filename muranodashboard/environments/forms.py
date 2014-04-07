@@ -18,7 +18,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from muranodashboard.dynamic_ui.fields import get_murano_images, \
     ImageChoiceField
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 def filter_service_by_image_type(service, request):
