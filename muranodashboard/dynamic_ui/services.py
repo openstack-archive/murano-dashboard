@@ -15,9 +15,7 @@
 
 import os
 import re
-import time
 import logging
-from muranodashboard.dynamic_ui import metadata
 from muranodashboard.dynamic_ui import helpers
 from .helpers import decamelize, get_yaql_expr, create_yaql_context
 
@@ -25,10 +23,16 @@ import yaql
 import yaml
 from yaml.scanner import ScannerError
 from django.utils.translation import ugettext_lazy as _
-from muranodashboard.environments.consts import CACHE_REFRESH_SECONDS_INTERVAL
+from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
 
 log = logging.getLogger(__name__)
+
+
+if not os.path.exists(CACHE_DIR):
+    os.mkdir(CACHE_DIR)
+    log.info('Creating cache directory located at {dir}'.format(dir=CACHE_DIR))
+log.info('Using cache directory located at {dir}'.format(dir=CACHE_DIR))
 
 
 class Service(object):
@@ -131,63 +135,6 @@ class Service(object):
         return self.cleaned_data
 
 
-def import_service(services, full_service_name, service_file):
-    try:
-        with open(service_file) as stream:
-            desc = yaml.load(stream)
-    except (OSError, ScannerError) as e:
-        log.warn("Failed to import service definition from {0},"
-                 " reason: {1!s}".format(service_file, e))
-    else:
-        version.check_version(desc.pop('Version', 1))
-        desc = dict((decamelize(k), v) for (k, v) in desc.iteritems())
-        services[full_service_name] = Service(**desc)
-        log.info("Added service '{0}' from '{1}'".format(
-            services[full_service_name].name, service_file))
-
-
-def import_all_services(request):
-    """Tries to import all metadata from repository, this includes calculating
-    hash-sum of local metadata package, making HTTP-request and unpacking
-    received package into cache directory. Calling this function several
-    times for each form in dynamicUI is inevitable, so to avoid significant
-    delays all metadata-related stuff is actually performed no more often than
-    each CACHE_REFRESH_SECONDS_INTERVAL.
-
-    Expected contents of metadata package is:
-      - <full_service_name1>/<form_definitionA>.yaml
-      - <full_service_name2>/<form_definitionB>.yaml
-      ...
-    If there is no YAMLs with form definitions inside <full_service_nameN>
-    dir, then <full_service_nameN> won't be shown in Create Service first step.
-    """
-    last_check_time = request.session.get('last_check_time', 0)
-    if time.time() - last_check_time > CACHE_REFRESH_SECONDS_INTERVAL:
-        request.session['last_check_time'] = time.time()
-        directory, modified = metadata.get_ui_metadata(request)
-        session_is_empty = not request.session.get('services', {})
-        # check directory here in case metadata service is not available
-        # and None is returned as directory value.
-        # TODO: it is better to use redirect for that purpose (if possible)
-        if directory is not None and (modified or session_is_empty):
-            request.session['services'] = {}
-            for full_service_name in os.listdir(directory):
-                final_dir = os.path.join(directory, full_service_name)
-                if os.path.isdir(final_dir) and len(os.listdir(final_dir)):
-                    filename = os.listdir(final_dir)[0]
-                    if filename.endswith('.yaml'):
-                        import_service(request.session['services'],
-                                       full_service_name,
-                                       os.path.join(final_dir, filename))
-
-
-def iterate_over_services(request):
-    import_all_services(request)
-    services = request.session.get('services', {})
-    for service in sorted(services.values(), key=lambda v: v.name):
-        yield service.type, service
-
-
 def import_app(request, app_id):
     from muranodashboard.environments import api
 
@@ -198,6 +145,7 @@ def import_app(request, app_id):
     app = services.get(app_id)
     if not app:
         ui_desc = api.muranoclient(request).packages.get_ui(app_id)
+        version.check_version(ui_desc.pop('Version', 1))
         service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
         services[app_id] = Service(**service)
         app = services[app_id]
