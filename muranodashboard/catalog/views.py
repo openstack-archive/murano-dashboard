@@ -103,12 +103,12 @@ def quick_deploy(request, app_id):
 
 
 class IndexView(list.ListView):
-    paginate_by = 2
+    paginate_by = 6
 
     def get_queryset(self):
         category = self.kwargs.get('category', ALL_CATEGORY_NAME)
         packages = api.muranoclient(self.request).packages
-        query_params = {}
+        query_params = {'type': 'Application'}
         if category != ALL_CATEGORY_NAME:
             query_params['category'] = category
         search = self.request.GET.get('search')
