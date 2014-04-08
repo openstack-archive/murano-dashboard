@@ -5,5 +5,5 @@ iso8601>=0.1.8
 six>=1.5.2
 PyYAML>=3.1.0
 django-floppyforms>=1.1
-yaql==0.2
+yaql>=0.2.2,<0.3
 http://tarballs.openstack.org/python-muranoclient/python-muranoclient-master.tar.gz#egg=muranoclient-0.5
