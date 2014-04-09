@@ -20,7 +20,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 import muranodashboard.dynamic_ui.fields as fields
 import muranodashboard.dynamic_ui.helpers as helpers
-import yaql
+from muranodashboard.dynamic_ui import yaql_expression
 
 
 LOG = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ def _collect_fields(field_specs, form_name, service):
         if not isinstance(keys, types.ListType):
             keys = [keys]
         key = keys and keys[-1] or None
-        if helpers.get_yaql_expr(spec):
+        if isinstance(spec, yaql_expression.YaqlExpression):
             return key, fields.RawProperty(key, spec)
         elif isinstance(spec, types.DictType):
             items = []
@@ -113,10 +113,7 @@ def _collect_fields(field_specs, form_name, service):
         kwargs['widget'] = process_widget(kwargs, cls, widget)
         cls = cls.finalize_properties(kwargs, form_name, service)
 
-        attribute_names = kwargs.pop('attribute_names', None)
         field = cls(**kwargs)
-        field.attribute_names = attribute_names
-
         return field_spec['name'], field
 
     return [make_field(spec, form_name, service) for spec in field_specs]
@@ -168,7 +165,6 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     def __init__(self, *args, **kwargs):
         LOG.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
-        self.attribute_mappings = {}
         self.context = helpers.create_yaql_context()
         self.finalize_fields()
         self.initial = kwargs.get('initial', self.initial)
@@ -195,8 +191,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                 cleaned_data, form=self)
             error_messages = []
             for validator in self.validators:
-                expr = helpers.get_yaql_expr(validator['expr'])
-                if not yaql.parse(expr).evaluate(all_data, self.context):
+                expr = validator['expr']
+                if not expr.evaluate(data=all_data, context=self.context):
                     error_messages.append(_(validator.get('message', '')))
             if error_messages:
                 raise forms.ValidationError(error_messages)

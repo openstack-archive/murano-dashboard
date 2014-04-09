@@ -12,7 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import copy
 import re
 import uuid
 from django.core.validators import RegexValidator
@@ -80,10 +79,6 @@ def prepare_regexp(regexp):
         return RegexValidator(re.compile(regexp))
 
 
-def get_yaql_expr(expr):
-    return isinstance(expr, types.DictType) and expr.get('YAQL', None)
-
-
 def recursive_apply(predicate, transformer, value, *args):
     def rec(val):
         if predicate(val, *args):
@@ -107,13 +102,6 @@ def evaluate(value, context):
         lambda v, _ctx: hasattr(v, 'evaluate'),
         lambda v, _ctx: v.evaluate(context=_ctx),
         value, context)
-
-
-def parse(value):
-    return recursive_apply(
-        get_yaql_expr,
-        lambda v: yaql.parse(get_yaql_expr(v)),
-        value)
 
 
 def insert_hidden_ids(application):

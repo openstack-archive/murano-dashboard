@@ -17,14 +17,12 @@ import os
 import re
 import logging
 from muranodashboard.dynamic_ui import helpers
-from .helpers import decamelize, get_yaql_expr, create_yaql_context
+from .helpers import decamelize, create_yaql_context
 
-import yaql
 import yaml
-from yaml.scanner import ScannerError
-from django.utils.translation import ugettext_lazy as _
 from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
+from muranodashboard.dynamic_ui import yaql_expression
 
 LOG = logging.getLogger(__name__)
 
@@ -58,7 +56,7 @@ class Service(object):
         if application is None:
             raise ValueError('Application section is required')
         else:
-            self.application = helpers.parse(application)
+            self.application = application
 
         self.context = create_yaql_context()
         self.cleaned_data = {}
@@ -114,7 +112,7 @@ class Service(object):
     def extract_attributes(self):
         self.context.set_data(self.cleaned_data)
         for name, template in self.templates.iteritems():
-            self.context.set_data(helpers.parse(template), name)
+            self.context.set_data(template, name)
 
         return helpers.evaluate(self.application, self.context)
 
@@ -123,9 +121,8 @@ class Service(object):
         found, use raw data."""
         if data:
             self.update_cleaned_data(data, form_name=form_name)
-        expr = get_yaql_expr(expr)
         data = self.cleaned_data
-        value = data and yaql.parse(expr).evaluate(data, self.context)
+        value = data and expr.evaluate(data=data, context=self.context)
         return data != {}, value
 
     def update_cleaned_data(self, data, form=None, form_name=None):
@@ -133,6 +130,21 @@ class Service(object):
         if data:
             self.cleaned_data[form_name] = data
         return self.cleaned_data
+
+
+def make_loader_cls():
+    class Loader(yaml.Loader):
+        pass
+
+    def yaql_constructor(loader, node):
+        value = loader.construct_scalar(node)
+        return yaql_expression.YaqlExpression(value)
+
+    Loader.add_constructor(u'!yaql', yaql_constructor)
+    Loader.add_implicit_resolver(
+        u'!yaql', yaql_expression.YaqlExpression, None)
+
+    return Loader
 
 
 def import_app(request, app_id):
@@ -144,7 +156,8 @@ def import_app(request, app_id):
 
     app = services.get(app_id)
     if not app:
-        ui_desc = api.muranoclient(request).packages.get_ui(app_id)
+        ui_desc = api.muranoclient(request).packages.get_ui(
+            app_id, make_loader_cls())
         version.check_version(ui_desc.pop('Version', 1))
         service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
         services[app_id] = Service(**service)
