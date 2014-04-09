@@ -21,7 +21,7 @@ from horizon.forms import SelfHandlingForm
 from horizon import messages, exceptions
 from openstack_dashboard.api import glance
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 def filter_murano_images(images, request=None):
@@ -33,7 +33,7 @@ def filter_murano_images(images, request=None):
                 metadata = json.loads(metadata)
             except ValueError:
                 msg = _('Invalid metadata for image: {0}'.format(image.id))
-                log.warn(msg)
+                LOG.warn(msg)
                 if request:
                     exceptions.handle(request, msg)
             else:
@@ -63,7 +63,7 @@ class MarkImageForm(SelfHandlingForm):
         try:
             images, _more = glance.image_list_detailed(request)
         except Exception:
-            log.error('Failed to request image list from Glance')
+            LOG.error('Failed to request image list from Glance')
             exceptions.handle(request, _('Unable to retrieve list of images'))
 
         self.fields['image'].choices = [(i.id, i.name) for i in images]
@@ -71,7 +71,7 @@ class MarkImageForm(SelfHandlingForm):
             [image.title for image in filter_murano_images(images)]
 
     def handle(self, request, data):
-        log.debug('Marking image with specified metadata: {0}'.format(data))
+        LOG.debug('Marking image with specified metadata: {0}'.format(data))
 
         image_id = data['image']
         properties = {

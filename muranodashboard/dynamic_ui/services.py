@@ -26,13 +26,13 @@ from django.utils.translation import ugettext_lazy as _
 from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 if not os.path.exists(CACHE_DIR):
     os.mkdir(CACHE_DIR)
-    log.info('Creating cache directory located at {dir}'.format(dir=CACHE_DIR))
-log.info('Using cache directory located at {dir}'.format(dir=CACHE_DIR))
+    LOG.info('Creating cache directory located at {dir}'.format(dir=CACHE_DIR))
+LOG.info('Using cache directory located at {dir}'.format(dir=CACHE_DIR))
 
 
 class Service(object):
