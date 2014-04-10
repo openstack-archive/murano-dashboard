@@ -27,18 +27,18 @@ var diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.y, d.x]; });
 
 function update(){
-  node = node.data(nodes, function(d) { return d.name; });
+  node = node.data(nodes, function(d) { return d.id; });
   link = link.data(links);
 
   var nodeEnter = node.enter().append("g")
     .attr("class", "node")
     .attr("node_name", function(d) { return d.name; })
-    .attr("node_id", function(d) { return d.instance; })
+    .attr("node_id", function(d) { return d.id; })
     .call(force.drag);
 
   nodeEnter.append("image")
     .attr("xlink:href", function(d) { return d.image; })
-    .attr("id", function(d){ return "image_"+ d.name; })
+    .attr("id", function(d){ return "image_"+ d.id; })
     .attr("x", function(d) { return d.image_x; })
     .attr("y", function(d) { return d.image_y; })
     .attr("width", function(d) { return d.image_size; })
@@ -62,15 +62,12 @@ function update(){
 }
 
 function tick() {
-  link.attr("d", linkArc);
+  link.attr('d', drawLink).style('stroke-width', 3);
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function linkArc(d) {
-  var dx = d.target.x - d.source.x,
-      dy = d.target.y - d.source.y,
-      dr = Math.sqrt(dx * dx + dy * dy);
-  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+function drawLink(d) {
+  return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
 }
 
 
@@ -82,15 +79,15 @@ function set_in_progress(stack, nodes) {
   }
 }
 
-function findNode(name) {
+function findNode(id) {
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].name === name){ return nodes[i]; }
+    if (nodes[i].id === id){ return nodes[i]; }
   }
 }
 
-function findNodeIndex(name) {
+function findNodeIndex(id) {
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].name === name){ return i; }
+    if (nodes[i].id=== id){ return i; }
   }
 }
 
@@ -99,9 +96,9 @@ function addNode (node) {
   needs_update = true;
 }
 
-function removeNode (name) {
+function removeNode (id) {
   var i = 0;
-  var n = findNode(name);
+  var n = findNode(id);
   while (i < links.length) {
     if (links[i].source === n || links[i].target === n) {
       links.splice(i, 1);
@@ -109,7 +106,7 @@ function removeNode (name) {
       i++;
     }
   }
-  nodes.splice(findNodeIndex(name),1);
+  nodes.splice(findNodeIndex(id),1);
   needs_update = true;
 }
 
@@ -118,18 +115,19 @@ function remove_nodes(old_nodes, new_nodes){
   for (var i=0;i<old_nodes.length;i++) {
     var remove_node = true;
     for (var j=0;j<new_nodes.length;j++) {
-      if (old_nodes[i].name === new_nodes[j].name){
+      if (old_nodes[i].id === new_nodes[j].id){
         remove_node = false;
         break;
       }
     }
     if (remove_node === true){
-      removeNode(old_nodes[i].name);
+      removeNode(old_nodes[i].id);
     }
   }
 }
 
 function build_links(){
+    debugger;
   for (var i=0;i<nodes.length;i++){
     build_node_links(nodes[i]);
     build_reverse_links(nodes[i]);
@@ -140,7 +138,7 @@ function build_node_links(node){
   for (var j=0;j<node.required_by.length;j++){
     var push_link = true;
     var target_idx = '';
-    var source_idx = findNodeIndex(node.name);
+    var source_idx = findNodeIndex(node.id);
     //make sure target node exists
     try {
       target_idx = findNodeIndex(node.required_by[j]);
@@ -173,10 +171,10 @@ function build_reverse_links(node){
       for (var j=0;j<nodes[i].required_by.length;j++){
         var dependency = nodes[i].required_by[j];
         //if new node is required by existing node, push new link
-        if(node.name === dependency){
+        if(node.id === dependency){
           links.push({
-            'source':findNodeIndex(nodes[i].name),
-            'target':findNodeIndex(node.name),
+            'source':findNodeIndex(nodes[i].id),
+            'target':findNodeIndex(node.id),
             'value':1,
             'link_type': node.link_type
           });
@@ -202,7 +200,7 @@ function ajax_poll(poll_time){
 
       //Check for updates and new nodes
       json.nodes.forEach(function(d){
-        current_node = findNode(d.name);
+        current_node = findNode(d.id);
         //Check if node already exists
         if (current_node) {
           //Node already exists, just update it
@@ -211,7 +209,7 @@ function ajax_poll(poll_time){
           //Status has changed, image should be updated
           if (current_node.image !== d.image){
             current_node.image = d.image;
-            var this_image = d3.select("#image_"+current_node.name);
+            var this_image = d3.select("#image_"+current_node.id);
             this_image
               .transition()
               .attr("x", function(d) { return d.image_x + 5; })
