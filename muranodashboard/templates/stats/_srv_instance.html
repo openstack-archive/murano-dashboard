@@ -1,22 +1,19 @@
 {% load static %}
 
 <div class="well">
-    <div class="app-icon pull-left">
+    <div class="app-icon pull-left server">
       <img  src="{% static 'muranodashboard/images/murano_srv.png' %}"/>
     </div>
 
-
-    <div class="">
-        <h4>API server: {{ server.host }}</h4>
-        <span class="label label-success">Requests: {{ server.request_count }}</span>
-        <span class="label label-success">Errors: {{ server.error_count }}</span>
-        <span class="label label-success">Ave.Resp.Time: {{ server.average_response_time }}</span>
-        <span class="label label-success">Req\sec: {{ server.requests_per_second }}</span>
-        <span class="label label-success">Err\sec: {{ server.errors_per_second }}</span>
-    </div>
-    <div class="">
-        CPU Load:
-        <meter value="{{ server.cpu_percent }}" max="{{ server.max_cpu }}">{{ server.cpu_percent }}%</meter>
+    <h4>API server: {{ server.host }}</h4>
+    <div class="server-stats">
+       CPU Load:
+       <meter value="{{ server.cpu_percent }}" max="{{ server.max_cpu }}">{{ server.cpu_percent }}%</meter>
+       Requests:  <span class="label label-default">{{ server.request_count }}</span>
+       Errors:  <span class="label label-default">{{ server.error_count }}</span>
+       Ave.Resp.Time: <span class="label label-default">{{ server.average_response_time }}</span>
+       Req\sec: <span class="label label-default">{{ server.requests_per_second }}</span>
+       Err\sec: <span class="label label-default">{{ server.errors_per_second }}</span>
     </div>
 
 </div>
