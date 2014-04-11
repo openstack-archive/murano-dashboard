@@ -31,7 +31,7 @@ APPLICATION_CACHE_DIR="/var/cache/$APPLICATION_NAME"
 APPLICATION_DB_DIR="/var/lib/openstack-dashboard"
 LOGFILE="/tmp/${APPLICATION_NAME}_install.log"
 HORIZON_CONFIGS="/opt/stack/horizon/openstack_dashboard/settings.py,/usr/share/openstack-dashboard/openstack_dashboard/settings.py"
-common_pkgs="wget git make gcc python-pip python-setuptools unzip"
+common_pkgs="wget git make gcc python-pip python-setuptools unzip ntpdate"
 # Distro-specific package namings
 debian_pkgs="python-dev python-mysqldb libxml2-dev libxslt1-dev libffi-dev mysql-client memcached apache2 libapache2-mod-wsgi openstack-dashboard"
 redhat_pkgs="python-devel MySQL-python libxml2-devel libxslt-devel libffi-devel mysql memcached httpd python-memcached mod_wsgi openstack-dashboard python-netaddr"
@@ -52,22 +52,22 @@ function install_prerequisites()
                 retval=1
                 return $retval
             fi
-            find /var/lib/apt/lists/ -name "*cloud.archive*" | grep -q "havana_main"
+            find /var/lib/apt/lists/ -name "*cloud.archive*" | grep -q "icehouse_main"
             if [ $? -ne 0 ]; then
-                add-apt-repository -y cloud-archive:havana >> $LOGFILE 2>&1
+                add-apt-repository -y cloud-archive:icehouse >> $LOGFILE 2>&1
                 if [ $? -ne 0 ]; then
                     log "... can't enable \"cloud-archive:havana\", exiting !"
                     retval=1
                     return $retval
                 fi
                 apt-get update -y
-                apt-get upgrade -y
+                apt-get upgrade -y -o Dpkg::Options::="--force-confnew"
                 log "..success"
             fi
             ;;
         "redhat")
             $(yum repolist | grep -qoE "epel") || rpm -ivh "http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm" >> $LOGFILE 2>&1
-            $(yum repolist | grep -qoE "openstack-havana") || rpm -ivh "http://rdo.fedorapeople.org/openstack-havana/rdo-release-havana.rpm" >> $LOGFILE 2>&1
+            $(yum repolist | grep -qoE "openstack-icehouse") || rpm -ivh "http://rdo.fedorapeople.org/openstack-icehouse/rdo-release-icehouse.rpm" >> $LOGFILE 2>&1
             if [ $? -ne 0 ]; then
                 log "... can't enable EPEL6 or RDO, exiting!"
                 retval=1
@@ -169,8 +169,6 @@ modify_horizon_config()
                 rm -f $TMPFILE
                 cat >> $TMPFILE << EOF
 #START_MURANO_DASHBOARD
-#TODO: should remove the next line once https://bugs.launchpad.net/ubuntu/+source/horizon/+bug/1243187 is fixed
-LOGOUT_URL = '/horizon/auth/logout/'
 METADATA_CACHE_DIR = '$APPLICATION_CACHE_DIR'
 DATABASES = {
     'default': {
@@ -188,10 +186,9 @@ else: LOGGING['formatters'] = verbose_formatter
 LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '$APPLICATION_LOG_DIR/murano-dashboard.log'}
 LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
 LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
-ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
-NETWORK_TOPOLOGY = 'routed'
-#MURANO_API_URL = "http://localhost:8082/v1"
-#MURANO_METADATA_URL = "http://localhost:8084/v1"
+#ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
+#NETWORK_TOPOLOGY = 'routed'
+#MURANO_API_URL = "http://localhost:8082"
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
 #END_MURANO_DASHBOARD
@@ -237,7 +234,6 @@ function prepare_db()
     horizon_manage=$1
     retval=0
     log "Creating db for storing sessions..."
-    #python $horizon_manage syncdb --noinput
     su -c "python $horizon_manage syncdb --noinput >> $LOGFILE 2>&1" -s /bin/bash $WEB_SERVICE_USER
     if [ $? -ne 0 ]; then
         log "...\"$horizon_manage\" syncdb failed, exiting!!!"
@@ -247,6 +243,51 @@ function prepare_db()
     fi
     return $retval
 }
+
+function save_symlinks_from_static_dir()
+{
+    # Save all symbolic links from openstack_dashboard/static dir
+    #------------------------------------------------------------
+    local currdir=$RUN_DIR
+    cd $1/static
+
+    rm -f .symlinks
+    for f in $(find . -type l); do
+        log $(printf "Saving symlink '%s' ...\n" $f)
+        printf "%s\t%s\n" $f $(readlink $f) >> .symlinks
+        rm -f $f
+    done
+
+    cd $currdir
+    #------------------------------------------------------------
+}
+
+function restore_symlinks_from_static_dir()
+{
+    # Restore sympbolic links
+    #------------------------
+    local currdir=$RUN_DIR
+    cd $1/static
+
+    if [ ! -f .symlinks ]; then
+        cd $currdir
+        return
+    fi
+
+    while read name path; do
+        log $(printf "Restoring symlink '%s' ...\n" $f)
+            if [ -d "$name" ]; then
+                rm -rf "$name"
+            fi
+            ln -s "$path" "$name"
+    done < .symlinks
+
+    rm -f .symlinks
+
+    cd $currdir
+    #------------------------
+}
+
 function rebuildstatic()
 {
     retval=0
@@ -265,16 +306,22 @@ function rebuildstatic()
         retval=1
         return $retval
     fi
-    _old_murano_static="$(dirname $horizon_manage)/openstack_dashboard/static/muranodashboard"
-    if [ -d "$_old_murano_static" ];then
-        log "...$APPLICATION_NAME static for \"muranodashboard\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
-        rm -rf $_old_murano_static
-        if [ $? -ne 0 ]; then
-            log "...can't delete \"$_old_murano_static\, WARNING!!!"
+    save_symlinks_from_static_dir "$(dirname $horizon_manage)"
+    _static_dirs="muranodashboard floppyforms"
+    for _static_dir in $_static_dirs
+    do
+        _old_murano_static="$(dirname $horizon_manage)/static/$_static_dir"
+        if [ -d "$_old_murano_static" ];then
+            log "...$APPLICATION_NAME static for \"$_static_dir\" found under \"HORIZON\" STATIC, deleting \"$_old_murano_static\"..."
+            rm -rf ${_old_murano_static}/*
+            if [ $? -ne 0 ]; then
+                log "...can't delete \"$_old_murano_static\, WARNING!!!"
+            fi
+        else
+            mk_dir "$_old_murano_static" "$WEB_SERVICE_USER" "$WEB_SERVICE_GROUP" || exit $?
         fi
-    fi
+    done
     log "Rebuilding STATIC output will be recorded in \"$LOGFILE\""
-    #python $horizon_manage collectstatic --noinput >> $LOGFILE 2>&1
     chmod a+rw $LOGFILE
     su -c "python $horizon_manage collectstatic --noinput >> $LOGFILE 2>&1" -s /bin/bash $WEB_SERVICE_USER
     if [ $? -ne 0 ]; then
@@ -283,6 +330,7 @@ function rebuildstatic()
     else
         log "...success"
     fi
+    restore_symlinks_from_static_dir "$(dirname $horizon_manage)"
     prepare_db "$horizon_manage" || retval=$?
     return $retval
 }
@@ -307,7 +355,15 @@ function run_pip_uninstall()
 }
 function install_application()
 {
+    #small cleanup
+    rm -rf /tmp/pip-build-*
     install_prerequisites || exit 1
+    if [ -n "$1" ]; then
+        #syncing clock
+        log "Syncing clock..."
+        ntpdate -u pool.ntp.org
+        log "Continuing installation..."
+    fi
     make_tarball || exit $?
     run_pip_install || exit $?
     log "Configuring HORIZON..."
@@ -374,11 +430,16 @@ function postuninst()
 }
 # Command line args'
 COMMAND="$1"
+SUB_COMMAND="$2"
 case $COMMAND in
     install)
         rm -rf $LOGFILE
         log "Installing \"$APPLICATION_NAME\" to system..."
-        install_application || exit $?
+        if [ "$SUB_COMMAND" == "timesync" ]; then
+            install_application $SUB_COMMAND || exit $?
+        else
+            install_application || exit $?
+        fi
         postinst || exit $?
         log "...success"
         ;;
