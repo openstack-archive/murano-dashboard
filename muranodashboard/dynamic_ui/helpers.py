@@ -124,10 +124,10 @@ def insert_hidden_ids(application):
 
 
 @ctx.ContextAware()
-def _repeat(context, template, start, end):
-    # context.data = copy.deepcopy(context.parent_context.data)
-    for i in xrange(start(), end()):
-        context.set_data(i, '$index')
+@ctx.EvalArg('times', arg_type=int)
+def _repeat(context, template, times):
+    for i in xrange(times):
+        context.set_data(i + 1, '$index')
         yield evaluate(template(), context)
 
 
@@ -135,22 +135,10 @@ def _interpolate(template, number):
     return template().replace('#', '{0}').format(number())
 
 
-def _coalesce(arg, *args):
-    arg = arg()
-    if arg is None:
-        for arg in args:
-            arg = arg()
-            if arg is not None:
-                return arg
-    else:
-        return arg
-
-
 YAQL_FUNCTIONS = [
     ('test', lambda self, pattern: re.match(pattern(), self()) is not None,),
     ('repeat', _repeat,),
     ('interpolate', _interpolate),
-    ('coalesce', _coalesce),
 ]
 
 
