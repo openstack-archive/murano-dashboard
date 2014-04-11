@@ -484,7 +484,6 @@ class ImageChoiceField(ChoiceField):
         for image in murano_images:
             murano_data = image.murano_property
             title = murano_data.get('title', image.name)
-            murano_data['name'] = image.name
             if self.image_type is not None:
                 itype = murano_data.get('type')
 
@@ -495,7 +494,7 @@ class ImageChoiceField(ChoiceField):
                 if (not itype.startswith(prefix) and
                         not self.image_type == itype):
                     continue
-            image_mapping[smart_text(title)] = json.dumps(murano_data)
+            image_mapping[smart_text(title)] = image.name
 
         for name in sorted(image_mapping.keys()):
             image_choices.append((image_mapping[name], name))
@@ -505,10 +504,6 @@ class ImageChoiceField(ChoiceField):
             image_choices.insert(0, ("", _("No images available")))
 
         self.choices = image_choices
-
-    def clean(self, value):
-        value = super(ImageChoiceField, self).clean(value)
-        return json.loads(value) if value else value
 
 
 class AZoneChoiceField(ChoiceField):
