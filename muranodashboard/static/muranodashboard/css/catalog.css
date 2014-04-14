@@ -54,7 +54,7 @@ h3.link .caret {
     margin-bottom:20px;
 }
 .app-list .app {
-	min-height:120px;
+	min-height:130px;
 	position:relative;
 }
 .app-list .app > div {
@@ -62,11 +62,15 @@ h3.link .caret {
 }
 .app-list .app div.description {
 	padding-left:20px;
+	margin-left:0;
 }
 .app-list .app .app-actions {
 	position:absolute;
 	bottom: 20px;
-	left:0px;
+	left:20px;
+}
+.app-actions div[class*='span'] {
+	margin-left:0;
 }
 .header.dropdown {
     display:inline-block;
@@ -83,11 +87,8 @@ h3.link .caret {
 }
 .app-icon {
 	line-height:0;
-	border-radius:2px;
-	-moz-border-radius:2px;
-	-webkit-border-radius:2px;
-	background: #ccc;
 	overflow:hidden;
+	margin-left:0;
 }
 .app-meta .app-icon {
 	margin-right:30px;
@@ -97,10 +98,7 @@ h3.link .caret {
 .app-icon img {
 	width:100%;
 	height:auto;
-	margin:1px;
-	border-radius:2px;
-	-moz-border-radius:2px;
-	-webkit-border-radius:2px;
+	margin:0px;
 }
 a.trigger.first {
 top: 110px; right: 0;
@@ -181,4 +179,16 @@ line-height: 22px;
 float: right;
 width: 150px;
 line-height: 22px;
+}
+.server-stats {
+	margin: 10px 0;
+}
+.server-stats .label {
+	margin-right:12px;
+}
+.server-stats meter {
+	margin-right:20px;
+}
+.app-icon.server {
+	margin-right:20px;
 }
