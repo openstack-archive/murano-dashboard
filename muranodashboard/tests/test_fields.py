@@ -12,11 +12,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import bunch
-import mock
 import unittest2 as unittest
 
 from mock import patch
+
+from muranodashboard.common import utils
 
 from muranodashboard.dynamic_ui.fields import PostgreSqlChoiceField
 
@@ -25,10 +25,8 @@ class CustomFieldsTests(unittest.TestCase):
     def test_postgresql_choice_field_values(self):
 
         with patch('muranodashboard.dynamic_ui.fields.api') as mock:
-            mock.service_list_by_type.return_value = [bunch.bunchify({
-                'id': 'id1',
-                'name': 'examplePostgreSQL'
-            })]
+            mock.service_list_by_type.return_value = [
+                utils.Bunch(id='id1', name='examplePostgreSQL')]
 
             field = PostgreSqlChoiceField()
             field.update({'environment_id': None}, request='request')

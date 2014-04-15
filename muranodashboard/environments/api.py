@@ -13,7 +13,6 @@
 #    under the License.
 
 import logging
-import bunch
 import json
 from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
@@ -25,6 +24,7 @@ from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
 
 from muranodashboard.environments import format
+from muranodashboard.common import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -259,7 +259,7 @@ def services_list(request, environment_id):
         services.append(service_data)
 
     LOG.debug('Service::List')
-    return [bunch.bunchify(service) for service in services]
+    return [utils.Bunch(**service) for service in services]
 
 
 def app_id_by_fqn(request, fqn):
