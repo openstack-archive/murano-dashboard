@@ -15,11 +15,8 @@
 import logging
 
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
-from horizon import exceptions
 from horizon import tables
 from horizon.forms.views import ModalFormView
-
 from .tables import PackageDefinitionsTable
 from muranodashboard.packages import forms
 from muranodashboard.environments import api
@@ -31,7 +28,10 @@ class PackageDefinitionsView(tables.DataTableView):
     template_name = 'packages/index.html'
 
     def get_data(self):
-        return api.muranoclient(self.request).packages.list()
+        pkgs = []
+        with api.handled_exceptions(self.request):
+            pkgs = api.muranoclient(self.request).packages.list()
+        return pkgs
 
 
 class UploadPackageView(ModalFormView):

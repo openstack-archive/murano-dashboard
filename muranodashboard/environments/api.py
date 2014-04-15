@@ -12,21 +12,64 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import contextlib
 import logging
 
 from django.conf import settings
-from horizon.exceptions import ServiceCatalogException
+from django.contrib.messages import api as msg_api
+from django.utils.encoding import force_unicode
+from django.utils.translation import ugettext_lazy as _
+from horizon import exceptions
 from openstack_dashboard.api.base import url_for
 import muranoclient.client as client
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
+from muranoclient.common import exceptions as exc
 from muranodashboard.environments import topology
 from muranodashboard.common import utils
 
 
 LOG = logging.getLogger(__name__)
+
+
+def _handle_message(request, message):
+    def horizon_message_already_queued(_message):
+        _message = force_unicode(_message)
+        if request.is_ajax():
+            for tag, msg, extra in request.horizon['async_messages']:
+                if _message == msg:
+                    return True
+        else:
+            for msg in msg_api.get_messages(request):
+                if msg.message == _message:
+                    return True
+        return False
+
+    if horizon_message_already_queued(message):
+        exceptions.handle(request, ignore=True)
+    else:
+        exceptions.handle(request, message=message)
+
+
+@contextlib.contextmanager
+def handled_exceptions(request):
+    """Handles all murano-api specific exceptions."""
+    try:
+        yield
+    except exc.CommunicationError:
+        msg = _('Unable to communicate to murano-api server.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
+    except exc.Unauthorized:
+        msg = _('Check Keystone configuration of murano-api server.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
+    except exc.Forbidden:
+        msg = _('Operation is forbidden by murano-api server.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
 
 
 def get_endpoint(request):
@@ -36,7 +79,7 @@ def get_endpoint(request):
     if not endpoint:
         try:
             endpoint = url_for(request, 'murano')
-        except ServiceCatalogException:
+        except exceptions.ServiceCatalogException:
             endpoint = 'http://localhost:8082'
             LOG.warning('Murano API location could not be found in Service '
                         'Catalog, using default: {0}'.format(endpoint))
@@ -168,7 +211,9 @@ class Session(object):
 
 
 def environments_list(request):
-    environments = muranoclient(request).environments.list()
+    environments = []
+    with handled_exceptions(request):
+        environments = muranoclient(request).environments.list()
     LOG.debug('Environment::List {0}'.format(environments))
     for index, env in enumerate(environments):
         environments[index].has_services = False
@@ -296,7 +341,7 @@ def service_get(request, environment_id, service_id):
     services = services_list(request, environment_id)
     LOG.debug("Return service detail for a specified id")
     for service in services:
-        if service.id == service_id:
+        if service['?']['id'] == service_id:
             return service
 
 
