@@ -16,13 +16,17 @@
 import os
 import re
 import logging
-from muranodashboard.dynamic_ui import helpers
-from .helpers import decamelize, create_yaql_context
+
 
 import yaml
+import yaql
+
+from muranodashboard.dynamic_ui import helpers
+from .helpers import decamelize
 from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
 from muranodashboard.dynamic_ui import yaql_expression
+from muranodashboard.dynamic_ui import yaql_functions
 
 LOG = logging.getLogger(__name__)
 
@@ -58,7 +62,9 @@ class Service(object):
         else:
             self.application = application
 
-        self.context = create_yaql_context()
+        self.context = yaql.create_context()
+        yaql_functions.register(self.context)
+
         self.cleaned_data = {}
         self.forms = []
         self._forms = []
@@ -84,7 +90,8 @@ class Service(object):
         # dealing with the attributes which cannot be serialized (see
         # http://tinyurl.com/kxx3tam on pickle restrictions )
         # yaql context is not serializable because it contains lambda functions
-        self.context = create_yaql_context()
+        self.context = yaql.create_context()
+        yaql_functions.register(self.context)
         # form classes are not serializable 'cause they are defined dynamically
         self.forms = []
         for name, field_specs, validators in d.get('_forms', []):
