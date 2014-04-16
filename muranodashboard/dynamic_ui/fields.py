@@ -670,6 +670,6 @@ def make_select_cls(fqn):
             self.widget.add_item_link_args = (environment_id, app_id)
             self.choices = [('', _('Select Application'))]
             apps = api.service_list_by_id(request, environment_id, app_id)
-            self.choices.extend([(app.id, app.name) for app in apps])
+            self.choices.extend([(app['?']['id'], app.name) for app in apps])
 
     return DynamicSelect
