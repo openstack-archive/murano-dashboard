@@ -42,7 +42,7 @@ class RemoveImageMetadata(tables.DeleteAction):
 class MarkedImagesTable(tables.DataTable):
     image = tables.Column(
         'name',
-        link='horizon:project:images_and_snapshots:images:detail',
+        link='horizon:project:images:images:detail',
         verbose_name=_('Image')
     )
     type = tables.Column('type', verbose_name=_('Type'))
