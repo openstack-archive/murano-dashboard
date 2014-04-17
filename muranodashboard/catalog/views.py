@@ -98,8 +98,12 @@ def create_quick_environment(request):
 @login_required
 def quick_deploy(request, app_id):
     env = create_quick_environment(request)
-    return views.Wizard.as_view(services.get_app_forms, do_redirect=True)(
-        request, app_id=app_id, environment_id=env.id)
+    try:
+        return views.Wizard.as_view(services.get_app_forms, do_redirect=True)(
+            request, app_id=app_id, environment_id=env.id)
+    except:
+        api.environment_delete(request, env.id)
+        raise
 
 
 class IndexView(list.ListView):
