@@ -18,6 +18,8 @@ from muranodashboard.environments import api
 class StatsModel(object):
     def get_api_stats(self, request):
         st_list = api.muranoclient(request).request_statistics.list()
+        for srv in st_list:
+            srv.max_cpu = srv.cpu_count * 100
         return st_list
 
 
