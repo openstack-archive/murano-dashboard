@@ -16,11 +16,14 @@ import collections
 import logging
 import types
 
+import yaql
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import muranodashboard.dynamic_ui.fields as fields
 import muranodashboard.dynamic_ui.helpers as helpers
 from muranodashboard.dynamic_ui import yaql_expression
+from muranodashboard.dynamic_ui import yaql_functions
 
 
 LOG = logging.getLogger(__name__)
@@ -165,7 +168,10 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
     def __init__(self, *args, **kwargs):
         LOG.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
-        self.context = helpers.create_yaql_context()
+
+        self.context = yaql.create_context()
+        yaql_functions.register(self.context)
+
         self.finalize_fields()
         self.initial = kwargs.get('initial', self.initial)
         self.update_fields()

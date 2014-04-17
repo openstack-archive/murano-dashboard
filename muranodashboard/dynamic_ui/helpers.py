@@ -13,12 +13,12 @@
 #    under the License.
 
 import re
-import uuid
-from django.core.validators import RegexValidator
+import string
 import types
-import yaql
-import yaql.context as ctx
-from yaql import utils as yaql_utils
+import uuid
+
+from django.core import validators
+from yaql import utils
 
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
 
@@ -74,9 +74,9 @@ def prepare_regexp(regexp):
             flag = flag.upper()
             if hasattr(re, flag):
                 flags |= getattr(re, flag)
-        return RegexValidator(re.compile(regexp, flags))
+        return validators.RegexValidator(re.compile(regexp, flags))
     else:
-        return RegexValidator(re.compile(regexp))
+        return validators.RegexValidator(re.compile(regexp))
 
 
 def recursive_apply(predicate, transformer, value, *args):
@@ -90,7 +90,7 @@ def recursive_apply(predicate, transformer, value, *args):
         elif isinstance(val, types.TupleType):
             return tuple([rec(v) for v in val])
         elif isinstance(val, types.GeneratorType):
-            return rec(yaql_utils.limit(val))
+            return rec(utils.limit(val))
         else:
             return val
 
@@ -123,27 +123,27 @@ def insert_hidden_ids(application):
     return rec(application)
 
 
-@ctx.ContextAware()
-@ctx.EvalArg('times', arg_type=int)
-def _repeat(context, template, times):
-    for i in xrange(times):
-        context.set_data(i + 1, '$index')
-        yield evaluate(template(), context)
+def int2base(x, base):
+    """
+    Converts decimal integers into another number base from base-2 to base-36
 
-
-def _interpolate(template, number):
-    return template().replace('#', '{0}').format(number())
-
-
-YAQL_FUNCTIONS = [
-    ('test', lambda self, pattern: re.match(pattern(), self()) is not None,),
-    ('repeat', _repeat,),
-    ('interpolate', _interpolate),
-]
-
-
-def create_yaql_context(functions=YAQL_FUNCTIONS):
-    context = yaql.create_context()
-    for name, func in functions:
-        context.register_function(func, name)
-    return context
+    :param x: decimal integer
+    :param base: number base, max value is 36
+    :return: integer converted to the specified base
+    """
+    digs = string.digits + string.lowercase
+    if x < 0:
+        sign = -1
+    elif x == 0:
+        return '0'
+    else:
+        sign = 1
+    x *= sign
+    digits = []
+    while x:
+        digits.append(digs[x % base])
+        x /= base
+    if sign < 0:
+        digits.append('-')
+    digits.reverse()
+    return ''.join(digits)
