@@ -11,9 +11,12 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import os
 import tempfile
+
 from django.conf import settings
+
 
 #---- Metadata Consts ----#
 CHUNK_SIZE = 1 << 20  # 1MB
@@ -26,6 +29,8 @@ IMAGE_CACHE_DIR = getattr(settings, 'IMAGE_CACHE_DIR',
                                        'muranodashboard-image-cache'))
 
 CACHE_REFRESH_SECONDS_INTERVAL = 5
+
+DASHBOARD_ATTRS_KEY = '26411a1861294160833743e45d0eaad9'
 
 #---- Forms Consts ----#
 STATUS_ID_READY = 'ready'

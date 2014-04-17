@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django import shortcuts
 
@@ -21,6 +21,7 @@ from horizon import tables
 from horizon import messages
 
 from muranodashboard.environments import api
+from muranodashboard.environments import consts
 from muranodashboard.openstack.common import timeutils
 from consts import STATUS_ID_DEPLOYING
 from consts import STATUS_CHOICES
@@ -310,11 +311,12 @@ class DeploymentsTable(tables.DataTable):
 class EnvConfigTable(tables.DataTable):
     name = tables.Column('name',
                          verbose_name=_('Name'))
-    _type = tables.Column('full_service_name',
-                          verbose_name=_('Type'))
+    _type = tables.Column(
+        lambda datum: datum['?'][consts.DASHBOARD_ATTRS_KEY]['name'],
+        verbose_name=_('Type'))
 
     def get_object_id(self, datum):
-        return datum['id']
+        return datum['?']['id']
 
     class Meta:
         name = 'environment_configuration'

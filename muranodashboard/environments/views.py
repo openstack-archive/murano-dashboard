@@ -41,7 +41,9 @@ from django.utils.decorators import classonlymethod
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
 from muranodashboard.dynamic_ui import helpers
+from muranodashboard.environments import consts
 from muranodashboard import utils
+
 
 LOG = logging.getLogger(__name__)
 
@@ -103,13 +105,15 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
         environment_id = kwargs.get('environment_id')
         url = reverse('horizon:murano:environments:services',
                       args=(environment_id,))
-
-        app_id = kwargs.get('app_id')
-        attributes = {'app_id': app_id}
+        app_name = get_service_name(self.request, kwargs.get('app_id'))
 
         service = form_list[0].service
-        attributes.update(service.extract_attributes())
+        attributes = service.extract_attributes()
         attributes = helpers.insert_hidden_ids(attributes)
+
+        storage = attributes.setdefault('?', {}).setdefault(
+            consts.DASHBOARD_ATTRS_KEY, {})
+        storage['name'] = app_name
 
         try:
             srv = api.service_create(self.request, environment_id, attributes)
@@ -124,8 +128,9 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
                               _("Sorry, you can't add application right now."),
                               redirect=redirect)
         else:
-            message = "The %s service successfully created." % \
-                      get_service_name(self.request, app_id)
+            message = "The '{0}' application successfully " \
+                      "added to environment.".format(app_name)
+
             messages.success(self.request, message)
 
             if self.do_redirect:
