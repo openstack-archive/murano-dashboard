@@ -19,15 +19,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from horizon import exceptions
 from horizon import tabs
-
-from openstack_dashboard.api import nova as nova_api
-from openstack_dashboard.api import heat as heat_api
-
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
-from muranodashboard.environments.consts import LOG_LEVEL_TO_COLOR
-from muranodashboard.environments.consts import LOG_LEVEL_TO_TEXT
-from muranodashboard.environments.tables import STATUS_DISPLAY_CHOICES
+from muranodashboard.environments import consts
 from muranodashboard.environments.tables import EnvConfigTable, ServicesTable
 
 LOG = logging.getLogger(__name__)
@@ -45,25 +39,17 @@ class OverviewTab(tabs.Tab):
         :return:
         """
         service_data = self.tab_group.kwargs['service']
-        environment_id = self.tab_group.kwargs['environment_id']
 
-        for id, name in STATUS_DISPLAY_CHOICES:
-            if id == service_data.status:
+        status_name = ''
+        for id, name in consts.STATUS_DISPLAY_CHOICES:
+            if id == service_data['?']['status']:
                 status_name = name
 
         detail_info = SortedDict([
-            ('Name', service_data.name),
-            ('ID', service_data.id),
-            ('Type', service_data.full_service_name),
+            ('Name', getattr(service_data, 'name', '')),
+            ('ID', service_data['?']['id']),
+            ('Type', service_data['?'][consts.DASHBOARD_ATTRS_KEY]['name']),
             ('Status', status_name), ])
-
-        if hasattr(service_data, 'unitNamingPattern'):
-            if service_data.unitNamingPattern:
-                text = service_data.unitNamingPattern
-                name_incrementation = True if '#' in text else False
-                if name_incrementation:
-                    text += '    (# transforms into index number)'
-                detail_info['Hostname template'] = text
 
         if hasattr(service_data, 'domain'):
             if not service_data.domain:
@@ -80,49 +66,7 @@ class OverviewTab(tabs.Tab):
         if hasattr(service_data, 'floatingip'):
             detail_info['Floating IP'] = service_data.floatingip
 
-        #check for deployed services so additional information can be added
-        units = []
-        for unit in service_data.units:
-            if not hasattr(unit, 'state'):
-                continue
-
-            unit_detail = SortedDict()
-            instance_hostname = unit.state.hostname
-            if 'Hostname template' in detail_info:
-                del detail_info['Hostname template']
-
-            unit_detail['Hostname'] = instance_hostname
-            instances = nova_api.server_list(request)[0]
-
-            # HEAT always adds e before instance name
-            instance_name = 'e' + environment_id + '-' + instance_hostname
-
-            for instance in instances:
-                if instance_name in instance.name:
-                    unit_detail['instance'] = {
-                        'id': instance.id,
-                        'name': instance.name
-                    }
-                    break
-
-            # add stack info
-            stack_name = 'e' + environment_id
-            existing_stacks = heat_api.stacks_list(request)
-            for stack in existing_stacks:
-                if stack.stack_name == stack_name:
-                    unit_detail['stack'] = {
-                        'id': stack.id,
-                        'name': stack.stack_name
-                    }
-                    break
-
-            unit_detail['Floating IP'] = unit.get('floatingip')
-
-            if len(service_data.units) > 1:
-                units.append(unit_detail)
-            else:
-                detail_info.update(unit_detail)
-        return {'service': detail_info, 'units': units}
+        return {'service': detail_info}
 
 
 class ServiceLogsTab(tabs.Tab):
@@ -231,7 +175,8 @@ class DeploymentTabs(tabs.TabGroup):
 def format_log(message, level):
     if level == 'warning' or level == 'error':
         frm = "<b><span style='color:#{0}' title='{1}'>{2}</span></b>"
-        return frm.format(LOG_LEVEL_TO_COLOR[level], LOG_LEVEL_TO_TEXT[level],
+        return frm.format(consts.LOG_LEVEL_TO_COLOR[level],
+                          consts.LOG_LEVEL_TO_TEXT[level],
                           message)
     else:
         return message
