@@ -241,7 +241,7 @@ class EnvironmentsTable(tables.DataTable):
 
 def get_service_details_link(service):
     return reverse('horizon:murano:environments:service_details',
-                   args=(service.environment_id, service.id))
+                   args=(service.environment_id, service['?']['id']))
 
 
 class ServicesTable(tables.DataTable):

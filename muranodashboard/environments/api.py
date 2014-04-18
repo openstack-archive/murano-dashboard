@@ -14,6 +14,7 @@
 
 import logging
 import json
+
 from django.conf import settings
 from horizon.exceptions import ServiceCatalogException
 from openstack_dashboard.api.base import url_for
@@ -22,9 +23,9 @@ from muranodashboard.dynamic_ui.services import get_service_name
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from consts import STATUS_ID_READY, STATUS_ID_NEW
 from .network import get_network_params
-
 from muranodashboard.environments import format
 from muranodashboard.common import utils
+
 
 LOG = logging.getLogger(__name__)
 
@@ -296,7 +297,7 @@ def service_get(request, environment_id, service_id):
     services = services_list(request, environment_id)
     LOG.debug("Return service detail for a specified id")
     for service in services:
-        if service.id == service_id:
+        if service['?']['id'] == service_id:
             return service
 
 
