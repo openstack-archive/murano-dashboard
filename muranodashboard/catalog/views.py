@@ -112,11 +112,12 @@ class IndexView(list.ListView):
     def get_queryset(self):
         category = self.kwargs.get('category', ALL_CATEGORY_NAME)
         query_params = {'type': 'Application'}
-        if category != ALL_CATEGORY_NAME:
-            query_params['category'] = category
         search = self.request.GET.get('search')
         if search:
             query_params['search'] = search
+        else:
+            if category != ALL_CATEGORY_NAME:
+                query_params['category'] = category
 
         pkgs = []
         with api.handled_exceptions(self.request):
@@ -141,6 +142,10 @@ class IndexView(list.ListView):
         current_category = self.kwargs.get('category', categories[0])
         context['categories'] = categories
         context['current_category'] = current_category
+
+        search = self.request.GET.get('search')
+        if search:
+            context['search'] = search
 
         context.update(get_environments_context(self.request))
 

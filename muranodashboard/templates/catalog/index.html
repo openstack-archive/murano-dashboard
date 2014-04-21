@@ -71,12 +71,11 @@
     <div class="btn-toolbar centering">
       <div class="btn-group">
           {% if page_obj.has_previous %}
-           <a class="btn btn-default"
-              href="
-              {% url 'horizon:murano:catalog:index' current_category page_obj.previous_page_number %}">
-               Previous</a>
+              {% with page_number=page_obj.previous_page_number link_text="Previous" %}
+                  {% include 'catalog/page_link.html' %}
+              {% endwith %}
           {% else %}
-           <a class="btn btn-default disabled" href="#">Previous</a>
+              <a class="btn btn-default disabled" href="#">Previous</a>
           {% endif %}
 
           <a class="btn btn-default disabled"
@@ -85,12 +84,11 @@
               {{ page_obj.number }}</a>
 
           {% if page_obj.has_next %}
-           <a class="btn btn-default"
-              href="
-              {% url 'horizon:murano:catalog:index' current_category page_obj.next_page_number %}">
-               Next</a>
+              {% with page_number=page_obj.next_page_number link_text="Next" %}
+                  {% include 'catalog/page_link.html' %}
+              {% endwith %}
           {% else %}
-           <a  class="btn btn-default disabled"  href="#">Next</a>
+              <a class="btn btn-default disabled" href="#">Next</a>
           {% endif %}
       </div>
     </div>
@@ -108,7 +106,7 @@
 
 <div class="murano-side-panel" id="MuranoSearchPanel">
     <h3>Search</h3>
-    <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' current_category 1 %}">
+    <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' %}">
         <input name="search" class="text input-medium search-query"/>
         <button class="btn_search btn">Go</button>
     </form>

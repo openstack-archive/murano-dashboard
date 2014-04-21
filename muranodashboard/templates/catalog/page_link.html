@@ -1,0 +1,3 @@
+<a class="btn btn-default"
+   href="{% url 'horizon:murano:catalog:index' current_category page_number %}{% if search %}?search={{ search|urlencode }}{% endif %}">
+    {{ link_text }}</a>
