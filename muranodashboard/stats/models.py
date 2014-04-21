@@ -17,19 +17,7 @@ from muranodashboard.environments import api
 
 class StatsModel(object):
     def get_api_stats(self, request):
-        #st_list = api.muranoclient(request).statistics.list()
-        st_list = []
-        for i in range(1, 4):
-            fdict = {
-                "host": "API-%s" % str(i),
-                "request_count": "100",
-                "error_count": "2",
-                "average_response_time": "0.22",
-                "requests_per_second": "2.1",
-                "errors_per_second": "0.001",
-                "max_cpu": "800",
-                "cpu_percent": "150"}
-            st_list.append(Stats(fdict))
+        st_list = api.muranoclient(request).request_statistics.list()
         return st_list
 
 
