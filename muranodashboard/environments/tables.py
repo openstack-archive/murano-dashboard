@@ -116,7 +116,7 @@ class DeleteService(tables.DeleteAction):
         try:
             environment_id = self.table.kwargs.get('environment_id')
             for service in self.table.data:
-                if service.id == service_id:
+                if service['?']['id'] == service_id:
                     api.service_delete(request,
                                        environment_id,
                                        service_id)

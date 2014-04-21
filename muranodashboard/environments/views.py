@@ -381,9 +381,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
 
 
 class JSONView(generic.View):
-
-    def get(self, request, **kwargs):
-        self.environment_id = kwargs['environment_id']
-        data = api.load_environment_data(request, self.environment_id)
-        return HttpResponse(data,
-                            content_type="application/json")
+    @staticmethod
+    def get(request, **kwargs):
+        data = api.load_environment_data(request, kwargs['environment_id'])
+        return HttpResponse(data, content_type='application/json')

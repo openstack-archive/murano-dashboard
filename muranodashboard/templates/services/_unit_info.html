@@ -1,5 +1,10 @@
 <img src="{{ unit_image }}" width="35px" height="35px" />
-<h3>Name: {{ name }}</h3>
-<p>OS: {{ os }}</p>
-<p>Image: {{ image }}</p>
-<p>Flavor: {{ flavor }}</p>
+
+{% if data.name %}
+    <h3>Name: {{ data.name }}</h3>
+{% endif %}
+{% for key, value in data.items %}
+    {% if key != "name" and not "password" in key|lower %}
+        <p>{{ key|title }}: {{ value }}</p>
+    {% endif %}
+{% endfor %}
