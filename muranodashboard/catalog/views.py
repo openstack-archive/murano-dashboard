@@ -12,20 +12,20 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 import logging
+
 from django.views.generic import list
 from horizon import tabs
-
 from django import shortcuts
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
 from django.utils.http import is_safe_url
-
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.environments import api
 from muranodashboard.environments import views
 from muranodashboard.dynamic_ui import services
 import re
+
 
 LOG = logging.getLogger(__name__)
 ALL_CATEGORY_NAME = 'All'
@@ -111,7 +111,6 @@ class IndexView(list.ListView):
 
     def get_queryset(self):
         category = self.kwargs.get('category', ALL_CATEGORY_NAME)
-        packages = api.muranoclient(self.request).packages
         query_params = {'type': 'Application'}
         if category != ALL_CATEGORY_NAME:
             query_params['category'] = category
@@ -119,7 +118,11 @@ class IndexView(list.ListView):
         if search:
             query_params['search'] = search
 
-        return packages.filter(**query_params)
+        pkgs = []
+        with api.handled_exceptions(self.request):
+            client = api.muranoclient(self.request)
+            pkgs = client.packages.filter(**query_params)
+        return pkgs
 
     def get_template_names(self):
         return ['catalog/index.html']
@@ -128,7 +131,11 @@ class IndexView(list.ListView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['latest_list'] = []
 
-        categories = api.muranoclient(self.request).packages.categories()
+        categories = []
+        with api.handled_exceptions(self.request):
+            client = api.muranoclient(self.request)
+            categories = client.packages.categories()
+
         if not ALL_CATEGORY_NAME in categories:
             categories.insert(0, ALL_CATEGORY_NAME)
         current_category = self.kwargs.get('category', categories[0])

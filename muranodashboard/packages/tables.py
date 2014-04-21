@@ -13,6 +13,7 @@
 #    under the License.
 
 import logging
+
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -20,8 +21,9 @@ from django.template import defaultfilters
 from horizon import exceptions
 from horizon import tables
 from horizon import messages
-from muranoclient.common.exceptions import HTTPException
+from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
+
 LOG = logging.getLogger(__name__)
 
 
@@ -32,7 +34,11 @@ class UploadPackage(tables.LinkAction):
     classes = ('ajax-modal', 'btn-create')
 
     def allowed(self, request, image):
-        return True
+        _allowed = False
+        with api.handled_exceptions(request):
+            client = api.muranoclient(request)
+            _allowed = client.packages.categories() is not None
+        return _allowed
 
 
 class DownloadPackage(tables.Action):
@@ -61,7 +67,7 @@ class DownloadPackage(tables.Action):
             response['Content-Disposition'] = 'filename={name}.package'.format(
                 name=self.get_package_name(data_table, app_id))
             return response
-        except HTTPException:
+        except exc.HTTPException:
             LOG.exception(_('Something went wrong during package downloading'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
@@ -80,7 +86,7 @@ class ToggleEnabled(tables.BatchAction):
         for obj_id in obj_ids:
             try:
                 api.muranoclient(request).packages.toggle_active(obj_id)
-            except HTTPException:
+            except exc.HTTPException:
                 LOG.exception(_('Toggling package state in package '
                                 'repository failed'))
                 exceptions.handle(request,
@@ -101,7 +107,7 @@ class DeletePackage(tables.DeleteAction):
     def delete(self, request, obj_id):
         try:
             api.muranoclient(request).packages.delete(obj_id)
-        except HTTPException:
+        except exc.HTTPException:
             LOG.exception(_('Unable to delete package in murano-api server'))
             exceptions.handle(request,
                               _('Unable to remove package.'),
