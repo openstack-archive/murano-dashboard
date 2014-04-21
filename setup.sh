@@ -191,6 +191,7 @@ LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERR
 #MURANO_API_URL = "http://localhost:8082"
 #if murano-api set up with ssl uncomment next strings
 #MURANO_API_INSECURE = True
+MAX_FILE_SIZE_MB = 5
 #END_MURANO_DASHBOARD
 EOF
             sed -ne "/$PATTERN/r  $TMPFILE" -e 1x  -e '2,${x;p}' -e '${x;p}' -i $INFILE
