@@ -12,8 +12,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import re
 import json
+import copy
+import logging
+
+import re
 from django import forms
 from django.core.validators import RegexValidator, validate_ipv4_address
 from netaddr import all_matching_cidrs, IPNetwork, IPAddress
@@ -24,9 +27,6 @@ from horizon import exceptions, messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api.nova import novaclient
 from django.template.defaultfilters import pluralize
-import copy
-import types
-import logging
 import horizon.tables as tables
 import horizon.forms as hz_forms
 import floppyforms
@@ -669,7 +669,7 @@ def make_select_cls(fqn):
                 raise KeyError(msg.format(fqn))
             self.widget.add_item_link_args = (environment_id, app_id)
             self.choices = [('', _('Select Application'))]
-            apps = api.service_list_by_id(request, environment_id, app_id)
+            apps = api.service_list_by_fqn(request, environment_id, fqn)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
 
     return DynamicSelect

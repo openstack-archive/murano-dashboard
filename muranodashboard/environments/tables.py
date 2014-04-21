@@ -244,12 +244,16 @@ def get_service_details_link(service):
                    args=(service.environment_id, service['?']['id']))
 
 
+def get_service_type(datum):
+    return datum['?'].get(consts.DASHBOARD_ATTRS_KEY, {}).get('name')
+
+
 class ServicesTable(tables.DataTable):
     name = tables.Column('name',
                          verbose_name=_('Name'),
                          link=get_service_details_link)
 
-    _type = tables.Column('full_service_name',
+    _type = tables.Column(get_service_type,
                           verbose_name=_('Type'))
 
     status = tables.Column('status',

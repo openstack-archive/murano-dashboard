@@ -12,9 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import os
 import tempfile
 
+import os
 from django.conf import settings
 
 
@@ -30,7 +30,7 @@ IMAGE_CACHE_DIR = getattr(settings, 'IMAGE_CACHE_DIR',
 
 CACHE_REFRESH_SECONDS_INTERVAL = 5
 
-DASHBOARD_ATTRS_KEY = '26411a1861294160833743e45d0eaad9'
+DASHBOARD_ATTRS_KEY = '_26411a1861294160833743e45d0eaad9'
 
 #---- Forms Consts ----#
 STATUS_ID_READY = 'ready'
