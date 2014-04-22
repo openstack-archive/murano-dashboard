@@ -18,7 +18,7 @@ from muranodashboard import dashboard
 
 
 class AppCatalog(horizon.Panel):
-    name = _('Application Catalog')
+    name = _('Applications')
     slug = 'catalog'
 
 
