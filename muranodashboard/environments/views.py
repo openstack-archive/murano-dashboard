@@ -23,6 +23,7 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.http import HttpResponseRedirect  # noqa
 from django.http import HttpResponse  # noqa
 from django.views import generic
+from django.utils.decorators import classonlymethod
 from horizon import exceptions
 from horizon import tabs
 from horizon import tables
@@ -37,7 +38,6 @@ from tabs import ServicesTabs, DeploymentTabs, EnvironmentDetailsTabs
 from . import api
 from muranoclient.common.exceptions import HTTPUnauthorized, \
     CommunicationError, HTTPInternalServerError, HTTPForbidden, HTTPNotFound
-from django.utils.decorators import classonlymethod
 from muranodashboard.dynamic_ui.services import get_service_name
 from muranodashboard.dynamic_ui.services import get_service_field_descriptions
 from muranodashboard.dynamic_ui import helpers
@@ -75,6 +75,11 @@ class LazyWizard(SessionWizardView):
             _kwargs = copy.copy(initkwargs)
 
             _kwargs = cls.get_initkwargs(forms, *initargs, **_kwargs)
+
+            cdict = _kwargs.get('condition_dict')
+            if cdict and hasattr(cdict, '__call__'):
+                _kwargs['condition_dict'] = cdict(request, kwargs)
+
             self = cls(**_kwargs)
             if hasattr(self, 'get') and not hasattr(self, 'head'):
                 self.head = self.get
@@ -115,6 +120,12 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
             consts.DASHBOARD_ATTRS_KEY, {})
         storage['name'] = app_name
 
+        wm_form_data = service.cleaned_data.get('workflowManagement')
+        if wm_form_data:
+            do_redirect = not wm_form_data['StayAtCatalog']
+        else:
+            do_redirect = self.get_wizard_flag('do_redirect')
+
         try:
             srv = api.service_create(self.request, environment_id, attributes)
         except HTTPForbidden:
@@ -133,7 +144,7 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
 
             messages.success(self.request, message)
 
-            if self._get_wizard_flag('do_redirect'):
+            if do_redirect:
                 return HttpResponseRedirect(url)
             else:
                 srv_id = getattr(srv, '?')['id']
@@ -160,7 +171,7 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
         param = self.kwargs.get(key)
         return param if param is not None else self.request.POST.get(key)
 
-    def _get_wizard_flag(self, key):
+    def get_wizard_flag(self, key):
         value = self._get_wizard_param(key)
         if isinstance(value, basestring):
             return value.lower() == 'true'
@@ -177,7 +188,8 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
                         'service_name': app.name,
                         'app_id': app_id,
                         'environment_id': self.kwargs.get('environment_id'),
-                        'do_redirect': self._get_wizard_flag('do_redirect'),
+                        'do_redirect': self.get_wizard_flag('do_redirect'),
+                        'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
                         'prefix': self.prefix,
                         })
         return context

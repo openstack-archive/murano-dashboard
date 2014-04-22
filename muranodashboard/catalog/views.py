@@ -99,8 +99,10 @@ def create_quick_environment(request):
 def quick_deploy(request, app_id):
     env = create_quick_environment(request)
     try:
-        return views.Wizard.as_view(services.get_app_forms)(
-            request, app_id=app_id, environment_id=env.id, do_redirect=True)
+        view = views.Wizard.as_view(services.get_app_forms,
+                                    condition_dict=services.condition_getter)
+        return view(request, app_id=app_id, environment_id=env.id,
+                    do_redirect=True, drop_wm_form=True)
     except:
         api.environment_delete(request, env.id)
         raise
