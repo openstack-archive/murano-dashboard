@@ -14,7 +14,7 @@
 {% endblock %}
 {% block form_id %}create_service_form{% endblock %}
 {% block modal_id %}create_service{% endblock %}
-{% block modal-header %}{% trans "Create Service" %}{% endblock %}
+{% block modal-header %}{% trans "Add Application" %}{% endblock %}
 
 {% block modal-body %}
 <div class="left">
@@ -34,7 +34,7 @@
 <p class='italic'>{% blocktrans %} {{ extended_description }} {% endblocktrans %}</p>
 </div>
 <div class="right">
-    <h3> {% blocktrans %} {{ service_name }} Service{% endblocktrans %} </h3>
+    <h3> {% blocktrans %} {{ service_name }} Application{% endblocktrans %} </h3>
     {% for title, description in field_descriptions %}
         <p>
         {% if title %}
