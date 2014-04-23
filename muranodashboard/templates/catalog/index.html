@@ -43,11 +43,15 @@
 {% block main %}
 <div class="table_wrapper">
 <h3 class="quota-heading">Latest Apps</h3>
-<div class="app-row app-list row">
-    {% for app in latest_list %}
-        {% include 'catalog/app_tile.html' %}
-    {% endfor %}
-</div>
+{% if latest_list|length > 0 %}
+    <div class="app-row app-list row">
+        {% for app in latest_list %}
+            {% include 'catalog/app_tile.html' %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-results">{% trans "There are no applications available at this time." %}</p>
+{% endif %}
 <h3 class="quota-heading">App Category: <div class="header dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     {{ current_category }}<b class="caret"></b></a>
@@ -61,11 +65,15 @@
 </div>
 </h3>
 
-<div class="app-row app-list row">
-    {% for app in object_list %}
-        {% include 'catalog/app_tile.html' %}
-    {% endfor %}
-</div>
+{% if object_list|length > 0 %}
+    <div class="app-row app-list row">
+        {% for app in object_list %}
+            {% include 'catalog/app_tile.html' %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-results">{% trans "There are no applications matching your search criteria." %}</p>
+{% endif %}
 
 {% if is_paginated %}
     <div class="btn-toolbar centering">

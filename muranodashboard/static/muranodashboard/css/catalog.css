@@ -192,3 +192,7 @@ line-height: 22px;
 .app-icon.server {
 	margin-right:20px;
 }
+
+.no-results {
+  margin-bottom: 25px;
+}
