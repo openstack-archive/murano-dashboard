@@ -14,9 +14,14 @@
 <div class="table_wrapper">
 <div class="row-fluid">
  <div class="span12">
-    {% with class='btn btn-small btn-add ajax-modal pull-right' %}
-        {% include 'catalog/add_app.html' %}
-    {% endwith %}
+    <div class="btn-group pull-right">
+        {% with class='btn btn-small btn-add ajax-modal' %}
+            {% include 'catalog/add_app.html' %}
+        {% endwith %}
+        {% with class='btn btn-small btn-add ajax-modal' %}
+            {% include 'catalog/quick_deploy.html' %}
+        {% endwith %}
+    </div>
     <h3>{{ app.name }}</h3>
      {{ tab_group.render }}
  <div class="well app-meta">
