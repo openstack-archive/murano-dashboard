@@ -133,7 +133,7 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
 
             messages.success(self.request, message)
 
-            if self.do_redirect:
+            if self._get_wizard_flag('do_redirect'):
                 return HttpResponseRedirect(url)
             else:
                 srv_id = getattr(srv, '?')['id']
@@ -151,13 +151,21 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
             return HttpResponse('Done')
 
     def get_form_initial(self, step):
-        init_dict = {}
-        if step != 'service_choice':
-            init_dict.update({
-                'request': self.request,
-                'environment_id': self.kwargs.get('environment_id')
-            })
+        init_dict = {'request': self.request,
+                     'environment_id': self.kwargs.get('environment_id')}
+
         return self.initial_dict.get(step, init_dict)
+
+    def _get_wizard_param(self, key):
+        param = self.kwargs.get(key)
+        return param if param is not None else self.request.POST.get(key)
+
+    def _get_wizard_flag(self, key):
+        value = self._get_wizard_param(key)
+        if isinstance(value, basestring):
+            return value.lower() == 'true'
+        else:
+            return value
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
@@ -169,8 +177,8 @@ class Wizard(hz_views.ModalFormMixin, LazyWizard):
                         'service_name': app.name,
                         'app_id': app_id,
                         'environment_id': self.kwargs.get('environment_id'),
+                        'do_redirect': self._get_wizard_flag('do_redirect'),
                         'prefix': self.prefix,
-                        'do_redirect': self.do_redirect
                         })
         return context
 

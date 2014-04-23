@@ -6,11 +6,7 @@
 {% load i18n humanize %}
 {% load url from future %} {# fix for django 1.4.9 on CentOS #}
 {% block form_action %}
-    {% if do_redirect %}
-        {% url 'horizon:murano:catalog:add_redirect' environment_id app_id %}
-    {% else %}
-        {% url 'horizon:murano:catalog:add' environment_id app_id %}
-    {% endif %}
+    {% url 'horizon:murano:catalog:add' environment_id app_id %}
 {% endblock %}
 {% block form_id %}create_service_form{% endblock %}
 {% block modal_id %}create_service{% endblock %}
@@ -61,6 +57,7 @@
     {{ wizard.form.media }}
 
     <input type="hidden" name="wizard_goto_step" id="{{ prefix }}_val"/>
+    <input type="hidden" name="do_redirect" value="{{ do_redirect }}"/>
     {% if wizard.steps.next %}
         {% trans "Next" as next %}
     {% else %}
