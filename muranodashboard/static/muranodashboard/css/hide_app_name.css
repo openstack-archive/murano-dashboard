@@ -1,0 +1,7 @@
+div.right h3{
+    display: none !important;
+}
+
+div.right p strong {
+    display: none !important;
+}

@@ -13,20 +13,19 @@
 #    under the License.
 
 
-import os
-import re
 import logging
 
-
+import os
+import re
 import yaml
 import yaql
-
 from muranodashboard.dynamic_ui import helpers
 from .helpers import decamelize
 from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
 from muranodashboard.dynamic_ui import yaql_expression
 from muranodashboard.dynamic_ui import yaql_functions
+from muranodashboard.catalog import forms as catalog_forms
 
 LOG = logging.getLogger(__name__)
 
@@ -74,10 +73,12 @@ class Service(object):
         if forms:
             for data in forms:
                 name, field_specs, validators = self.extract_form_data(data)
-                self._add_form(name, field_specs, validators)
+                self._init_forms(field_specs, name, validators)
 
-                # for pickling/unpickling
-                self._forms.append((name, field_specs, validators))
+        # Add ManageWorkflowForm
+        workflow_form = catalog_forms.WorkflowManagementForm
+        self._init_forms(workflow_form.field_specs, workflow_form.name,
+                         workflow_form.validators)
 
     def __getstate__(self):
         dct = dict((k, v) for (k, v) in self.__dict__.iteritems()
@@ -109,6 +110,11 @@ class Service(object):
             validators = _validators
 
         self.forms.append(Form)
+
+    def _init_forms(self, field_specs, name, validators):
+        self._add_form(name, field_specs, validators)
+        # for pickling/unpickling
+        self._forms.append((name, field_specs, validators))
 
     @staticmethod
     def extract_form_data(form_data):
@@ -171,6 +177,15 @@ def import_app(request, app_id):
         app = services[app_id]
 
     return app
+
+
+def condition_getter(request, kwargs):
+    def _func(wizard):
+        return not wizard.get_wizard_flag('drop_wm_form')
+
+    app = import_app(request, kwargs['app_id'])
+    last_form_key = str(len(app.forms) - 1)
+    return {last_form_key: _func}
 
 
 def get_app_forms(request, kwargs):
