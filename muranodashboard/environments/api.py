@@ -287,7 +287,7 @@ def services_list(request, environment_id):
             last_operation = strip(str(reports[service_id].text))
             time = reports[service_id].updated.replace('T', ' ')
         else:
-            last_operation = 'Service draft created' \
+            last_operation = 'Component draft created' \
                 if environment.version == 0 else ''
             try:
                 time = service_data['updated'].replace('T', ' ')[:-7]
