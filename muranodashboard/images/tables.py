@@ -36,7 +36,8 @@ class RemoveImageMetadata(tables.DeleteAction):
         try:
             glance.image_update(request, obj_id, properties={})
         except Exception:
-            exceptions.handle(request, _('Unable to remove metadata'))
+            exceptions.handle(request, _('Unable to remove metadata'),
+                              redirect='horizon:murano:images:index')
 
 
 class MarkedImagesTable(tables.DataTable):
