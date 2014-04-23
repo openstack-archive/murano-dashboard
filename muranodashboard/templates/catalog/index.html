@@ -3,13 +3,13 @@
 {% load static %}
 {% load url from future %}
 
-{% block title %}{% trans "Environments" %}{% endblock %}
+{% block title %}{% trans "Applications" %}{% endblock %}
 
 {% block page_header %}
 
 <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
 <link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
-  {% include "horizon/common/_page_header.html" with title=_("Application Catalog") %}
+  {% include "horizon/common/_page_header.html" with title=_("Applications") %}
 {% endblock page_header %}
 
 {% block js %}

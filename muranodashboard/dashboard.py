@@ -20,14 +20,14 @@ assert exceptions
 
 class DeployPanels(horizon.PanelGroup):
     slug = "deployment_group"
-    name = _("Deployment")
-    panels = ("environments", "catalog")
+    name = _("Application Catalog")
+    panels = ("environments", "catalog", "stats")
 
 
 class ManagePanels(horizon.PanelGroup):
     slug = "manage_metadata"
     name = _("Manage")
-    panels = ("images", "packages", "stats")
+    panels = ("images", "packages")
 
 
 class Murano(horizon.Dashboard):
