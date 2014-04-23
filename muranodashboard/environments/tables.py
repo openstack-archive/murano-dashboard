@@ -256,15 +256,13 @@ class ServicesTable(tables.DataTable):
     _type = tables.Column(get_service_type,
                           verbose_name=_('Type'))
 
-    status = tables.Column('status',
+    status = tables.Column(lambda datum: datum['?'].get('status'),
                            verbose_name=_('Status'),
                            status=True,
                            status_choices=STATUS_CHOICES,
                            display_choices=STATUS_DISPLAY_CHOICES)
-
     operation = tables.Column('operation',
                               verbose_name=_('Last operation'))
-
     operation_updated = tables.Column('operation_updated',
                                       verbose_name=_('Time updated'))
 
