@@ -94,6 +94,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+MAX_FILE_SIZE_MB = 5
+
 less_binary = os.path.join(BIN_DIR, 'less', 'lessc')
 COMPRESS_PRECOMPILERS = (
     ('text/less', (less_binary + ' {infile} {outfile}')),

@@ -16,6 +16,7 @@ from django import forms
 from django.core.files import uploadedfile
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from horizon.forms import SelfHandlingForm
 from horizon import exceptions
 from horizon import messages
@@ -24,8 +25,11 @@ from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
 
-
-MAX_FILE_SIZE_SPEC = (5 * 1024 * 1024, '5', _('MB'))
+try:
+    MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
+except ValueError:
+    LOG.warning("MAX_FILE_SIZE_MB parameter has the incorrect value.")
+    MAX_FILE_SIZE_MB = 5
 
 
 def split_post_data(post):
@@ -52,10 +56,10 @@ class UploadPackageForm(SelfHandlingForm):
     def clean_package(self):
         package = self.cleaned_data.get('package')
         if package:
-            max_size, size_in_units, unit_spec = MAX_FILE_SIZE_SPEC
-            if package.size > max_size:
+            max_size_in_bytes = MAX_FILE_SIZE_MB << 20
+            if package.size > max_size_in_bytes:
                 msg = _('It is restricted to upload files larger than '
-                        '{0}{1}.'.format(size_in_units, unit_spec))
+                        '{0} MB.').format(MAX_FILE_SIZE_MB)
                 LOG.error(msg)
                 raise forms.ValidationError(msg)
         return package
