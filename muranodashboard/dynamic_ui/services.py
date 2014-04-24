@@ -207,7 +207,7 @@ def get_service_name(request, app_id):
     return app.name
 
 
-def get_service_field_descriptions(request, app_id, index):
+def get_app_field_descriptions(request, app_id, index):
     app = import_app(request, app_id)
 
     form_cls = app.forms[index]

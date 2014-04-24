@@ -11,20 +11,35 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
+import copy
+import functools
+import json
 import logging
 
-from django.views.generic import list
-from horizon import tabs
-from django import shortcuts
-from django.conf import settings
-from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.auth.decorators import login_required
-from django.utils.http import is_safe_url
-from muranodashboard.catalog import tabs as catalog_tabs
-from muranodashboard.environments import api
-from muranodashboard.environments import views
-from muranodashboard.dynamic_ui import services
 import re
+from django.conf import settings
+from django.contrib import auth
+from django.contrib.auth import decorators as auth_dec
+from django.contrib.formtools.wizard import views as wizard_views
+from django.core import urlresolvers as url
+from django import http
+from django import shortcuts
+from django.utils import decorators as django_dec
+from django.utils import http as http_utils
+from django.utils.translation import ugettext_lazy as _  # noqa
+from django.views.generic import list as list_view
+from horizon import messages
+from horizon import tabs
+from horizon.forms import views
+from horizon import exceptions
+from muranoclient.common import exceptions as exc
+from muranodashboard.catalog import tabs as catalog_tabs
+from muranodashboard.dynamic_ui import services
+from muranodashboard.dynamic_ui import helpers
+from muranodashboard.environments import api
+from muranodashboard.environments import consts
+from muranodashboard import utils
 
 
 LOG = logging.getLogger(__name__)
@@ -64,10 +79,11 @@ def get_environments_context(request):
     return context
 
 
-@login_required
-def switch(request, environment_id, redirect_field_name=REDIRECT_FIELD_NAME):
+@auth_dec.login_required
+def switch(request, environment_id,
+           redirect_field_name=auth.REDIRECT_FIELD_NAME):
     redirect_to = request.REQUEST.get(redirect_field_name, '')
-    if not is_safe_url(url=redirect_to, host=request.get_host()):
+    if not http_utils.is_safe_url(url=redirect_to, host=request.get_host()):
         redirect_to = settings.LOGIN_REDIRECT_URL
 
     for env in get_available_environments(request):
@@ -95,12 +111,12 @@ def create_quick_environment(request):
     return api.environment_create(request, params)
 
 
-@login_required
+@auth_dec.login_required
 def quick_deploy(request, app_id):
     env = create_quick_environment(request)
     try:
-        view = views.Wizard.as_view(services.get_app_forms,
-                                    condition_dict=services.condition_getter)
+        view = Wizard.as_view(services.get_app_forms,
+                              condition_dict=services.condition_getter)
         return view(request, app_id=app_id, environment_id=env.id,
                     do_redirect=True, drop_wm_form=True)
     except:
@@ -108,7 +124,155 @@ def quick_deploy(request, app_id):
         raise
 
 
-class IndexView(list.ListView):
+class LazyWizard(wizard_views.SessionWizardView):
+    """The class which defers evaluation of form_list and condition_dict
+    until view method is called. So, each time we load a page with a dynamic
+    UI form, it will have markup/logic from the newest YAML-file definition.
+    """
+    @django_dec.classonlymethod
+    def as_view(cls, initforms, *initargs, **initkwargs):
+        """
+        Main entry point for a request-response process.
+        """
+        # sanitize keyword arguments
+        for key in initkwargs:
+            if key in cls.http_method_names:
+                raise TypeError(u"You tried to pass in the %s method name as a"
+                                u" keyword argument to %s(). Don't do that."
+                                % (key, cls.__name__))
+            if not hasattr(cls, key):
+                raise TypeError(u"%s() received an invalid keyword %r" % (
+                    cls.__name__, key))
+
+        def view(request, *args, **kwargs):
+            forms = initforms
+            if hasattr(initforms, '__call__'):
+                forms = initforms(request, kwargs)
+            _kwargs = copy.copy(initkwargs)
+
+            _kwargs = cls.get_initkwargs(forms, *initargs, **_kwargs)
+
+            cdict = _kwargs.get('condition_dict')
+            if cdict and hasattr(cdict, '__call__'):
+                _kwargs['condition_dict'] = cdict(request, kwargs)
+
+            self = cls(**_kwargs)
+            if hasattr(self, 'get') and not hasattr(self, 'head'):
+                self.head = self.get
+            self.request = request
+            self.args = args
+            self.kwargs = kwargs
+            return self.dispatch(request, *args, **kwargs)
+
+        # take name and docstring from class
+        functools.update_wrapper(view, cls, updated=())
+
+        # and possible attributes set by decorators
+        # like csrf_exempt from dispatch
+        functools.update_wrapper(view, cls.dispatch, assigned=())
+        return view
+
+
+class Wizard(views.ModalFormMixin, LazyWizard):
+    template_name = 'services/wizard_create.html'
+    do_redirect = False
+
+    def get_prefix(self, *args, **kwargs):
+        base = super(Wizard, self).get_prefix(*args, **kwargs)
+        fmt = utils.BlankFormatter()
+        return fmt.format('{0}_{environment_id}_{app_id}', base, **kwargs)
+
+    def done(self, form_list, **kwargs):
+        environment_id = kwargs.get('environment_id')
+        env_url = url.reverse('horizon:murano:environments:services',
+                              args=(environment_id,))
+        app_name = services.get_service_name(self.request,
+                                             kwargs.get('app_id'))
+
+        service = form_list[0].service
+        attributes = service.extract_attributes()
+        attributes = helpers.insert_hidden_ids(attributes)
+
+        storage = attributes.setdefault('?', {}).setdefault(
+            consts.DASHBOARD_ATTRS_KEY, {})
+        storage['name'] = app_name
+
+        wm_form_data = service.cleaned_data.get('workflowManagement')
+        if wm_form_data:
+            do_redirect = not wm_form_data['StayAtCatalog']
+        else:
+            do_redirect = self.get_wizard_flag('do_redirect')
+
+        fail_url = url.reverse("horizon:murano:environments:index")
+        try:
+            srv = api.service_create(self.request, environment_id, attributes)
+        except exc.HTTPForbidden:
+            msg = _("Sorry, you can't add application right now. "
+                    "The environment is deploying.")
+            exceptions.handle(self.request, msg, redirect=fail_url)
+        except Exception:
+            exceptions.handle(self.request,
+                              _("Sorry, you can't add application right now."),
+                              redirect=fail_url)
+        else:
+            message = "The '{0}' application successfully " \
+                      "added to environment.".format(app_name)
+
+            messages.success(self.request, message)
+
+            if do_redirect:
+                return http.HttpResponseRedirect(env_url)
+            else:
+                srv_id = getattr(srv, '?')['id']
+                return self.create_hacked_response(srv_id, attributes['name'])
+
+    def create_hacked_response(self, obj_id, obj_name):
+        # copy-paste from horizon.forms.views.ModalFormView; should be done
+        # that way until we move here from django Wizard to horizon workflow
+        if views.ADD_TO_FIELD_HEADER in self.request.META:
+            field_id = self.request.META[views.ADD_TO_FIELD_HEADER]
+            response = http.HttpResponse(json.dumps([obj_id, obj_name]))
+            response["X-Horizon-Add-To-Field"] = field_id
+            return response
+        else:
+            return http.HttpResponse('Done')
+
+    def get_form_initial(self, step):
+        init_dict = {'request': self.request,
+                     'environment_id': self.kwargs.get('environment_id')}
+
+        return self.initial_dict.get(step, init_dict)
+
+    def _get_wizard_param(self, key):
+        param = self.kwargs.get(key)
+        return param if param is not None else self.request.POST.get(key)
+
+    def get_wizard_flag(self, key):
+        value = self._get_wizard_param(key)
+        if isinstance(value, basestring):
+            return value.lower() == 'true'
+        else:
+            return value
+
+    def get_context_data(self, form, **kwargs):
+        context = super(Wizard, self).get_context_data(form=form, **kwargs)
+        app_id = self.kwargs.get('app_id')
+        app = api.muranoclient(self.request).packages.get(app_id)
+
+        context['field_descriptions'] = services.get_app_field_descriptions(
+            self.request, app_id, self.steps.index)
+        context.update({'type': app.fully_qualified_name,
+                        'service_name': app.name,
+                        'app_id': app_id,
+                        'environment_id': self.kwargs.get('environment_id'),
+                        'do_redirect': self.get_wizard_flag('do_redirect'),
+                        'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
+                        'prefix': self.prefix,
+                        })
+        return context
+
+
+class IndexView(list_view.ListView):
     paginate_by = 6
 
     def get_queryset(self):

@@ -15,13 +15,11 @@
 from django.conf.urls import patterns, url
 from muranodashboard.catalog import views
 from muranodashboard.catalog import image
-
-from muranodashboard.environments import views as env_views
 from muranodashboard.dynamic_ui import services
 
 VIEW_MOD = 'muranodashboard.catalog.views'
 
-wizard_view = env_views.Wizard.as_view(
+wizard_view = views.Wizard.as_view(
     services.get_app_forms, condition_dict=services.condition_getter)
 
 urlpatterns = patterns(
