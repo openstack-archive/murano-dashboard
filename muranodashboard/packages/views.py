@@ -30,7 +30,10 @@ class PackageDefinitionsView(tables.DataTableView):
     def get_data(self):
         pkgs = []
         with api.handled_exceptions(self.request):
-            pkgs = api.muranoclient(self.request).packages.list()
+            pkgs = api.muranoclient(self.request).packages.filter(
+                include_disabled=True,
+                owned=True
+            )
         return pkgs
 
 
