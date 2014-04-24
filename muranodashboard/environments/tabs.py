@@ -28,7 +28,7 @@ LOG = logging.getLogger(__name__)
 
 
 class OverviewTab(tabs.Tab):
-    name = _("Service")
+    name = _("Component")
     slug = "_service"
     template_name = 'services/_overview.html'
 
@@ -130,7 +130,7 @@ class EnvironmentTopologyTab(tabs.Tab):
 
 
 class EnvironmentServicesTab(tabs.TableTab):
-    name = _("Services")
+    name = _("Components")
     slug = "serviceslist"
     table_classes = (ServicesTable,)
     template_name = "services/_service_list.html"

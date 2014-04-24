@@ -3,7 +3,7 @@
 {% block page_header %}
   <div class='page-header'>
 
-      <h2> {% blocktrans %}Service Detail: {{ service_name }} {% endblocktrans %}
+      <h2> {% blocktrans %}Component Details: {{ service_name }} {% endblocktrans %}
       </h2>
       <h3>
           <a href=" {% url 'horizon:murano:environments:index' %}">
@@ -12,7 +12,7 @@
           <a href=" {% url 'horizon:murano:environments:services' service.environment_id %}">
               {% blocktrans %}environment {{ environment_name }}{% endblocktrans %}
           </a>
-          {% blocktrans %} > service {{ service_name }}{% endblocktrans %}
+          {% blocktrans %} > component {{ service_name }}{% endblocktrans %}
 
       </h3>
   </div>

@@ -42,7 +42,7 @@ def creation_allowed(self, request, environment):
 
 class AddApplication(tables.LinkAction):
     name = 'AddApplication'
-    verbose_name = _('Add Application')
+    verbose_name = _('Add Component')
     classes = ('btn-launch',)
 
     def allowed(self, request, environment):
@@ -102,8 +102,8 @@ class EditEnvironment(tables.LinkAction):
 
 
 class DeleteService(tables.DeleteAction):
-    data_type_singular = _('Service')
-    data_type_plural = _('Services')
+    data_type_singular = _('Component')
+    data_type_plural = _('Components')
 
     def allowed(self, request, service=None):
         environment_id = self.table.kwargs.get('environment_id')
@@ -187,7 +187,7 @@ class DeployThisEnvironment(tables.Action):
 
 class ShowEnvironmentServices(tables.LinkAction):
     name = 'show'
-    verbose_name = _('Services')
+    verbose_name = _('Components')
     url = 'horizon:murano:environments:services'
 
     def allowed(self, request, environment):
@@ -271,7 +271,7 @@ class ServicesTable(tables.DataTable):
 
     class Meta:
         name = 'services'
-        verbose_name = _('Services')
+        verbose_name = _('Components')
         status_columns = ['status']
         row_class = UpdateServiceRow
         table_actions = (AddApplication, DeleteService,
@@ -322,4 +322,4 @@ class EnvConfigTable(tables.DataTable):
 
     class Meta:
         name = 'environment_configuration'
-        verbose_name = _('Deployed Services')
+        verbose_name = _('Deployed Components')
