@@ -21,6 +21,9 @@ from muranodashboard.dynamic_ui import services
 
 VIEW_MOD = 'muranodashboard.catalog.views'
 
+wizard_view = env_views.Wizard.as_view(
+    services.get_app_forms, condition_dict=services.condition_getter)
+
 urlpatterns = patterns(
     VIEW_MOD,
     url(r'^index$', views.IndexView.as_view(), name='index'),
@@ -31,9 +34,12 @@ urlpatterns = patterns(
         'switch',
         name='switch_env'),
     url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
-        env_views.Wizard.as_view(services.get_app_forms,
-                                 condition_dict=services.condition_getter),
+        wizard_view,
         name='add'),
+    url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)/'
+        r'(?P<do_redirect>[^/]+)/(?P<drop_wm_form>[^/]+)$',
+        wizard_view,
+        name='add_many'),
     url(r'^quick-add/(?P<app_id>[^/]+)$',
         'quick_deploy',
         name='quick_add'),

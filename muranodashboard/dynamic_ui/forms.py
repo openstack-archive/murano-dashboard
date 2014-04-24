@@ -16,10 +16,10 @@ import collections
 import logging
 import types
 
-import yaql
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+import yaql
+
 import muranodashboard.dynamic_ui.fields as fields
 import muranodashboard.dynamic_ui.helpers as helpers
 from muranodashboard.dynamic_ui import yaql_expression
@@ -49,8 +49,7 @@ TYPES.update({
     'image': fields.ImageChoiceField,
     'azone': fields.AZoneChoiceField,
     'text': (fields.CharField, forms.Textarea),
-    'floatingip': fields.FloatingIpBooleanField,
-    'psqlDatabase': fields.PostgreSqlChoiceField
+    'floatingip': fields.FloatingIpBooleanField
 })
 
 

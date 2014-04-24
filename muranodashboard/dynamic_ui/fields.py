@@ -647,19 +647,11 @@ class DatabaseListField(CharField):
             self.validate_mssql_identifier(db_name)
 
 
-class PostgreSqlChoiceField(ChoiceField):
-    @with_request
-    def update(self, request, environment_id, **kwargs):
-        self.choices = [('', _('(No Database)'))]
-        psql = api.service_list_by_type(request, environment_id, 'postgreSql')
-        self.choices.extend([(srv.id, srv.name) for srv in psql])
-
-
 def make_select_cls(fqn):
     class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
         def __init__(self, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
-            self.widget.add_item_link = 'horizon:murano:catalog:add'
+            self.widget.add_item_link = 'horizon:murano:catalog:add_many'
 
         @with_request
         def update(self, request, environment_id, **kwargs):
@@ -667,7 +659,8 @@ def make_select_cls(fqn):
             if app_id is None:
                 msg = "Application with FQN='{0}' doesn't exist"
                 raise KeyError(msg.format(fqn))
-            self.widget.add_item_link_args = (environment_id, app_id)
+            self.widget.add_item_link_args = (
+                environment_id, app_id, False, True)
             self.choices = [('', _('Select Application'))]
             apps = api.service_list_by_fqn(request, environment_id, fqn)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
