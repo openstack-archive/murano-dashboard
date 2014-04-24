@@ -19,26 +19,30 @@ from muranodashboard.stats import models
 
 class APIStatsTab(tabs.Tab):
     name = _("Murano API Servers")
-    slug = "_murano_srv"
+    slug = "murano_srv"
     template_name = "stats/_api_srv.html"
+    preload = False
 
     def get_context_data(self, request):
-        stm = models.StatsModel()
-        stats = stm.get_api_stats(request)
-        context = {}
-        context["api_servers"] = stats
+        stats = models.StatsModel().get_api_stats(request)
+        return {'api_servers': stats}
+
+
+class InstanceStatsTab(tabs.Tab):
+    name = _("Murano Instance Statistics")
+    slug = "murano_eng"
+    template_name = "stats/_billing.html"
+    preload = False
+
+    def get_context_data(self, request):
+        stm = models.BillingStats()
+        stats = stm.get_all(request)
+        context = {'stats': stats,
+                   'grp_id': 'murano_billing',
+                   'offset': ''}
         return context
-
-
-class EngineStatsTab(tabs.Tab):
-    name = _("Murano Engine Servers")
-    slug = "_murano_eng"
-    template_name = "stats/_eng_srv.html"
-
-    def get_context_data(self, request):
-        pass
 
 
 class StatsTabs(tabs.TabGroup):
     slug = "stats_group"
-    tabs = (APIStatsTab, EngineStatsTab)
+    tabs = (InstanceStatsTab, APIStatsTab)

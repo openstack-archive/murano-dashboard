@@ -1,0 +1,9 @@
+{% load i18n sizeformat %}
+
+<div class="panel-group {{ offset }}" id="{{ grp_id }}">
+    {% for env in stats %}
+      {% with parent=grp_id env=env t="stats/_billing_stats.html" %}
+        {% include t %}
+      {% endwith %}
+    {% endfor %}
+</div>
