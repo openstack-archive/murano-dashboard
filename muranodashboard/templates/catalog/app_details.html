@@ -30,7 +30,7 @@
         <li><strong>Active:</strong> {{ app.enabled }}</li>
         <li><strong>Public:</strong> {{ app.is_public }}</li>
         <li><strong>Type:</strong> {{ app.type }}</li>
-        <li><strong>Tags:</strong> {% for tag in app.tags %} {{ tag }} {% endfor %}</li>
+        <li><strong>Tags:</strong> {{ app.tags|join:", " }}</li>
         <li><strong>Categories:</strong> {% for category in app.categories %} {{ category }} {% endfor %}</li>
 
         </ul>
