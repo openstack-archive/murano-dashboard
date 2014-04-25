@@ -13,8 +13,8 @@
 #    under the License.
 
 from django.conf.urls import patterns, url
+
 from muranodashboard.catalog import views
-from muranodashboard.catalog import image
 from muranodashboard.dynamic_ui import services
 
 VIEW_MOD = 'muranodashboard.catalog.views'
@@ -43,5 +43,5 @@ urlpatterns = patterns(
         name='quick_add'),
     url(r'^details/(?P<application_id>[^/]+)$',
         views.AppDetailsView.as_view(), name='application_details'),
-    url(r'^images/(?P<app_id>[^/]*)', image.get_image, name="images")
+    url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images")
 )

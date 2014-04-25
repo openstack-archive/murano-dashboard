@@ -16,8 +16,8 @@ import copy
 import functools
 import json
 import logging
-
 import re
+
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
@@ -33,10 +33,12 @@ from horizon import messages
 from horizon import tabs
 from horizon.forms import views
 from horizon import exceptions
+
 from muranoclient.common import exceptions as exc
 from muranodashboard.catalog import tabs as catalog_tabs
-from muranodashboard.dynamic_ui import services
+from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
+from muranodashboard.dynamic_ui import services
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard import utils
@@ -122,6 +124,15 @@ def quick_deploy(request, app_id):
     except:
         api.environment_delete(request, env.id)
         raise
+
+
+def get_image(request, app_id):
+    @cache.with_cache('logo', 'logo.png')
+    def _get(_request, _app_id):
+        return api.muranoclient(_request).packages.get_logo(_app_id)
+
+    content = _get(request, app_id)
+    return http.HttpResponse(content=content, content_type='image/png')
 
 
 class LazyWizard(wizard_views.SessionWizardView):
