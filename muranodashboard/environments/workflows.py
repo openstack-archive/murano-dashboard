@@ -14,6 +14,7 @@
 
 import logging
 
+from django.core import validators
 from django.utils.translation import ugettext as _
 
 from horizon import exceptions
@@ -53,7 +54,13 @@ class SelectProjectUser(workflows.Step):
 
 
 class ConfigureEnvironmentAction(workflows.Action):
-    name = forms.CharField(label=_("Environment Name"), required=True)
+    name = forms.CharField(
+        label=_("Environment Name"),
+        required=True,
+        validators=[validators.RegexValidator('^[a-zA-Z]+[\w-]*$')],
+        error_messages={'invalid': 'Environment name must contain only '
+                                   'alphanumeric or "_-." characters,'
+                                   ' must start with alpha'})
 
     class Meta:
         name = _("Environment")
