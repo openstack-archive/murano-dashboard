@@ -24,7 +24,6 @@ from openstack_dashboard.api.base import url_for
 import muranoclient.client as client
 from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
 from consts import STATUS_ID_READY, STATUS_ID_NEW
-from .network import get_network_params
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import topology
 from muranodashboard.common import utils
@@ -228,9 +227,8 @@ def environments_list(request):
 
 
 def environment_create(request, parameters):
-    body = get_network_params(request)
     #name is required param
-    body['name'] = parameters['name']
+    body = {'name': parameters['name']}
     env = muranoclient(request).environments.create(body)
     LOG.debug('Environment::Create {0}'.format(env))
     return env
