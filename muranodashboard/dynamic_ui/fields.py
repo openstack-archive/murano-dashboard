@@ -537,13 +537,11 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
+# This type of field is deprecated, in future floating ip fields should be
+# implemented using a regular BooleanField
+# TODO(ativelkov, tsufiev): add a deprecated decorator
 class FloatingIpBooleanField(BooleanField):
-    @with_request
-    def update(self, request, environment_id, **kwargs):
-        env = api.environment_get(request, environment_id)
-        network_topology = env.networking.get('topology')
-        if network_topology not in ('routed', 'manual'):
-            self.widget.attrs['disabled'] = True
+    pass
 
 
 class ClusterIPField(CharField):
