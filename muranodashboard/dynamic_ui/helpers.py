@@ -46,19 +46,12 @@ def decamelize(name):
     return '_'.join([bit.lower() for bit in bits])
 
 
-def explode(string):
+def explode(_string):
     """Explodes a string into a list of one-character strings."""
-    if not string:
-        return string
-    bits = []
-    while True:
-        head, tail = string[0], string[1:]
-        bits.append(head)
-        if tail:
-            string = tail
-        else:
-            break
-    return bits
+    if not _string or not isinstance(_string, basestring):
+        return _string
+    else:
+        return list(_string)
 
 
 def prepare_regexp(regexp):

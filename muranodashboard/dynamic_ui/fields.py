@@ -360,7 +360,7 @@ class TableWidget(floppyforms.widgets.Input):
         # FixME: we need to use this hack because TableField passes all kwargs
         # to TableWidget
         for kwarg in ('widget', 'description', 'description_title'):
-            ignorable = kwargs.pop(kwarg, None)
+            kwargs.pop(kwarg, None)
         super(TableWidget, self).__init__(*args, **kwargs)
 
     def get_context(self, name, value, attrs=None):
