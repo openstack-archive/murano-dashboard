@@ -127,7 +127,6 @@ function remove_nodes(old_nodes, new_nodes){
 }
 
 function build_links(){
-    debugger;
   for (var i=0;i<nodes.length;i++){
     build_node_links(nodes[i]);
     build_reverse_links(nodes[i]);
