@@ -14,11 +14,11 @@
 
 
 import logging
-
 import os
 import re
 import yaml
 import yaql
+
 from muranodashboard.dynamic_ui import helpers
 from .helpers import decamelize
 from muranodashboard.environments.consts import CACHE_DIR
@@ -26,6 +26,7 @@ from muranodashboard.dynamic_ui import version
 from muranodashboard.dynamic_ui import yaql_expression
 from muranodashboard.dynamic_ui import yaql_functions
 from muranodashboard.catalog import forms as catalog_forms
+from muranodashboard.common import cache
 
 LOG = logging.getLogger(__name__)
 
@@ -169,8 +170,12 @@ def import_app(request, app_id):
 
     app = services.get(app_id)
     if not app:
-        ui_desc = api.muranoclient(request).packages.get_ui(
-            app_id, make_loader_cls())
+        @cache.with_cache('ui', 'ui.yaml')
+        def _get(_request, _app_id):
+            return api.muranoclient(_request).packages.get_ui(
+                _app_id, make_loader_cls())
+
+        ui_desc = _get(request, app_id)
         version.check_version(ui_desc.pop('Version', 1))
         service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
         services[app_id] = Service(**service)
