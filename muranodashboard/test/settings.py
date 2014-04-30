@@ -1,6 +1,6 @@
 import socket
 
-from muranodashboard.settings import *
+from muranodashboard.settings import *  # noqa
 
 socket.setdefaulttimeout(1)
 

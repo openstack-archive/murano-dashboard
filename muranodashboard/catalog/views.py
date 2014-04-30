@@ -343,7 +343,7 @@ class IndexView(list_view.ListView):
             client = api.muranoclient(self.request)
             categories = client.packages.categories()
 
-        if not ALL_CATEGORY_NAME in categories:
+        if ALL_CATEGORY_NAME not in categories:
             categories.insert(0, ALL_CATEGORY_NAME)
         current_category = self.kwargs.get('category', categories[0])
         context['categories'] = categories
