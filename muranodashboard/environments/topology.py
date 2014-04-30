@@ -168,8 +168,9 @@ def render_d3_data(environment):
         d3_data['nodes'].append(service_node)
 
         def rec(node_data, node_key, parent_node=None):
-            node_type = node_data.get('?', {}).get('type') if \
-                isinstance(node_data, types.DictType) else None
+            if not isinstance(node_data, types.DictType):
+                return
+            node_type = node_data.get('?', {}).get('type')
             atomics, containers = _split_seq_by_predicate(
                 node_data.iteritems(), _is_atomic)
             if node_type and node_data is not parent_node:
