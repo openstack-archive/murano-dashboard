@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 import logging
+
 from django import forms
 from django.core.files import uploadedfile
 from django.utils.translation import ugettext_lazy as _
@@ -22,6 +23,8 @@ from horizon import exceptions
 from horizon import messages
 from muranoclient.common.exceptions import HTTPException
 from muranodashboard.environments import api
+from muranodashboard.catalog import views
+
 
 LOG = logging.getLogger(__name__)
 
@@ -68,9 +71,15 @@ class UploadPackageForm(SelfHandlingForm):
         LOG.debug('Uploading package {0}'.format(data))
         try:
             data, files = split_post_data(data)
-            result = api.muranoclient(request).packages.create(data, files)
-            messages.success(request, _('Package uploaded.'))
-            return result
+            package = api.muranoclient(request).packages.create(data, files)
+
+            @views.update_latest_apps
+            def _handle(_request, app_id):
+                messages.success(_request, _('Package uploaded.'))
+                return package
+
+            return _handle(request, app_id=package.id)
+
         except HTTPException:
             LOG.exception(_('Uploading package failed'))
             redirect = reverse('horizon:murano:packages:index')

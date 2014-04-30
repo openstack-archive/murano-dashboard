@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import collections
 import copy
 import functools
 import json
@@ -46,6 +47,7 @@ from muranodashboard import utils
 
 LOG = logging.getLogger(__name__)
 ALL_CATEGORY_NAME = 'All'
+LATEST_APPS_QUEUE_LIMIT = 6
 
 
 class DictToObj(object):
@@ -113,6 +115,24 @@ def create_quick_environment(request):
     return api.environment_create(request, params)
 
 
+def update_latest_apps(func):
+    @functools.wraps(func)
+    def __inner(request, **kwargs):
+        apps = request.session.setdefault('latest_apps', collections.deque())
+        app_id = kwargs['app_id']
+        if app_id in apps:  # move recent app to the beginning
+            apps.remove(app_id)
+
+        apps.appendleft(app_id)
+        if len(apps) > LATEST_APPS_QUEUE_LIMIT:
+            apps.pop()
+
+        return func(request, **kwargs)
+
+    return __inner
+
+
+@update_latest_apps
 @auth_dec.login_required
 def quick_deploy(request, app_id):
     env = create_quick_environment(request)
@@ -155,6 +175,7 @@ class LazyWizard(wizard_views.SessionWizardView):
                 raise TypeError(u"%s() received an invalid keyword %r" % (
                     cls.__name__, key))
 
+        @update_latest_apps
         def view(request, *args, **kwargs):
             forms = initforms
             if hasattr(initforms, '__call__'):
@@ -246,7 +267,8 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             response["X-Horizon-Add-To-Field"] = field_id
             return response
         else:
-            return http.HttpResponse('Done')
+            ns_url = 'horizon:murano:catalog:index'
+            return http.HttpResponseRedirect(url.reverse(ns_url))
 
     def get_form_initial(self, step):
         init_dict = {'request': self.request,
@@ -296,10 +318,14 @@ class IndexView(list_view.ListView):
             if category != ALL_CATEGORY_NAME:
                 query_params['category'] = category
 
-        pkgs = []
+        pkgs, self.mappings = [], {}
         with api.handled_exceptions(self.request):
             client = api.muranoclient(self.request)
             pkgs = client.packages.filter(**query_params)
+
+        for pkg in pkgs:
+            self.mappings[pkg.id] = pkg
+
         return pkgs
 
     def get_template_names(self):
@@ -307,7 +333,10 @@ class IndexView(list_view.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['latest_list'] = []
+
+        app_ids = self.request.session.get('latest_apps', [])
+        context['latest_list'] = [self.mappings[app_id] for app_id in app_ids
+                                  if app_id in self.mappings]
 
         categories = []
         with api.handled_exceptions(self.request):
