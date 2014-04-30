@@ -13,9 +13,6 @@
 #    under the License.
 
 import logging
-import json
-from django import forms
-from django.utils.translation import ugettext_lazy as _
 from muranodashboard.dynamic_ui.fields import get_murano_images, \
     ImageChoiceField
 LOG = logging.getLogger(__name__)
