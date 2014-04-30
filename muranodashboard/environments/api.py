@@ -102,7 +102,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
     LOG.debug('Deployment::List {0}'.format(deployments))
 
     result = '\n'
-    #TODO: Add updated time to logs
+    #TODO(efedorova): Add updated time to logs
     if deployments:
         for deployment in reversed(deployments):
             reports = muranoclient(request).deployments.reports(environment_id,
