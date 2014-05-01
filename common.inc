@@ -90,7 +90,7 @@ function find_or_install()
     case $(lowercase $DISTRO_BASED_ON) in
         "debian")
             _pkg_mrg_cmd="$PKG_MGR -s $_searching_for"
-            _pkgr_cmd="$PACKAGER install $_searching_for --yes -o Dpkg::Options::=\"--force-confnew\""
+            _pkgr_cmd="$PACKAGER install $_searching_for --yes -o Dpkg::Options::=--force-confnew"
             ;;
         *)
             _pkg_mrg_cmd="$PKG_MGR -q $_searching_for"
