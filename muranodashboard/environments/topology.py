@@ -16,6 +16,7 @@ import json
 
 import types
 from django.template.loader import render_to_string
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 
 def _get_environment_status_message(entity):
@@ -98,7 +99,7 @@ def _create_empty_node():
 def _create_ext_network_node(name):
     node = _create_empty_node()
     node.update({'name': name,
-                 'image': '/static/dashboard/img/lb-green.svg',
+                 'image': static('dashboard/img/lb-green.svg'),
                  'link_type': 'relation'})
     return node
 
@@ -131,14 +132,14 @@ def render_d3_data(environment):
         'id': environment.id,
         'name': environment.name,
         'status': status_message,
-        'image': '/static/dashboard/img/stack-green.svg',
+        'image': static('dashboard/img/stack-green.svg'),
         'in_progress': in_progress,
         'info_box': _environment_info(environment, status_message)
     })
     d3_data['environment'] = environment_node
 
-    service_image = '/static/dashboard/img/stack-green.svg'
-    unit_image = '/static/dashboard/img/server-green.svg'
+    service_image = static('dashboard/img/stack-green.svg')
+    unit_image = static('dashboard/img/server-green.svg')
 
     for service in environment.services:
         in_progress, status_message = _get_environment_status_message(service)
