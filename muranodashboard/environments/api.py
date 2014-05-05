@@ -118,8 +118,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
 class Session(object):
     @staticmethod
     def get_or_create(request, environment_id):
-        """
-        Gets id from already opened session for specified environment,
+        """Gets id from already opened session for specified environment,
         otherwise opens new session and returns it's id
 
         :param request:
@@ -141,10 +140,9 @@ class Session(object):
 
     @staticmethod
     def get_or_create_or_delete(request, environment_id):
-        """
-        Gets id from session in open state for specified environment, if state
-        is deployed - this session will be deleted and new would be created.
-        If there are no any sessions new would be created.
+        """Gets id from session in open state for specified environment,
+        if state is deployed - this session will be deleted and new
+        would be created. If there are no any sessions new would be created.
         Returns if of chosen or created session.
 
         :param request:
@@ -187,8 +185,7 @@ class Session(object):
 
     @staticmethod
     def get(request, environment_id):
-        """
-        Gets id from already opened session for specified environment,
+        """Gets id from already opened session for specified environment,
         otherwise returns None
 
         :param request:

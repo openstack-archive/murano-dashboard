@@ -36,9 +36,9 @@ _random_string_counter = None
 @yaql.context.EvalArg('pattern', types.StringTypes)
 @yaql.context.EvalArg('number', types.IntType)
 def _generate_hostname(pattern, number):
-    """
-    Replace '#' char in pattern with supplied number, if no pattern is
-    supplied generate short and unique name for the host
+    """Replace '#' char in pattern with supplied number, if no pattern is
+       supplied generate short and unique name for the host.
+
     :param pattern: hostname pattern
     :param number: number to replace with in pattern
     :return: hostname

@@ -162,9 +162,7 @@ class LazyWizard(wizard_views.SessionWizardView):
     """
     @django_dec.classonlymethod
     def as_view(cls, initforms, *initargs, **initkwargs):
-        """
-        Main entry point for a request-response process.
-        """
+        """Main entry point for a request-response process."""
         # sanitize keyword arguments
         for key in initkwargs:
             if key in cls.http_method_names:

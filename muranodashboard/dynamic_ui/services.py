@@ -132,7 +132,8 @@ class Service(object):
 
     def get_data(self, form_name, expr, data=None):
         """First try to get value from cleaned data, if none
-        found, use raw data."""
+        found, use raw data.
+        """
         if data:
             self.update_cleaned_data(data, form_name=form_name)
         data = self.cleaned_data

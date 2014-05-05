@@ -33,7 +33,7 @@ class OverviewTab(tabs.Tab):
     template_name = 'services/_overview.html'
 
     def get_context_data(self, request):
-        """
+        """Return application details.
 
         :param request:
         :return:

@@ -16,9 +16,7 @@ import string
 
 
 class BlankFormatter(string.Formatter):
-    """
-    Utility class aimed to provide empty string for non-existent keys.
-    """
+    """Utility class aimed to provide empty string for non-existent keys."""
     def __init__(self, default=''):
         self.default = default
 

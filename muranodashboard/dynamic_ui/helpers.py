@@ -58,7 +58,8 @@ def prepare_regexp(regexp):
     """Converts regular expression string pattern into RegexValidator object.
 
     Also /regexp/flags syntax is allowed, where flags is a string of
-    one-character flags that will be appended to the compiled regexp."""
+    one-character flags that will be appended to the compiled regexp.
+    """
     if regexp.startswith('/'):
         groups = re.match(r'^/(.*)/([A-Za-z]*)$', regexp).groups()
         regexp, flags_str = groups
@@ -117,8 +118,8 @@ def insert_hidden_ids(application):
 
 
 def int2base(x, base):
-    """
-    Converts decimal integers into another number base from base-2 to base-36
+    """Converts decimal integers into another number base
+     from base-2 to base-36.
 
     :param x: decimal integer
     :param base: number base, max value is 36

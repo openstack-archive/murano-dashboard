@@ -14,8 +14,7 @@
 
 
 class Bunch(object):
-    """
-    Bunch is a container that provides both dictionary-like and
+    """Bunch is a container that provides both dictionary-like and
     object-like attribute access.
     """
     def __init__(self, **kwargs):
