@@ -15,7 +15,7 @@
 import logging
 
 from django.core import validators
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import forms

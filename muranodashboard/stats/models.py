@@ -11,10 +11,12 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import logging
+
+from muranodashboard.common import utils
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
-from muranodashboard.common import utils
 
 LOG = logging.getLogger(__name__)
 

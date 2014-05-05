@@ -12,46 +12,46 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns, url
+from django.conf import urls
+from openstack_dashboard.dashboards.project.instances import views as inst_view
 
-from views import IndexView, DeploymentDetailsView
-from views import JSONView, EnvironmentDetails
-from views import CreateEnvironmentView
-from views import DetailServiceView
-from views import DeploymentsView
-from views import EditEnvironmentView
-from openstack_dashboard.dashboards.project.instances.views import DetailView
+from muranodashboard.environments import views
 
 VIEW_MOD = 'muranodashboard.environments.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
 
-urlpatterns = patterns(
+urlpatterns = urls.patterns(
     VIEW_MOD,
-    url(r'^environments$', IndexView.as_view(), name='index'),
+    urls.url(r'^environments$', views.IndexView.as_view(), name='index'),
 
-    url(r'^create_environment$', CreateEnvironmentView.as_view(),
-        name='create_environment'),
+    urls.url(r'^create_environment$', views.CreateEnvironmentView.as_view(),
+             name='create_environment'),
 
-    url(ENVIRONMENT_ID + r'/update_environment$',
-        EditEnvironmentView.as_view(),
-        name='update_environment'),
+    urls.url(ENVIRONMENT_ID + r'/update_environment$',
+             views.EditEnvironmentView.as_view(),
+             name='update_environment'),
 
-    url(ENVIRONMENT_ID + r'/services$', EnvironmentDetails.as_view(),
-        name='services'),
+    urls.url(ENVIRONMENT_ID + r'/services$',
+             views.EnvironmentDetails.as_view(),
+             name='services'),
 
-    url(ENVIRONMENT_ID + r'/services/get_d3_data$',
-        JSONView.as_view(), name='d3_data'),
+    urls.url(ENVIRONMENT_ID + r'/services/get_d3_data$',
+             views.JSONView.as_view(), name='d3_data'),
 
-    url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
-        DetailServiceView.as_view(),
-        name='service_details'),
+    urls.url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
+             views.DetailServiceView.as_view(),
+             name='service_details'),
 
-    url(r'^(?P<instance_id>[^/]+)/$', DetailView.as_view(), name='detail'),
+    urls.url(r'^(?P<instance_id>[^/]+)/$',
+             inst_view.DetailView.as_view(),
+             name='detail'),
 
-    url(ENVIRONMENT_ID + r'/deployments$',
-        DeploymentsView.as_view(), name='deployments'),
+    urls.url(ENVIRONMENT_ID + r'/deployments$',
+             views.DeploymentsView.as_view(),
+             name='deployments'),
 
-    url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
-        DeploymentDetailsView.as_view(), name='deployment_details'),
+    urls.url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
+             views.DeploymentDetailsView.as_view(),
+             name='deployment_details'),
 )

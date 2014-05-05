@@ -14,18 +14,20 @@
 
 import logging
 
-from django.core import urlresolvers as url
-from django.utils.translation import ugettext_lazy as _  # noqa
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
+from django import http
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from horizon import exceptions
-from horizon import tabs
 from horizon import tables
+from horizon import tabs
 from horizon import workflows
+
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
-from muranodashboard.environments import tabs as env_tabs
 from muranodashboard.environments import tables as env_tables
+from muranodashboard.environments import tabs as env_tabs
 from muranodashboard.environments import workflows as env_workflows
 
 
@@ -68,7 +70,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
 
         except Exception:
             msg = _("Sorry, this environment doesn't exist anymore")
-            redirect = url.reverse("horizon:murano:environments:index")
+            redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         return context
 
@@ -96,7 +98,7 @@ class DetailServiceView(tabs.TabView):
             exceptions.handle(self.request)
 
         except exc.HTTPForbidden:
-            redirect = url.reverse('horizon:murano:environments:index')
+            redirect = reverse('horizon:murano:environments:index')
             exceptions.handle(self.request,
                               _('Unable to retrieve details for '
                                 'service'),
@@ -124,7 +126,7 @@ class CreateEnvironmentView(workflows.WorkflowView):
 class EditEnvironmentView(workflows.WorkflowView):
     workflow_class = env_workflows.UpdateEnvironment
     template_name = 'environments/update.html'
-    success_url = url.reverse_lazy("horizon:murano:environments:index")
+    success_url = reverse_lazy("horizon:murano:environments:index")
 
     def get_context_data(self, **kwargs):
         context = super(EditEnvironmentView, self).get_context_data(**kwargs)
@@ -138,7 +140,7 @@ class EditEnvironmentView(workflows.WorkflowView):
                 self._object = \
                     api.environment_get(self.request, environment_id)
             except Exception:
-                redirect = url.reverse("horizon:murano:environments:index")
+                redirect = reverse("horizon:murano:environments:index")
                 msg = _('Unable to retrieve environment details.')
                 exceptions.handle(self.request, msg, redirect=redirect)
         return self._object
@@ -162,7 +164,7 @@ class DeploymentsView(tables.DataTableView):
             context['environment_name'] = env.name
         except Exception:
             msg = _("Sorry, this environment doesn't exist anymore")
-            redirect = url.reverse("horizon:murano:environments:index")
+            redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
         return context
 
@@ -176,13 +178,13 @@ class DeploymentsView(tables.DataTableView):
 
         except exc.HTTPForbidden:
             msg = _('Unable to retrieve list of deployments')
-            exceptions.handle(self.request, msg, redirect=url.reverse(ns_url))
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
 
         except exc.HTTPInternalServerError:
             msg = _("Environment with id %s doesn't exist anymore")
             exceptions.handle(self.request,
                               msg % self.environment_id,
-                              redirect=url.reverse(ns_url))
+                              redirect=reverse(ns_url))
         return deployments
 
 
@@ -210,7 +212,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                                   self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
             msg = _("Deployment with id %s doesn't exist anymore")
-            redirect = url.reverse("horizon:murano:environments:deployments")
+            redirect = reverse("horizon:murano:environments:deployments")
             exceptions.handle(self.request,
                               msg % self.deployment_id,
                               redirect=redirect)
@@ -224,7 +226,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                           self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
             msg = _('Deployment with id %s doesn\'t exist anymore')
-            redirect = url.reverse("horizon:murano:environments:deployments")
+            redirect = reverse("horizon:murano:environments:deployments")
             exceptions.handle(self.request,
                               msg % self.deployment_id,
                               redirect=redirect)
@@ -244,4 +246,4 @@ class JSONView(generic.View):
     @staticmethod
     def get(request, **kwargs):
         data = api.load_environment_data(request, kwargs['environment_id'])
-        return HttpResponse(data, content_type='application/json')
+        return http.HttpResponse(data, content_type='application/json')

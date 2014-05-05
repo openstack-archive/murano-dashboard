@@ -12,27 +12,28 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
 import copy
+import json
 import logging
-
+import netaddr
 import re
-from django import forms
-from django.core.validators import RegexValidator, validate_ipv4_address
-from netaddr import all_matching_cidrs, IPNetwork, IPAddress
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_text
-from muranodashboard.environments import api
-from horizon import exceptions, messages
-from openstack_dashboard.api import glance
-from openstack_dashboard.api.nova import novaclient
-from django.template.defaultfilters import pluralize
-import horizon.tables as tables
-import horizon.forms as hz_forms
-import floppyforms
-from django.template.loader import render_to_string
-from muranoclient.common import exceptions as muranoclient_exc
 
+from django.core import validators as django_validator
+from django import forms
+from django.template import defaultfilters
+from django.template import loader
+from django.utils.encoding import smart_text
+from django.utils.translation import ugettext_lazy as _
+import floppyforms
+from horizon import exceptions
+from horizon import forms as hz_forms
+from horizon import messages
+from horizon import tables
+from openstack_dashboard.api import glance
+from openstack_dashboard.api import nova
+
+from muranoclient.common import exceptions as muranoclient_exc
+from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ def make_yaql_validator(field, form, key, validator_property):
 def get_regex_validator(expr):
     try:
         validator = expr['validators'][0]
-        if isinstance(validator, RegexValidator):
+        if isinstance(validator, django_validator.RegexValidator):
             return validator
     except (TypeError, KeyError, IndexError):
         pass
@@ -194,7 +195,7 @@ class PasswordField(CharField):
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
     has_clone = False
-    validate_password = RegexValidator(
+    validate_password = django_validator.RegexValidator(
         password_re, _('The password must contain at least one letter, one   \
                                number and one special character'), 'invalid')
 
@@ -208,7 +209,7 @@ class PasswordField(CharField):
             # do not run compare for hidden fields (they are not required)
             if form_data.get(name) != form_data.get(self.get_clone_name(name)):
                 raise forms.ValidationError(_(u"{0}{1} don't match").format(
-                    self.label, pluralize(2)))
+                    self.label, defaultfilters.pluralize(2)))
 
     class PasswordInput(forms.PasswordInput):
         class Media:
@@ -271,7 +272,7 @@ class Column(tables.Column):
                            'row_index': str(datum.id),
                            'table_name': table_name,
                            'column_name': self.name}
-                return render_to_string(self.template_name, context)
+                return loader.render_to_string(self.template_name, context)
             _transform.__name__ = transform
             transform = _transform
         super(Column, self).__init__(transform, **kwargs)
@@ -456,7 +457,7 @@ class FlavorChoiceField(ChoiceField):
     @with_request
     def update(self, request, **kwargs):
         self.choices = [(flavor.name, flavor.name) for flavor in
-                        novaclient(request).flavors.list()]
+                        nova.novaclient(request).flavors.list()]
         for flavor in self.choices:
             if 'medium' in flavor[1]:
                 self.initial = flavor[0]
@@ -468,7 +469,7 @@ class KeyPairChoiceField(ChoiceField):
     @with_request
     def update(self, request, **kwargs):
         self.choices = [('', _('No keypair'))]
-        for keypair in novaclient(request).keypairs.list():
+        for keypair in nova.novaclient(request).keypairs.list():
             self.choices.append((keypair.name, keypair.name))
 
 
@@ -510,8 +511,8 @@ class AZoneChoiceField(ChoiceField):
     @with_request
     def update(self, request, **kwargs):
         try:
-            availability_zones = novaclient(request).availability_zones.\
-                list(detailed=False)
+            availability_zones = nova.novaclient(
+                request).availability_zones.list(detailed=False)
         except Exception:
             availability_zones = []
             exceptions.handle(request,
@@ -552,12 +553,12 @@ class ClusterIPField(CharField):
     @staticmethod
     def make_nova_validator(request, ip_ranges):
         def perform_checking(ip):
-            validate_ipv4_address(ip)
-            if not all_matching_cidrs(ip, ip_ranges) and ip_ranges:
+            django_validator.validate_ipv4_address(ip)
+            if not netaddr.all_matching_cidrs(ip, ip_ranges) and ip_ranges:
                 raise forms.ValidationError(_('Specified Cluster Static IP is'
                                               ' not in valid IP range'))
             try:
-                ip_info = novaclient(request).fixed_ips.get(ip)
+                ip_info = nova.novaclient(request).fixed_ips.get(ip)
             except exceptions.UNAUTHORIZED:
                 LOG.error("Error to get information about IP address"
                           " using novaclient")
@@ -584,12 +585,13 @@ class ClusterIPField(CharField):
 
     def make_neutron_validator(self):
         def perform_checking(ip):
-            validate_ipv4_address(ip)
+            django_validator.validate_ipv4_address(ip)
             if not self.existing_subnet:
                 raise forms.ValidationError(
                     _('Cannot get allowed subnet for the environment, '
                       'consult your admin'))
-            elif not IPAddress(ip) in IPNetwork(self.existing_subnet):
+            elif not netaddr.IPAddress(ip) in netaddr.IPNetwork(
+                    self.existing_subnet):
                 raise forms.ValidationError(
                     _('Specified IP address should belong to {0} '
                       'subnet').format(self.existing_subnet))
@@ -602,7 +604,7 @@ class ClusterIPField(CharField):
 
         if self.network_topology == 'nova':
             try:
-                network_list = novaclient(request).networks.list()
+                network_list = nova.novaclient(request).networks.list()
                 ip_ranges = [network.cidr for network in network_list]
                 ranges = ', '.join(ip_ranges)
             except StandardError:
@@ -621,11 +623,12 @@ class ClusterIPField(CharField):
             self.validators = [self.make_neutron_validator()]
         else:  # 'flat' topology
             raise NotImplementedError('Flat topology is not implemented yet')
-        self.error_messages['invalid'] = validate_ipv4_address.message
+        self.error_messages['invalid'] = \
+            django_validator.validate_ipv4_address.message
 
 
 class DatabaseListField(CharField):
-    validate_mssql_identifier = RegexValidator(
+    validate_mssql_identifier = django_validator.RegexValidator(
         re.compile(r'^[a-zA-z_][a-zA-Z0-9_$#@]*$'),
         _((u'First symbol should be latin letter or underscore. Subsequent ' +
            u'symbols can be latin letter, numeric, underscore, at sign, ' +

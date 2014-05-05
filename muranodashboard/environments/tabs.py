@@ -15,14 +15,15 @@
 import logging
 
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
+from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
+
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
-from muranodashboard.environments.tables import EnvConfigTable, ServicesTable
+from muranodashboard.environments import tables
 
 LOG = logging.getLogger(__name__)
 
@@ -105,7 +106,7 @@ class EnvLogsTab(tabs.Tab):
 class EnvConfigTab(tabs.TableTab):
     name = _("Configuration")
     slug = "env_config"
-    table_classes = (EnvConfigTable,)
+    table_classes = (tables.EnvConfigTable,)
     template_name = 'horizon/common/_detail_table.html'
     preload = False
 
@@ -132,7 +133,7 @@ class EnvironmentTopologyTab(tabs.Tab):
 class EnvironmentServicesTab(tabs.TableTab):
     name = _("Components")
     slug = "serviceslist"
-    table_classes = (ServicesTable,)
+    table_classes = (tables.ServicesTable,)
     template_name = "services/_service_list.html"
     preload = False
 

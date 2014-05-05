@@ -12,20 +12,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns, url
+from django.conf import urls
+from muranodashboard.images import views
 
-from .views import MarkedImagesView, MarkImageView
 
-
-urlpatterns = patterns(
+urlpatterns = urls.patterns(
     '',
-    url(r'^$', MarkedImagesView.as_view(),
-        name='index'),
+    urls.url(r'^$', views.MarkedImagesView.as_view(),
+             name='index'),
 
-    url(r'^mark_image$', MarkImageView.as_view(),
-        name='mark_image'),
+    urls.url(r'^mark_image$', views.MarkImageView.as_view(),
+             name='mark_image'),
 
-    url(r'^remove_metadata$', MarkedImagesView.as_view(),
-        name='remove_metadata'),
+    urls.url(r'^remove_metadata$', views.MarkedImagesView.as_view(),
+             name='remove_metadata'),
 
 )

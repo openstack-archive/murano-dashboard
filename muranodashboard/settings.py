@@ -1,7 +1,7 @@
 import logging
 import os
-import tempfile
 import sys
+import tempfile
 
 from openstack_dashboard import exceptions
 
@@ -136,6 +136,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = False
+
+SECRET_KEY = 'some_random_value'
 
 gettext_noop = lambda s: s
 LANGUAGES = (

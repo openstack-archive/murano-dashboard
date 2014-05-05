@@ -12,19 +12,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
-from openstack_dashboard.api import glance
 from horizon import exceptions
-from horizon import tables
-from horizon.forms.views import ModalFormView
-from .tables import MarkedImagesTable
-from .forms import MarkImageForm, filter_murano_images
+from horizon.forms import views
+from horizon import tables as horizon_tables
+from openstack_dashboard.api import glance
+
+from muranodashboard.images import forms
+from muranodashboard.images import tables
 
 
-class MarkedImagesView(tables.DataTableView):
-    table_class = MarkedImagesTable
+class MarkedImagesView(horizon_tables.DataTableView):
+    table_class = tables.MarkedImagesTable
     template_name = 'images/index.html'
 
     def get_data(self):
@@ -36,11 +38,11 @@ class MarkedImagesView(tables.DataTableView):
             uri = reverse('horizon:murano:images:index')
 
             exceptions.handle(self.request, msg, redirect=uri)
-        return filter_murano_images(images, request=self.request)
+        return forms.filter_murano_images(images, request=self.request)
 
 
-class MarkImageView(ModalFormView):
-    form_class = MarkImageForm
+class MarkImageView(views.ModalFormView):
+    form_class = forms.MarkImageForm
     template_name = 'images/mark.html'
     context_object_name = 'image'
     success_url = reverse_lazy('horizon:murano:images:index')

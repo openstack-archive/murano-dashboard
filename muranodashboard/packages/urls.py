@@ -12,23 +12,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns, url
+from django.conf import urls
 
-from .views import PackageDefinitionsView
-from .views import UploadPackageView
-from .views import ModifyPackageView
+from muranodashboard.packages import views
 
 
-urlpatterns = patterns(
+urlpatterns = urls.patterns(
     '',
-    url(r'^$', PackageDefinitionsView.as_view(),
-        name='index'),
+    urls.url(r'^$', views.PackageDefinitionsView.as_view(),
+             name='index'),
 
-    url(r'^upload$', UploadPackageView.as_view(),
-        name='upload'),
+    urls.url(r'^upload$', views.UploadPackageView.as_view(),
+             name='upload'),
 
-    url(r'^modify/(?P<app_id>[^/]+)?$',
-        ModifyPackageView.as_view(),
-        name='modify'),
+    urls.url(r'^modify/(?P<app_id>[^/]+)?$',
+             views.ModifyPackageView.as_view(),
+             name='modify'),
 
 )

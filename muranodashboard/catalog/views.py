@@ -23,17 +23,17 @@ from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
 from django.contrib.formtools.wizard import views as wizard_views
-from django.core import urlresolvers as url
+from django.core.urlresolvers import reverse
 from django import http
 from django import shortcuts
 from django.utils import decorators as django_dec
 from django.utils import http as http_utils
-from django.utils.translation import ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import list as list_view
+from horizon import exceptions
+from horizon.forms import views
 from horizon import messages
 from horizon import tabs
-from horizon.forms import views
-from horizon import exceptions
 
 from muranoclient.common import exceptions as exc
 from muranodashboard.catalog import tabs as catalog_tabs
@@ -214,8 +214,8 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
     def done(self, form_list, **kwargs):
         environment_id = kwargs.get('environment_id')
-        env_url = url.reverse('horizon:murano:environments:services',
-                              args=(environment_id,))
+        env_url = reverse('horizon:murano:environments:services',
+                          args=(environment_id,))
         app_name = services.get_service_name(self.request,
                                              kwargs.get('app_id'))
 
@@ -233,7 +233,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         else:
             do_redirect = self.get_wizard_flag('do_redirect')
 
-        fail_url = url.reverse("horizon:murano:environments:index")
+        fail_url = reverse("horizon:murano:environments:index")
         try:
             srv = api.service_create(self.request, environment_id, attributes)
         except exc.HTTPForbidden:
@@ -266,7 +266,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             return response
         else:
             ns_url = 'horizon:murano:catalog:index'
-            return http.HttpResponseRedirect(url.reverse(ns_url))
+            return http.HttpResponseRedirect(reverse(ns_url))
 
     def get_form_initial(self, step):
         init_dict = {'request': self.request,

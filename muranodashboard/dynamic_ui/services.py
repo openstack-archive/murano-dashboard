@@ -12,29 +12,29 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-
 import logging
 import os
 import re
 import yaml
 import yaql
 
+from muranodashboard.catalog import forms as catalog_forms
+from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
-from .helpers import decamelize
-from muranodashboard.environments.consts import CACHE_DIR
 from muranodashboard.dynamic_ui import version
 from muranodashboard.dynamic_ui import yaql_expression
 from muranodashboard.dynamic_ui import yaql_functions
-from muranodashboard.catalog import forms as catalog_forms
-from muranodashboard.common import cache
+from muranodashboard.environments import consts
 
 LOG = logging.getLogger(__name__)
 
 
-if not os.path.exists(CACHE_DIR):
-    os.mkdir(CACHE_DIR)
-    LOG.info('Creating cache directory located at {dir}'.format(dir=CACHE_DIR))
-LOG.info('Using cache directory located at {dir}'.format(dir=CACHE_DIR))
+if not os.path.exists(consts.CACHE_DIR):
+    os.mkdir(consts.CACHE_DIR)
+    LOG.info('Creating cache directory located at {dir}'.format(
+        dir=consts.CACHE_DIR))
+LOG.info('Using cache directory located at {dir}'.format(
+    dir=consts.CACHE_DIR))
 
 
 class Service(object):
@@ -178,7 +178,8 @@ def import_app(request, app_id):
 
         ui_desc = _get(request, app_id)
         version.check_version(ui_desc.pop('Version', 1))
-        service = dict((decamelize(k), v) for (k, v) in ui_desc.iteritems())
+        service = dict(
+            (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
         services[app_id] = Service(**service)
         app = services[app_id]
 

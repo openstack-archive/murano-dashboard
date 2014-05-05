@@ -15,16 +15,18 @@
 import logging
 
 from django.core.urlresolvers import reverse_lazy
-from horizon import tables
-from horizon.forms.views import ModalFormView
-from .tables import PackageDefinitionsTable
-from muranodashboard.packages import forms
+from horizon.forms import views
+from horizon import tables as horizon_tables
+
 from muranodashboard.environments import api
+from muranodashboard.packages import forms
+from muranodashboard.packages import tables
+
 LOG = logging.getLogger(__name__)
 
 
-class PackageDefinitionsView(tables.DataTableView):
-    table_class = PackageDefinitionsTable
+class PackageDefinitionsView(horizon_tables.DataTableView):
+    table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
 
     def get_data(self):
@@ -37,7 +39,7 @@ class PackageDefinitionsView(tables.DataTableView):
         return pkgs
 
 
-class UploadPackageView(ModalFormView):
+class UploadPackageView(views.ModalFormView):
     form_class = forms.UploadPackageForm
     template_name = 'packages/upload_package.html'
     context_object_name = 'packages'
@@ -45,7 +47,7 @@ class UploadPackageView(ModalFormView):
     failure_url = reverse_lazy('horizon:murano:packages:index')
 
 
-class ModifyPackageView(ModalFormView):
+class ModifyPackageView(views.ModalFormView):
     form_class = forms.ModifyPackageForm
     template_name = 'packages/modify_package.html'
     success_url = reverse_lazy('horizon:murano:packages:index')

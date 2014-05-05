@@ -13,10 +13,10 @@
 #    under the License.
 
 import json
-
 import types
-from django.template.loader import render_to_string
+
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.template import loader
 
 
 def _get_environment_status_message(entity):
@@ -58,8 +58,8 @@ def _application_info(application, app_image, status):
                'type': _truncate_type(application['?']['type'], 45),
                'status': status,
                'app_image': app_image}
-    return render_to_string('services/_application_info.html',
-                            context)
+    return loader.render_to_string('services/_application_info.html',
+                                   context)
 
 
 def _unit_info(unit, unit_image):
@@ -68,14 +68,14 @@ def _unit_info(unit, unit_image):
     context = {'data': data,
                'unit_image': unit_image}
 
-    return render_to_string('services/_unit_info.html', context)
+    return loader.render_to_string('services/_unit_info.html', context)
 
 
 def _environment_info(environment, status):
     context = {'name': environment.name,
                'status': status}
-    return render_to_string('services/_environment_info.html',
-                            context)
+    return loader.render_to_string('services/_environment_info.html',
+                                   context)
 
 
 def _create_empty_node():

@@ -12,8 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import horizon
 from django.utils.translation import ugettext_lazy as _
+import horizon
+
 from muranodashboard import dashboard
 
 

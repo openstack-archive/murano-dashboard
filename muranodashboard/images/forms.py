@@ -12,13 +12,14 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
 import json
+import logging
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ValidationError
-from horizon.forms import SelfHandlingForm
-from horizon import messages, exceptions
+from horizon import exceptions
+from horizon import forms as horizon_forms
+from horizon import messages
 from openstack_dashboard.api import glance
 
 LOG = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def filter_murano_images(images, request=None):
     return marked_images
 
 
-class MarkImageForm(SelfHandlingForm):
+class MarkImageForm(horizon_forms.SelfHandlingForm):
     _metadata = {
         'windows.2012': ' Windows Server 2012',
         'linux': 'Generic Linux',
@@ -94,7 +95,7 @@ class MarkImageForm(SelfHandlingForm):
         title = cleaned_data.get('title')
         existing_titles = self.fields['existing_titles'].initial
         if title in existing_titles:
-            raise ValidationError(_('Specified title already in use.'
-                                    ' Please choose another one.'))
+            raise forms.ValidationError(_('Specified title already in use.'
+                                          ' Please choose another one.'))
 
         return title

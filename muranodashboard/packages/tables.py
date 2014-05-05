@@ -14,13 +14,14 @@
 
 import logging
 
-from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django import http
 from django.template import defaultfilters
+from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
-from horizon import tables
 from horizon import messages
+from horizon import tables
+
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
 
@@ -63,7 +64,7 @@ class DownloadPackage(tables.Action):
             body = api.muranoclient(request).packages.download(app_id)
 
             content_type = 'application/octet-stream'
-            response = HttpResponse(body, content_type=content_type)
+            response = http.HttpResponse(body, content_type=content_type)
             response['Content-Disposition'] = 'filename={name}.package'.format(
                 name=self.get_package_name(data_table, app_id))
             return response

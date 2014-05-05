@@ -17,11 +17,11 @@ import functools
 import logging
 import os
 
-from muranodashboard.environments.consts import CACHE_DIR
+from muranodashboard.environments import consts
 
 
 LOG = logging.getLogger(__name__)
-OBJS_PATH = os.path.join(CACHE_DIR, 'apps')
+OBJS_PATH = os.path.join(consts.CACHE_DIR, 'apps')
 
 if not os.path.exists(OBJS_PATH):
     os.makedirs(OBJS_PATH)

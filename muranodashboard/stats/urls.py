@@ -12,12 +12,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns, url
+from django.conf import urls
+
 from muranodashboard.stats import views
 
 VIEW_MOD = "muranodashboard.stats.views"
 
 
-urlpatterns = patterns(
+urlpatterns = urls.patterns(
     VIEW_MOD,
-    url(r'^view$', views.StatsView.as_view(), name="index"))
+    urls.url(r'^view$', views.StatsView.as_view(), name="index"))

@@ -13,8 +13,9 @@
 #    under the License.
 
 import logging
-from muranodashboard.dynamic_ui.fields import get_murano_images, \
-    ImageChoiceField
+
+from muranodashboard.dynamic_ui import fields
+
 LOG = logging.getLogger(__name__)
 
 
@@ -22,7 +23,7 @@ def filter_service_by_image_type(service, request):
     def find_image_field():
         for form_cls in service.forms:
             for field in form_cls.base_fields.itervalues():
-                if isinstance(field, ImageChoiceField):
+                if isinstance(field, fields.ImageChoiceField):
                     return field
         return None
 
@@ -38,7 +39,7 @@ def filter_service_by_image_type(service, request):
         return filtered, message
 
     registered_murano_images = []
-    available_images = get_murano_images(request)
+    available_images = fields.get_murano_images(request)
     for image in available_images:
         registered_murano_images.append(image.murano_property.get('type'))
 

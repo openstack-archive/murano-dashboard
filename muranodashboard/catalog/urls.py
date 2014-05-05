@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf.urls import patterns, url
+from django.conf import urls
 
 from muranodashboard.catalog import views
 from muranodashboard.dynamic_ui import services
@@ -22,26 +22,26 @@ VIEW_MOD = 'muranodashboard.catalog.views'
 wizard_view = views.Wizard.as_view(
     services.get_app_forms, condition_dict=services.condition_getter)
 
-urlpatterns = patterns(
+urlpatterns = urls.patterns(
     VIEW_MOD,
-    url(r'^index$', views.IndexView.as_view(), name='index'),
-    url(r'^index/(?P<category>[^/]+)/(?P<page>\d+)$',
-        views.IndexView.as_view(),
-        name='index'),
-    url(r'^switch_environment/(?P<environment_id>[^/]+)$',
-        'switch',
-        name='switch_env'),
-    url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
-        wizard_view,
-        name='add'),
-    url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)/'
-        r'(?P<do_redirect>[^/]+)/(?P<drop_wm_form>[^/]+)$',
-        wizard_view,
-        name='add_many'),
-    url(r'^quick-add/(?P<app_id>[^/]+)$',
-        'quick_deploy',
-        name='quick_add'),
-    url(r'^details/(?P<application_id>[^/]+)$',
-        views.AppDetailsView.as_view(), name='application_details'),
-    url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images")
+    urls.url(r'^index$', views.IndexView.as_view(), name='index'),
+    urls.url(r'^index/(?P<category>[^/]+)/(?P<page>\d+)$',
+             views.IndexView.as_view(),
+             name='index'),
+    urls.url(r'^switch_environment/(?P<environment_id>[^/]+)$',
+             'switch',
+             name='switch_env'),
+    urls.url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
+             wizard_view,
+             name='add'),
+    urls.url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)/'
+             r'(?P<do_redirect>[^/]+)/(?P<drop_wm_form>[^/]+)$',
+             wizard_view,
+             name='add_many'),
+    urls.url(r'^quick-add/(?P<app_id>[^/]+)$',
+             'quick_deploy',
+             name='quick_add'),
+    urls.url(r'^details/(?P<application_id>[^/]+)$',
+             views.AppDetailsView.as_view(), name='application_details'),
+    urls.url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images")
 )

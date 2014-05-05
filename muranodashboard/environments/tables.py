@@ -13,21 +13,16 @@
 #    under the License.
 
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 from django import shortcuts
+from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
-from horizon import tables
 from horizon import messages
+from horizon import tables
 
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.openstack.common import timeutils
-from consts import STATUS_ID_DEPLOYING
-from consts import STATUS_CHOICES
-from consts import STATUS_DISPLAY_CHOICES
-from consts import STATUS_ID_NEW
-from consts import DEPLOYMENT_STATUS_DISPLAY_CHOICES
 
 
 def creation_allowed(self, request, environment):
@@ -35,7 +30,7 @@ def creation_allowed(self, request, environment):
     env = api.environment_get(request, environment_id)
     status = getattr(env, 'status', None)
 
-    if status not in [STATUS_ID_DEPLOYING]:
+    if status not in [consts.STATUS_ID_DEPLOYING]:
         return True
     return False
 
@@ -75,7 +70,7 @@ class DeleteEnvironment(tables.DeleteAction):
     def allowed(self, request, environment):
         if environment:
             environment = api.environment_get(request, environment.id)
-            if environment.status == STATUS_ID_DEPLOYING:
+            if environment.status == consts.STATUS_ID_DEPLOYING:
                 deployment = api.deployments_list(request, environment.id)[0]
                 last_action = timeutils.parse_strtime(
                     deployment.started.replace(' ', 'T'),
@@ -95,7 +90,7 @@ class EditEnvironment(tables.LinkAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status not in [STATUS_ID_DEPLOYING]:
+        if status not in [consts.STATUS_ID_DEPLOYING]:
             return True
         else:
             return False
@@ -110,7 +105,7 @@ class DeleteService(tables.DeleteAction):
         env = api.environment_get(request, environment_id)
         status = getattr(env, 'status', None)
 
-        return False if status == STATUS_ID_DEPLOYING else True
+        return False if status == consts.STATUS_ID_DEPLOYING else True
 
     def action(self, request, service_id):
         try:
@@ -136,7 +131,7 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status == STATUS_ID_DEPLOYING:
+        if status == consts.STATUS_ID_DEPLOYING:
             return False
         if environment.version == 0 and not environment.has_services:
             return False
@@ -163,7 +158,7 @@ class DeployThisEnvironment(tables.Action):
         status = getattr(env, 'status', None)
         version = getattr(env, 'version', None)
 
-        if status == STATUS_ID_DEPLOYING:
+        if status == consts.STATUS_ID_DEPLOYING:
             return False
         services = self.table.data
         if version == 0 and not services:
@@ -215,7 +210,7 @@ class ShowDeployments(tables.LinkAction):
     url = 'horizon:murano:environments:deployments'
 
     def allowed(self, request, environment):
-        return environment.status != STATUS_ID_NEW
+        return environment.status != consts.STATUS_ID_NEW
 
 
 class EnvironmentsTable(tables.DataTable):
@@ -226,8 +221,8 @@ class EnvironmentsTable(tables.DataTable):
     status = tables.Column('status',
                            verbose_name=_('Status'),
                            status=True,
-                           status_choices=STATUS_CHOICES,
-                           display_choices=STATUS_DISPLAY_CHOICES)
+                           status_choices=consts.STATUS_CHOICES,
+                           display_choices=consts.STATUS_DISPLAY_CHOICES)
 
     class Meta:
         name = 'murano'
@@ -259,8 +254,8 @@ class ServicesTable(tables.DataTable):
     status = tables.Column(lambda datum: datum['?'].get('status'),
                            verbose_name=_('Status'),
                            status=True,
-                           status_choices=STATUS_CHOICES,
-                           display_choices=STATUS_DISPLAY_CHOICES)
+                           status_choices=consts.STATUS_CHOICES,
+                           display_choices=consts.STATUS_DISPLAY_CHOICES)
     operation = tables.Column('operation',
                               verbose_name=_('Last operation'))
     operation_updated = tables.Column('operation_updated',
@@ -299,10 +294,11 @@ class DeploymentsTable(tables.DataTable):
     finished = tables.Column('finished',
                              verbose_name=_('Time Finished'))
 
-    status = tables.Column('state',
-                           verbose_name=_('Status'),
-                           status=True,
-                           display_choices=DEPLOYMENT_STATUS_DISPLAY_CHOICES)
+    status = tables.Column(
+        'state',
+        verbose_name=_('Status'),
+        status=True,
+        display_choices=consts.DEPLOYMENT_STATUS_DISPLAY_CHOICES)
 
     class Meta:
         name = 'deployments'

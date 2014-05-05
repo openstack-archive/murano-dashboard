@@ -11,19 +11,21 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import logging
 
-from django import forms
-from django.core.files import uploadedfile
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.conf import settings
-from horizon.forms import SelfHandlingForm
+from django.core.files import uploadedfile
+from django.core.urlresolvers import reverse
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
+from horizon import forms as horizon_forms
 from horizon import messages
-from muranoclient.common.exceptions import HTTPException
-from muranodashboard.environments import api
+
+from muranoclient.common import exceptions as exc
 from muranodashboard.catalog import views
+from muranodashboard.environments import api
 
 
 LOG = logging.getLogger(__name__)
@@ -45,7 +47,7 @@ def split_post_data(post):
     return data, files
 
 
-class UploadPackageForm(SelfHandlingForm):
+class UploadPackageForm(horizon_forms.SelfHandlingForm):
     package = forms.FileField(label=_('Application .zip package'),
                               required=True)
     categories = forms.MultipleChoiceField(label=_('Application Category'),
@@ -80,7 +82,7 @@ class UploadPackageForm(SelfHandlingForm):
 
             return _handle(request, app_id=package.id)
 
-        except HTTPException:
+        except exc.HTTPException:
             LOG.exception(_('Uploading package failed'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
@@ -96,7 +98,7 @@ class CheckboxInput(forms.CheckboxInput):
         css = {'all': ('muranodashboard/css/checkbox.css',)}
 
 
-class ModifyPackageForm(SelfHandlingForm):
+class ModifyPackageForm(horizon_forms.SelfHandlingForm):
     name = forms.CharField(label=_('Name'))
     categories = forms.MultipleChoiceField(label=_('Categories'))
     tags = forms.CharField(label=_('Tags'), required=False)
@@ -125,7 +127,7 @@ class ModifyPackageForm(SelfHandlingForm):
             result = api.muranoclient(request).packages.update(app_id, data)
             messages.success(request, _('Package modified.'))
             return result
-        except HTTPException:
+        except exc.HTTPException:
             LOG.exception(_('Modifying package failed'))
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,

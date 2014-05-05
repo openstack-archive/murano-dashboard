@@ -20,13 +20,13 @@ from django.contrib.messages import api as msg_api
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
-from openstack_dashboard.api.base import url_for
+from openstack_dashboard.api import base
+
 import muranoclient.client as client
-from muranoclient.common.exceptions import HTTPForbidden, HTTPNotFound
-from consts import STATUS_ID_READY, STATUS_ID_NEW
 from muranoclient.common import exceptions as exc
-from muranodashboard.environments import topology
 from muranodashboard.common import utils
+from muranodashboard.environments import consts
+from muranodashboard.environments import topology
 
 
 LOG = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ def get_endpoint(request):
 
     if not endpoint:
         try:
-            endpoint = url_for(request, 'murano')
+            endpoint = base.url_for(request, 'murano')
         except exceptions.ServiceCatalogException:
             endpoint = 'http://localhost:8082'
             LOG.warning('Murano API location could not be found in Service '
@@ -102,7 +102,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
     LOG.debug('Deployment::List {0}'.format(deployments))
 
     result = '\n'
-    #TODO(efedorova): Add updated time to logs
+    # TODO(efedorova): Add updated time to logs
     if deployments:
         for deployment in reversed(deployments):
             reports = muranoclient(request).deployments.reports(environment_id,
@@ -163,7 +163,7 @@ class Session(object):
             try:
                 session_data = \
                     muranoclient(request).sessions.get(environment_id, id)
-            except HTTPForbidden:
+            except exc.HTTPForbidden:
                 del sessions[environment_id]
                 LOG.debug("The environment is deploying by other user."
                           "Creating a new session "
@@ -218,8 +218,8 @@ def environments_list(request):
                 environments[index].has_services = True
             break
         if not environments[index].has_services:
-            if environments[index].status == STATUS_ID_READY:
-                environments[index].status = STATUS_ID_NEW
+            if environments[index].status == consts.STATUS_ID_READY:
+                environments[index].status = consts.STATUS_ID_NEW
     return environments
 
 
@@ -271,7 +271,7 @@ def services_list(request, environment_id):
     try:
         reports = muranoclient(request).environments.last_status(
             environment_id, session_id)
-    except HTTPNotFound:
+    except exc.HTTPNotFound:
         reports = {}
 
     for service_item in environment.services:

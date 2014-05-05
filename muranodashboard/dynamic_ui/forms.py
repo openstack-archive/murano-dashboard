@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import collections
+from collections import defaultdict
 import logging
 import types
 
@@ -29,7 +29,7 @@ from muranodashboard.dynamic_ui import yaql_functions
 LOG = logging.getLogger(__name__)
 
 
-class AnyFieldDict(collections.defaultdict):
+class AnyFieldDict(defaultdict):
     def __missing__(self, key):
         return fields.make_select_cls(key)
 
