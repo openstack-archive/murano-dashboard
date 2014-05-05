@@ -120,7 +120,7 @@ class DeleteService(tables.DeleteAction):
                     api.service_delete(request,
                                        environment_id,
                                        service_id)
-        except:
+        except Exception:
             msg = _('Sorry, you can\'t delete service right now')
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(request, msg, redirect=redirect)
@@ -175,7 +175,7 @@ class DeployThisEnvironment(tables.Action):
         try:
             api.environment_deploy(request, environment_id)
             messages.success(request, _('Deploy started'))
-        except:
+        except Exception:
             msg = _('Unable to deploy. Try again later')
             exceptions.handle(
                 request, msg,

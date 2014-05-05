@@ -141,7 +141,7 @@ def quick_deploy(request, app_id):
                               condition_dict=services.condition_getter)
         return view(request, app_id=app_id, environment_id=env.id,
                     do_redirect=True, drop_wm_form=True)
-    except:
+    except Exception:
         api.environment_delete(request, env.id)
         raise
 

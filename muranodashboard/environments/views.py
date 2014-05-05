@@ -66,7 +66,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
             env = api.environment_get(self.request, self.environment_id)
             context['environment_name'] = env.name
 
-        except:
+        except Exception:
             msg = _("Sorry, this environment doesn't exist anymore")
             redirect = url.reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
@@ -137,7 +137,7 @@ class EditEnvironmentView(workflows.WorkflowView):
             try:
                 self._object = \
                     api.environment_get(self.request, environment_id)
-            except:
+            except Exception:
                 redirect = url.reverse("horizon:murano:environments:index")
                 msg = _('Unable to retrieve environment details.')
                 exceptions.handle(self.request, msg, redirect=redirect)
@@ -160,7 +160,7 @@ class DeploymentsView(tables.DataTableView):
         try:
             env = api.environment_get(self.request, self.environment_id)
             context['environment_name'] = env.name
-        except:
+        except Exception:
             msg = _("Sorry, this environment doesn't exist anymore")
             redirect = url.reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)

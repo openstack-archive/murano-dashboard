@@ -100,7 +100,7 @@ def get_murano_images(request):
     try:
         # public filter removed
         images, _more = glance.image_list_detailed(request)
-    except:
+    except Exception:
         LOG.error("Error to request image list from glance ")
         exceptions.handle(request, _("Unable to retrieve public images."))
     murano_images = []
@@ -512,7 +512,7 @@ class AZoneChoiceField(ChoiceField):
         try:
             availability_zones = novaclient(request).availability_zones.\
                 list(detailed=False)
-        except:
+        except Exception:
             availability_zones = []
             exceptions.handle(request,
                               _("Unable to retrieve  availability zones."))
