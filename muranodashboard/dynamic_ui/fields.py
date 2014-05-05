@@ -207,8 +207,8 @@ class PasswordField(CharField):
             # run compare only for original fields
             # do not run compare for hidden fields (they are not required)
             if form_data.get(name) != form_data.get(self.get_clone_name(name)):
-                raise forms.ValidationError(_(u"{0}{1} don't match".format(
-                    self.label, pluralize(2))))
+                raise forms.ValidationError(_(u"{0}{1} don't match").format(
+                    self.label, pluralize(2)))
 
     class PasswordInput(forms.PasswordInput):
         class Media:
@@ -592,7 +592,7 @@ class ClusterIPField(CharField):
             elif not IPAddress(ip) in IPNetwork(self.existing_subnet):
                 raise forms.ValidationError(
                     _('Specified IP address should belong to {0} '
-                      'subnet'.format(self.existing_subnet)))
+                      'subnet').format(self.existing_subnet))
 
         return perform_checking
 
@@ -608,7 +608,8 @@ class ClusterIPField(CharField):
             except StandardError:
                 ip_ranges, ranges = [], ''
             if ip_ranges:
-                self.help_text = _('Select IP from available range: ' + ranges)
+                self.help_text = _('Select IP from '
+                                   'available range: {0} ').format(ranges)
             else:
                 self.help_text = _('Specify valid fixed IP')
             self.validators = [self.make_nova_validator(request, ip_ranges)]

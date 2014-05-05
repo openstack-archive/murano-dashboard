@@ -179,9 +179,10 @@ class DeploymentsView(tables.DataTableView):
             exceptions.handle(self.request, msg, redirect=url.reverse(ns_url))
 
         except exc.HTTPInternalServerError:
-            msg = _("Environment with id %s doesn't exist anymore"
-                    % self.environment_id)
-            exceptions.handle(self.request, msg, redirect=url.reverse(ns_url))
+            msg = _("Environment with id %s doesn't exist anymore")
+            exceptions.handle(self.request,
+                              msg % self.environment_id,
+                              redirect=url.reverse(ns_url))
         return deployments
 
 
@@ -208,10 +209,11 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                                   self.environment_id,
                                                   self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
-            msg = _("Deployment with id %s doesn't exist anymore"
-                    % self.deployment_id)
+            msg = _("Deployment with id %s doesn't exist anymore")
             redirect = url.reverse("horizon:murano:environments:deployments")
-            exceptions.handle(self.request, msg, redirect=redirect)
+            exceptions.handle(self.request,
+                              msg % self.deployment_id,
+                              redirect=redirect)
         return deployment
 
     def get_logs(self):
@@ -221,10 +223,11 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                           self.environment_id,
                                           self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
-            msg = _('Deployment with id %s doesn\'t exist anymore'
-                    % self.deployment_id)
+            msg = _('Deployment with id %s doesn\'t exist anymore')
             redirect = url.reverse("horizon:murano:environments:deployments")
-            exceptions.handle(self.request, msg, redirect=redirect)
+            exceptions.handle(self.request,
+                              msg % self.deployment_id,
+                              redirect=redirect)
         return logs
 
     def get_tabs(self, request, *args, **kwargs):

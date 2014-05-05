@@ -96,8 +96,7 @@ class ToggleEnabled(tables.BatchAction):
                 obj.enabled = not obj.enabled
                 messages.success(
                     request,
-                    _("Package '{package}' successfully toggled".format(
-                        package=obj.name)))
+                    _("Package '{0}' successfully toggled").format(obj.name))
 
 
 class DeletePackage(tables.DeleteAction):

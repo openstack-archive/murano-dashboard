@@ -32,7 +32,7 @@ def filter_murano_images(images, request=None):
             try:
                 metadata = json.loads(metadata)
             except ValueError:
-                msg = _('Invalid metadata for image: {0}'.format(image.id))
+                msg = _('Invalid metadata for image: {0}').format(image.id)
                 LOG.warn(msg)
                 if request:
                     exceptions.handle(request, msg)

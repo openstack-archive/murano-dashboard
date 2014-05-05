@@ -148,9 +148,10 @@ class EnvironmentServicesTab(tabs.TableTab):
             exceptions.handle(self.request, msg, redirect=reverse(ns_url))
 
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
-            msg = _("Environment with id %s doesn't exist anymore"
-                    % self.environment_id)
-            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
+            msg = _("Environment with id %s doesn't exist anymore")
+            exceptions.handle(self.request,
+                              msg % self.environment.id,
+                              redirect=reverse(ns_url))
         except exc.HTTPUnauthorized:
             exceptions.handle(self.request)
 
