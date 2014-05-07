@@ -34,6 +34,8 @@ from django.template.loader import render_to_string
 from muranoclient.common import exceptions as muranoclient_exc
 
 
+from django.core import urlresolvers as urls
+
 LOG = logging.getLogger(__name__)
 
 
@@ -647,19 +649,32 @@ class DatabaseListField(CharField):
 
 
 def make_select_cls(fqn):
+    class Widget(hz_forms.fields.DynamicSelectWidget):
+        class Media:
+            js = ('muranodashboard/js/add-select.js',)
+
     class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
+        widget = Widget
+
         def __init__(self, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
-            self.widget.add_item_link = 'horizon:murano:catalog:add_many'
 
         @with_request
         def update(self, request, environment_id, **kwargs):
-            app_id = api.app_id_by_fqn(request, fqn)
-            if app_id is None:
-                msg = "Application with FQN='{0}' doesn't exist"
-                raise KeyError(msg.format(fqn))
-            self.widget.add_item_link_args = (
-                environment_id, app_id, False, True)
+            def _make_link():
+                ns_url = 'horizon:murano:catalog:add_many'
+
+                def _reverse(_fqn):
+                    _app = api.app_by_fqn(request, _fqn)
+                    if _app is None:
+                        msg = "Application with FQN='{0}' doesn't exist"
+                        raise KeyError(msg.format(_fqn))
+                    args = (environment_id, _app.id, False, True)
+                    return _app.name, urls.reverse(ns_url, args=args)
+                return json.dumps(
+                    [_reverse(cls) for cls in api.split_classes(fqn)])
+
+            self.widget.add_item_link = _make_link
             self.choices = [('', _('Select Application'))]
             apps = api.service_list_by_fqn(request, environment_id, fqn)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
