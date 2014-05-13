@@ -304,10 +304,20 @@ def app_id_by_fqn(request, fqn):
     return apps[0].id if apps else None
 
 
+def app_by_fqn(request, fqn):
+    apps = muranoclient(request).packages.filter(fqn=fqn)
+    return apps[0] if apps else None
+
+
+def split_classes(classes_str):
+    return classes_str.split(', ')
+
+
 def service_list_by_fqn(request, environment_id, fqn):
     services = services_list(request, environment_id)
+    fqns = split_classes(fqn)
     LOG.debug('Service::Instances::List')
-    return [service for service in services if service['?']['type'] == fqn]
+    return [service for service in services if service['?']['type'] in fqns]
 
 
 def service_create(request, environment_id, parameters):
