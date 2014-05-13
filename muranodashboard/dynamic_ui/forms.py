@@ -183,7 +183,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             for v in field.validators:
                 expr = isinstance(v, types.DictType) and v.get('expr')
                 if expr and isinstance(expr, fields.RawProperty):
-                    v = fields.make_yaql_validator(field, self, field_name, v)
+                    v = fields.make_yaql_validator(v)
                 validators.append(v)
             field.validators = validators
 

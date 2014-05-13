@@ -31,6 +31,7 @@ from horizon import messages
 from horizon import tables
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
+import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.environments import api
@@ -61,14 +62,16 @@ def with_request(func):
     return update
 
 
-def make_yaql_validator(field, form, key, validator_property):
+def make_yaql_validator(validator_property):
+    """Field-level validator uses field's value as its '$' root object."""
+    expr = validator_property['expr'].spec
+    message = _(validator_property.get('message', ''))
+
     def validator_func(value):
-        data = getattr(form, 'cleaned_data', {})
-        data[key] = value
-        form.service.update_cleaned_data(data, form=form)
-        if not validator_property['expr'].__get__(field):
-            raise forms.ValidationError(
-                _(validator_property.get('message', '')))
+        context = yaql.create_context()
+        context.set_data(value)
+        if not expr.evaluate(context=context):
+            raise forms.ValidationError(message)
 
     return validator_func
 
