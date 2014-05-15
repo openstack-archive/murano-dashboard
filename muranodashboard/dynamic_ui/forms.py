@@ -13,6 +13,7 @@
 #    under the License.
 
 from collections import defaultdict
+import copy
 import logging
 import types
 
@@ -54,10 +55,12 @@ TYPES.update({
 
 
 def _collect_fields(field_specs, form_name, service):
-    def process_widget(kwargs, cls, widget):
-        widget = kwargs.get('widget', widget)
-        if widget is None:
-            widget = cls.widget
+    def process_widget(cls, kwargs):
+        if isinstance(cls, types.TupleType):
+            cls, _w = cls
+            cls.widget = _w
+
+        widget = kwargs.get('widget') or cls.widget
         if 'widget_media' in kwargs:
             media = kwargs['widget_media']
             del kwargs['widget_media']
@@ -69,56 +72,48 @@ def _collect_fields(field_specs, form_name, service):
             widget = Widget
 
         if 'widget_attrs' in kwargs:
-            widget = widget(attrs=kwargs['widget_attrs'])
-            del kwargs['widget_attrs']
-        return widget
+            widget = widget(attrs=kwargs.pop('widget_attrs'))
+        return cls, widget
 
     def parse_spec(spec, keys=None):
         if keys is None:
             keys = []
-
         if not isinstance(keys, types.ListType):
             keys = [keys]
         key = keys and keys[-1] or None
+
         if isinstance(spec, yaql_expression.YaqlExpression):
             return key, fields.RawProperty(key, spec)
         elif isinstance(spec, types.DictType):
             items = []
             for k, v in spec.iteritems():
-                if not k in ('type', 'name'):
-                    k = helpers.decamelize(k)
-                    new_key, v = parse_spec(v, keys + [k])
-                    if new_key:
-                        k = new_key
-                    items.append((k, v))
+                k = helpers.decamelize(k)
+                new_key, v = parse_spec(v, keys + [k])
+                if new_key:
+                    k = new_key
+                items.append((k, v))
             return key, dict(items)
         elif isinstance(spec, types.ListType):
             return key, [parse_spec(_spec, keys)[1] for _spec in spec]
         elif isinstance(spec, basestring) and helpers.is_localizable(keys):
             return key, _(spec)
         else:
-            if key == 'type':
-                return key, TYPES[spec]
-            elif key == 'hidden' and spec is True:
+            if key == 'hidden' and spec is True:
                 return 'widget', forms.HiddenInput
             elif key == 'regexp_validator':
                 return 'validators', [helpers.prepare_regexp(spec)]
             else:
                 return key, spec
 
-    def make_field(field_spec, form_name, service):
-        cls = parse_spec(field_spec['type'], 'type')[1]
-        widget = None
-        if isinstance(cls, types.TupleType):
-            cls, widget = cls
-        kwargs = parse_spec(field_spec)[1]
-        kwargs['widget'] = process_widget(kwargs, cls, widget)
+    def make_field(field_spec):
+        cls, name = TYPES[field_spec.pop('type')], field_spec.pop('name')
+        _ignorable, kwargs = parse_spec(field_spec)
+        cls, kwargs['widget'] = process_widget(cls, kwargs)
         cls = cls.finalize_properties(kwargs, form_name, service)
 
-        field = cls(**kwargs)
-        return field_spec['name'], field
+        return name, cls(**kwargs)
 
-    return [make_field(spec, form_name, service) for spec in field_specs]
+    return [make_field(copy.deepcopy(_spec)) for _spec in field_specs]
 
 
 class DynamicFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
