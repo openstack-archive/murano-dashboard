@@ -28,15 +28,32 @@ LOG = logging.getLogger(__name__)
 class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
+    PACKAGES_LIMIT = 10
+
+    def has_more_data(self, table):
+        return self._more
 
     def get_data(self):
-        pkgs = []
+        opts = {
+            'include_disabled': True,
+            'owned': True,
+            'limit': self.PACKAGES_LIMIT + 1,
+        }
+        marker = self.request.GET.get(
+            tables.PackageDefinitionsTable._meta.pagination_param, None)
+        if marker:
+            opts['marker'] = marker
+        packages = []
+        self._more = False
         with api.handled_exceptions(self.request):
-            pkgs = api.muranoclient(self.request).packages.filter(
-                include_disabled=True,
-                owned=True
-            )
-        return pkgs
+            packages = api.muranoclient(self.request).packages.filter(**opts)
+            # The client doesn't return any info about whether there are
+            # more packages, so we need to try to get one extra, and
+            # determine whether to show the More link ourselves.
+            if len(packages) == self.PACKAGES_LIMIT + 1:
+                self._more = True
+                packages = packages[:self.PACKAGES_LIMIT]
+        return packages
 
 
 class UploadPackageView(views.ModalFormView):
