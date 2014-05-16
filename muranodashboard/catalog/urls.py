@@ -25,9 +25,6 @@ wizard_view = views.Wizard.as_view(
 urlpatterns = urls.patterns(
     VIEW_MOD,
     urls.url(r'^index$', views.IndexView.as_view(), name='index'),
-    urls.url(r'^index/(?P<category>[^/]+)/(?P<page>\d+)$',
-             views.IndexView.as_view(),
-             name='index'),
     urls.url(r'^switch_environment/(?P<environment_id>[^/]+)$',
              'switch',
              name='switch_env'),

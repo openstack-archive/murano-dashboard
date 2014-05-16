@@ -135,6 +135,20 @@ def update_latest_apps(func):
     return __inner
 
 
+def clean_latest_apps(request):
+    cleaned_apps, cleaned_app_ids = [], []
+    for app_id in request.session.get('latest_apps', []):
+        try:
+            app = api.muranoclient(request).packages.get(app_id)
+        except exc.HTTPNotFound:
+            pass
+        else:
+            cleaned_apps.append(app)
+            cleaned_app_ids.append(app_id)
+    request.session['latest_apps'] = collections.deque(cleaned_app_ids)
+    return cleaned_apps
+
+
 @update_latest_apps
 @auth_dec.login_required
 def quick_deploy(request, app_id):
@@ -313,10 +327,34 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
 class IndexView(list_view.ListView):
     paginate_by = 6
+    pagination_param = 'marker'
+
+    def __init__(self, **kwargs):
+        super(IndexView, self).__init__(**kwargs)
+        self._more = None
+
+    @staticmethod
+    def get_object_id(datum):
+        return datum.id
+
+    def get_marker(self):
+        """Returns the identifier for the last object in the current data set
+        for APIs that use marker/limit-based paging.
+        """
+        data = self.object_list
+        if data:
+            return http_utils.urlquote_plus(self.get_object_id(data[-1]))
+        else:
+            return ''
+
+    def get_pagination_string(self):
+        """Returns the query parameter string to paginate this table."""
+        return "=".join([self.pagination_param, self.get_marker()])
 
     def get_queryset(self):
-        category = self.kwargs.get('category', ALL_CATEGORY_NAME)
         query_params = {'type': 'Application'}
+        category = self.request.GET.get('category', ALL_CATEGORY_NAME)
+        marker = self.request.GET.get('marker')
         search = self.request.GET.get('search')
         if search:
             query_params['search'] = search
@@ -326,22 +364,25 @@ class IndexView(list_view.ListView):
 
         packages = []
         with api.handled_exceptions(self.request):
-            packages, has_more = pkg_api.package_list(
+            packages, self._more = pkg_api.package_list(
                 self.request, filters=query_params, paginate=True,
-                page_size=self.paginate_by)
+                marker=marker, page_size=self.paginate_by)
 
-        self.mappings = dict((pkg.id, pkg) for pkg in packages)
         return packages
 
     def get_template_names(self):
         return ['catalog/index.html']
 
+    def has_more_data(self):
+        return self._more
+
+    def paginate_queryset(self, queryset, page_size):
+        # override this method explicitly to skip unnecessary calculations
+        # during call to parent's get_context_data() method
+        return None, None, queryset, None
+
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-
-        app_ids = self.request.session.get('latest_apps', [])
-        context['latest_list'] = [self.mappings[app_id] for app_id in app_ids
-                                  if app_id in self.mappings]
 
         categories = []
         with api.handled_exceptions(self.request):
@@ -350,9 +391,12 @@ class IndexView(list_view.ListView):
 
         if ALL_CATEGORY_NAME not in categories:
             categories.insert(0, ALL_CATEGORY_NAME)
-        current_category = self.kwargs.get('category', categories[0])
-        context['categories'] = categories
-        context['current_category'] = current_category
+        current_category = self.request.GET.get('category', categories[0])
+        context.update({
+            'categories': categories,
+            'current_category': current_category,
+            'latest_list': clean_latest_apps(self.request)
+        })
 
         search = self.request.GET.get('search')
         if search:

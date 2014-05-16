@@ -58,7 +58,7 @@
   <ul class="dropdown-menu">
       {% for category in categories %}
         <li><a tabindex="-1" href="
-        {% url 'horizon:murano:catalog:index' category page_obj.number %}">
+        {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}">
             {{ category }}</a></li>
       {% endfor %}
   </ul>
@@ -75,32 +75,17 @@
     <p class="no-results">{% trans "There are no applications matching your search criteria." %}</p>
 {% endif %}
 
-{% if is_paginated %}
-    <div class="btn-toolbar centering">
-      <div class="btn-group">
-          {% if page_obj.has_previous %}
-              {% with page_number=page_obj.previous_page_number link_text="Previous" %}
-                  {% include 'catalog/page_link.html' %}
-              {% endwith %}
-          {% else %}
-              <a class="btn btn-default disabled" href="#">Previous</a>
-          {% endif %}
-
-          <a class="btn btn-default disabled"
-             href="
-             {% url 'horizon:murano:catalog:index' current_category page_obj.number %}">
-              {{ page_obj.number }}</a>
-
-          {% if page_obj.has_next %}
-              {% with page_number=page_obj.next_page_number link_text="Next" %}
-                  {% include 'catalog/page_link.html' %}
-              {% endwith %}
-          {% else %}
-              <a class="btn btn-default disabled" href="#">Next</a>
-          {% endif %}
-      </div>
-    </div>
-{% endif %}
+<div class="btn-toolbar centering">
+  <div class="btn-group">
+      {% if view.has_more_data %}
+          <a class="btn btn-default"
+             href="{% url 'horizon:murano:catalog:index' %}?category={{ current_category|urlencode }}&{{ view.get_pagination_string }}{% if search %}&search={{ search|urlencode }}{% endif %}">
+              More Apps</a>
+      {% else %}
+          <a class="btn btn-default disabled" href="#">More Apps</a>
+      {% endif %}
+  </div>
+</div>
 
 <div class="murano-side-panel" id="MuranoDefaultEnvPanel">
     {% include 'catalog/env_switcher.html' %}
