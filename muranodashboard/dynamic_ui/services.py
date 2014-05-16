@@ -18,6 +18,7 @@ import re
 import yaml
 import yaql
 
+from muranodashboard import api
 from muranodashboard.catalog import forms as catalog_forms
 from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
@@ -163,8 +164,6 @@ def make_loader_cls():
 
 
 def import_app(request, app_id):
-    from muranodashboard.environments import api
-
     if not request.session.get('apps'):
         request.session['apps'] = {}
     services = request.session['apps']
@@ -209,7 +208,6 @@ def service_type_from_id(service_id):
 
 
 def get_service_name(request, app_id):
-    from muranodashboard.environments import api
     app = api.muranoclient(request).packages.get(app_id)
     return app.name
 
