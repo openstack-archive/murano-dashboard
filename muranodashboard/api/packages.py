@@ -15,8 +15,11 @@
 import itertools
 
 from django.conf import settings
+import yaml
 
 from muranodashboard import api
+from muranodashboard.common import cache
+from muranodashboard.dynamic_ui import yaql_expression
 
 
 def package_list(request, marker=None, filters=None, paginate=False,
@@ -47,3 +50,53 @@ def package_list(request, marker=None, filters=None, paginate=False,
         packages = list(packages_iter)
 
     return packages, has_more_data
+
+
+def app_by_fqn(request, fqn):
+    apps = api.muranoclient(request).packages.filter(fqn=fqn)
+    try:
+        return apps.next()
+    except StopIteration:
+        return None
+
+
+def make_loader_cls():
+    class Loader(yaml.Loader):
+        pass
+
+    def yaql_constructor(loader, node):
+        value = loader.construct_scalar(node)
+        return yaql_expression.YaqlExpression(value)
+
+    # workaround for PyYAML bug: http://pyyaml.org/ticket/221
+    resolvers = {}
+    for k, v in yaml.Loader.yaml_implicit_resolvers.items():
+        resolvers[k] = v[:]
+    Loader.yaml_implicit_resolvers = resolvers
+
+    Loader.add_constructor(u'!yaql', yaql_constructor)
+    Loader.add_implicit_resolver(
+        u'!yaql', yaql_expression.YaqlExpression, None)
+
+    return Loader
+
+
+# Here are cached some data calls to api; note that not every package attribute
+# getter should be cached - only immutable ones could be safely cached. E.g.,
+# it would be a mistake to cache Application Name because it is mutable and can
+# be changed in Manage -> Package Definitions while cache is immutable (i.e. it
+# its contents are obtained from the api only the first time).
+@cache.with_cache('ui', 'ui.yaml')
+def get_app_ui(request, app_id):
+    return api.muranoclient(request).packages.get_ui(app_id, make_loader_cls())
+
+
+@cache.with_cache('logo', 'logo.png')
+def get_app_logo(request, app_id):
+    return api.muranoclient(request).packages.get_logo(app_id)
+
+
+@cache.with_cache('package')
+def get_app_fqn(request, app_id):
+    package = api.muranoclient(request).packages.get(app_id)
+    return package.fully_qualified_name

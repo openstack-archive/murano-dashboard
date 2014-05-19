@@ -229,14 +229,6 @@ def services_list(request, environment_id):
     return [utils.Bunch(**service) for service in services]
 
 
-def app_by_fqn(request, fqn):
-    apps = api.muranoclient(request).packages.filter(fqn=fqn)
-    try:
-        return apps.next()
-    except StopIteration:
-        return None
-
-
 def split_classes(classes_str):
     return classes_str.split(', ')
 

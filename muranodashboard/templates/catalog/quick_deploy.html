@@ -2,4 +2,4 @@
 {% load url from future %}
 
 {% trans "Quick Deploy" as label %}
-<a href="{% url 'horizon:murano:catalog:quick_add' app.id %}" class="{{ class }}"><i class="fa fa-rocket"></i> {{ label }}</a>
+<a href="{% url 'horizon:murano:catalog:quick_deploy' app.id %}" class="{{ class }}"><i class="fa fa-rocket"></i> {{ label }}</a>

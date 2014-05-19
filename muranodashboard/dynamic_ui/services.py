@@ -15,15 +15,13 @@
 import logging
 import os
 import re
-import yaml
 import yaql
 
 from muranodashboard import api
+from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
-from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import version
-from muranodashboard.dynamic_ui import yaql_expression
 from muranodashboard.dynamic_ui import yaql_functions
 from muranodashboard.environments import consts
 
@@ -36,6 +34,9 @@ if not os.path.exists(consts.CACHE_DIR):
         dir=consts.CACHE_DIR))
 LOG.info('Using cache directory located at {dir}'.format(
     dir=consts.CACHE_DIR))
+
+
+_apps = {}
 
 
 class Service(object):
@@ -120,39 +121,33 @@ class Service(object):
             self.cleaned_data[form_name] = data
         return self.cleaned_data
 
+    def set_data(self, data):
+        self.cleaned_data = data
 
-def make_loader_cls():
-    class Loader(yaml.Loader):
-        pass
 
-    def yaql_constructor(loader, node):
-        value = loader.construct_scalar(node)
-        return yaql_expression.YaqlExpression(value)
-
-    Loader.add_constructor(u'!yaql', yaql_constructor)
-    Loader.add_implicit_resolver(
-        u'!yaql', yaql_expression.YaqlExpression, None)
-
-    return Loader
+def get_apps_data(request):
+    return request.session.setdefault('apps_data', {})
 
 
 def import_app(request, app_id):
-    @cache.with_cache('ui', 'ui.yaml')
-    def _get(_request, _app_id):
-        return api.muranoclient(_request).packages.get_ui(
-            _app_id, make_loader_cls())
+    app_data = get_apps_data(request).setdefault(app_id, {})
 
-    if not request.session.get('apps_data'):
-        request.session['apps_data'] = {}
-    app_data = request.session['apps_data'].setdefault(app_id, {})
-
-    ui_desc = _get(request, app_id)
-    LOG.debug('Using data {0} for app {1}'.format(
-        app_data, ui_desc.get('Application', {}).get('?', {}).get('type')))
+    ui_desc = pkg_api.get_app_ui(request, app_id)
+    fqn = pkg_api.get_app_fqn(request, app_id)
+    LOG.debug('Using data {0} for app {1}'.format(app_data, fqn))
     version.check_version(ui_desc.pop('Version', 1))
     service = dict(
         (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
-    return Service(app_data, **service)
+
+    global _apps  # In-memory caching of dynamic UI forms
+    if app_id in _apps:
+        LOG.debug('Using in-memory forms for app {0}'.format(fqn))
+        app = _apps[app_id]
+        app.set_data(app_data)
+    else:
+        LOG.debug('Creating new forms for app {0}'.format(fqn))
+        app = _apps[app_id] = Service(app_data, **service)
+    return app
 
 
 def condition_getter(request, kwargs):
@@ -178,11 +173,7 @@ def service_type_from_id(service_id):
 
 
 def get_service_name(request, app_id):
-    @cache.with_cache('package')
-    def _get(_request, _app_id):
-        return api.muranoclient(_request).packages.get(_app_id)
-
-    package = _get(request, app_id)
+    package = api.muranoclient(request).packages.get(app_id)
     return package.name
 
 
