@@ -45,17 +45,15 @@ class Service(object):
 
     Attribute ``self.cleaned_data`` is needed for, e.g. ServiceA.Step2, be
     able to reference data at ServiceA.Step1 while actual form instance
-    representing Step1 is already gone.
-
-    Because the need to store this data per-user, sessions must be employed
-    (actually, they are not the _only_ way of doing this, but the most simple
-    one), and because every Django session backend uses pickle serialization,
-    __getstate__/__setstate__ methods for custom pickle serialization must be
-    implemented.
+    representing Step1 is already gone. That attribute is stored per-user,
+    so sessions are employed - the reference to a dictionary with forms data
+    stored in a session is passed to Service during its initialization,
+    because Service instance is re-created on each request from UI definition
+    stored at local file-system cache .
     """
-    NON_SERIALIZABLE_ATTRS = ('forms', 'context')
-
-    def __init__(self, forms=None, templates=None, application=None, **kwargs):
+    def __init__(self, cleaned_data, forms=None, templates=None,
+                 application=None, **kwargs):
+        self.cleaned_data = cleaned_data
         self.templates = templates or {}
 
         if application is None:
@@ -66,39 +64,19 @@ class Service(object):
         self.context = yaql.create_context()
         yaql_functions.register(self.context)
 
-        self.cleaned_data = {}
         self.forms = []
-        self._forms = []
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
         if forms:
             for data in forms:
                 name, field_specs, validators = self.extract_form_data(data)
-                self._init_forms(field_specs, name, validators)
+                self._add_form(name, field_specs, validators)
 
         # Add ManageWorkflowForm
         workflow_form = catalog_forms.WorkflowManagementForm
-        self._init_forms(workflow_form.field_specs, workflow_form.name,
-                         workflow_form.validators)
-
-    def __getstate__(self):
-        dct = dict((k, v) for (k, v) in self.__dict__.iteritems()
-                   if not k in self.NON_SERIALIZABLE_ATTRS)
-        return dct
-
-    def __setstate__(self, d):
-        for k, v in d.iteritems():
-            setattr(self, k, v)
-        # dealing with the attributes which cannot be serialized (see
-        # http://tinyurl.com/kxx3tam on pickle restrictions )
-        # yaql context is not serializable because it contains lambda functions
-        self.context = yaql.create_context()
-        yaql_functions.register(self.context)
-        # form classes are not serializable 'cause they are defined dynamically
-        self.forms = []
-        for name, field_specs, validators in d.get('_forms', []):
-            self._add_form(name, field_specs, validators)
+        self._add_form(workflow_form.name, workflow_form.field_specs,
+                       workflow_form.validators)
 
     def _add_form(self, _name, _specs, _validators):
         import muranodashboard.dynamic_ui.forms as forms
@@ -112,11 +90,6 @@ class Service(object):
             validators = _validators
 
         self.forms.append(Form)
-
-    def _init_forms(self, field_specs, name, validators):
-        self._add_form(name, field_specs, validators)
-        # for pickling/unpickling
-        self._forms.append((name, field_specs, validators))
 
     @staticmethod
     def extract_form_data(form_data):
@@ -164,25 +137,22 @@ def make_loader_cls():
 
 
 def import_app(request, app_id):
-    if not request.session.get('apps'):
-        request.session['apps'] = {}
-    services = request.session['apps']
+    @cache.with_cache('ui', 'ui.yaml')
+    def _get(_request, _app_id):
+        return api.muranoclient(_request).packages.get_ui(
+            _app_id, make_loader_cls())
 
-    app = services.get(app_id)
-    if not app:
-        @cache.with_cache('ui', 'ui.yaml')
-        def _get(_request, _app_id):
-            return api.muranoclient(_request).packages.get_ui(
-                _app_id, make_loader_cls())
+    if not request.session.get('apps_data'):
+        request.session['apps_data'] = {}
+    app_data = request.session['apps_data'].setdefault(app_id, {})
 
-        ui_desc = _get(request, app_id)
-        version.check_version(ui_desc.pop('Version', 1))
-        service = dict(
-            (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
-        services[app_id] = Service(**service)
-        app = services[app_id]
-
-    return app
+    ui_desc = _get(request, app_id)
+    LOG.debug('Using data {0} for app {1}'.format(
+        app_data, ui_desc.get('Application', {}).get('?', {}).get('type')))
+    version.check_version(ui_desc.pop('Version', 1))
+    service = dict(
+        (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
+    return Service(app_data, **service)
 
 
 def condition_getter(request, kwargs):
@@ -208,8 +178,12 @@ def service_type_from_id(service_id):
 
 
 def get_service_name(request, app_id):
-    app = api.muranoclient(request).packages.get(app_id)
-    return app.name
+    @cache.with_cache('package')
+    def _get(_request, _app_id):
+        return api.muranoclient(_request).packages.get(_app_id)
+
+    package = _get(request, app_id)
+    return package.name
 
 
 def get_app_field_descriptions(request, app_id, index):
