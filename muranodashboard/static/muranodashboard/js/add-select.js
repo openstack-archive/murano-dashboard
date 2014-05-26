@@ -15,9 +15,7 @@
 */
 
 $(function() {
-    if ( window.murano === undefined )
-        window.murano = {};
-
+    var CUSTOM_CTRL_CLS = 'murano-add-select';
     function bind_add_item_handlers(el) {
         var $selects = $(el).find('select[data-add-item-url]');
         $selects.each(function () {
@@ -26,15 +24,19 @@ $(function() {
             if ( urls[0].length ) {
                 // if instead of single url there is an Application name + url
                 // then it was created by custom FQN reference and not by vanilla horizon
-                $('div.input a[class*=btn]').remove();
+                $('div.input a[class*=btn]').filter(function() {
+                    return !$(this).hasClass(CUSTOM_CTRL_CLS);
+                }).remove();
                 if ( urls.length == 1 ) {
                     $button = $("<a href='" + urls[0][1] + "' " +
                         "data-add-to-field='" + $this.attr("id") + "' " +
-                        "class='btn ajax-add ajax-modal btn-inline'>+</a>");
+                        "class='btn ajax-add ajax-modal btn-inline " +
+                        CUSTOM_CTRL_CLS + "'>+</a>");
                 } else {
                     $button = $("<div class='btn-group' id='" +
                         $this.attr("id") + "-button' ><button type='button' class='btn " +
-                        "btn-default dropdown-toggle' data-toggle='dropdown'>+</button>" +
+                        "btn-default dropdown-toggle " + CUSTOM_CTRL_CLS + "' " +
+                        "data-toggle='dropdown'>+</button>" +
                         "<ul class='dropdown-menu' role='menu'></ul></div>");
 
                     var $choices = $button.find('ul');
@@ -50,6 +52,9 @@ $(function() {
             }
         });
     }
+    if ( window.murano === undefined )
+        window.murano = {};
+
     if ( !murano.bind_add_item_handlers ) {
         murano.bind_add_item_handlers = true;
         horizon.modals.addModalInitFunction(bind_add_item_handlers);
