@@ -204,24 +204,6 @@ function find_pip()
             version_ge $_pip_ver "1.5"
             if [ $? -eq 0 ]; then
                 log "For future use, experimental, use pip v$pip_min_ver!"
-                #exit 1
-                ##_pipargs="--allow-unverified --allow-external"
-                #_pipargs="--allow-all-external"
-                #mk_dir "/root/.pip"
-                #_pipcfg="/root/.pip/pip.conf"
-                #if [ ! -f "$_pipcfg" ]; then
-                #    touch $_pipcfg
-                #fi
-                #iniset 'install' 'allow-all-external' 'true' "$_pipcfg"
-                #iniset 'install' 'allow-all-unverified' 'true' "$_pipcfg"
-                #log "Setuptools upgrade required..."
-                #$cmd install setuptools --no-use-wheel --upgrade >> $LOGFILE 2>&1
-                #if [ $? -ne 0 ]; then
-                #    log "...upgrade fails, exiting"
-                #    exit 1
-                #else
-                #    log "...success"
-                #fi
             fi
             log "Found pip version - $_pip_ver"
         fi
