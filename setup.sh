@@ -54,15 +54,18 @@ function install_prerequisites()
             fi
             find /var/lib/apt/lists/ -name "*cloud.archive*" | grep -q "icehouse_main"
             if [ $? -ne 0 ]; then
-                add-apt-repository -y cloud-archive:icehouse >> $LOGFILE 2>&1
-                if [ $? -ne 0 ]; then
-                    log "... can't enable \"cloud-archive:havana\", exiting !"
-                    retval=1
-                    return $retval
+                # Ubuntu 14.04 already has icehouse repos.
+                if [ $REV != "14.04" ]; then
+                    add-apt-repository -y cloud-archive:icehouse >> $LOGFILE 2>&1
+                    if [ $? -ne 0 ]; then
+                        log "... can't enable \"cloud-archive:havana\", exiting !"
+                        retval=1
+                        return $retval
+                    fi
+                    apt-get update -y
+                    apt-get upgrade -y -o Dpkg::Options::="--force-confnew"
+                    log "..success"
                 fi
-                apt-get update -y
-                apt-get upgrade -y -o Dpkg::Options::="--force-confnew"
-                log "..success"
             fi
             ;;
         "redhat")
