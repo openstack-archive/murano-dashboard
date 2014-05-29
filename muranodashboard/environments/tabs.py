@@ -159,17 +159,44 @@ class EnvironmentServicesTab(tabs.TableTab):
         return services
 
 
+class DeploymentTab(tabs.TableTab):
+    slug = "deployments"
+    name = _("Deployment History")
+    table_classes = (tables.DeploymentsTable,)
+    template_name = 'horizon/common/_detail_table.html'
+    preload = False
+
+    def get_deployments_data(self):
+        deployments = []
+        self.environment_id = self.tab_group.kwargs['environment_id']
+        ns_url = "horizon:murano:environments:index"
+        try:
+            deployments = api.deployments_list(self.request,
+                                               self.environment_id)
+
+        except exc.HTTPForbidden:
+            msg = _('Unable to retrieve list of deployments')
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
+
+        except exc.HTTPInternalServerError:
+            msg = _("Environment with id %s doesn't exist anymore")
+            exceptions.handle(self.request,
+                              msg % self.environment_id,
+                              redirect=reverse(ns_url))
+        return deployments
+
+
 class EnvironmentDetailsTabs(tabs.TabGroup):
-    slug = "environemnt_details"
-    tabs = (EnvironmentServicesTab, EnvironmentTopologyTab)
+    slug = "environment_details"
+    tabs = (EnvironmentServicesTab, EnvironmentTopologyTab, DeploymentTab)
 
 
 class ServicesTabs(tabs.TabGroup):
     slug = "services_details"
-    tabs = (OverviewTab, ServiceLogsTab)
+    tabs = (OverviewTab, ServiceLogsTab, )
 
 
-class DeploymentTabs(tabs.TabGroup):
+class DeploymentDetailsTabs(tabs.TabGroup):
     slug = "deployment_details"
     tabs = (EnvConfigTab, EnvLogsTab,)
 

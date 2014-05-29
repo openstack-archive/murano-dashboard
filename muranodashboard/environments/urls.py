@@ -47,10 +47,6 @@ urlpatterns = urls.patterns(
              inst_view.DetailView.as_view(),
              name='detail'),
 
-    urls.url(ENVIRONMENT_ID + r'/deployments$',
-             views.DeploymentsView.as_view(),
-             name='deployments'),
-
     urls.url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
              views.DeploymentDetailsView.as_view(),
              name='deployment_details'),

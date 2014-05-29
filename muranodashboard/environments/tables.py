@@ -204,15 +204,6 @@ class UpdateServiceRow(tables.Row):
         return api.service_get(request, environment_id, service_id)
 
 
-class ShowDeployments(tables.LinkAction):
-    name = 'show_deployments'
-    verbose_name = _('Show Deployments')
-    url = 'horizon:murano:environments:deployments'
-
-    def allowed(self, request, environment):
-        return environment.status != consts.STATUS_ID_NEW
-
-
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:murano:environments:services',
@@ -231,7 +222,7 @@ class EnvironmentsTable(tables.DataTable):
         status_columns = ['status']
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       EditEnvironment, DeleteEnvironment, ShowDeployments)
+                       EditEnvironment, DeleteEnvironment)
 
 
 def get_service_details_link(service):
