@@ -9,8 +9,48 @@ import testtools
 from base import UITestCase
 
 
-class UISanityTests(UITestCase):
+class TestSuiteOneSmokeTests(UITestCase):
+    """This class keeps smoke tests which check operability of all main panels
+    """
+    def test_001_smoke_environments_panel(self):
+        self.go_to_submenu('Environments')
 
+        self.assertIn('Environments',
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
+
+    def test_002_smoke_applications_panel(self):
+        self.go_to_submenu('Applications')
+
+        self.assertIn('Applications',
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
+
+    def test_003_smoke_statistics_panel(self):
+        self.go_to_submenu('Statistics')
+
+        self.assertIn('Murano Status',
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
+
+    def test_004_smoke_images_panel(self):
+        self.navigate_to('Manage')
+        self.go_to_submenu('Images')
+
+        self.assertIn('Marked Images',
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
+
+    def test_005_smoke_package_definitions_panel(self):
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.assertIn('Package Definitions',
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
+
+
+class TestSuiteTwoSanityTests(UITestCase):
     def test_001_create_delete_environment(self):
         """Test check ability to create and delete environment
 
@@ -21,7 +61,6 @@ class UISanityTests(UITestCase):
         """
         self.go_to_submenu('Environments')
         self.create_environment('test_create_del_env')
-        self.driver.find_element_by_link_text('test_create_del_env').click()
 
         self.delete_environment('test_create_del_env')
         self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
@@ -37,6 +76,7 @@ class UISanityTests(UITestCase):
         """
         self.go_to_submenu('Environments')
         self.create_environment('test_edit_env')
+        self.go_to_submenu('Environments')
         self.driver.find_element_by_link_text('test_edit_env')
 
         self.edit_environment(old_name='test_edit_env', new_name='edited_env')
@@ -201,28 +241,13 @@ class UISanityTests(UITestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
         tomcat_id = self.get_element_id('Apache Tomcat')
-        postgre_id = self.get_element_id('PostgreSQL')
 
         self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Environments')
-        self.create_environment('test')
-        env_id = self.get_element_id('test')
-        self.env_to_components_list('test')
+        self.go_to_submenu('Applications')
 
-        self.driver.find_element_by_link_text('Add Component').click()
-        self.select_and_click_action_for_app('add/{0}'.format(env_id),
-                                             postgre_id)
-        self.create_postgreSQL_service('PostgreSQL')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'PostgreSQL'))
+        self.select_and_click_action_for_app('quick-add', tomcat_id)
 
-        self.driver.find_element_by_link_text('Add Component').click()
-        self.select_and_click_action_for_app('add/{0}'.format(env_id),
-                                             tomcat_id)
-
-        self.create_tomcat_service('tomcat-serv', 'PostgreSQL')
+        self.create_tomcat_service('tomcat-serv')
         self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
                                                    'tomcat-serv'))
         self.delete_component('tomcat-serv')
@@ -245,8 +270,7 @@ class UISanityTests(UITestCase):
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', postgresql_id)
-        self.create_postgreSQL_service('PostgreSQL')
+        self.create_postgreSQL_service('PostgreSQL', postgresql_id)
         self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
                                                    'PostgreSQL'))
 
@@ -337,33 +361,7 @@ class UISanityTests(UITestCase):
             'they are used to delimit the components of domain style names',
             1))
 
-    def test_012_check_regex_expression_for_git_repo_field(self):
-        """Test check that validation of git repository field work
-        and appropriate error message is appeared after entering incorrect url
-
-        Scenario:
-            1. Navigate to Application Catalog > Applications
-            2. Start to create Tomcat service
-            3. Set "a" as a git repository url and verify error message
-            4. Set "://@:" as a git repository url and verify error message
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        tomcat_id = self.get_element_id('Apache Tomcat')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-        self.select_and_click_action_for_app('quick-add', tomcat_id)
-
-        self.fill_field(by.By.ID, field='id_0-repository', value='a')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Enter a correct git repository URL', 3))
-
-        self.fill_field(by.By.ID, field='id_0-repository', value='://@:')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Enter a correct git repository URL', 3))
-
-    def test_013_check_validation_for_hostname_template_field(self):
+    def test_012_check_validation_for_hostname_template_field(self):
         """Test check that validation of hostname template field work and
         appropriate error message is appeared after entering incorrect name
 
@@ -397,7 +395,7 @@ class UISanityTests(UITestCase):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.ID, 'id_1-osImage').is_displayed())
 
-    def test_014_modify_package_name(self):
+    def test_013_modify_package_name(self):
         """Test check ability to change name of the package
 
         Scenario:
@@ -425,7 +423,7 @@ class UISanityTests(UITestCase):
         self.assertTrue(self.check_element_on_page(
             by.By.XPATH, './/*[@data-display="PostgreSQL"]'))
 
-    def test_015_modify_package_add_tag(self):
+    def test_014_modify_package_add_tag(self):
         """Test check ability to add file in composed service
 
         Scenario:
@@ -450,7 +448,7 @@ class UISanityTests(UITestCase):
             ".//*[@id='content_body']/div[2]/div/div/div[2]/div[2]/ul/li[6]",
             'TEST_TAG')
 
-    def test_016_download_package(self):
+    def test_015_download_package(self):
         """Test check ability to download package from repository
 
         Scenario:
@@ -463,28 +461,7 @@ class UISanityTests(UITestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'download_package')
 
-    @testtools.skip("Work in progress")
-    def test_017_upload_package_add_to_env(self):
-        """Test check ability to upload package to repository
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Click on "Upload Package"
-            3. Select zip archive with package and category, submit form
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        self.click_on_package_action('upload_package')
-        self.choose_and_upload_files('AppForUploadTest.zip')
-        self.select_from_list('categories', 'Web')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, './/*[@data-display="AppForUploadTest"]'))
-
-    def test_018_check_opportunity_to_toggle_package(self):
+    def test_016_check_opportunity_to_toggle_package(self):
         """Test check ability to make package active or inactive
 
         Scenario:
@@ -509,19 +486,8 @@ class UISanityTests(UITestCase):
         self.assertTrue(self.check_package_parameter(
             'PostgreSQL', '3', 'True'))
 
-    def test_019_check_application_catalog_panel(self):
-        """Test checks that 'Applications' panel is operable
-
-        Scenario:
-            1. Create environment
-            2. Navigate to 'Application Catalog > Applications' panel
-        """
-        self.go_to_submenu('Applications')
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, ".//*[@id='content_body']/div[1]/h2"))
-
     @testtools.skip("Work in progress")
-    def test_020_env_creation_form_app_catalog_page(self):
+    def test_017_env_creation_form_app_catalog_page(self):
         """Test checks that app's option 'Add to environment' is operable
         when there is no previously created env. In this case creation of the
         environment should start after clicking 'Add to environment' button
@@ -545,7 +511,7 @@ class UISanityTests(UITestCase):
         self.assertTrue(
             self.driver.find_element_by_id('services__action_AddApplication'))
 
-    def test_021_check_info_about_app(self):
+    def test_018_check_info_about_app(self):
         """Test checks that information about app is available and truly.
 
         Scenario:
@@ -566,7 +532,7 @@ class UISanityTests(UITestCase):
         self.driver.find_element_by_link_text('Requirements').click()
         self.driver.find_element_by_link_text('License').click()
 
-    def test_022_check_search_option(self):
+    def test_019_check_search_option(self):
         """Test checks that 'Search' option is operable.
 
         Scenario:
@@ -581,7 +547,7 @@ class UISanityTests(UITestCase):
         self.driver.find_element_by_xpath(
             ".//*[@id='MuranoSearchPanel']/form/button").click()
 
-    def test_023_filter_by_category(self):
+    def test_020_filter_by_category(self):
         """Test checks ability to filter applications by category
         in Application Catalog page
 
@@ -614,7 +580,7 @@ class UISanityTests(UITestCase):
             format(self.url_prefix, package_category2)))
 
     @testtools.skip("Work in progress")
-    def test_024_check_option_switch_env(self):
+    def test_021_check_option_switch_env(self):
         """Test checks ability to switch environment and add app in other env
 
         Scenario:
@@ -632,41 +598,39 @@ class UISanityTests(UITestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
-        app_id = self.get_element_id('Telnet')
+        app_id = self.get_element_id('Apache Tomcat')
 
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Environments')
         self.create_environment('env1')
+        self.go_to_submenu('Environments')
         self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
                                                    'env1'))
+        env_id = self.get_element_id('env1')
+
         self.create_environment('env2')
+        self.go_to_submenu('Environments')
         self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'env1'))
+                                                   'env2'))
+
         self.go_to_submenu('Applications')
         self.driver.find_element_by_id('MuranoDefaultEnvPanelToggle').click()
-        self.driver.find_element_by_id('environment_switcher').click()
+        self.driver.find_element_by_xpath(
+            ".//*[@id='environment_switcher']/a/h3").click()
         self.driver.find_element_by_xpath(
             ".//*[@id='environment_list']/li[2]/a").click()
 
-        self.create_linux_telnet('linuxtelnet', app_id)
+        self.select_and_click_action_for_app(
+            'add', '{0}/{1}'.format(env_id, app_id))
+
+        self.create_tomcat_service('Tomcat')
 
         self.go_to_submenu('Environments')
         self.env_to_components_list('env1')
         self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'linuxtelnet'))
+                                                   'Tomcat'))
 
-    def test_025_check_statistics_panel(self):
-        """Test checks that 'Statictics' panel is operable
-
-        Scenario:
-            1. Navigate to 'Application Catalog > Statistics' panel
-        """
-        self.go_to_submenu('Statistics')
-        self.driver.find_element_by_link_text('Murano API Servers').click()
-        self.driver.find_element_by_link_text(
-            'Murano Instance Statistics').click()
-
-    def test_026_modify_description(self):
+    def test_023_modify_description(self):
         """Test check ability to change description of the package
 
         Scenario:
@@ -687,13 +651,15 @@ class UISanityTests(UITestCase):
             ".//*[@class='app-description']",
             'New Description')
 
-    def test_027_check_opportunity_to_delete_package(self):
+    @testtools.skip("Work in progress")
+    def test_024_delete_package_and_upload_it(self):
         """Test check ability to delete package from database
 
         Scenario:
             1. Navigate to 'Package Definitions' page
             2. Select some package
             3. Delete this package
+            4. Upload package
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
@@ -704,4 +670,16 @@ class UISanityTests(UITestCase):
         self.click_on_package_action('delete_package')
         self.confirm_deletion()
         self.assertFalse(self.check_element_on_page(
+            by.By.XPATH, './/*[@data-display="PostgreSQL"]'))
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.click_on_package_action('upload_package')
+        self.choose_and_upload_files('murano-app-incubator/PostgreSQL.zip')
+        self.select_from_list('categories', 'Databases')
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.assertTrue(self.check_element_on_page(
             by.By.XPATH, './/*[@data-display="PostgreSQL"]'))

@@ -1,4 +1,3 @@
-import datetime
 import os
 import random
 import sys
@@ -154,8 +153,7 @@ class UITestCase(BaseDeps):
         screenshot_dir = './screenshots'
         if not os.path.exists(screenshot_dir):
             os.makedirs(screenshot_dir)
-        date = datetime.datetime.now().strftime('%H%M%S')
-        filename = '{0}/{1}-{2}.png'.format(screenshot_dir, test_name, date)
+        filename = '{0}/{1}.png'.format(screenshot_dir, test_name)
         self.driver.get_screenshot_as_file(filename)
         log.debug("\nScreenshot {0} was saved".format(filename))
 
@@ -191,6 +189,8 @@ class UITestCase(BaseDeps):
         self.fill_field(by.By.ID, 'id_name', env_name)
         self.driver.find_element_by_xpath(
             self.elements.get('button', 'InputSubmit')).click()
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, 'Add Component').is_displayed())
 
     def delete_environment(self, env_name):
         self.driver.find_element_by_link_text('Environments').click()
@@ -274,10 +274,8 @@ class UITestCase(BaseDeps):
         next_button = self.elements.get('button', 'InputSubmit')
         self.driver.find_element_by_xpath(next_button).click()
 
-    def create_tomcat_service(self, app_name, database):
+    def create_tomcat_service(self, app_name):
         self.fill_field(by.By.ID, 'id_0-name', app_name)
-        self.select_from_list('0-database', database)
-        self.fill_field(by.By.ID, 'id_0-repository', self.tomcat_repository)
 
         self.driver.find_element_by_xpath(
             self.elements.get('button', 'ButtonSubmit')).click()
@@ -286,15 +284,10 @@ class UITestCase(BaseDeps):
 
         self.driver.find_element_by_xpath(
             self.elements.get('button', 'InputSubmit')).click()
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
 
-    def create_postgreSQL_service(self, app_name):
+    def create_postgreSQL_service(self, app_name, app_id):
+        self.select_and_click_action_for_app('quick-add', app_id)
         self.fill_field(by.By.ID, 'id_0-name', app_name)
-        self.fill_field(by.By.ID, 'id_0-database', 'psql-base')
-        self.fill_field(by.By.ID, 'id_0-username', 'admin')
-        self.fill_field(by.By.ID, 'id_0-password', 'P@ssw0rd')
-        self.fill_field(by.By.ID, 'id_0-password-clone', 'P@ssw0rd')
 
         self.driver.find_element_by_xpath(
             self.elements.get('button', 'ButtonSubmit')).click()
