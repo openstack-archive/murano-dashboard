@@ -94,10 +94,9 @@ def wrap_regex_validator(validator, message):
     def _validator(value):
         try:
             validator(value)
-        except forms.ValidationError as e:
-            e.messages = [message]
-            delattr(e, 'code')
-            raise e
+        except forms.ValidationError:
+            # provide our own message
+            raise forms.ValidationError(message)
     return _validator
 
 
