@@ -28,11 +28,11 @@ urlpatterns = urls.patterns(
     urls.url(r'^switch_environment/(?P<environment_id>[^/]+)$',
              'switch',
              name='switch_env'),
-    urls.url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)/'
+    urls.url(r'^add/(?P<app_id>[^/]+)/(?P<environment_id>[^/]+)/'
              r'(?P<do_redirect>[^/]+)/(?P<drop_wm_form>[^/]+)$',
              wizard_view,
              name='add'),
-    urls.url(r'^add/(?P<environment_id>[^/]+)/(?P<app_id>[^/]+)$',
+    urls.url(r'^add/(?P<app_id>[^/]+)/(?P<environment_id>[^/]+)$',
              'deploy',
              name='deploy'),
     urls.url(r'^quick-add/(?P<app_id>[^/]+)$',

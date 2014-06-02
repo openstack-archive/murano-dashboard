@@ -675,7 +675,7 @@ def make_select_cls(fqn):
                     if _app is None:
                         msg = "Application with FQN='{0}' doesn't exist"
                         raise KeyError(msg.format(_fqn))
-                    args = (environment_id, _app.id, False, True)
+                    args = (_app.id, environment_id, False, True)
                     return _app.name, reverse(ns_url, args=args)
                 return json.dumps(
                     [_reverse(cls) for cls in env_api.split_classes(fqn)])

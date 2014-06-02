@@ -12,6 +12,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import string
+
+
+def ensure_python_obj(obj):
+    mappings = {'True': True, 'False': False, 'None': None}
+    return mappings.get(obj, obj)
+
 
 class Bunch(object):
     """Bunch is a container that provides both dictionary-like and
@@ -35,3 +42,15 @@ class Bunch(object):
 
     def __iter__(self):
         return iter(self.__dict__.itervalues())
+
+
+class BlankFormatter(string.Formatter):
+    """Utility class aimed to provide empty string for non-existent keys."""
+    def __init__(self, default=''):
+        self.default = default
+
+    def get_value(self, key, args, kwargs):
+        if isinstance(key, str):
+            return kwargs.get(key, self.default)
+        else:
+            return string.Formatter.get_value(self, key, args, kwargs)

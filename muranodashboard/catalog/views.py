@@ -40,11 +40,11 @@ from muranoclient.common import exceptions as exc
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import tabs as catalog_tabs
+from muranodashboard.common import utils
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import services
 from muranodashboard.environments import api as env_api
 from muranodashboard.environments import consts
-from muranodashboard import utils
 
 
 LOG = logging.getLogger(__name__)
@@ -170,6 +170,15 @@ def clear_forms_data(func):
     return __inner
 
 
+def clear_quick_env_id(func):
+    @functools.wraps(func)
+    def __inner(request, **kwargs):
+        request.session.pop('quick_env_id', None)
+        return func(request, **kwargs)
+
+    return __inner
+
+
 @update_latest_apps
 @clear_forms_data
 @auth_dec.login_required
@@ -181,17 +190,13 @@ def deploy(request, environment_id, app_id,
                 do_redirect=do_redirect, drop_wm_form=drop_wm_form)
 
 
+@clear_quick_env_id
 @update_latest_apps
 @clear_forms_data
 @auth_dec.login_required
 def quick_deploy(request, app_id):
-    env = create_quick_environment(request)
-    try:
-        return deploy(request, environment_id=env.id, app_id=app_id,
-                      do_redirect=True, drop_wm_form=True)
-    except Exception:
-        env_api.environment_delete(request, env.id)
-        raise
+    return deploy(request, app_id=app_id, environment_id=None,
+                  do_redirect=True, drop_wm_form=True)
 
 
 def get_image(request, app_id):
@@ -258,14 +263,11 @@ class Wizard(views.ModalFormMixin, LazyWizard):
     def get_prefix(self, *args, **kwargs):
         base = super(Wizard, self).get_prefix(*args, **kwargs)
         fmt = utils.BlankFormatter()
-        return fmt.format('{0}_{environment_id}_{app_id}', base, **kwargs)
+        return fmt.format('{0}_{app_id}', base, **kwargs)
 
     def done(self, form_list, **kwargs):
-        environment_id = kwargs.get('environment_id')
-        env_url = reverse('horizon:murano:environments:services',
-                          args=(environment_id,))
-        app_name = services.get_service_name(self.request,
-                                             kwargs.get('app_id'))
+        app_id = kwargs['app_id']
+        app_name = services.get_service_name(self.request, app_id)
 
         service = form_list[0].service
         attributes = service.extract_attributes()
@@ -282,7 +284,22 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             do_redirect = self.get_wizard_flag('do_redirect')
 
         fail_url = reverse("horizon:murano:environments:index")
+        environment_id = utils.ensure_python_obj(kwargs.get('environment_id'))
+        quick_environment_id = self.request.session.get('quick_env_id')
         try:
+            # NOTE (tsufiev): create new quick environment only if we came
+            # here after pressing 'Quick Deploy' button and quick environment
+            # wasn't created yet during addition of some referred App
+            if environment_id is None:
+                if quick_environment_id is None:
+                    env = create_quick_environment(self.request)
+                    self.request.session['quick_env_id'] = env.id
+                    environment_id = env.id
+                else:
+                    environment_id = quick_environment_id
+            env_url = reverse('horizon:murano:environments:services',
+                              args=(environment_id,))
+
             srv = env_api.service_create(
                 self.request, environment_id, attributes)
         except exc.HTTPForbidden:
@@ -290,13 +307,16 @@ class Wizard(views.ModalFormMixin, LazyWizard):
                     "The environment is deploying.")
             exceptions.handle(self.request, msg, redirect=fail_url)
         except Exception:
-            exceptions.handle(self.request,
-                              _("Sorry, you can't add application right now."),
-                              redirect=fail_url)
+            message = _('Adding application to an environment failed.')
+            LOG.exception(message)
+            if quick_environment_id:
+                env_api.environment_delete(self.request, quick_environment_id)
+                fail_url = reverse('horizon:murano:catalog:index')
+            exceptions.handle(self.request, message, redirect=fail_url)
         else:
-            message = "The '{0}' application successfully " \
-                      "added to environment.".format(app_name)
-
+            message = _("The '{0}' application successfully added to "
+                        "environment.").format(app_name)
+            LOG.info(message)
             messages.success(self.request, message)
 
             if do_redirect:
@@ -318,8 +338,11 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             return http.HttpResponseRedirect(reverse(ns_url))
 
     def get_form_initial(self, step):
+        env_id = utils.ensure_python_obj(self.kwargs.get('environment_id'))
+        if env_id is None:
+            env_id = self.request.session.get('quick_env_id')
         init_dict = {'request': self.request,
-                     'environment_id': self.kwargs.get('environment_id')}
+                     'environment_id': env_id}
 
         return self.initial_dict.get(step, init_dict)
 
@@ -329,10 +352,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
     def get_wizard_flag(self, key):
         value = self._get_wizard_param(key)
-        if isinstance(value, basestring):
-            return value.lower() == 'true'
-        else:
-            return value
+        return utils.ensure_python_obj(value)
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)

@@ -234,6 +234,8 @@ def split_classes(classes_str):
 
 
 def service_list_by_fqn(request, environment_id, fqn):
+    if environment_id is None:
+        return []
     services = services_list(request, environment_id)
     fqns = split_classes(fqn)
     LOG.debug('Service::Instances::List')

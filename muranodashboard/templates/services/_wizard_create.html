@@ -6,7 +6,7 @@
 {% load i18n humanize %}
 {% load url from future %} {# fix for django 1.4.9 on CentOS #}
 {% block form_action %}
-    {% url 'horizon:murano:catalog:add' environment_id app_id do_redirect drop_wm_form%}
+    {% url 'horizon:murano:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}
 {% block form_id %}create_service_form{% endblock %}
 {% block modal_id %}create_service{% endblock %}
