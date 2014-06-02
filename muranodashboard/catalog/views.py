@@ -23,6 +23,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
 from django.contrib.formtools.wizard import views as wizard_views
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
 from django import http
 from django import shortcuts
@@ -152,7 +153,11 @@ def get_image(request, app_id):
         return api.muranoclient(_request).packages.get_logo(_app_id)
 
     content = _get(request, app_id)
-    return http.HttpResponse(content=content, content_type='image/png')
+    if content:
+        return http.HttpResponse(content=content, content_type='image/png')
+    else:
+        universal_logo = static('muranodashboard/images/icon.png')
+        return http.HttpResponseRedirect(universal_logo)
 
 
 class LazyWizard(wizard_views.SessionWizardView):
