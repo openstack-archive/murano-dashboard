@@ -4,7 +4,7 @@
     margin-top:15px;
 }
 .app-description {
-    height: 80px;
+    height: 100px;
 }
 .btn-link {
     padding: 5px 0;
@@ -54,7 +54,7 @@ h3.link .caret {
     margin-bottom:20px;
 }
 .app-list .app {
-	min-height:130px;
+	min-height:160px;
 	position:relative;
 }
 .app-list .app > div {
@@ -64,10 +64,13 @@ h3.link .caret {
 	padding-left:20px;
 	margin-left:0;
 }
+.app-list .app h4 {;
+	margin-bottom:0.25em;
+}
 .app-list .app .app-actions {
 	position:absolute;
-	bottom: 20px;
-	left:20px;
+	bottom:15px;
+	right:15px;
 }
 .app-actions div[class*='span'] {
 	margin-left:0;
