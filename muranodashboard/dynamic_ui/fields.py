@@ -18,6 +18,7 @@ import logging
 import netaddr
 import re
 
+from django.core.urlresolvers import reverse
 from django.core import validators as django_validator
 from django import forms
 from django.template import defaultfilters
@@ -36,7 +37,6 @@ import yaql
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.environments import api
 
-from django.core import urlresolvers as urls
 
 LOG = logging.getLogger(__name__)
 
@@ -675,7 +675,7 @@ def make_select_cls(fqn):
                         msg = "Application with FQN='{0}' doesn't exist"
                         raise KeyError(msg.format(_fqn))
                     args = (environment_id, _app.id, False, True)
-                    return _app.name, urls.reverse(ns_url, args=args)
+                    return _app.name, reverse(ns_url, args=args)
                 return json.dumps(
                     [_reverse(cls) for cls in api.split_classes(fqn)])
 

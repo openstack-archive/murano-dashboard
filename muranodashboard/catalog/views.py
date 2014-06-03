@@ -37,11 +37,13 @@ from horizon import messages
 from horizon import tabs
 
 from muranoclient.common import exceptions as exc
+from muranodashboard import api
+from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import tabs as catalog_tabs
 from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import services
-from muranodashboard.environments import api
+from muranodashboard.environments import api as env_api
 from muranodashboard.environments import consts
 from muranodashboard import utils
 
@@ -59,7 +61,7 @@ class DictToObj(object):
 
 def get_available_environments(request):
     envs = []
-    for env in api.environments_list(request):
+    for env in env_api.environments_list(request):
         obj = DictToObj(id=env.id, name=env.name, status=env.status)
         envs.append(obj)
 
@@ -106,14 +108,14 @@ def create_quick_environment(request):
         match = re.match(quick_env_re, env.name)
         return int(match.group(1)) if match else 0
 
-    numbers = [parse_number(e) for e in api.environments_list(request)]
+    numbers = [parse_number(e) for e in env_api.environments_list(request)]
     new_env_number = 1
     if numbers:
         numbers.sort()
         new_env_number = numbers[-1] + 1
 
     params = {'name': quick_env_prefix + str(new_env_number)}
-    return api.environment_create(request, params)
+    return env_api.environment_create(request, params)
 
 
 def update_latest_apps(func):
@@ -143,7 +145,7 @@ def quick_deploy(request, app_id):
         return view(request, app_id=app_id, environment_id=env.id,
                     do_redirect=True, drop_wm_form=True)
     except Exception:
-        api.environment_delete(request, env.id)
+        env_api.environment_delete(request, env.id)
         raise
 
 
@@ -240,7 +242,8 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
         fail_url = reverse("horizon:murano:environments:index")
         try:
-            srv = api.service_create(self.request, environment_id, attributes)
+            srv = env_api.service_create(
+                self.request, environment_id, attributes)
         except exc.HTTPForbidden:
             msg = _("Sorry, you can't add application right now. "
                     "The environment is deploying.")
@@ -321,15 +324,14 @@ class IndexView(list_view.ListView):
             if category != ALL_CATEGORY_NAME:
                 query_params['category'] = category
 
-        pkgs, self.mappings = [], {}
+        packages = []
         with api.handled_exceptions(self.request):
-            client = api.muranoclient(self.request)
-            pkgs = client.packages.filter(**query_params)
+            packages, has_more = pkg_api.package_list(
+                self.request, filters=query_params, paginate=True,
+                page_size=self.paginate_by)
 
-        for pkg in pkgs:
-            self.mappings[pkg.id] = pkg
-
-        return pkgs
+        self.mappings = dict((pkg.id, pkg) for pkg in packages)
+        return packages
 
     def get_template_names(self):
         return ['catalog/index.html']

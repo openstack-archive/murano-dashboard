@@ -14,8 +14,9 @@
 
 import logging
 
+from muranodashboard import api
 from muranodashboard.common import utils
-from muranodashboard.environments import api
+from muranodashboard.environments import api as env_api
 from muranodashboard.environments import consts
 
 LOG = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class BillingStats(object):
         return st_list
 
     def get_all(self, request):
-        env_list = api.environments_list(request)
+        env_list = env_api.environments_list(request)
         stats = []
         LOG.debug('Got env list: {0}'.format(env_list))
         for env in env_list:
@@ -80,7 +81,7 @@ class BillingStats(object):
         return ids
 
     def build_service_list(self, request, env):
-        serv_list = api.services_list(request, env.id)
+        serv_list = env_api.services_list(request, env.id)
         LOG.debug('Got Service List: {0}'.format(serv_list))
         id_list = {}
         for service in serv_list:

@@ -24,8 +24,8 @@ from horizon import forms as horizon_forms
 from horizon import messages
 
 from muranoclient.common import exceptions as exc
+from muranodashboard import api
 from muranodashboard.catalog import views
-from muranodashboard.environments import api
 
 
 LOG = logging.getLogger(__name__)

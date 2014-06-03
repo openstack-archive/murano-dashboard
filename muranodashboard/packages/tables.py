@@ -23,7 +23,7 @@ from horizon import messages
 from horizon import tables
 
 from muranoclient.common import exceptions as exc
-from muranodashboard.environments import api
+from muranodashboard import api
 
 LOG = logging.getLogger(__name__)
 

@@ -17,8 +17,10 @@ import logging
 from django.core.urlresolvers import reverse_lazy
 from horizon.forms import views
 from horizon import tables as horizon_tables
+from horizon.utils import functions as utils
 
-from muranodashboard.environments import api
+from muranodashboard import api
+from muranodashboard.api import packages as pkg_api
 from muranodashboard.packages import forms
 from muranodashboard.packages import tables
 
@@ -28,7 +30,6 @@ LOG = logging.getLogger(__name__)
 class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
-    PACKAGES_LIMIT = 10
 
     def has_more_data(self, table):
         return self._more
@@ -36,23 +37,19 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
     def get_data(self):
         opts = {
             'include_disabled': True,
-            'owned': True,
-            'limit': self.PACKAGES_LIMIT + 1,
+            'owned': True
         }
         marker = self.request.GET.get(
             tables.PackageDefinitionsTable._meta.pagination_param, None)
-        if marker:
-            opts['marker'] = marker
+
         packages = []
         self._more = False
+        page_size = utils.get_page_size(self.request)
         with api.handled_exceptions(self.request):
-            packages = api.muranoclient(self.request).packages.filter(**opts)
-            # The client doesn't return any info about whether there are
-            # more packages, so we need to try to get one extra, and
-            # determine whether to show the More link ourselves.
-            if len(packages) == self.PACKAGES_LIMIT + 1:
-                self._more = True
-                packages = packages[:self.PACKAGES_LIMIT]
+            packages, self._more = pkg_api.package_list(
+                self.request, marker=marker, filters=opts, paginate=True,
+                page_size=page_size)
+
         return packages
 
 
