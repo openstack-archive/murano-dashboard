@@ -684,4 +684,8 @@ def make_select_cls(fqn):
             apps = api.service_list_by_fqn(request, environment_id, fqn)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
 
+        def clean(self, value):
+            value = super(DynamicSelect, self).clean(value)
+            return None if value == '' else value
+
     return DynamicSelect
