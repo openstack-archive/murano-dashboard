@@ -14,6 +14,7 @@
 
 import logging
 
+from django.core.urlresolvers import reverse
 from django.core import validators
 from django.utils.translation import ugettext_lazy as _
 
@@ -83,8 +84,11 @@ class CreateEnvironment(workflows.Workflow):
     finalize_button_name = _("Create")
     success_message = _('Created environment "%s".')
     failure_message = _('Unable to create environment "%s".')
-    success_url = "horizon:murano:environments:index"
     default_steps = (SelectProjectUser, ConfigureEnvironment)
+
+    def get_success_url(self):
+        env_id = self.context.get('environment_id')
+        return reverse("horizon:murano:environments:services", args=[env_id])
 
     def format_status_message(self, message):
         name = self.context.get('name', 'noname')
@@ -92,8 +96,10 @@ class CreateEnvironment(workflows.Workflow):
 
     def handle(self, request, context):
         try:
-            api.environment_create(request, context)
+            environment = api.environment_create(request, context)
+            context['environment_id'] = environment.id
             return True
+
         except Exception:
             name = self.context.get('name', 'noname')
             LOG.error("Unable to create environment {0}".format(name))
