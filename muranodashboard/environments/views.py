@@ -152,44 +152,8 @@ class EditEnvironmentView(workflows.WorkflowView):
         return initial
 
 
-class DeploymentsView(tables.DataTableView):
-    table_class = env_tables.DeploymentsTable
-    template_name = 'deployments/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DeploymentsView, self).get_context_data(**kwargs)
-
-        try:
-            env = api.environment_get(self.request, self.environment_id)
-            context['environment_name'] = env.name
-        except Exception:
-            msg = _("Sorry, this environment doesn't exist anymore")
-            redirect = reverse("horizon:murano:environments:index")
-            exceptions.handle(self.request, msg, redirect=redirect)
-        return context
-
-    def get_data(self):
-        deployments = []
-        self.environment_id = self.kwargs['environment_id']
-        ns_url = "horizon:murano:environments:index"
-        try:
-            deployments = api.deployments_list(self.request,
-                                               self.environment_id)
-
-        except exc.HTTPForbidden:
-            msg = _('Unable to retrieve list of deployments')
-            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
-
-        except exc.HTTPInternalServerError:
-            msg = _("Environment with id %s doesn't exist anymore")
-            exceptions.handle(self.request,
-                              msg % self.environment_id,
-                              redirect=reverse(ns_url))
-        return deployments
-
-
 class DeploymentDetailsView(tabs.TabbedTableView):
-    tab_group_class = env_tabs.DeploymentTabs
+    tab_group_class = env_tabs.DeploymentDetailsTabs
     table_class = env_tables.EnvConfigTable
     template_name = 'deployments/reports.html'
 
