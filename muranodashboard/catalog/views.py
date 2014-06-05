@@ -40,7 +40,6 @@ from muranoclient.common import exceptions as exc
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import tabs as catalog_tabs
-from muranodashboard.common import cache
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import services
 from muranodashboard.environments import api as env_api
@@ -119,6 +118,11 @@ def create_quick_environment(request):
 
 
 def update_latest_apps(func):
+    """Adds package id to a session queue with Applications which were
+    recently added to an environment or to the Catalog itself. Thus it is
+    used as decorator for views adding application to an environment or
+    uploading new package definition to a catalog.
+    """
     @functools.wraps(func)
     def __inner(request, **kwargs):
         apps = request.session.setdefault('latest_apps', collections.deque())
@@ -149,26 +153,49 @@ def clean_latest_apps(request):
     return cleaned_apps
 
 
+def clear_forms_data(func):
+    """Clears user's session from a data for a specific application. It
+    guarantees that previous additions of that application won't interfere
+    with the next ones. Should be used as a decorator for entry points for
+    adding an application in an environment.
+    """
+    @functools.wraps(func)
+    def __inner(request, **kwargs):
+        app_id = kwargs['app_id']
+        fqn = pkg_api.get_app_fqn(request, app_id)
+        LOG.debug('Clearing forms data for application {0}.'.format(fqn))
+        services.get_apps_data(request)[app_id] = {}
+        return func(request, **kwargs)
+
+    return __inner
+
+
 @update_latest_apps
+@clear_forms_data
+@auth_dec.login_required
+def deploy(request, environment_id, app_id,
+           do_redirect=False, drop_wm_form=False):
+    view = Wizard.as_view(services.get_app_forms,
+                          condition_dict=services.condition_getter)
+    return view(request, app_id=app_id, environment_id=environment_id,
+                do_redirect=do_redirect, drop_wm_form=drop_wm_form)
+
+
+@update_latest_apps
+@clear_forms_data
 @auth_dec.login_required
 def quick_deploy(request, app_id):
     env = create_quick_environment(request)
     try:
-        view = Wizard.as_view(services.get_app_forms,
-                              condition_dict=services.condition_getter)
-        return view(request, app_id=app_id, environment_id=env.id,
-                    do_redirect=True, drop_wm_form=True)
+        return deploy(request, environment_id=env.id, app_id=app_id,
+                      do_redirect=True, drop_wm_form=True)
     except Exception:
         env_api.environment_delete(request, env.id)
         raise
 
 
 def get_image(request, app_id):
-    @cache.with_cache('logo', 'logo.png')
-    def _get(_request, _app_id):
-        return api.muranoclient(_request).packages.get_logo(_app_id)
-
-    content = _get(request, app_id)
+    content = pkg_api.get_app_logo(request, app_id)
     if content:
         return http.HttpResponse(content=content, content_type='image/png')
     else:

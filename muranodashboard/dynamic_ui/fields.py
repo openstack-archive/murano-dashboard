@@ -35,7 +35,8 @@ from openstack_dashboard.api import nova
 import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc
-from muranodashboard.environments import api
+from muranodashboard.api import packages as pkg_api
+from muranodashboard.environments import api as env_api
 
 
 LOG = logging.getLogger(__name__)
@@ -451,8 +452,8 @@ class DomainChoiceField(ChoiceField):
     @with_request
     def update(self, request, environment_id, **kwargs):
         self.choices = [("", "Not in domain")]
-        domains = api.service_list_by_type(request, environment_id,
-                                           'activeDirectory')
+        domains = env_api.service_list_by_type(request, environment_id,
+                                               'activeDirectory')
         self.choices.extend(
             [(domain.name, domain.name) for domain in domains])
 
@@ -583,7 +584,7 @@ class ClusterIPField(CharField):
         return perform_checking
 
     def update_network_params(self, request, environment_id):
-        env = api.environment_get(request, environment_id)
+        env = env_api.environment_get(request, environment_id)
         self.existing_subnet = env.networking.get('cidr')
         self.network_topology = env.networking.get('topology')
 
@@ -667,21 +668,21 @@ def make_select_cls(fqn):
         @with_request
         def update(self, request, environment_id, **kwargs):
             def _make_link():
-                ns_url = 'horizon:murano:catalog:add_many'
+                ns_url = 'horizon:murano:catalog:add'
 
                 def _reverse(_fqn):
-                    _app = api.app_by_fqn(request, _fqn)
+                    _app = pkg_api.app_by_fqn(request, _fqn)
                     if _app is None:
                         msg = "Application with FQN='{0}' doesn't exist"
                         raise KeyError(msg.format(_fqn))
                     args = (environment_id, _app.id, False, True)
                     return _app.name, reverse(ns_url, args=args)
                 return json.dumps(
-                    [_reverse(cls) for cls in api.split_classes(fqn)])
+                    [_reverse(cls) for cls in env_api.split_classes(fqn)])
 
             self.widget.add_item_link = _make_link
             self.choices = [('', _('Select Application'))]
-            apps = api.service_list_by_fqn(request, environment_id, fqn)
+            apps = env_api.service_list_by_fqn(request, environment_id, fqn)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
 
         def clean(self, value):
