@@ -334,8 +334,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             response["X-Horizon-Add-To-Field"] = field_id
             return response
         else:
-            ns_url = 'horizon:murano:catalog:index'
-            return http.HttpResponseRedirect(reverse(ns_url))
+            return http.HttpResponse()
 
     def get_form_initial(self, step):
         env_id = utils.ensure_python_obj(self.kwargs.get('environment_id'))
@@ -428,6 +427,20 @@ class IndexView(list_view.ListView):
         # during call to parent's get_context_data() method
         return None, None, queryset, None
 
+    def get_current_category(self):
+        return self.request.GET.get('category', ALL_CATEGORY_NAME)
+
+    def current_page_url(self):
+        query = {'category': self.get_current_category()}
+        marker = self.request.GET.get('marker')
+        search = self.request.GET.get('search')
+        if marker:
+            query['marker'] = marker
+        if search:
+            query['search'] = search
+        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+                                http_utils.urlencode(query))
+
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
 
@@ -435,13 +448,12 @@ class IndexView(list_view.ListView):
         with api.handled_exceptions(self.request):
             client = api.muranoclient(self.request)
             categories = client.packages.categories()
-
         if ALL_CATEGORY_NAME not in categories:
             categories.insert(0, ALL_CATEGORY_NAME)
-        current_category = self.request.GET.get('category', categories[0])
+
         context.update({
             'categories': categories,
-            'current_category': current_category,
+            'current_category': self.get_current_category(),
             'latest_list': clean_latest_apps(self.request)
         })
 
