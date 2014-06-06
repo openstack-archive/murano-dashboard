@@ -229,15 +229,10 @@ def services_list(request, environment_id):
     return [utils.Bunch(**service) for service in services]
 
 
-def split_classes(classes_str):
-    return classes_str.split(', ')
-
-
-def service_list_by_fqn(request, environment_id, fqn):
+def service_list_by_fqns(request, environment_id, fqns):
     if environment_id is None:
         return []
     services = services_list(request, environment_id)
-    fqns = split_classes(fqn)
     LOG.debug('Service::Instances::List')
     return [service for service in services if service['?']['type'] in fqns]
 

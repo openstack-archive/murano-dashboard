@@ -37,6 +37,7 @@ import yaql
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.environments import api as env_api
+from muranodashboard.openstack.common import versionutils
 
 
 LOG = logging.getLogger(__name__)
@@ -448,16 +449,6 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
     pass
 
 
-class DomainChoiceField(ChoiceField):
-    @with_request
-    def update(self, request, environment_id, **kwargs):
-        self.choices = [("", "Not in domain")]
-        domains = env_api.service_list_by_type(request, environment_id,
-                                               'activeDirectory')
-        self.choices.extend(
-            [(domain.name, domain.name) for domain in domains])
-
-
 class FlavorChoiceField(ChoiceField):
     def __init__(self, *args, **kwargs):
         if 'requirements' in kwargs:
@@ -560,9 +551,10 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
-# This type of field is deprecated, in future floating ip fields should be
-# implemented using a regular BooleanField
-# TODO(ativelkov, tsufiev): add a deprecated decorator
+@versionutils.deprecated(
+    as_of=versionutils.deprecated.ICEHOUSE,
+    in_favor_of='type boolean (regular BooleanField)',
+    remove_in=1)
 class FloatingIpBooleanField(BooleanField):
     pass
 
@@ -671,7 +663,10 @@ class DatabaseListField(CharField):
             self.validate_mssql_identifier(db_name)
 
 
-def make_select_cls(fqn):
+def make_select_cls(fqns):
+    if not isinstance(fqns, (tuple, list)):
+        fqns = (fqns,)
+
     class Widget(hz_forms.fields.DynamicSelectWidget):
         class Media:
             js = ('muranodashboard/js/add-select.js',)
@@ -679,8 +674,12 @@ def make_select_cls(fqn):
     class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
         widget = Widget
 
-        def __init__(self, *args, **kwargs):
+        def __init__(self, empty_value_message=None, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
+            if empty_value_message is not None:
+                self.choices = [('', _(empty_value_message))]
+            else:
+                self.choices = [('', _('Select Application'))]
 
         @with_request
         def update(self, request, environment_id, **kwargs):
@@ -694,12 +693,10 @@ def make_select_cls(fqn):
                         raise KeyError(msg.format(_fqn))
                     args = (_app.id, environment_id, False, True)
                     return _app.name, reverse(ns_url, args=args)
-                return json.dumps(
-                    [_reverse(cls) for cls in env_api.split_classes(fqn)])
+                return json.dumps([_reverse(cls) for cls in fqns])
 
             self.widget.add_item_link = _make_link
-            self.choices = [('', _('Select Application'))]
-            apps = env_api.service_list_by_fqn(request, environment_id, fqn)
+            apps = env_api.service_list_by_fqns(request, environment_id, fqns)
             self.choices.extend([(app['?']['id'], app.name) for app in apps])
 
         def clean(self, value):
@@ -707,3 +704,14 @@ def make_select_cls(fqn):
             return None if value == '' else value
 
     return DynamicSelect
+
+
+@versionutils.deprecated(
+    as_of=versionutils.deprecated.ICEHOUSE,
+    in_favor_of='type io.murano.windows.ActiveDirectory with a custom '
+                'emptyValueMessage attribute',
+    remove_in=1)
+class DomainChoiceField(make_select_cls('io.murano.windows.ActiveDirectory')):
+    def __init__(self, *args, **kwargs):
+        super(DomainChoiceField, self).__init__(*args, **kwargs)
+        self.choices = [('', _('Not in domain'))]

@@ -106,9 +106,11 @@ def _collect_fields(field_specs, form_name, service):
                 return key, spec
 
     def make_field(field_spec):
-        cls, name = TYPES[field_spec.pop('type')], field_spec.pop('name')
+        _type, name = field_spec.pop('type'), field_spec.pop('name')
+        if isinstance(_type, list):  # make list keys hashable for TYPES dict
+            _type = tuple(_type)
         _ignorable, kwargs = parse_spec(field_spec)
-        cls, kwargs['widget'] = process_widget(cls, kwargs)
+        cls, kwargs['widget'] = process_widget(TYPES[_type], kwargs)
         cls = cls.finalize_properties(kwargs, form_name, service)
 
         return name, cls(**kwargs)
