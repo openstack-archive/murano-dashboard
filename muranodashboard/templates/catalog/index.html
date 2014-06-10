@@ -81,8 +81,6 @@
           <a class="btn btn-default"
              href="{% url 'horizon:murano:catalog:index' %}?category={{ current_category|urlencode }}&{{ view.get_pagination_string }}{% if search %}&search={{ search|urlencode }}{% endif %}">
               More Apps</a>
-      {% else %}
-          <a class="btn btn-default disabled" href="#">More Apps</a>
       {% endif %}
   </div>
 </div>
