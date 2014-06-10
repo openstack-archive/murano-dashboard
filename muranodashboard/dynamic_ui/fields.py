@@ -459,14 +459,31 @@ class DomainChoiceField(ChoiceField):
 
 
 class FlavorChoiceField(ChoiceField):
+    def __init__(self, *args, **kwargs):
+        if 'requirements' in kwargs:
+            self.requirements = kwargs.pop('requirements')
+        super(FlavorChoiceField, self).__init__(*args, **kwargs)
+
     @with_request
     def update(self, request, **kwargs):
-        self.choices = [(flavor.name, flavor.name) for flavor in
-                        nova.novaclient(request).flavors.list()]
-        for flavor in self.choices:
-            if 'medium' in flavor[1]:
-                self.initial = flavor[0]
-                break
+        self.choices = []
+        flavors = nova.novaclient(request).flavors.list()
+
+        # If no requirements are present, return all the flavors.
+        if not hasattr(self, 'requirements'):
+            self.choices = [(flavor.name, flavor.name) for flavor in flavors]
+        else:
+            for flavor in flavors:
+                # If a flavor doesn't meet a minimum requirement,
+                # do not add it to the options list and skip to the
+                # next flavor.
+                if flavor.vcpus < self.requirements['min_vcpus']:
+                    continue
+                if flavor.disk < self.requirements['min_disk']:
+                    continue
+                if flavor.ram < self.requirements['min_memory_mb']:
+                    continue
+                self.choices.append((flavor.name, flavor.name))
 
 
 class KeyPairChoiceField(ChoiceField):
