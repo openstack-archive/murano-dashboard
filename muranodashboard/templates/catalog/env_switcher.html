@@ -1,33 +1,25 @@
 {% load i18n %}
 {% load url from future %}
 
-<div id="environment_switcher" class="dropdown switcher_bar" tabindex="1">
-{% with num_of_envs=available_environments|length %}
-    {% if num_of_envs > 1 %}
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#environment_switcher">
-    {% endif %}
-    <h3>
-        {% trans "Environment:" %}
-        {% if environment %}
-            {{ environment.name }}
-        {% else %}
-            <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="ajax-modal">{% trans "No Environments" %}</a>
-        {% endif %}
-       {% if num_of_envs > 1 %}
-           <span class="caret pull-right"></span>
-       {% endif %}
-    </h3>
-{% if num_of_envs > 1 %}
-    </a>
-    <ul id="environment_list" class="dropdown-menu">
-    <li class='divider'></li>
-        {% for env in available_environments %}
-        {% if env.id != environment.id %}
-          <li><a href="{% url 'horizon:murano:catalog:switch_env' env.id %}?next={% url 'horizon:murano:catalog:index' %}">
-              {{ env.name }}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-</div>
+<h3 class="heading_switcher env_switcher">{% trans "Environment:" %}
+
+    <div id="environment_switcher" class="header dropdown">
+        {% with num_of_envs=available_environments|length %}
+            {% if environment %}
+                <a href="#environment_switcher" class="btn btn-small dropdown-toggle" data-toggle="dropdown">{{ environment.name }} {% if num_of_envs > 1 %} <b class="caret"></b>{% endif %}</a>
+            {% else %}
+                <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" title="{% trans 'Click to create an environment' %}" class="btn btn-small btn-create ajax-modal">{% trans "Create Environment" %}</a>
+            {% endif %}
+
+            {% if num_of_envs > 1 %}
+                <ul id="environment_list" class="dropdown-menu row_actions clearfix">
+                    {% for env in available_environments %}
+                        {% if env.id != environment.id %}
+                            <li class="clearfix"><a tabindex="-1" href="{% url 'horizon:murano:catalog:switch_env' env.id %}?next={% url 'horizon:murano:catalog:index' %}" class="btn btn-small">{{ env.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</h3>

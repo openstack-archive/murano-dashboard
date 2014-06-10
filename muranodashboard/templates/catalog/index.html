@@ -6,104 +6,79 @@
 {% block title %}{% trans "Applications" %}{% endblock %}
 
 {% block page_header %}
-
-<link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
-<link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
-  {% include "horizon/common/_page_header.html" with title=_("Applications") %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
+    {% include "horizon/common/_page_header.html" with title=_("Applications") %}
 {% endblock page_header %}
 
 {% block js %}
     {% include "horizon/_scripts.html" %}
-
-    <script type="text/javascript">
-    var allPanelIds = ['#MuranoCategoriesPanel', '#MuranoSearchPanel',
-        '#MuranoDefaultEnvPanel'];
-    function bindPanelToggle(panelId) {
-        var toggler = $(panelId + 'Toggle'), panel = $(panelId);
-        toggler.click(function(event) {
-            panel.css('top', toggler.offset().top);
-            panel.toggleClass('panel-visible');
-            allPanelIds.forEach(function(panId) {
-                if ( panId != panelId ) {
-                    $(panId).removeClass('panel-visible');
-                    $(panId + 'Toggle').removeClass('active');
-                }
-            });
-            toggler.toggleClass('active');
-        })
-    }
-    $(function() {
-        bindPanelToggle('#MuranoCategoriesPanel');
-        bindPanelToggle('#MuranoSearchPanel');
-        bindPanelToggle('#MuranoDefaultEnvPanel');
-    })
-    </script>
 {% endblock %}
 
 {% block main %}
-<div class="table_wrapper">
-<h3 class="quota-heading">Latest Apps</h3>
-{% if latest_list|length > 0 %}
-    <div class="app-row app-list row">
-        {% for app in latest_list %}
-            {% include 'catalog/app_tile.html' %}
-        {% endfor %}
+    <div class="table_wrapper">
+        <h3 class="quota-heading">Recent Activity</h3>
+        {% if latest_list|length > 0 %}
+            <div class="app-row app-list row">
+                {% for app in latest_list %}
+                    {% include 'catalog/app_tile.html' %}
+                {% endfor %}
+            </div>
+        {% else %}
+
+            <div class="alert alert-block alert-info fade in">
+                <p>{% trans "No recent activity to report at this time." %}</p>
+            </div>
+        {% endif %}
+
+        <div class="table_header catalog">
+
+            <div class="table_actions clearfix">
+                <h3 class="heading_switcher">App Category: <div class="header dropdown">
+                <a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                    {{ current_category }}  <b class="caret"></b></a>
+                  <ul class="dropdown-menu row_actions clearfix">
+                      {% for category in categories %}
+                        <li class="clearfix"><a tabindex="-1" href="
+                        {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}" class="btn btn-small">
+                            {{ category }}</a></li>
+                      {% endfor %}
+                  </ul>
+                </h3>
+
+                {% include 'catalog/env_switcher.html' %}
+
+                <div class="table_search client">
+                    <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' %}">
+                        <input class="span3 example" value="{{ search }}" type="text" name="search" placeholder="Filter">
+                        <button type="submit" class="btn btn-small btn-search" id="apps__action_filter">Filter</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        {% if object_list|length > 0 %}
+            <div class="app-row app-list row">
+                {% for app in object_list %}
+                    {% include 'catalog/app_tile.html' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-block alert-info fade in">
+                <p>{% trans "There are no applications matching your search criteria." %}</p>
+            </div>
+        {% endif %}
+
+        <div class="btn-toolbar centering">
+          <div class="btn-group">
+              {% if view.has_more_data %}
+                  <a class="btn btn-default"
+                     href="{% url 'horizon:murano:catalog:index' %}?category={{ current_category|urlencode }}&{{ view.get_pagination_string }}{% if search %}&search={{ search|urlencode }}{% endif %}">
+                      More Apps</a>
+              {% endif %}
+          </div>
+        </div>
+
     </div>
-{% else %}
-    <p class="no-results">{% trans "There are no applications available at this time." %}</p>
-{% endif %}
-<h3 class="quota-heading">App Category: <div class="header dropdown">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    {{ current_category }}<b class="caret"></b></a>
-  <ul class="dropdown-menu">
-      {% for category in categories %}
-        <li><a tabindex="-1" href="
-        {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}">
-            {{ category }}</a></li>
-      {% endfor %}
-  </ul>
-</div>
-</h3>
-
-{% if object_list|length > 0 %}
-    <div class="app-row app-list row">
-        {% for app in object_list %}
-            {% include 'catalog/app_tile.html' %}
-        {% endfor %}
-    </div>
-{% else %}
-    <p class="no-results">{% trans "There are no applications matching your search criteria." %}</p>
-{% endif %}
-
-<div class="btn-toolbar centering">
-  <div class="btn-group">
-      {% if view.has_more_data %}
-          <a class="btn btn-default"
-             href="{% url 'horizon:murano:catalog:index' %}?category={{ current_category|urlencode }}&{{ view.get_pagination_string }}{% if search %}&search={{ search|urlencode }}{% endif %}">
-              More Apps</a>
-      {% endif %}
-  </div>
-</div>
-
-<div class="murano-side-panel" id="MuranoDefaultEnvPanel">
-    {% include 'catalog/env_switcher.html' %}
-</div>
-<a class="trigger third" href="#" id="MuranoDefaultEnvPanelToggle"><i class="fa fa-desktop"></i></a>
-
-<div class="murano-side-panel" id="MuranoCategoriesPanel">
-    {% include 'catalog/categories.html' %}
-</div>
-<a class="trigger second" href="#" id="MuranoCategoriesPanelToggle"><i class="fa fa-th-list"></i></a>
-
-<div class="murano-side-panel" id="MuranoSearchPanel">
-    <h3>Search</h3>
-    <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' %}">
-        <input name="search" class="text input-medium search-query"/>
-        <button class="btn_search btn">Go</button>
-    </form>
-</div>
-<a class="trigger first" href="#" id="MuranoSearchPanelToggle"><i class="fa fa-search"></i></a>
-
-</div>
-
 {% endblock %}
