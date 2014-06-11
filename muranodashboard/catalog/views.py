@@ -99,7 +99,7 @@ def switch(request, environment_id,
     return shortcuts.redirect(redirect_to)
 
 
-def create_quick_environment(request):
+def get_next_quick_environment_name(request):
     quick_env_prefix = 'quick-env-'
     quick_env_re = re.compile('^' + quick_env_prefix + '([\d]+)$')
 
@@ -113,7 +113,11 @@ def create_quick_environment(request):
         numbers.sort()
         new_env_number = numbers[-1] + 1
 
-    params = {'name': quick_env_prefix + str(new_env_number)}
+    return quick_env_prefix + str(new_env_number)
+
+
+def create_quick_environment(request):
+    params = {'name': get_next_quick_environment_name(request)}
     return env_api.environment_create(request, params)
 
 
@@ -359,7 +363,11 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         app_id = self.kwargs.get('app_id')
         app = mc.packages.get(app_id)
         environment_id = self.kwargs.get('environment_id')
-        env = mc.environments.get(environment_id)
+        environment_id = utils.ensure_python_obj(environment_id)
+        if environment_id is not None:
+            env_name = mc.environments.get(environment_id).name
+        else:
+            env_name = get_next_quick_environment_name(self.request)
 
         context['field_descriptions'] = services.get_app_field_descriptions(
             self.request, app_id, self.steps.index)
@@ -367,7 +375,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
                         'service_name': app.name,
                         'app_id': app_id,
                         'environment_id': environment_id,
-                        'environment_name': env.name,
+                        'environment_name': env_name,
                         'do_redirect': self.get_wizard_flag('do_redirect'),
                         'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
                         'prefix': self.prefix,
