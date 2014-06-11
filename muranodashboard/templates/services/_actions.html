@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="clearfix">
+  <h3 class="pull-left">{% trans "Component Actions" %}</h3>
+</div>
+
+{% if actions%}
+    <ul class="nav nav-list">
+        {% for action_id, action_name in actions.items %}
+            <li><a href="{% url 'horizon:murano:environments:actions' environment_id service_id action_id %}">{{ action_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="row">
+        <div class="alert alert-block alert-info fade in">
+            <p>{% trans "Component does not provide any actions." %}</p>
+        </div>
+    </div>
+{% endif %}

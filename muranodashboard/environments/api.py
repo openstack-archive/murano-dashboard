@@ -195,6 +195,12 @@ def environment_update(request, environment_id, name):
     return api.muranoclient(request).environments.update(environment_id, name)
 
 
+def action_allowed(request, environment_id):
+    env = environment_get(request, environment_id)
+    status = getattr(env, 'status', None)
+    return status not in ('deploying',)
+
+
 def services_list(request, environment_id):
     def strip(msg, to=100):
         return '%s...' % msg[:to] if len(msg) > to else msg
@@ -271,6 +277,17 @@ def service_get(request, environment_id, service_id):
     for service in services:
         if service['?']['id'] == service_id:
             return service
+
+
+def extract_actions_list(service):
+    actions_data = service['?'].get('_actions', {})
+    return dict((action_id, action.get('name')) for (action_id, action)
+                in actions_data.iteritems() if action.get('enabled'))
+
+
+def run_action(request, environment_id, action_id):
+    mc = api.muranoclient(request)
+    return mc.actions.call(environment_id, action_id)
 
 
 def deployments_list(request, environment_id):

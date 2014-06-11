@@ -54,12 +54,12 @@ Forms:
 
         - name: name
           type: string
-          label: String - Application Name
+          label: Application Name
           description: >-
             Requirements: Just A-Z, a-z, 0-9, dash and
             underline are allowed, min/max value are defined.
           minLength: 2
-          maxLength: 5
+          maxLength: 12
           regexpValidator: '^[-\w]+$'
           errorMessages:
             invalid: Just letters, numbers, underscores and hyphens are allowed.

@@ -625,3 +625,28 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    c.Status.format('Ready'),
                                    sec=90)
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
+
+    def test_check_actions_tab(self):
+        """Test check that action tab in deployed application is available
+        and actions are display in the corresponding tab
+
+        Scenario:
+            1. Navigate Applications and click MockApp 'Quick Deploy'
+            2. Click deploy
+            3. Wait 'Ready' status
+            4. Click on application
+            5. Check that 'Actions' tab is present
+            6. Click on 'Actions' tab
+            7. Check that application's actions are present
+        """
+        self.start_deploy(self.mockapp_id)
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+
+        self.driver.find_element_by_link_text('TestApp').click()
+        self.check_element_on_page(by.By.LINK_TEXT, 'Actions')
+        self.driver.find_element_by_link_text('Actions').click()
+
+        self.check_element_on_page(by.By.LINK_TEXT, 'deploy')

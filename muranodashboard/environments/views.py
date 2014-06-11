@@ -20,6 +20,7 @@ from django import http
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from horizon import exceptions
+from horizon import messages
 from horizon import tables
 from horizon import tabs
 from horizon import workflows
@@ -75,6 +76,26 @@ class EnvironmentDetails(tabs.TabbedTableView):
         return context
 
 
+class ApplicationActions(generic.View):
+    @staticmethod
+    def get(request, environment_id=None, service_id=None, action_id=None):
+        if api.action_allowed(request, environment_id):
+            api.run_action(request, environment_id, action_id)
+            service = api.service_get(request, environment_id, service_id)
+            action_name = api.extract_actions_list(service).get(action_id, '-')
+            component_name = getattr(service, 'name', '-')
+            msg = _("Action '{0}' was scheduled for component '{1}.").format(
+                action_name, component_name)
+            messages.success(request, msg)
+        else:
+            msg = _("There is some action being run in an environment")
+            messages.error(request, msg)
+        url = reverse('horizon:murano:environments:services',
+                      args=(environment_id,))
+
+        return http.HttpResponseRedirect(url)
+
+
 class DetailServiceView(tabs.TabView):
     tab_group_class = env_tabs.ServicesTabs
     template_name = 'services/details.html'
@@ -82,7 +103,7 @@ class DetailServiceView(tabs.TabView):
     def get_context_data(self, **kwargs):
         context = super(DetailServiceView, self).get_context_data(**kwargs)
         context["service"] = self.get_data()
-        context["service_name"] = self.service.name
+        context["service_name"] = getattr(self.service, 'name', '-')
         env = api.environment_get(self.request, self.environment_id)
         context["environment_name"] = env.name
         return context
