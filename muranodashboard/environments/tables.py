@@ -25,14 +25,12 @@ from muranodashboard.environments import consts
 from muranodashboard.openstack.common import timeutils
 
 
-def creation_allowed(self, request, environment):
-    environment_id = self.table.kwargs['environment_id']
+def _get_environment_status_and_version(request, table):
+    environment_id = table.kwargs.get('environment_id')
     env = api.environment_get(request, environment_id)
     status = getattr(env, 'status', None)
-
-    if status not in [consts.STATUS_ID_DEPLOYING]:
-        return True
-    return False
+    version = getattr(env, 'version', None)
+    return status, version
 
 
 class AddApplication(tables.LinkAction):
@@ -41,7 +39,9 @@ class AddApplication(tables.LinkAction):
     classes = ('btn-launch',)
 
     def allowed(self, request, environment):
-        return creation_allowed(self, request, environment)
+        status, version = _get_environment_status_and_version(request,
+                                                              self.table)
+        return status != consts.STATUS_ID_DEPLOYING
 
     def get_link_url(self, datum=None):
         base_url = reverse('horizon:murano:catalog:switch_env',
@@ -101,11 +101,9 @@ class DeleteService(tables.DeleteAction):
     data_type_plural = _('Components')
 
     def allowed(self, request, service=None):
-        environment_id = self.table.kwargs.get('environment_id')
-        env = api.environment_get(request, environment_id)
-        status = getattr(env, 'status', None)
-
-        return False if status == consts.STATUS_ID_DEPLOYING else True
+        status, version = _get_environment_status_and_version(request,
+                                                              self.table)
+        return status != consts.STATUS_ID_DEPLOYING
 
     def action(self, request, service_id):
         try:
@@ -153,15 +151,13 @@ class DeployThisEnvironment(tables.Action):
     classes = ('btn-launch')
 
     def allowed(self, request, service):
-        environment_id = self.table.kwargs['environment_id']
-        env = api.environment_get(request, environment_id)
-        status = getattr(env, 'status', None)
-        version = getattr(env, 'version', None)
-
+        status, version = _get_environment_status_and_version(request,
+                                                              self.table)
         if status == consts.STATUS_ID_DEPLOYING:
             return False
-        services = self.table.data
-        if version == 0 and not services:
+
+        apps = self.table.data
+        if version == 0 and not apps:
             return False
         return True
 
