@@ -1,9 +1,8 @@
 {% load i18n %}
 {% load url from future %}
 
-{% trans "Add to Env" as label %}
 {% if environment %}
-    <a href="{% url 'horizon:murano:catalog:deploy' app.id environment.id %}" class="{{ class }}"><i class="fa fa-plus-circle"></i>  {{ label }}</a>
+    <a href="{% url 'horizon:murano:catalog:deploy' app.id environment.id %}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {% trans "Add to Env" %}</a>
 {% else %}
-    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={% url 'horizon:murano:catalog:index' %}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {{ label }}</a>
+    <a href="{% url 'horizon:murano:environments:create_environment' %}?next={{ view.current_page_url|urlencode }}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {% trans "Create Env" %}</a>
 {% endif %}
