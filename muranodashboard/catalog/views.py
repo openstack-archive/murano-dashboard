@@ -356,15 +356,19 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
+        mc = api.muranoclient(self.request)
         app_id = self.kwargs.get('app_id')
-        app = api.muranoclient(self.request).packages.get(app_id)
+        app = mc.packages.get(app_id)
+        environment_id = self.kwargs.get('environment_id')
+        env = mc.environments.get(environment_id)
 
         context['field_descriptions'] = services.get_app_field_descriptions(
             self.request, app_id, self.steps.index)
         context.update({'type': app.fully_qualified_name,
                         'service_name': app.name,
                         'app_id': app_id,
-                        'environment_id': self.kwargs.get('environment_id'),
+                        'environment_id': environment_id,
+                        'environment_name': env.name,
                         'do_redirect': self.get_wizard_flag('do_redirect'),
                         'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
                         'prefix': self.prefix,
