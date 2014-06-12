@@ -151,8 +151,9 @@ def clean_latest_apps(request):
         except exc.HTTPNotFound:
             pass
         else:
-            cleaned_apps.append(app)
-            cleaned_app_ids.append(app_id)
+            if app.type == 'Application':
+                cleaned_apps.append(app)
+                cleaned_app_ids.append(app_id)
     request.session['latest_apps'] = collections.deque(cleaned_app_ids)
     return cleaned_apps
 
