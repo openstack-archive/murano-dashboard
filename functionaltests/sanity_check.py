@@ -537,15 +537,15 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         Scenario:
             1. Navigate to 'Application Catalog > Applications' panel
-            2. Click on 'Search' panel
-            3. Type name of service that should be founded
-            3. Click on 'Go' and check result
+            2. Set search criterion in the search field(e.g 'Telnet')
+            3. Click on 'Filter' and check result
         """
         self.go_to_submenu('Applications')
-        self.driver.find_element_by_id('MuranoSearchPanelToggle').click()
-        self.fill_field(by.By.XPATH, ".//*[@name='search']", 'PARAM')
-        self.driver.find_element_by_xpath(
-            ".//*[@id='MuranoSearchPanel']/form/button").click()
+        self.fill_field(by.By.NAME, 'search', 'Telnet')
+        self.driver.find_element_by_id('apps__action_filter').click()
+
+        self.assertIn('Telnet', self.driver.page_source)
+        self.assertNotIn('PostgreSQL', self.driver.page_source)
 
     def test_020_filter_by_category(self):
         """Test checks ability to filter applications by category
@@ -553,9 +553,11 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         Scenario:
             1. Navigate to 'Application Catalog' panel
-            2. Click on 'Category' panel
-            3. Select category and click on it
-            4. Verify result
+            2. Select 'Databases' category in 'App Category' dropdown menu
+            3. Verify that PostgreSQL is shown
+            4. Select 'Microsoft Services' category in
+            'App Category' dropdown menu
+            5. Verify that AD is shown
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
@@ -565,14 +567,14 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Applications')
-        self.driver.find_element_by_id('MuranoCategoriesPanelToggle').click()
+        self.driver.find_element_by_xpath(".//*[@href='#']").click()
         self.driver.find_element_by_link_text('Databases').click()
 
         self.assertTrue(self.check_element_on_page(
             by.By.XPATH, ".//*[@href='/{0}/murano/catalog/details/{1}']".
             format(self.url_prefix, package_category1)))
 
-        self.driver.find_element_by_id('MuranoCategoriesPanelToggle').click()
+        self.driver.find_element_by_xpath(".//*[@href='#']").click()
         self.driver.find_element_by_link_text('Microsoft Services').click()
 
         self.assertTrue(self.check_element_on_page(

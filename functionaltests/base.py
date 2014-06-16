@@ -170,8 +170,7 @@ class UITestCase(BaseDeps):
     def log_in(self):
         self.fill_field(by.By.ID, 'id_username', cfg.common.user)
         self.fill_field(by.By.ID, 'id_password', cfg.common.password)
-        sign_in = self.elements.get('button', 'ButtonSubmit')
-        self.driver.find_element_by_xpath(sign_in).click()
+        self.driver.find_element_by_xpath("//button[@type='submit']").click()
         self.driver.find_element_by_xpath(
             self.elements.get('button', 'Murano')).click()
 
