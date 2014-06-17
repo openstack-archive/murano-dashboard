@@ -8,8 +8,8 @@
 {% block form_action %}
     {% url 'horizon:murano:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}
-{% block form_id %}create_service_form{% endblock %}
-{% block modal_id %}create_service{% endblock %}
+{% block form_id %}form_{{ app_id }}{% endblock %}
+{% block modal_id %}modal_{{ app_id }}{% endblock %}
 {% block modal-header %}{% trans "Add Application to " %}&ldquo;{{ environment_name }}&rdquo;{% endblock %}
 
 {% block modal-body %}
