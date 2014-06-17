@@ -70,8 +70,6 @@ class UITestCase(BaseDeps):
         cls.demo_image = cls.get_image_name('demo', image_list)
         cls.linux_image = cls.get_image_name('linux', image_list)
         cls.windows_image = cls.get_image_name('windows', image_list)
-        cls.keypair = cfg.common.keypair_name
-        cls.tomcat_repository = cfg.common.tomcat_repository
 
         cls.elements = ConfigParser.RawConfigParser()
         cls.elements.read('common.ini')
@@ -239,63 +237,6 @@ class UITestCase(BaseDeps):
         self.driver.find_element_by_id(
             "murano__row_{0}__action_show".format(element_id)).click()
 
-    def create_linux_telnet(self, app_name, app_id):
-        self.select_and_click_action_for_app('quick-add', app_id)
-
-        self.fill_field(by.By.ID, 'id_0-name', app_name)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        self.select_from_list('1-osImage', self.linux_image)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-    def create_linux_apache(self, app_name, app_id):
-        self.select_and_click_action_for_app('quick-add', app_id)
-
-        self.fill_field(by.By.ID, 'id_0-name', app_name)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-        self.select_from_list('1-osImage', self.linux_image)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-    def create_ad_service(self, app_name):
-        self.fill_field(by.By.ID, 'id_0-name', app_name)
-        self.fill_field(by.By.ID, 'id_0-adminPassword', 'P@ssw0rd')
-        self.fill_field(by.By.ID, 'id_0-adminPassword-clone', 'P@ssw0rd')
-        self.fill_field(by.By.ID, 'id_0-recoveryPassword', 'P@ssw0rd')
-        self.fill_field(by.By.ID, 'id_0-recoveryPassword-clone', 'P@ssw0rd')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        self.select_from_list('1-osImage', self.windows_image)
-        next_button = self.elements.get('button', 'InputSubmit')
-        self.driver.find_element_by_xpath(next_button).click()
-
-    def create_tomcat_service(self, app_name):
-        self.fill_field(by.By.ID, 'id_0-name', app_name)
-
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        self.select_from_list('1-osImage', self.linux_image)
-
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-    def create_postgreSQL_service(self, app_name, app_id):
-        self.select_and_click_action_for_app('quick-add', app_id)
-        self.fill_field(by.By.ID, 'id_0-name', app_name)
-
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        self.select_from_list('1-osImage', self.linux_image)
-
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
     def get_element_id(self, el_name):
         path = self.driver.find_element_by_xpath(
             ".//*[@data-display='{0}']".format(el_name)).get_attribute("id")
@@ -386,39 +327,6 @@ class UITestCase(BaseDeps):
         self.driver.find_element_by_xpath(".//*[@id='id_file']").click()
         self.driver.find_element_by_id('id_file').send_keys(
             os.path.join(__location, name))
-
-    def check_the_status_of_env(self, env_name, status):
-        env_id = self.get_element_id(env_name)
-
-        env_status = self.driver.find_element_by_xpath(
-            ".//*[@id='murano__row__{0}']/td[3]".format(env_id))
-        k = 0
-        while env_status.text != status:
-            time.sleep(15)
-            k += 1
-            self.driver.refresh()
-            env_status = self.driver.find_element_by_xpath(
-                ".//*[@id='murano__row__{0}']/td[3]".format(env_id))
-            if k > 160:
-                log.error('\nTimeout has expired')
-                break
-
-    def check_that_deploy_finished(self, env_name):
-        self.navigate_to('Environments')
-        self.click_on_more(env_name)
-        self.select_action_for_environment(env_name, 'show_deployments')
-        status = self.driver.find_element_by_xpath(
-            "/html/body/div/div[2]/div[3]/form/table/tbody/tr/td[3]").text
-
-        self.driver.find_element_by_link_text("Show Details").click()
-        self.driver.find_element_by_link_text("Logs").click()
-        self.take_screenshot(self._testMethodName)
-
-        self.navigate_to('Environments')
-        self.click_on_more(env_name)
-        self.select_action_for_environment(env_name, 'show_deployments')
-
-        self.assertEqual('Successful', status, 'Deploy finished with errors')
 
     def select_and_click_action_for_app(self, action, app):
         self.driver.find_element_by_xpath(

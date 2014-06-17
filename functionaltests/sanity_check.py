@@ -5,36 +5,77 @@ import uuid
 sys.path.append(os.getcwd())
 
 import selenium.webdriver.common.by as by
-from selenium.webdriver.support.ui import WebDriverWait
 
 from base import UITestCase
 
 
-class TestSuiteOneSmokeTests(UITestCase):
+_ordered_counter = 0
+
+
+def ordered(func):
+    global _ordered_counter
+    func.counter = _ordered_counter
+    _ordered_counter += 1
+    return func
+
+
+class OrderedMethodMetaclass(type):
+    prefix = 'test_'
+
+    def __new__(meta, name, bases, dct):
+        test_methods, other = [], []
+        for key, value in dct.items():
+            if key.startswith(meta.prefix):
+                test_methods.append((key, value))
+            else:
+                other.append((key, value))
+        test_methods = sorted(test_methods, key=lambda pair: pair[1].counter)
+        prefix_len = len(meta.prefix)
+        dct = {}
+        for index, (method_name, method) in enumerate(test_methods):
+            method_name = '{0}{1:03d}_{2}'.format(
+                meta.prefix, index, method_name[prefix_len:])
+            delattr(method, 'counter')
+            dct[method_name] = method
+
+        dct.update(dict(other))
+        return super(OrderedMethodMetaclass, meta).__new__(
+            meta, name, bases, dct)
+
+
+class OrderedMethodsUITestCase(UITestCase):
+    __metaclass__ = OrderedMethodMetaclass
+
+
+class TestSuiteOneSmokeTests(OrderedMethodsUITestCase):
     """This class keeps smoke tests which check operability of all main panels
     """
-    def test_001_smoke_environments_panel(self):
+    @ordered
+    def test_smoke_environments_panel(self):
         self.go_to_submenu('Environments')
 
         self.assertIn('Environments',
                       self.driver.find_element_by_xpath(
                           ".//*[@class='page-header']").text)
 
-    def test_002_smoke_applications_panel(self):
+    @ordered
+    def test_smoke_applications_panel(self):
         self.go_to_submenu('Applications')
 
         self.assertIn('Applications',
                       self.driver.find_element_by_xpath(
                           ".//*[@class='page-header']").text)
 
-    def test_003_smoke_statistics_panel(self):
+    @ordered
+    def test_smoke_statistics_panel(self):
         self.go_to_submenu('Statistics')
 
         self.assertIn('Murano Status',
                       self.driver.find_element_by_xpath(
                           ".//*[@class='page-header']").text)
 
-    def test_004_smoke_images_panel(self):
+    @ordered
+    def test_smoke_images_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
 
@@ -42,7 +83,8 @@ class TestSuiteOneSmokeTests(UITestCase):
                       self.driver.find_element_by_xpath(
                           ".//*[@class='page-header']").text)
 
-    def test_005_smoke_package_definitions_panel(self):
+    @ordered
+    def test_smoke_package_definitions_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
@@ -51,8 +93,9 @@ class TestSuiteOneSmokeTests(UITestCase):
                           ".//*[@class='page-header']").text)
 
 
-class TestSuiteTwoSanityTests(UITestCase):
-    def test_001_create_delete_environment(self):
+class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
+    @ordered
+    def test_create_delete_environment(self):
         """Test check ability to create and delete environment
 
         Scenario:
@@ -67,7 +110,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
                                                     'test_create_del_env'))
 
-    def test_002_edit_environment(self):
+    @ordered
+    def test_edit_environment(self):
         """Test check ability to change environment name
 
         Scenario:
@@ -86,7 +130,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
                                                     'test_edit_env'))
 
-    def test_003_rename_image(self):
+    @ordered
+    def test_rename_image(self):
         """Test check ability to mark murano image
 
         Scenario:
@@ -105,7 +150,8 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         self.select_and_click_element('Mark')
 
-    def test_004_delete_image(self):
+    @ordered
+    def test_delete_image(self):
         """Test check ability to delete image
 
         Scenario:
@@ -131,7 +177,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
                                                     'TestImageForDeletion'))
 
-    def test_005_check_image_info(self):
+    @ordered
+    def test_check_image_info(self):
         """Test check ability to view image details
 
         Scenario:
@@ -155,133 +202,9 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertIn("{0}".format(self.image_title),
                       self.driver.page_source)
 
-    def test_006_create_and_delete_linux_telnet(self):
-        """Test check ability to create and delete Linux Telnet service
-
-        Scenario:
-            1. Navigate to 'Application Catalog'
-            2. Click on 'Quick Deploy' for Telnet application
-            3. Create Linux Telnet app by filling the creation form
-            4. Delete Linux Telnet app from environment
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        telnet_id = self.get_element_id('Telnet')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.create_linux_telnet('linuxtelnet', telnet_id)
-
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'linuxtelnet'))
-        self.delete_component('linuxtelnet')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'linuxtelnet'))
-
-    def test_007_create_and_delete_linux_apache(self):
-        """Test check ability to create and delete Linux Apache service
-
-        Scenario:
-            1. Navigate to 'Application Catalog'
-            2. Click on 'Quick Deploy' for Apache application
-            3. Create Linux Apache app by filling the creation form
-            4. Delete Linux Apache app from environment
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        apache_id = self.get_element_id('Apache HTTP Server')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.create_linux_apache('linuxapache', apache_id)
-
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'linuxapache'))
-        self.delete_component('linuxapache')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'linuxapache'))
-
-    def test_008_create_and_delete_ad_service(self):
-        """Test check ability to create and delete Active Directory service
-
-        Scenario:
-            1. Navigate to 'Application Catalog'
-            2. Click on 'Quick Deploy' for Active Directory application
-            3. Create Active Directory app by filling the creation form
-            4. Delete Active Directory app from environment
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        ad_id = self.get_element_id('Active Directory')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.select_and_click_action_for_app('quick-add', ad_id)
-        self.create_ad_service('muranotest.domain')
-
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'muranotest.domain'))
-
-        self.delete_component('muranotest.domain')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'muranotest.domain'))
-
-    def test_009_create_and_delete_tomcat_service(self):
-        """Test check ability to create and delete Tomcat service
-
-        Scenario:
-            1. Navigate to 'Application Catalog'
-            2. Click on 'Quick Deploy' for Tomcat application
-            3. Firstly, create PostgreSQL app by filling the creation form
-            4. Create Tomcat app, in case of database select created
-            early PostgreSQL
-            5. Delete Tomcat app from environment
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        tomcat_id = self.get_element_id('Apache Tomcat')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.select_and_click_action_for_app('quick-add', tomcat_id)
-
-        self.create_tomcat_service('tomcat-serv')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'tomcat-serv'))
-        self.delete_component('tomcat-serv')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'tomcat-serv'))
-
-    def test_010_create_and_delete_postgreSQL_service(self):
-        """Test check ability to create and delete PostgreSQL service
-
-        Scenario:
-            1. Navigate to 'Application Catalog'
-            2. Click on 'Quick Deploy' for PostgreSQL application
-            3. Create PostgreSQL app by filling the creation form
-            4. Delete PostgreSQL app from environment
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        postgresql_id = self.get_element_id('PostgreSQL')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.create_postgreSQL_service('PostgreSQL', postgresql_id)
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'PostgreSQL'))
-
-        self.delete_component('PostgreSQL')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'PostgreSQL'))
-
     @testtools.skip("https://bugs.launchpad.net/murano/+bug/1321690")
-    def test_011_check_regex_expression_for_ad_name(self):
+    @ordered
+    def test_check_regex_expression_for_ad_name(self):
         """Test check that validation of domain name field work and appropriate
         error message is appeared after entering incorrect domain name
 
@@ -363,41 +286,8 @@ class TestSuiteTwoSanityTests(UITestCase):
             'they are used to delimit the components of domain style names',
             1))
 
-    def test_012_check_validation_for_hostname_template_field(self):
-        """Test check that validation of hostname template field work and
-        appropriate error message is appeared after entering incorrect name
-
-        Scenario:
-            1. Navigate to Application Catalog > Applications
-            2. Start to create Telnet service
-            3. Set "`qwe`" as a hostname template name and verify error message
-            4. Set "host" as a hostname template name and
-            check that there is no error message
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        telnet_id = self.get_element_id('Telnet')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.select_and_click_action_for_app('quick-add', telnet_id)
-        self.fill_field(by.By.ID, 'id_0-name', 'name')
-        self.fill_field(by.By.ID, 'id_0-unitNamingPattern', '`qwe`')
-
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Enter a valid value.', 1))
-
-        self.fill_field(by.By.ID, 'id_0-unitNamingPattern', 'host')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.ID, 'id_1-osImage').is_displayed())
-
-    def test_013_modify_package_name(self):
+    @ordered
+    def test_modify_package_name(self):
         """Test check ability to change name of the package
 
         Scenario:
@@ -425,7 +315,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertTrue(self.check_element_on_page(
             by.By.XPATH, './/*[@data-display="PostgreSQL"]'))
 
-    def test_014_modify_package_add_tag(self):
+    @ordered
+    def test_modify_package_add_tag(self):
         """Test check ability to add file in composed service
 
         Scenario:
@@ -450,7 +341,8 @@ class TestSuiteTwoSanityTests(UITestCase):
             ".//*[@id='content_body']/div[2]/div/div/div[2]/div[2]/ul/li[6]",
             'TEST_TAG')
 
-    def test_015_download_package(self):
+    @ordered
+    def test_download_package(self):
         """Test check ability to download package from repository
 
         Scenario:
@@ -463,7 +355,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'download_package')
 
-    def test_016_check_opportunity_to_toggle_package(self):
+    @ordered
+    def test_check_opportunity_to_toggle_package(self):
         """Test check ability to make package active or inactive
 
         Scenario:
@@ -489,7 +382,8 @@ class TestSuiteTwoSanityTests(UITestCase):
             'PostgreSQL', '3', 'True'))
 
     @testtools.skip("Work in progress")
-    def test_017_env_creation_form_app_catalog_page(self):
+    @ordered
+    def test_env_creation_form_app_catalog_page(self):
         """Test checks that app's option 'Add to environment' is operable
         when there is no previously created env. In this case creation of the
         environment should start after clicking 'Add to environment' button
@@ -513,7 +407,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertTrue(
             self.driver.find_element_by_id('services__action_AddApplication'))
 
-    def test_018_check_info_about_app(self):
+    @ordered
+    def test_check_info_about_app(self):
         """Test checks that information about app is available and truly.
 
         Scenario:
@@ -534,7 +429,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.driver.find_element_by_link_text('Requirements').click()
         self.driver.find_element_by_link_text('License').click()
 
-    def test_019_check_search_option(self):
+    @ordered
+    def test_check_search_option(self):
         """Test checks that 'Search' option is operable.
 
         Scenario:
@@ -549,7 +445,8 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.assertIn('Telnet', self.driver.page_source)
         self.assertNotIn('PostgreSQL', self.driver.page_source)
 
-    def test_020_filter_by_category(self):
+    @ordered
+    def test_filter_by_category(self):
         """Test checks ability to filter applications by category
         in Application Catalog page
 
@@ -583,58 +480,8 @@ class TestSuiteTwoSanityTests(UITestCase):
             by.By.XPATH, ".//*[@href='/{0}/murano/catalog/details/{1}']".
             format(self.url_prefix, package_category2)))
 
-    @testtools.skip("Work in progress")
-    def test_021_check_option_switch_env(self):
-        """Test checks ability to switch environment and add app in other env
-
-        Scenario:
-            1. Navigate to 'Application Catalog>Environments' panel
-            2. Create environment 'env1'
-            3. Create environment 'env2'
-            4. Navigate to 'Application Catalog>Application Catalog'
-            5. Click on 'Environment' panel
-            6. Switch to env2
-            7. Add application in env2
-            8. Navigate to 'Application Catalog>Environments'
-            and go to the env2
-            9. Check that added application is here
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        app_id = self.get_element_id('Apache Tomcat')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Environments')
-        self.create_environment('env1')
-        self.go_to_submenu('Environments')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'env1'))
-        env_id = self.get_element_id('env1')
-
-        self.create_environment('env2')
-        self.go_to_submenu('Environments')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'env2'))
-
-        self.go_to_submenu('Applications')
-        self.driver.find_element_by_id('MuranoDefaultEnvPanelToggle').click()
-        self.driver.find_element_by_xpath(
-            ".//*[@id='environment_switcher']/a/h3").click()
-        self.driver.find_element_by_xpath(
-            ".//*[@id='environment_list']/li[2]/a").click()
-
-        self.select_and_click_action_for_app(
-            'add', '{0}/{1}'.format(env_id, app_id))
-
-        self.create_tomcat_service('Tomcat')
-
-        self.go_to_submenu('Environments')
-        self.env_to_components_list('env1')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'Tomcat'))
-
-    def test_023_modify_description(self):
+    @ordered
+    def test_modify_description(self):
         """Test check ability to change description of the package
 
         Scenario:
@@ -656,7 +503,8 @@ class TestSuiteTwoSanityTests(UITestCase):
             'New Description')
 
     @testtools.skip("Work in progress")
-    def test_024_delete_package_and_upload_it(self):
+    @ordered
+    def test_delete_package_and_upload_it(self):
         """Test check ability to delete package from database
 
         Scenario:
