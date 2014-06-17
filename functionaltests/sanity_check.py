@@ -1,10 +1,11 @@
 import os
 import sys
+import testtools
+import uuid
 sys.path.append(os.getcwd())
 
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support.ui import WebDriverWait
-import testtools
 
 from base import UITestCase
 
@@ -100,7 +101,7 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         self.select_from_list('image', 'TestImageForDeletion')
         self.fill_field(by.By.ID, 'id_title', 'New Image')
-        self.select_from_list('type', ' Windows Server 2012')
+        self.select_from_list('type', 'Murano Demo')
 
         self.select_and_click_element('Mark')
 
@@ -119,7 +120,7 @@ class TestSuiteTwoSanityTests(UITestCase):
 
         self.select_from_list('image', 'TestImageForDeletion')
         self.fill_field(by.By.ID, 'id_title', 'Image for deletion')
-        self.select_from_list('type', ' Windows Server 2012')
+        self.select_from_list('type', 'Murano Demo')
 
         self.select_and_click_element('Mark')
 
@@ -143,14 +144,15 @@ class TestSuiteTwoSanityTests(UITestCase):
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
 
+        self.image_title = "TestImage-{0}".format(uuid.uuid4())
         self.select_from_list('image', 'TestImageForDeletion')
-        self.fill_field(by.By.ID, 'id_title', 'TestImage')
-        self.select_from_list('type', ' Windows Server 2012')
+        self.fill_field(by.By.ID, 'id_title', self.image_title)
+        self.select_from_list('type', 'Murano Demo')
 
         self.select_and_click_element('Mark')
 
         self.driver.find_element_by_link_text('TestImageForDeletion').click()
-        self.assertIn('{"type": "windows.2012", "title": "TestImage"}',
+        self.assertIn("{0}".format(self.image_title),
                       self.driver.page_source)
 
     def test_006_create_and_delete_linux_telnet(self):
