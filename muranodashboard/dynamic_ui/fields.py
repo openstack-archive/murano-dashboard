@@ -468,11 +468,11 @@ class FlavorChoiceField(ChoiceField):
                 # If a flavor doesn't meet a minimum requirement,
                 # do not add it to the options list and skip to the
                 # next flavor.
-                if flavor.vcpus < self.requirements['min_vcpus']:
+                if flavor.vcpus < self.requirements.get('min_vcpus', 0):
                     continue
-                if flavor.disk < self.requirements['min_disk']:
+                if flavor.disk < self.requirements.get('min_disk', 0):
                     continue
-                if flavor.ram < self.requirements['min_memory_mb']:
+                if flavor.ram < self.requirements.get('min_memory_mb', 0):
                     continue
                 self.choices.append((flavor.name, flavor.name))
 
