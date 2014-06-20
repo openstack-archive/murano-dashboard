@@ -23,7 +23,7 @@ from muranodashboard.dynamic_ui import yaql_expression
 
 
 def package_list(request, marker=None, filters=None, paginate=False,
-                 page_size=20):
+                 page_size=20, sort_dir=None):
     limit = getattr(settings, 'PACKAGES_LIMIT', 100)
     filters = filters or {}
 
@@ -34,6 +34,8 @@ def package_list(request, marker=None, filters=None, paginate=False,
 
     if marker:
         filters['marker'] = marker
+    if sort_dir:
+        filters['sort_dir'] = sort_dir
 
     client = api.muranoclient(request)
     packages_iter = client.packages.filter(page_size=request_size,

@@ -72,10 +72,11 @@
 
         <div class="btn-toolbar centering">
           <div class="btn-group">
-              {% if view.has_more_data %}
-                  <a class="btn btn-default"
-                     href="{% url 'horizon:murano:catalog:index' %}?category={{ current_category|urlencode }}&{{ view.get_pagination_string }}{% if search %}&search={{ search|urlencode }}{% endif %}">
-                      More Apps</a>
+              {% if view.has_prev_page %}
+                  <a class="btn btn-default" href="{{ view.prev_page_url }}">Previous Page</a>
+              {% endif %}
+              {% if view.has_next_page %}
+                  <a class="btn btn-default" href="{{ view.next_page_url }}">Next Page</a>
               {% endif %}
           </div>
         </div>

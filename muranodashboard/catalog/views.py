@@ -386,7 +386,6 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
 class IndexView(list_view.ListView):
     paginate_by = 6
-    pagination_param = 'marker'
 
     def __init__(self, **kwargs):
         super(IndexView, self).__init__(**kwargs)
@@ -396,24 +395,22 @@ class IndexView(list_view.ListView):
     def get_object_id(datum):
         return datum.id
 
-    def get_marker(self):
-        """Returns the identifier for the last object in the current data set
-        for APIs that use marker/limit-based paging.
+    def get_marker(self, index=-1):
+        """Returns the identifier for the object indexed by ``index`` in the
+        current data set for APIs that use marker/limit-based paging.
         """
         data = self.object_list
         if data:
-            return http_utils.urlquote_plus(self.get_object_id(data[-1]))
+            return http_utils.urlquote_plus(self.get_object_id(data[index]))
         else:
             return ''
 
-    def get_pagination_string(self):
-        """Returns the query parameter string to paginate this table."""
-        return "=".join([self.pagination_param, self.get_marker()])
-
-    def get_queryset(self):
-        query_params = {'type': 'Application'}
-        category = self.request.GET.get('category', ALL_CATEGORY_NAME)
-        marker = self.request.GET.get('marker')
+    def get_query_params(self, internal_query=False):
+        if internal_query:
+            query_params = {'type': 'Application'}
+        else:
+            query_params = {}
+        category = self.get_current_category()
         search = self.request.GET.get('search')
         if search:
             query_params['search'] = search
@@ -421,19 +418,41 @@ class IndexView(list_view.ListView):
             if category != ALL_CATEGORY_NAME:
                 query_params['category'] = category
 
+        return query_params
+
+    def get_queryset(self):
+        query_params = self.get_query_params(internal_query=True)
+        marker = self.request.GET.get('marker')
+        sort_dir = self.request.GET.get('sort_dir')
+
         packages = []
         with api.handled_exceptions(self.request):
             packages, self._more = pkg_api.package_list(
                 self.request, filters=query_params, paginate=True,
-                marker=marker, page_size=self.paginate_by)
+                marker=marker, page_size=self.paginate_by, sort_dir=sort_dir)
 
+        if sort_dir == 'desc':
+            packages.reverse()
         return packages
 
     def get_template_names(self):
         return ['catalog/index.html']
 
-    def has_more_data(self):
-        return self._more
+    def has_next_page(self):
+        if self.request.GET.get('sort_dir', 'asc') == 'asc':
+            return self._more
+        else:
+            query_params = self.get_query_params(internal_query=True)
+            packages, more = pkg_api.package_list(
+                self.request, filters=query_params, paginate=True,
+                marker=self.get_marker(), page_size=1)
+            return len(packages) > 0
+
+    def has_prev_page(self):
+        if self.request.GET.get('sort_dir', 'asc') == 'desc':
+            return self._more
+        else:
+            return self.request.GET.get('marker') is not None
 
     def paginate_queryset(self, queryset, page_size):
         # override this method explicitly to skip unnecessary calculations
@@ -444,15 +463,28 @@ class IndexView(list_view.ListView):
         return self.request.GET.get('category', ALL_CATEGORY_NAME)
 
     def current_page_url(self):
-        query = {'category': self.get_current_category()}
+        query_params = self.get_query_params()
         marker = self.request.GET.get('marker')
-        search = self.request.GET.get('search')
+        sort_dir = self.request.GET.get('sort_dir')
         if marker:
-            query['marker'] = marker
-        if search:
-            query['search'] = search
+            query_params['marker'] = marker
+        if sort_dir:
+            query_params['sort_dir'] = sort_dir
         return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
-                                http_utils.urlencode(query))
+                                http_utils.urlencode(query_params))
+
+    def prev_page_url(self):
+        query_params = self.get_query_params()
+        query_params.update({'marker': self.get_marker(0),
+                             'sort_dir': 'desc'})
+        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+                                http_utils.urlencode(query_params))
+
+    def next_page_url(self):
+        query_params = self.get_query_params()
+        query_params['marker'] = self.get_marker()
+        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+                                http_utils.urlencode(query_params))
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
