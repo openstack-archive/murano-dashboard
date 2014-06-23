@@ -1,10 +1,10 @@
 import os
 import sys
-import testtools
 import uuid
 sys.path.append(os.getcwd())
 
 import selenium.webdriver.common.by as by
+from selenium.webdriver.support.ui import WebDriverWait
 
 from base import UITestCase
 
@@ -202,15 +202,15 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.assertIn("{0}".format(self.image_title),
                       self.driver.page_source)
 
-    @testtools.skip("https://bugs.launchpad.net/murano/+bug/1321690")
     @ordered
-    def test_check_regex_expression_for_ad_name(self):
-        """Test check that validation of domain name field work and appropriate
-        error message is appeared after entering incorrect domain name
+    def test_check_domain_name_field_validation(self):
+        """Test checks that validation of domain name field work
+        and appropriate error message is appeared after entering
+        incorrect domain name
 
         Scenario:
             1. Navigate to Environments page
-            2. Create environment and start to create AD service
+            2. Create environment and start to create MockApp service
             3. Set "a" as a domain name and verify error message
             4. Set "aa" as a domain name and check that error message
             didn't appear
@@ -231,60 +231,310 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-        ad_id = self.get_element_id('Active Directory')
+        testapp_id = self.get_element_id('MockApp')
 
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', ad_id)
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+        field_id = "{0}_0-domain".format(testapp_id)
 
-        self.fill_field(by.By.ID, field='id_0-name', value='a')
+        self.fill_field(by.By.ID, field_id, value='a')
         self.assertTrue(self.check_that_error_message_is_correct(
             'Ensure this value has at least 2 characters (it has 1).', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='aa')
+        self.fill_field(by.By.ID, field_id, value='aa')
         self.assertFalse(self.check_that_error_message_is_correct(
             'Ensure this value has at least 2 characters (it has 1).', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='@ct!v3')
+        self.fill_field(by.By.ID, field_id, value='@ct!v3')
         self.assertTrue(self.check_that_error_message_is_correct(
             'Only letters, numbers and dashes in the middle are allowed.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='active.com')
+        self.fill_field(by.By.ID, field_id, value='active.com')
         self.assertFalse(self.check_that_error_message_is_correct(
             'Only letters, numbers and dashes in the middle are allowed.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='domain')
+        self.fill_field(by.By.ID, field_id, value='domain')
         self.assertTrue(self.check_that_error_message_is_correct(
             'Single-level domain is not appropriate.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='domain.com')
+        self.fill_field(by.By.ID, field_id, value='domain.com')
         self.assertFalse(self.check_that_error_message_is_correct(
             'Single-level domain is not appropriate.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name',
+        self.fill_field(by.By.ID, field_id,
                         value='morethan15symbols.beforedot')
         self.assertTrue(self.check_that_error_message_is_correct(
             'NetBIOS name cannot be shorter than'
             ' 1 symbol and longer than 15 symbols.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name',
+        self.fill_field(by.By.ID, field_id,
                         value='lessthan15.beforedot')
         self.assertFalse(self.check_that_error_message_is_correct(
             'NetBIOS name cannot be shorter than'
             ' 1 symbol and longer than 15 symbols.', 1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='.domain.local')
+        self.fill_field(by.By.ID, field_id, value='.domain.local')
         self.assertTrue(self.check_that_error_message_is_correct(
             'Period characters are allowed only when '
             'they are used to delimit the components of domain style names',
             1))
 
-        self.fill_field(by.By.ID, field='id_0-name', value='domain.local')
+        self.fill_field(by.By.ID, field_id, value='domain.local')
         self.assertFalse(self.check_that_error_message_is_correct(
             'Period characters are allowed only when '
             'they are used to delimit the components of domain style names',
             1))
+
+    @ordered
+    def test_check_app_name_validation(self):
+        """Test checks validation of field that usually define
+        application name
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create Mock App
+            3. Check a set of names, if current name isn't valid
+            appropriate error message should appears
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+        field_id = "{0}_0-name".format(testapp_id)
+
+        self.fill_field(by.By.ID, field_id, value='a')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'Ensure this value has at least 2 characters (it has 1).', 1))
+
+        self.fill_field(by.By.ID, field_id, value='@pp')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'Just letters, numbers, underscores and hyphens are allowed.', 1))
+
+        self.fill_field(by.By.ID, field_id, value='AppL1')
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, '+').is_displayed())
+
+    @ordered
+    def test_check_required_field(self):
+        """Test checks that fields with parameter 'required=True' in yaml form
+        are truly required and can't be omitted
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create MockApp
+            3. Don't type app name in the 'Application Name'
+            field that is required and click 'Next',check that there is
+            error message
+            4. Set app name and click 'Next',
+            check that there is no error message
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'This field is required.', 1))
+
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, '+').is_displayed())
+
+    @ordered
+    def test_integer_field_validation(self):
+        """Test checks that only numbers can be written in integer field
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create MockApp
+            3. Set random string in the integer field and verify error message
+            4. Set number from allowable range in the integer field,
+            check that there is no error message
+            5. Set number that not in allowable range and check error message
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+        field_id = "{0}_0-integer".format(testapp_id)
+
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
+
+        self.fill_field(by.By.ID, field_id, value='0')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'Ensure this value is greater than or equal to 1.', 1))
+
+        self.fill_field(by.By.ID, field_id, value='101')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'Ensure this value is less than or equal to 100.', 1))
+
+        self.fill_field(by.By.ID, field_id, value='aaa')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'Enter a whole number.', 1))
+
+        self.fill_field(by.By.ID, field_id, "55")
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, '+').is_displayed())
+
+    @ordered
+    def test_password_validation(self):
+        """Test checks password validation
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create MockApp
+            3. Set weak password consisting of numbers,
+            check that error message appears
+            4. Set different passwords to Password field and Confirm password
+            field, check that validation failed
+            5. Set correct password. Validation has to pass
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+        field_id = "{0}_0-adminPassword".format(testapp_id)
+
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
+
+        self.fill_field(by.By.ID, field_id, value='123456')
+        self.assertTrue(self.check_that_error_message_is_correct(
+            'The password must contain at least one letter', 1))
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.ID, "{0}-clone".format(field_id),
+                        value='P@ssw0rd')
+        self.assertFalse(self.check_that_error_message_is_correct(
+            'Passwords do not match', 1))
+        self.fill_field(by.By.ID, field_id, value='P@ssw0rd')
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, '+').is_displayed())
+
+    @ordered
+    def test_check_transitions_from_one_wizard_to_another(self):
+        """Test checks that transitions "Next" and "Back" are not broken
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create MockApp
+            3. Set app name and click on "Next", check that second wizard step
+            will appear
+            4. Click 'Back' and check that first wizard step is shown
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, '+').is_displayed())
+
+        self.driver.find_element_by_id(
+            'wizard_{0}_btn'.format(testapp_id)).click()
+
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.ID, "{0}_0-name".format(testapp_id)).is_displayed())
+
+    @ordered
+    def test_check_ability_create_two_dependent_apps(self):
+        """Test checks that using one creation form it is possible to
+        add to related apps in the one environment
+
+        Scenario:
+            1. Navigate to Application Catalog > Applications
+            2. Start to create MockApp
+            3. Set app name and click on "Next"
+            4. Click '+' and verify that creation of second app is possible
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "app1")
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        self.driver.find_element_by_link_text('+').click()
+        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "app2")
+
+    @ordered
+    def test_creation_deletion_app(self):
+        """Test check ability to create and delete test app
+
+        Scenario:
+            1. Navigate to 'Application Catalog'
+            2. Click on 'Quick Deploy' for MockApp application
+            3. Create TestApp app by filling the creation form
+            4. Delete TestApp app from environment
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+
+        self.select_and_click_action_for_app('quick-add', testapp_id)
+
+        self.fill_field(by.By.ID, '{0}_0-name'.format(testapp_id), 'TestA')
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.select_from_list('2-osImage', self.linux_image)
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
+                                                   'TestA'))
+        self.delete_component('TestA')
+        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
+                                                    'TestA'))
 
     @ordered
     def test_modify_package_name(self):
@@ -381,32 +631,6 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.assertTrue(self.check_package_parameter(
             'PostgreSQL', '3', 'True'))
 
-    @testtools.skip("Work in progress")
-    @ordered
-    def test_env_creation_form_app_catalog_page(self):
-        """Test checks that app's option 'Add to environment' is operable
-        when there is no previously created env. In this case creation of the
-        environment should start after clicking 'Add to environment' button
-
-        Scenario:
-            1. Navigate to 'Application Catalog > Applications' panel
-            2. Click on 'Add to environment' button for some application
-            3. Create new environment
-            4. Add application in created environment
-        """
-        self.go_to_submenu('Applications')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'AddToEnv')).click()
-
-        self.fill_field(by.By.ID, 'id_name', 'test_env')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-        self.go_to_submenu('Environments')
-        self.driver.find_element_by_link_text('test_env').click()
-        self.assertTrue(
-            self.driver.find_element_by_id('services__action_AddApplication'))
-
     @ordered
     def test_check_info_about_app(self):
         """Test checks that information about app is available and truly.
@@ -481,6 +705,66 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             format(self.url_prefix, package_category2)))
 
     @ordered
+    def test_check_option_switch_env(self):
+        """Test checks ability to switch environment and add app in other env
+
+        Scenario:
+            1. Navigate to 'Application Catalog>Environments' panel
+            2. Create environment 'env1'
+            3. Create environment 'env2'
+            4. Navigate to 'Application Catalog>Application Catalog'
+            5. Click on 'Environment' panel
+            6. Switch to env2
+            7. Add application in env2
+            8. Navigate to 'Application Catalog>Environments'
+            and go to the env2
+            9. Check that added application is here
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        testapp_id = self.get_element_id('MockApp')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Environments')
+        self.create_environment('env1')
+        self.go_to_submenu('Environments')
+        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
+                                                   'env1'))
+        self.create_environment('env2')
+        self.go_to_submenu('Environments')
+        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
+                                                   'env2'))
+
+        env_id = self.get_element_id('env2')
+
+        self.go_to_submenu('Applications')
+        self.driver.find_element_by_xpath(
+            ".//*[@id='environment_switcher']/a").click()
+
+        self.driver.find_element_by_link_text("env2").click()
+
+        self.select_and_click_action_for_app(
+            'add', '{0}/{1}'.format(testapp_id, env_id))
+
+        self.fill_field(by.By.ID, '{0}_0-name'.format(testapp_id), 'TestA')
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'ButtonSubmit')).click()
+
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.select_from_list('2-osImage', self.linux_image)
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.driver.find_element_by_xpath(
+            self.elements.get('button', 'InputSubmit')).click()
+
+        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
+                                                   'TestA'))
+
+    @ordered
     def test_modify_description(self):
         """Test check ability to change description of the package
 
@@ -501,37 +785,3 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.check_element_on_page(
             ".//*[@class='app-description']",
             'New Description')
-
-    @testtools.skip("Work in progress")
-    @ordered
-    def test_delete_package_and_upload_it(self):
-        """Test check ability to delete package from database
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select some package
-            3. Delete this package
-            4. Upload package
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        package = self.get_element_id('PostgreSQL')
-        self.select_and_click_element(package)
-
-        self.click_on_package_action('delete_package')
-        self.confirm_deletion()
-        self.assertFalse(self.check_element_on_page(
-            by.By.XPATH, './/*[@data-display="PostgreSQL"]'))
-
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        self.click_on_package_action('upload_package')
-        self.choose_and_upload_files('murano-app-incubator/PostgreSQL.zip')
-        self.select_from_list('categories', 'Databases')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, './/*[@data-display="PostgreSQL"]'))

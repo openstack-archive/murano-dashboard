@@ -93,6 +93,10 @@ class UITestCase(BaseDeps):
                                  data=post_body,
                                  headers=cls.headers).json()['id']
 
+        cls.mockapp_id = upload_package(
+            'testApp',
+            {"categories": ["Web"], "tags": ["tag"]},
+            'MockApp.zip')
         cls.postgre_id = upload_package(
             'PostgreSQL',
             {"categories": ["Databases"], "tags": ["tag"]},
@@ -133,6 +137,7 @@ class UITestCase(BaseDeps):
                 url='/v1/catalog/packages/{0}'.format(package_id))
             requests.delete(request_url, headers=cls.headers)
 
+        delete_package(cls.mockapp_id)
         delete_package(cls.postgre_id)
         delete_package(cls.telnet_id)
         delete_package(cls.ad_id)
