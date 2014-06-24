@@ -40,6 +40,8 @@ get_os
 eval req_pkgs="\$$(lowercase $DISTRO_BASED_ON)_pkgs"
 REQ_PKGS="$common_pkgs $req_pkgs"
 
+
+
 function install_prerequisites()
 {
     retval=0
@@ -143,75 +145,7 @@ function run_pip_install()
     fi
     return $retval
 }
-modify_horizon_config()
-{
-    INFILE=$1
-    REMOVE=$2
-    PATTERN='from openstack_dashboard import policy'
-    TMPFILE="./tmpfile"
-    retval=0
-    if [ -f $INFILE ]; then
-        lines=$(sed -ne '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ =' $INFILE)
-        if [ -n "$lines" ]; then
-            if [ ! -z $REMOVE ]; then
-                log "Removing $APPLICATION_NAME data from \"$INFILE\"..."
-                sed -e '/^#START_MURANO_DASHBOARD/,/^#END_MURANO_DASHBOARD/ d' -i $INFILE
-                if [ $? -ne 0 ];then
-                    log "...can't modify \"$INFILE\", check permissions or something else, exiting!!!"
-                    retval=1
-                    return $retval
-                else
-                    log "...success"
-                fi
-            else
-                log "\"$INFILE\" already has $APPLICATION_NAME data, you can change it manually and restart apache2/httpd service"
-            fi
-        else
-            if [ -z "$REMOVE" ]; then
-                log "Adding $APPLICATION_NAME data to \"$INFILE\"..."
-                rm -f $TMPFILE
-                cat >> $TMPFILE << EOF
-#START_MURANO_DASHBOARD
-METADATA_CACHE_DIR = '$APPLICATION_CACHE_DIR'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join('$APPLICATION_DB_DIR', 'openstack-dashboard.sqlite')
-    }
-}
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-HORIZON_CONFIG['dashboards'] += ('murano',)
-INSTALLED_APPS += ('muranodashboard','floppyforms',)
-MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
-verbose_formatter = {'verbose': {'format': '[%(asctime)s] [%(levelname)s] [pid=%(process)d] %(message)s'}}
-if 'formatters' in LOGGING: LOGGING['formatters'].update(verbose_formatter)
-else: LOGGING['formatters'] = verbose_formatter
-LOGGING['handlers']['murano-file'] = {'level': 'DEBUG', 'formatter': 'verbose', 'class': 'logging.FileHandler', 'filename': '$APPLICATION_LOG_DIR/murano-dashboard.log'}
-LOGGING['loggers']['muranodashboard'] = {'handlers': ['murano-file'], 'level': 'DEBUG'}
-LOGGING['loggers']['muranoclient'] = {'handlers': ['murano-file'], 'level': 'ERROR'}
-#ADVANCED_NETWORKING_CONFIG = {'max_environments': 100, 'max_hosts': 250, 'env_ip_template': '10.0.0.0'}
-#NETWORK_TOPOLOGY = 'routed'
-#MURANO_API_URL = "http://localhost:8082"
-#if murano-api set up with ssl uncomment next strings
-#MURANO_API_INSECURE = True
-MAX_FILE_SIZE_MB = 5
-#END_MURANO_DASHBOARD
-EOF
-            sed -ne "/$PATTERN/r  $TMPFILE" -e 1x  -e '2,${x;p}' -e '${x;p}' -i $INFILE
-            if [ $? -ne 0 ];then
-                log "Can't modify \"$INFILE\", check permissions or something else, exiting!!!"
-            else
-                rm -f $TMPFILE
-                log "...success"
-            fi
-        fi
-    fi
-    else
-        echo "File \"$1\" not found, exiting!!!"
-        retval=1
-    fi
-    return $retval
-}
+
 function find_horizon_config()
 {
     retval=0
@@ -219,31 +153,28 @@ function find_horizon_config()
     do
         if [ -e "$cfg_file" ]; then
             log "Horizon config found at \"$cfg_file\""
-            modify_horizon_config $cfg_file $1
-            retval=0
-            break
+            if [ -z "$1" ]; then
+                ./update_setting.sh --input=$cfg_file --cache-dir=$APPLICATION_CACHE_DIR --log-file="$APPLICATION_LOG_DIR/murano-dashboard.log"
+                if [ $? -ne 0 ]; then
+                    log "Updating config failed!"
+                    return 1
+                fi
+            else
+                ./update_setting.sh --input=$cfg_file -r
+                if [ $? -ne 0 ]; then
+                    log "Updating config failed!"
+                    return 1
+                fi
+            fi
+            return 0
         else
+            log "Horizon settings file is not found '$cfg_file'"
             retval=1
         fi
     done
     if [ $retval -eq 1 ]; then
         log "Horizon config not found or openstack-dashboard does not installed, to override this set proper \"HORIZON_CONFIGS\" variable, exiting!!!"
         #exit 1
-    fi
-    return $retval
-}
-
-function prepare_db()
-{
-    horizon_manage=$1
-    retval=0
-    log "Creating db for storing sessions..."
-    su -c "python $horizon_manage syncdb --noinput >> $LOGFILE 2>&1" -s /bin/bash $WEB_SERVICE_USER
-    if [ $? -ne 0 ]; then
-        log "...\"$horizon_manage\" syncdb failed, exiting!!!"
-        retval=1
-    else
-        log "..success"
     fi
     return $retval
 }
@@ -335,7 +266,6 @@ function rebuildstatic()
         log "...success"
     fi
     restore_symlinks_from_static_dir "$(dirname $horizon_manage)"
-    prepare_db "$horizon_manage" || retval=$?
     return $retval
 }
 function run_pip_uninstall()

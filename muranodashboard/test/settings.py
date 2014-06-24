@@ -1,15 +1,15 @@
 import socket
 
+SECRET_KEY = 'HELLA_SECRET!'
+
+DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
+
 from muranodashboard.settings import *  # noqa
 
 socket.setdefaulttimeout(1)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-SECRET_KEY = 'HELLA_SECRET!'
-
-DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
 
 TESTSERVER = 'http://testserver'
 
