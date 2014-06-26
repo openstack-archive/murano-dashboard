@@ -677,9 +677,11 @@ def make_select_cls(fqns):
         def __init__(self, empty_value_message=None, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
             if empty_value_message is not None:
-                self.choices = [('', _(empty_value_message))]
+                self.empty_value_message = _(empty_value_message)
             else:
-                self.choices = [('', _('Select Application'))]
+                self.empty_value_message = _('Select Application')
+
+            self.empty_value_message = empty_value_message
 
         @with_request
         def update(self, request, environment_id, **kwargs):
@@ -697,7 +699,9 @@ def make_select_cls(fqns):
 
             self.widget.add_item_link = _make_link
             apps = env_api.service_list_by_fqns(request, environment_id, fqns)
-            self.choices.extend([(app['?']['id'], app.name) for app in apps])
+            choices = [('', self.empty_value_message)]
+            choices.extend([(app['?']['id'], app.name) for app in apps])
+            self.choices = choices
 
         def clean(self, value):
             value = super(DynamicSelect, self).clean(value)
