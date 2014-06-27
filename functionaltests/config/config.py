@@ -21,19 +21,7 @@ CommonGroup = [
                help='keystone url'),
     cfg.StrOpt('murano_url',
                default='http://127.0.0.1:8082',
-               help='murano url'),
-    cfg.StrOpt('keypair_name',
-               default='default_key',
-               help='keypair for murano services'),
-    cfg.StrOpt('asp_git_repository',
-               default='git://github.com/',
-               help='git repository with asp application'),
-    cfg.StrOpt('tomcat_repository',
-               default='git://github.com/',
-               help='git repository with tomcat servlet'),
-    cfg.StrOpt('selenium_server',
-               default='http://127.0.0.1:4444/wd/hub',
-               help='url where selenium server is running')
+               help='murano url')
 ]
 
 
@@ -42,8 +30,7 @@ def register_config(config, config_group, config_opts):
     config.register_group(config_group)
     config.register_opts(config_opts, config_group)
 
-path = os.path.join("%s/config/config_file.conf"
-                    % os.getcwd())
+path = os.path.join(os.path.dirname(__file__), "config_file.conf")
 
 if os.path.exists(path):
     cfg.CONF([], project='muranodashboard', default_config_files=[path])
