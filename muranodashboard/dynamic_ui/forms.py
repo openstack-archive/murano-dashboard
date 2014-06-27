@@ -165,11 +165,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         LOG.info("Creating form {0}".format(self.__class__.__name__))
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
 
+        self.auto_id = '{0}_%s'.format(self.initial.get('app_id'))
         self.context = yaql.create_context()
         yaql_functions.register(self.context)
 
         self.finalize_fields()
-        self.initial = kwargs.get('initial', self.initial)
         self.update_fields()
 
     def finalize_fields(self):

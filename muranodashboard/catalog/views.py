@@ -346,6 +346,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         if env_id is None:
             env_id = self.request.session.get('quick_env_id')
         init_dict = {'request': self.request,
+                     'app_id': self.kwargs['app_id'],
                      'environment_id': env_id}
 
         return self.initial_dict.get(step, init_dict)
