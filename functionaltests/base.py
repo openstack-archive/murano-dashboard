@@ -97,14 +97,6 @@ class UITestCase(BaseDeps):
             'PostgreSQL',
             {"categories": ["Databases"], "tags": ["tag"]},
             'murano-app-incubator/io.murano.apps.PostgreSql.zip')
-        cls.apache_id = upload_package(
-            'Apache',
-            {"categories": ["Application Servers"], "tags": ["tag"]},
-            'murano-app-incubator/io.murano.apps.apache.Apache.zip')
-        cls.tomcat_id = upload_package(
-            'Tomcat',
-            {"categories": ["Application Servers"], "tags": ["tag"]},
-            'murano-app-incubator/io.murano.apps.apache.Tomcat.zip')
         cls.telnet_id = upload_package(
             'Telnet',
             {"categories": ["Web"], "tags": ["tag"]},
@@ -142,8 +134,6 @@ class UITestCase(BaseDeps):
             requests.delete(request_url, headers=cls.headers)
 
         delete_package(cls.postgre_id)
-        delete_package(cls.apache_id)
-        delete_package(cls.tomcat_id)
         delete_package(cls.telnet_id)
         delete_package(cls.ad_id)
 

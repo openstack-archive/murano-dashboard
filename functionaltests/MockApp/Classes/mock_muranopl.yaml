@@ -1,0 +1,8 @@
+#Note: it is a fake application, it isn't intended to be deployed
+Namespaces:
+  =: io.murano.apps
+  std: io.murano
+
+Name: MockApp
+
+Extends: std:Application
