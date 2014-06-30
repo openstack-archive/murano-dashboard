@@ -14,6 +14,8 @@
 
 import testtools
 
+import mock
+
 from muranodashboard.common import utils
 
 
@@ -67,3 +69,19 @@ class BunchTests(testtools.TestCase):
         del obj['two']
 
         self.assertNotIn('two', obj)
+
+
+class DeprecatedDecoratorTests(testtools.TestCase):
+    @mock.patch('muranodashboard.common.utils.LOG')
+    def test_decorating_class(self, LOG):
+        dec = utils.deprecated(utils.deprecated.JUNO,
+                               in_favor_of='some class yet to be designed',
+                               remove_in=1)
+
+        @dec
+        class SampleClass(object):
+            pass
+        SampleClass()
+
+        self.assertEqual(type, SampleClass.__class__)
+        LOG.deprecated.assert_called_once_with(*dec._build_message())
