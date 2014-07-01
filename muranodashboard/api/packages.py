@@ -98,6 +98,11 @@ def get_app_logo(request, app_id):
     return api.muranoclient(request).packages.get_logo(app_id)
 
 
+@cache.with_cache('supplier_logo', 'supplier_logo.png')
+def get_app_supplier_logo(request, app_id):
+    return api.muranoclient(request).packages.get_supplier_logo(app_id)
+
+
 @cache.with_cache('package')
 def get_app_fqn(request, app_id):
     package = api.muranoclient(request).packages.get(app_id)

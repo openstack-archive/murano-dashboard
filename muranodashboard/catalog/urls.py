@@ -40,5 +40,7 @@ urlpatterns = urls.patterns(
              name='quick_deploy'),
     urls.url(r'^details/(?P<application_id>[^/]+)$',
              views.AppDetailsView.as_view(), name='application_details'),
-    urls.url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images")
+    urls.url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images"),
+    urls.url(r'^supplier-images/(?P<app_id>[^/]*)', 'get_supplier_image',
+             name="supplier_images")
 )

@@ -33,7 +33,7 @@ class AppOverviewTab(tabs.Tab):
         LOG.debug('AppOverviewTab: {0}'.format(self.app))
 
     def get_context_data(self, request):
-        return {'application': self.app}
+        return {'app': self.app}
 
 
 class AppRequirementsTab(tabs.Tab):
