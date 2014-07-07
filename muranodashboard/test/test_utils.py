@@ -12,12 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import unittest2 as unittest
+import testtools
 
 from muranodashboard.common import utils
 
 
-class BunchTests(unittest.TestCase):
+class BunchTests(testtools.TestCase):
     def test_get_attr(self):
         obj = utils.Bunch(one=10)
 
