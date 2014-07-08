@@ -105,8 +105,10 @@ def wrap_regex_validator(validator, message):
 def get_murano_images(request):
     images = []
     try:
-        # public filter removed
-        images, _more = glance.image_list_detailed(request)
+        # https://bugs.launchpad.net/murano/+bug/1339261 - glance
+        # client version change alters the API. Other tuple values
+        # are _more and _prev (in recent glance client)
+        images = glance.image_list_detailed(request)[0]
     except Exception:
         LOG.error("Error to request image list from glance ")
         exceptions.handle(request, _("Unable to retrieve public images."))

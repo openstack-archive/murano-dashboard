@@ -62,7 +62,10 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
 
         images = []
         try:
-            images, _more = glance.image_list_detailed(request)
+            # https://bugs.launchpad.net/murano/+bug/1339261 - glance
+            # client version change alters the API. Other tuple values
+            # are _more and _prev (in recent glance client)
+            images = glance.image_list_detailed(request)[0]
         except Exception:
             LOG.error('Failed to request image list from Glance')
             exceptions.handle(request, _('Unable to retrieve list of images'))
