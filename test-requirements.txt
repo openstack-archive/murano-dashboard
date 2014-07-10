@@ -3,12 +3,10 @@ hacking>=0.8.0,<0.9
 coverage>=3.6
 django-nose
 nose
-nose-exclude
-nosexcover
 openstack.nose_plugin>=0.7
 nosehtmloutput>=0.0.3
 
-unittest2
+testtools>=0.9.34
 mock>=1.0
 
 # Docs Requirements
