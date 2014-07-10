@@ -8,6 +8,7 @@ nosehtmloutput>=0.0.3
 
 testtools>=0.9.34
 mock>=1.0
+mox>=0.5.3
 
 # Docs Requirements
 sphinx>=1.1.2,<1.2
