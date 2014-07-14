@@ -1,22 +1,20 @@
-import os
-import random
-import sys
-
-import ConfigParser
 import json
 import logging
-import requests
-from selenium.common.exceptions import NoSuchElementException
+import sys
+import urlparse
+
+from glanceclient import client as gclient
+from keystoneclient.v2_0 import client as ksclient
+from muranoclient import client as mclient
+from selenium.common import exceptions as exc
 from selenium import webdriver
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support.ui import WebDriverWait
 import testtools
-import time
 
 import config.config as cfg
-from glanceclient import client as gclient
-from keystoneclient.v2_0 import client as ksclient
-from muranoclient import client as mclient
+from functionaltests import consts
+from functionaltests import utils
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -34,186 +32,70 @@ else:
         pass
 
 
-class ImageException(Exception):
-    message = "Image doesn't exist"
-
-    def __init__(self, im_type):
-        self._error_string = (self.message + '\nDetails: {0} image is '
-                                             'not found,'.format(im_type))
-
-    def __str__(self):
-        return self._error_string
+class OrderedMethodMixin(object):
+    __metaclass__ = utils.OrderedMethodMetaclass
 
 
-class UITestCase(BaseDeps):
-
+class UITestCase(OrderedMethodMixin, BaseDeps):
     @classmethod
     def setUpClass(cls):
-        super(UITestCase, cls).setUpClass()
-        keystone_client = ksclient.Client(username=cfg.common.user,
-                                          password=cfg.common.password,
-                                          tenant_name=cfg.common.tenant,
-                                          auth_url=cfg.common.keystone_url)
-
-        cls.murano_client = mclient.Client('1', endpoint=cfg.common.murano_url,
-                                           token=keystone_client.auth_token)
-        glance_endpoint = keystone_client.service_catalog.url_for(
-            service_type='image', endpoint_type='publicURL')
-        glance = gclient.Client('1', endpoint=glance_endpoint,
-                                token=keystone_client.auth_token)
-        cls.headers = {'X-Auth-Token': keystone_client.auth_token}
-
-        image_list = []
-        for i in glance.images.list():
-            image_list.append(i)
-
-        cls.demo_image = cls.get_image_name('demo', image_list)
-        cls.linux_image = cls.get_image_name('linux', image_list)
-        cls.windows_image = cls.get_image_name('windows', image_list)
-
-        cls.elements = ConfigParser.RawConfigParser()
-        cls.elements.read('common.ini')
-        cls.logger = logging.getLogger(__name__)
-
-        cls.url_prefix = cfg.common.horizon_url.split('/')[-1]
-        cls.location = os.path.realpath(
-            os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
-        def upload_package(package_name, body, app):
-            files = {'%s' % package_name: open(
-                os.path.join(cls.location, app), 'rb')}
-
-            post_body = {'JsonString': json.dumps(body)}
-            request_url = '{endpoint}{url}'.format(
-                endpoint=cfg.common.murano_url,
-                url='/v1/catalog/packages')
-
-            return requests.post(request_url,
-                                 files=files,
-                                 data=post_body,
-                                 headers=cls.headers).json()['id']
-
-        cls.mockapp_id = upload_package(
-            'testApp',
-            {"categories": ["Web"], "tags": ["tag"]},
-            'MockApp.zip')
-        cls.postgre_id = upload_package(
-            'PostgreSQL',
-            {"categories": ["Databases"], "tags": ["tag"]},
-            'murano-app-incubator/io.murano.apps.PostgreSql.zip')
-        cls.telnet_id = upload_package(
-            'Telnet',
-            {"categories": ["Web"], "tags": ["tag"]},
-            'murano-app-incubator/io.murano.apps.linux.Telnet.zip')
-        cls.ad_id = upload_package(
-            'Active Directory',
-            {"categories": ["Microsoft Services"], "tags": ["tag"]},
-            'murano-app-incubator/io.murano.windows.ActiveDirectory.zip')
+        cls.keystone_client = ksclient.Client(username=cfg.common.user,
+                                              password=cfg.common.password,
+                                              tenant_name=cfg.common.tenant,
+                                              auth_url=cfg.common.keystone_url)
+        cls.murano_client = mclient.Client(
+            '1', endpoint=cfg.common.murano_url,
+            token=cls.keystone_client.auth_token)
+        cls.url_prefix = urlparse.urlparse(cfg.common.horizon_url).path or ''
 
     def setUp(self):
         super(UITestCase, self).setUp()
 
         self.driver = webdriver.Firefox()
-
+        self.driver.maximize_window()
         self.driver.get(cfg.common.horizon_url + '/')
         self.driver.implicitly_wait(30)
         self.log_in()
 
     def tearDown(self):
         super(UITestCase, self).tearDown()
-        self.addOnException(self.take_screenshot(self._testMethodName))
         self.driver.quit()
 
         for env in self.murano_client.environments.list():
             self.murano_client.environments.delete(env.id)
 
-    @classmethod
-    def tearDownClass(cls):
-        super(UITestCase, cls).tearDownClass()
-
-        def delete_package(package_id):
-            request_url = '{endpoint}{url}'.format(
-                endpoint=cfg.common.murano_url,
-                url='/v1/catalog/packages/{0}'.format(package_id))
-            requests.delete(request_url, headers=cls.headers)
-
-        delete_package(cls.mockapp_id)
-        delete_package(cls.postgre_id)
-        delete_package(cls.telnet_id)
-        delete_package(cls.ad_id)
-
-    def take_screenshot(self, test_name):
-        screenshot_dir = './screenshots'
-        if not os.path.exists(screenshot_dir):
-            os.makedirs(screenshot_dir)
-        filename = '{0}/{1}.png'.format(screenshot_dir, test_name)
-        self.driver.get_screenshot_as_file(filename)
-        log.debug("\nScreenshot {0} was saved".format(filename))
-
-    @classmethod
-    def get_image_name(cls, type_of_image, list_of_images):
-        for i in list_of_images:
-            if 'murano_image_info' in i.properties.keys():
-                if type_of_image in json.loads(
-                        i.properties['murano_image_info'])['type']:
-                    return json.loads(i.properties[
-                        'murano_image_info'])['title']
-        raise ImageException(type_of_image)
-
     def log_in(self):
         self.fill_field(by.By.ID, 'id_username', cfg.common.user)
         self.fill_field(by.By.ID, 'id_password', cfg.common.password)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'Murano')).click()
+        self.driver.find_element_by_xpath(consts.Murano).click()
 
     def fill_field(self, by_find, field, value):
         self.driver.find_element(by=by_find, value=field).clear()
         self.driver.find_element(by=by_find, value=field).send_keys(value)
 
-    def confirm_deletion(self):
-        confirm_deletion = self.elements.get('button', 'ConfirmDeletion')
-        self.driver.find_element_by_xpath(confirm_deletion).click()
+    def get_element_id(self, el_name):
+        path = self.driver.find_element_by_xpath(
+            ".//*[@data-display='{0}']".format(el_name)).get_attribute("id")
+        return path.split('__')[-1]
 
-    def create_environment(self, env_name):
-        self.driver.find_element_by_id(
-            'murano__action_CreateEnvironment').click()
-        self.fill_field(by.By.ID, 'id_name', env_name)
+    def select_and_click_action_for_app(self, action, app):
         self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, 'Add Component').is_displayed())
-
-    def delete_environment(self, env_name):
-        self.driver.find_element_by_link_text('Environments').click()
-        self.click_on_more(env_name)
-        self.select_action_for_environment(env_name, 'delete')
-        self.confirm_deletion()
-
-    def edit_environment(self, old_name, new_name):
-        self.click_on_more(old_name)
-        self.select_action_for_environment(old_name, 'edit')
-        self.fill_field(by.By.ID, 'id_name', new_name)
-        save = self.elements.get('button', 'InputSubmit')
-        self.driver.find_element_by_xpath(save).click()
-
-    def click_on_more(self, env_name):
-        element_id = self.get_element_id(env_name)
-        self.driver.find_element_by_xpath(
-            ".//*[@id='murano__row__{0}']/td[4]/div/a[2]".
-            format(element_id)).click()
-
-    def select_action_for_environment(self, env_name, action):
-        element_id = self.get_element_id(env_name)
-        self.driver.find_element_by_id(
-            "murano__row_{0}__action_{1}".format(element_id, action)).click()
+            "//*[@href='{0}/murano/catalog/{1}/{2}']".format(self.url_prefix,
+                                                             action,
+                                                             app)).click()
 
     def go_to_submenu(self, link):
-        self.driver.find_element_by_link_text('{0}'.format(link)).click()
+        self.driver.find_element_by_partial_link_text(
+            '{0}'.format(link)).click()
+
+    def check_panel_is_present(self, panel_name):
+        self.assertIn(panel_name,
+                      self.driver.find_element_by_xpath(
+                          ".//*[@class='page-header']").text)
 
     def navigate_to(self, menu):
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', '{0}'.format(menu))).click()
+        self.driver.find_element_by_xpath(getattr(consts, menu)).click()
 
     def select_from_list(self, list_name, value):
         self.driver.find_element_by_xpath(
@@ -223,70 +105,132 @@ class UITestCase(BaseDeps):
     def check_element_on_page(self, method, value):
         try:
             self.driver.find_element(method, value)
-        except NoSuchElementException:
-            return False
-        return True
+        except (exc.NoSuchElementException, exc.ElementNotVisibleException):
+            self.fail("Element {0} is not preset on the page".format(value))
 
-    def env_to_components_list(self, env_name):
-        element_id = self.get_element_id(env_name)
+    def check_element_not_on_page(self, method, value):
+        self.driver.implicitly_wait(2)
+        present = True
+        try:
+            self.driver.find_element(method, value)
+        except (exc.NoSuchElementException, exc.ElementNotVisibleException):
+            present = False
+        self.assertFalse(present, "Element {0} is preset on the page"
+                                  " while it should't".format(value))
+        self.driver.implicitly_wait(30)
+
+    def create_environment(self, env_name):
         self.driver.find_element_by_id(
-            "murano__row_{0}__action_show".format(element_id)).click()
+            'murano__action_CreateEnvironment').click()
+        self.fill_field(by.By.ID, 'id_name', env_name)
+        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            by.By.LINK_TEXT, 'Add Component').is_displayed())
 
-    def get_element_id(self, el_name):
-        path = self.driver.find_element_by_xpath(
-            ".//*[@data-display='{0}']".format(el_name)).get_attribute("id")
-        return path.split('__')[-1]
 
+class PackageBase(UITestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(PackageBase, cls).setUpClass()
+        cls.mockapp_id = utils.upload_app_package(
+            cls.murano_client,
+            "MockApp",
+            {"categories": ["Web"], "tags": ["tag"]})
+        cls.postgre_id = utils.upload_app_package(
+            cls.murano_client,
+            "PostgreSQL",
+            {"categories": ["Databases"], "tags": ["tag"]})
+
+    @classmethod
+    def tearDownClass(cls):
+        super(PackageBase, cls).tearDownClass()
+        cls.murano_client.packages.delete(cls.mockapp_id)
+        cls.murano_client.packages.delete(cls.postgre_id)
+
+
+class ImageTestCase(PackageBase):
+    @classmethod
+    def setUpClass(cls):
+        super(ImageTestCase, cls).setUpClass()
+        glance_endpoint = cls.keystone_client.service_catalog.url_for(
+            service_type='image', endpoint_type='publicURL')
+        cls.glance = gclient.Client('1', endpoint=glance_endpoint,
+                                    token=cls.keystone_client.auth_token)
+        cls.image = cls.upload_image()
+
+    @classmethod
+    def tearDownClass(cls):
+        super(ImageTestCase, cls).tearDownClass()
+        cls.glance.images.delete(cls.image.id)
+
+    @classmethod
+    def upload_image(cls):
+        try:
+            property = {'murano_image_info': json.dumps({'title': 'New Image',
+                                                         'type': 'linux'})}
+            image = cls.glance.images.create(name='TestImage',
+                                             disk_format='qcow2',
+                                             size=0,
+                                             is_public=True,
+                                             properties=property)
+        except Exception as e:
+            log.exception("Unable to create or update image in Glance")
+            raise e
+        return image
+
+    def select_and_click_element(self, element):
+        self.driver.find_element_by_xpath(
+            ".//*[@value = '{0}']".format(element)).click()
+
+
+class EnvironmentTestCase(UITestCase):
+    def delete_environment(self, env_name):
+        self.select_action_for_environment(env_name, 'delete')
+        self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
+
+    def edit_environment(self, old_name, new_name):
+        self.select_action_for_environment(old_name, 'edit')
+        self.fill_field(by.By.ID, 'id_name', new_name)
+        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+
+    def select_action_for_environment(self, env_name, action):
+        element_id = self.get_element_id(env_name)
+        more_button = consts.More.format(element_id)
+        self.driver.find_element_by_xpath(more_button).click()
+        self.driver.find_element_by_id(
+            "murano__row_{0}__action_{1}".format(element_id, action)).click()
+
+
+class FieldsTestCase(PackageBase):
+    def check_error_message_is_present(self, error_message):
+        self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
+        self.driver.find_element_by_xpath(
+            '//span[@class="help-inline"]'
+            '[contains(text(), "{0}")]'.format(error_message))
+
+    def check_error_message_is_absent(self, error_message):
+        self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
+
+        self.driver.implicitly_wait(2)
+        try:
+            self.driver.find_element_by_xpath(
+                '//span[@class="help-inline"]'
+                '[contains(text(), "{0}")]'.format(error_message))
+        except (exc.NoSuchElementException, exc.ElementNotVisibleException):
+            log.info("Message {0} is not"
+                     " present on the page".format(error_message))
+
+        self.driver.implicitly_wait(30)
+
+
+class ApplicationTestCase(ImageTestCase):
     def delete_component(self, component_name):
         component_id = self.get_element_id(component_name)
         self.driver.find_element_by_id(
             'services__row_{0}__action_delete'.format(component_id)).click()
         self.driver.find_element_by_link_text('Delete Component').click()
 
-    def get_env_subnet(self):
-        help_text = self.driver.find_element_by_xpath(
-            "(.//span[@class = 'help-inline'])[1]").text
-        subnet = help_text.split('.')[-2]
-        num = random.randint(0, 255)
-        return '10.0.{0}.{1}'.format(subnet, num)
-
-    def check_that_error_message_is_correct(self, error_message, num):
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-        time.sleep(3)
-        appeared_text = self.driver.find_element_by_xpath(
-            ".//div[@class = 'control-group form-field clearfix error'][%d]"
-            % num).text
-        index = appeared_text.find(error_message)
-
-        if index != -1:
-            return True
-        else:
-            return False
-
-    def check_that_alert_message_is_appeared(self, error_message):
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        xpath = ".//*[@id='create_service_form']/div[2]/input[2]"
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.XPATH, xpath).is_displayed())
-
-        appeared_text = self.driver.find_element_by_xpath(
-            "(.//div[@class = 'alert alert-message alert-error'])").text
-        index = appeared_text.find(error_message)
-
-        if index != -1:
-            return True
-        else:
-            return False
-
-    def click_on_package_action(self, action):
-        self.driver.find_element_by_xpath(
-            ".//*[@id='packages__action_{0}']".format(action)).click()
-
     def select_action_for_package(self, package, action):
-        time.sleep(2)
         package_id = self.get_element_id(package)
         if action == 'more':
             self.driver.find_element_by_xpath(
@@ -312,24 +256,7 @@ class UITestCase(BaseDeps):
         else:
             return False
 
-    def select_and_click_element(self, element):
-        self.driver.find_element_by_xpath(
-            ".//*[@value = '{0}']".format(element)).click()
-
-    def choose_and_upload_files(self, name):
-        __location = os.path.realpath(os.path.join(os.getcwd(),
-                                                   os.path.dirname(__file__)))
-        self.driver.find_element_by_xpath(".//*[@id='id_file']").click()
-        self.driver.find_element_by_id('id_file').send_keys(
-            os.path.join(__location, name))
-
-    def select_and_click_action_for_app(self, action, app):
-        self.driver.find_element_by_xpath(
-            "//*[@href='/{0}/murano/catalog/{1}/{2}']"
-            .format(self.url_prefix, action, app)).click()
-
     def modify_package(self, param, value):
         self.fill_field(by.By.ID, 'id_{0}'.format(param), value)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(consts.InputSubmit).click()
         self.driver.refresh()
