@@ -213,6 +213,15 @@ def get_image(request, app_id):
         return http.HttpResponseRedirect(universal_logo)
 
 
+def get_supplier_image(request, app_id):
+    content = pkg_api.get_app_supplier_logo(request, app_id)
+    if content:
+        return http.HttpResponse(content=content, content_type='image/png')
+    else:
+        universal_logo = static('muranodashboard/images/icon.png')
+        return http.HttpResponseRedirect(universal_logo)
+
+
 class LazyWizard(wizard_views.SessionWizardView):
     """The class which defers evaluation of form_list and condition_dict
     until view method is called. So, each time we load a page with a dynamic

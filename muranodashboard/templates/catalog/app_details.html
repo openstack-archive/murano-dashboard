@@ -2,47 +2,33 @@
 {% load i18n sizeformat %}
 {% load static %}
 {% load url from future %}
-{% block title %}{% trans "Application Details" %}{% endblock %}
+{% block title %}{% trans "Application Details" %}: {{ app.name }}{% endblock %}
 
 {% block page_header %}
 <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
 <link rel="stylesheet" href="{% static 'muranodashboard/css/font-awesome.min.css' %}">
-    {% include "catalog/_details_page_header.html" %}
+    {% include "catalog/_details_page_header.html" with name=app.name %}
 {% endblock page_header %}
 
 {% block main %}
 <div class="table_wrapper">
-<div class="row-fluid">
- <div class="span12">
-    <div class="btn-group pull-right">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="btn-group pull-right">
         {% with class='btn btn-small btn-add ajax-modal' %}
             {% include 'catalog/add_app.html' %}
         {% endwith %}
         {% with class='btn btn-small btn-add ajax-modal' %}
             {% include 'catalog/quick_deploy.html' %}
         {% endwith %}
+      </div>
+      <div class="clearfix">
+        <div class="app-icon pull-left">
+          <img src="{% url 'horizon:murano:catalog:images' app.id %}" />
+        </div>
+      </div>
+      {{ tab_group.render }}
     </div>
-    <h3>{{ app.name }}</h3>
-     {{ tab_group.render }}
- <div class="well app-meta">
-     <div class="app-icon pull-left">
-       <img src="{% url 'horizon:murano:catalog:images' app.id %}" />
-     </div>
-     <div class="">
-       <ul>
-        <li><strong>Fully Qualified Application Name:</strong> {{ app.fully_qualified_name }}</li>
-        <li><strong>Author:</strong> {{ app.author }}</li>
-        <li><strong>Active:</strong> {{ app.enabled }}</li>
-        <li><strong>Public:</strong> {{ app.is_public }}</li>
-        <li><strong>Type:</strong> {{ app.type }}</li>
-        <li><strong>Tags:</strong> {{ app.tags|join:", " }}</li>
-        <li><strong>Categories:</strong> {% for category in app.categories %} {{ category }} {% endfor %}</li>
-
-        </ul>
-     </div>
-
+  </div>
 </div>
-</div>
-</div>
-    </div>
 {% endblock %}

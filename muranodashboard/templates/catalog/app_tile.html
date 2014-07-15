@@ -5,12 +5,14 @@
 <div class="span4 well app">
     <div class="app-description">
         <div class="span1 app-icon">
-            <img src="{% url 'horizon:murano:catalog:images' app.id %}"/>
+            <a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link">
+                <img src="{% url 'horizon:murano:catalog:images' app.id %}"/>
+            </a>
         </div>
         <div class="span3 app-summary description">
             <h4>{{ app.name }}</h4>
-            <p title="{{ app.description }}">{{ app.description|truncatechars:130 }}</p>
-            <div class="pull-right"><a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link">Details &raquo;</a></div>
+            <p title="{{ app.description }}">{{ app.description|striptags|truncatechars:130 }}</p>
+            <div class="pull-right app-details-link"><a href="{% url 'horizon:murano:catalog:application_details' app.id %}" class="btn-link">Details &raquo;</a></div>
          </div>
     </div>
 

@@ -56,7 +56,7 @@ h3.heading_switcher a.btn {
   padding-top:15px;
   margin-top:15px;
 }
-.app-description {
+.app-list .app-description {
   height: 100px;
 }
 .btn-link {
@@ -140,21 +140,24 @@ h3.link .caret {
   margin-top:20px;
 }
 .app-meta {
-  margin-top:30px;
+  padding:10px;
+}
+.tab-content {
+  margin-bottom:10px;
+}
+.app-meta .app-supplier {
+  border-top:1px solid #ddd;
+  padding-top:15px;
+  margin-top:15px;
 }
 .app-icon {
   line-height:0;
   overflow:hidden;
   margin-left:0;
-}
-.app-meta .app-icon {
-  margin-right:30px;
-  width:70px;
-  height:70px
+  max-height:70px
 }
 .app-icon img {
-  width:100%;
-  height:70px;
+  max-height:70px;
   margin:0px;
 }
 
