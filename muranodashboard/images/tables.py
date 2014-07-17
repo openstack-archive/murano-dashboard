@@ -34,7 +34,7 @@ class RemoveImageMetadata(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         try:
-            glance.image_update(request, obj_id, properties={})
+            glance.image_update(request, obj_id, purge_props=True)
         except Exception:
             exceptions.handle(request, _('Unable to remove metadata'),
                               redirect='horizon:murano:images:index')
