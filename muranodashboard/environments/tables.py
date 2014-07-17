@@ -219,6 +219,7 @@ class EnvironmentsTable(tables.DataTable):
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        EditEnvironment, DeleteEnvironment)
+        multi_select = False
 
 
 def get_service_details_link(service):
