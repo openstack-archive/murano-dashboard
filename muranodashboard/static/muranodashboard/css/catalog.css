@@ -202,3 +202,12 @@ h3.link .caret {
 .no-results {
   margin-bottom: 25px;
 }
+.app_requirements ul li {
+  font-weight: bold;
+}
+.app_requirements ul li ul {
+  margin-left: 30px;
+}
+.app_requirements ul li ul li {
+  font-weight: normal;
+}
