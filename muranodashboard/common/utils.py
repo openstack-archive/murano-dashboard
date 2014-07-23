@@ -14,6 +14,12 @@
 
 import string
 
+from openstack_dashboard.openstack.common import log
+
+from muranodashboard.openstack.common import versionutils
+
+LOG = log.getLogger(__name__)
+
 
 def ensure_python_obj(obj):
     mappings = {'True': True, 'False': False, 'None': None}
@@ -54,3 +60,31 @@ class BlankFormatter(string.Formatter):
             return kwargs.get(key, self.default)
         else:
             return string.Formatter.get_value(self, key, args, kwargs)
+
+
+class deprecated(versionutils.deprecated):
+    """A decorator to mark both functions and classes as deprecated."""
+    JUNO = 'J'
+
+    _RELEASES = {
+        'F': 'Folsom',
+        'G': 'Grizzly',
+        'H': 'Havana',
+        'I': 'Icehouse',
+        'J': 'Juno'
+    }
+
+    def __call__(self, func_or_cls):
+        if hasattr(func_or_cls, 'func_code'):
+            return super(deprecated, self).__call__(func_or_cls)
+        else:
+            if not self.what:
+                self.what = func_or_cls.__name__ + '()'
+            msg, details = self._build_message()
+
+            class cls(func_or_cls):
+                def __init__(self, *args, **kwargs):
+                    LOG.deprecated(msg, details)
+                    super(cls, self).__init__(*args, **kwargs)
+
+            return cls
