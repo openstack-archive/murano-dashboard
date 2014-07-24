@@ -101,6 +101,31 @@ class ToggleEnabled(tables.BatchAction):
                     _("Package '{0}' successfully toggled").format(obj.name))
 
 
+class TogglePublicEnabled(tables.BatchAction):
+    name = 'toggle_public_enabled'
+    data_type_singular = _('Public')
+    data_type_plural = _('Public')
+    action_present = _('Toggle')
+    action_past = _('Toggled')
+
+    def handle(self, table, request, obj_ids):
+        for obj_id in obj_ids:
+            try:
+                api.muranoclient(request).packages.toggle_public(obj_id)
+            except exc.HTTPException:
+                LOG.exception(_('Toggling package public state in package '
+                                'repository failed'))
+                exceptions.handle(request,
+                                  _('Unable to toggle package public state.'))
+            else:
+                obj = table.get_object_by_id(obj_id)
+                obj.is_public = not obj.is_public
+                messages.success(
+                    request,
+                    _("Public state for package '{0}' is successfully toggled")
+                    .format(obj.name))
+
+
 class DeletePackage(tables.DeleteAction):
     name = 'delete_package'
     data_type_singular = _('Package')
@@ -129,6 +154,7 @@ class ModifyPackage(tables.LinkAction):
 class PackageDefinitionsTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Package Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))
+    is_public = tables.Column('is_public', verbose_name=_('Public'))
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
 
@@ -140,9 +166,11 @@ class PackageDefinitionsTable(tables.DataTable):
         verbose_name = _('Package Definitions')
         table_actions = (UploadPackage,
                          ToggleEnabled,
+                         TogglePublicEnabled,
                          DeletePackage)
 
         row_actions = (ModifyPackage,
                        DownloadPackage,
                        ToggleEnabled,
+                       TogglePublicEnabled,
                        DeletePackage)
