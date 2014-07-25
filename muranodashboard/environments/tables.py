@@ -41,7 +41,7 @@ class AddApplication(tables.LinkAction):
     def allowed(self, request, environment):
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
-        return status != consts.STATUS_ID_DEPLOYING
+        return status not in consts.NO_ACTION_ALLOWED_STATUSES
 
     def get_link_url(self, datum=None):
         base_url = reverse('horizon:murano:catalog:switch_env',
@@ -77,6 +77,7 @@ class DeleteEnvironment(tables.DeleteAction):
                     deployment.started.replace(' ', 'T'),
                     timeutils._ISO8601_TIME_FORMAT)
                 return timeutils.is_older_than(last_action, 15 * 60)
+            return environment.status not in consts.NO_ACTION_ALLOWED_STATUSES
         return True
 
     def action(self, request, environment_id):
@@ -131,8 +132,8 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status == consts.STATUS_ID_DEPLOYING:
-            return False
+        if status not in consts.NO_ACTION_ALLOWED_STATUSES:
+            return True
         if environment.version == 0 and not environment.has_services:
             return False
         return True
