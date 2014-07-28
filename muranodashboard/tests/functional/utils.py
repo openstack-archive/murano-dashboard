@@ -70,7 +70,7 @@ def screenshot_on_error(test):
     @functools.wraps(test)
     def wrapper(*args, **kwargs):
         try:
-            log.debug("Executing test: '{0}'".format(test.func_name))
+            log.debug("\nExecuting test: '{0}'".format(test.func_name))
             test(*args, **kwargs)
         except Exception as e:
             log.exception('{0} failed'.format(test.func_name))

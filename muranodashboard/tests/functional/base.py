@@ -13,8 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 import testtools
 
 import config.config as cfg
-from functionaltests import consts
-from functionaltests import utils
+from muranodashboard.tests.functional import consts
+from muranodashboard.tests.functional import utils
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)

@@ -1,13 +1,9 @@
-import os
-import sys
-sys.path.append(os.getcwd())
-
 from selenium.webdriver.common import by
 from selenium.webdriver.support.ui import WebDriverWait
 
-from functionaltests import base
-from functionaltests import consts as c
-from functionaltests import utils
+from muranodashboard.tests.functional import base
+from muranodashboard.tests.functional import consts as c
+from muranodashboard.tests.functional import utils
 
 
 class TestSuiteSmoke(base.UITestCase):

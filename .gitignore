@@ -23,4 +23,4 @@ dist
 doc/source/api
 
 # Tests
-functionaltests/config/config_file.conf
+muranodashboard/test/functional/config/config_file.conf
