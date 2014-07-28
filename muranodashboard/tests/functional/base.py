@@ -128,9 +128,9 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
             EC.presence_of_element_located(locator))
         el.click()
 
-    def check_element_on_page(self, method, value):
+    def check_element_on_page(self, method, value, sec=10):
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, sec).until(
                 EC.presence_of_element_located((method, value)))
         except exc.TimeoutException:
             self.fail("Element {0} is not preset on the page".format(value))

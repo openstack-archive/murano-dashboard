@@ -44,9 +44,9 @@ DEP_STATUS_ID_SUCCESS = 'success'
 
 STATUS_CHOICES = (
     (None, True),
-    ('Ready to configure', True),
-    ('Ready', True),
-    ('Configuring', False),
+    (STATUS_ID_PENDING, True),
+    (STATUS_ID_DEPLOYING, None),
+    (STATUS_ID_NEW, True)
 )
 
 STATUS_DISPLAY_CHOICES = (
