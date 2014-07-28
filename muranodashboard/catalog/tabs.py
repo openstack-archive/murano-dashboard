@@ -17,6 +17,7 @@ import logging
 
 from django.utils.translation import ugettext_lazy as _
 
+from muranodashboard.dynamic_ui import services
 
 LOG = logging.getLogger(__name__)
 
@@ -48,7 +49,35 @@ class AppRequirementsTab(tabs.Tab):
         LOG.debug('AppREquirementsTab: {0}'.format(self.app))
 
     def get_context_data(self, request):
+        self._get_requirements()
         return {'application': self.app}
+
+    def _get_requirements(self):
+        forms = services.get_app_forms(self.request, {'app_id': self.app.id})
+        self.app.requirements = []
+        for step in forms:
+            for key in step.base_fields:
+                # Check for instance size requirements in the UI yaml file.
+                if key == 'flavor':
+                    if hasattr(step.base_fields[key], 'requirements'):
+                        reqs = step.base_fields[key].requirements
+                        # Make the requirement values screen-printable.
+                        self.app.requirements.append('Instance flavor:')
+                        requirements = []
+                        for req in reqs:
+                            if req == 'min_disk':
+                                requirements.append(
+                                    'Minimum disk size: {0}GB'.format(
+                                        str(reqs[req])))
+                            elif req == 'min_vcpus':
+                                requirements.append(
+                                    'Minimum vCPUs: {0}'.format(
+                                        str(reqs[req])))
+                            elif req == 'min_memory_mb':
+                                requirements.append(
+                                    'Minimum RAM size: {0}MB'.format(
+                                        str(reqs[req])))
+                        self.app.requirements.append(requirements)
 
 
 class AppLicenseAgreementTab(tabs.Tab):
@@ -63,7 +92,17 @@ class AppLicenseAgreementTab(tabs.Tab):
         LOG.debug('AppLicenseAgreementTab: {0}'.format(self.app))
 
     def get_context_data(self, request):
+        self._get_license()
         return {'application': self.app}
+
+    def _get_license(self):
+        forms = services.get_app_forms(self.request, {'app_id': self.app.id})
+        self.app.license = ''
+        for step in forms:
+            for key in step.base_fields.keys():
+                # Check for a license in the UI yaml file.
+                if key == 'license':
+                    self.app.license = step.base_fields[key].description
 
 
 class ApplicationTabs(tabs.TabGroup):

@@ -3,12 +3,9 @@
 
 
 <div class="status row-fluid detail app_requirements">
-    <p>
         {% if application.requirements %}
-            {{ application.requirements }}
+            <ul>{{ application.requirements|unordered_list }}</ul>
         {% else %}
-            {% trans 'No requirements' %}
+            <p>{% trans 'No requirements' %}</p>
         {% endif %}
-    </p>
-
 </div>
