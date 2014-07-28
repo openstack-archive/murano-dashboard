@@ -1,100 +1,48 @@
 import os
 import sys
-import uuid
 sys.path.append(os.getcwd())
 
-import selenium.webdriver.common.by as by
+from selenium.webdriver.common import by
 from selenium.webdriver.support.ui import WebDriverWait
 
-from base import UITestCase
+from functionaltests import base
+from functionaltests import consts as c
+from functionaltests import utils
 
 
-_ordered_counter = 0
-
-
-def ordered(func):
-    global _ordered_counter
-    func.counter = _ordered_counter
-    _ordered_counter += 1
-    return func
-
-
-class OrderedMethodMetaclass(type):
-    prefix = 'test_'
-
-    def __new__(meta, name, bases, dct):
-        test_methods, other = [], []
-        for key, value in dct.items():
-            if key.startswith(meta.prefix):
-                test_methods.append((key, value))
-            else:
-                other.append((key, value))
-        test_methods = sorted(test_methods, key=lambda pair: pair[1].counter)
-        prefix_len = len(meta.prefix)
-        dct = {}
-        for index, (method_name, method) in enumerate(test_methods):
-            method_name = '{0}{1:03d}_{2}'.format(
-                meta.prefix, index, method_name[prefix_len:])
-            delattr(method, 'counter')
-            dct[method_name] = method
-
-        dct.update(dict(other))
-        return super(OrderedMethodMetaclass, meta).__new__(
-            meta, name, bases, dct)
-
-
-class OrderedMethodsUITestCase(UITestCase):
-    __metaclass__ = OrderedMethodMetaclass
-
-
-class TestSuiteOneSmokeTests(OrderedMethodsUITestCase):
+class TestSuiteSmoke(base.UITestCase):
     """This class keeps smoke tests which check operability of all main panels
     """
-    @ordered
+    @utils.ordered
     def test_smoke_environments_panel(self):
         self.go_to_submenu('Environments')
+        self.check_panel_is_present('Environments')
 
-        self.assertIn('Environments',
-                      self.driver.find_element_by_xpath(
-                          ".//*[@class='page-header']").text)
-
-    @ordered
+    @utils.ordered
     def test_smoke_applications_panel(self):
         self.go_to_submenu('Applications')
+        self.check_panel_is_present('Applications')
 
-        self.assertIn('Applications',
-                      self.driver.find_element_by_xpath(
-                          ".//*[@class='page-header']").text)
-
-    @ordered
+    @utils.ordered
     def test_smoke_statistics_panel(self):
         self.go_to_submenu('Statistics')
+        self.check_panel_is_present('Murano Status')
 
-        self.assertIn('Murano Status',
-                      self.driver.find_element_by_xpath(
-                          ".//*[@class='page-header']").text)
-
-    @ordered
+    @utils.ordered
     def test_smoke_images_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
+        self.check_panel_is_present('Marked Images')
 
-        self.assertIn('Marked Images',
-                      self.driver.find_element_by_xpath(
-                          ".//*[@class='page-header']").text)
-
-    @ordered
+    @utils.ordered
     def test_smoke_package_definitions_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-
-        self.assertIn('Package Definitions',
-                      self.driver.find_element_by_xpath(
-                          ".//*[@class='page-header']").text)
+        self.check_panel_is_present('Package Definitions')
 
 
-class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
-    @ordered
+class TestSuiteEnvironment(base.EnvironmentTestCase):
+    @utils.ordered
     def test_create_delete_environment(self):
         """Test check ability to create and delete environment
 
@@ -105,19 +53,18 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         """
         self.go_to_submenu('Environments')
         self.create_environment('test_create_del_env')
-
+        self.go_to_submenu('Environments')
         self.delete_environment('test_create_del_env')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'test_create_del_env'))
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'test_create_del_env')
 
-    @ordered
+    @utils.ordered
     def test_edit_environment(self):
         """Test check ability to change environment name
 
         Scenario:
             1. Create environment
             2. Change environment's name
-            3. Check that there is renamed environment is in environment list
+            3. Check that renamed environment is in environment list
         """
         self.go_to_submenu('Environments')
         self.create_environment('test_edit_env')
@@ -125,12 +72,12 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.driver.find_element_by_link_text('test_edit_env')
 
         self.edit_environment(old_name='test_edit_env', new_name='edited_env')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'edited_env'))
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'test_edit_env'))
+        self.check_element_on_page(by.By.LINK_TEXT, 'edited_env')
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'test_edit_env')
 
-    @ordered
+
+class TestSuiteImage(base.ImageTestCase):
+    @utils.ordered
     def test_rename_image(self):
         """Test check ability to mark murano image
 
@@ -144,65 +91,61 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
 
-        self.select_from_list('image', 'TestImageForDeletion')
-        self.fill_field(by.By.ID, 'id_title', 'New Image')
-        self.select_from_list('type', 'Murano Demo')
-
+        self.select_from_list('image', self.image.name)
+        self.fill_field(by.By.ID, 'id_title', 'RenamedImage')
+        self.select_from_list('type', 'Generic Linux')
         self.select_and_click_element('Mark')
 
-    @ordered
-    def test_delete_image(self):
-        """Test check ability to delete image
+        self.driver.find_element_by_xpath(
+            "//tr[td[contains(text(), 'RenamedImage')]]")
 
-        Scenario:
-            1. Navigate to Images page
-            2. Create test image
-            3. Select created image and click on "Delete Metadata"
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Images')
+        # rename back
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
-
-        self.select_from_list('image', 'TestImageForDeletion')
-        self.fill_field(by.By.ID, 'id_title', 'Image for deletion')
-        self.select_from_list('type', 'Murano Demo')
-
+        self.select_from_list('image', self.image.name)
+        self.fill_field(by.By.ID, 'id_title', 'New Image')
+        self.select_from_list('type', 'Generic Linux')
         self.select_and_click_element('Mark')
 
-        element_id = self.get_element_id('TestImageForDeletion')
-        self.driver.find_element_by_id(
-            "marked_images__row_%s__action_delete" % element_id).click()
-        self.confirm_deletion()
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'TestImageForDeletion'))
-
-    @ordered
+    @utils.ordered
     def test_check_image_info(self):
         """Test check ability to view image details
 
         Scenario:
             1. Navigate to Images page
-            2. Create test image
-            3. Click on the name of selected image, check image info
+            2. Click on the name of selected image, check image info
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
+        self.driver.find_element_by_xpath(c.TestImage + '//a').click()
+        self.assertIn('New Image',
+                      self.driver.find_element(by.By.XPATH, c.ImageMeta).text)
+
+    @utils.ordered
+    def test_delete_image(self):
+        """Test check ability to delete image
+
+        Scenario:
+            1. Navigate to Images page
+            2. Select created image and click on "Delete Metadata"
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Images')
+        self.driver.find_element_by_xpath(c.DeleteImageMeta).click()
+        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.check_element_not_on_page(by.By, c.TestImage)
+
+        # repair image
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
-
-        self.image_title = "TestImage-{0}".format(uuid.uuid4())
-        self.select_from_list('image', 'TestImageForDeletion')
-        self.fill_field(by.By.ID, 'id_title', self.image_title)
-        self.select_from_list('type', 'Murano Demo')
-
+        self.select_from_list('image', self.image.name)
+        self.fill_field(by.By.ID, 'id_title', 'New Image')
+        self.select_from_list('type', 'Generic Linux')
         self.select_and_click_element('Mark')
 
-        self.driver.find_element_by_link_text('TestImageForDeletion').click()
-        self.assertIn("{0}".format(self.image_title),
-                      self.driver.page_source)
 
-    @ordered
+class TestSuiteFields(base.FieldsTestCase):
+    @utils.ordered
     def test_check_domain_name_field_validation(self):
         """Test checks that validation of domain name field work
         and appropriate error message is appeared after entering
@@ -229,65 +172,56 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             12. Set "domain.local" as a domain name and check that
             error message didn't appear
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
-        field_id = "{0}_0-domain".format(testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
+        field_id = self.mockapp_id + "_0-domain"
 
         self.fill_field(by.By.ID, field_id, value='a')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Ensure this value has at least 2 characters (it has 1).', 1))
-
+        self.check_error_message_is_present(
+            'Ensure this value has at least 2 characters (it has 1).')
         self.fill_field(by.By.ID, field_id, value='aa')
-        self.assertFalse(self.check_that_error_message_is_correct(
-            'Ensure this value has at least 2 characters (it has 1).', 1))
+        self.check_error_message_is_absent(
+            'Ensure this value has at least 2 characters (it has 1).')
 
         self.fill_field(by.By.ID, field_id, value='@ct!v3')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Only letters, numbers and dashes in the middle are allowed.', 1))
+        self.check_error_message_is_present(
+            'Only letters, numbers and dashes in the middle are allowed.')
 
         self.fill_field(by.By.ID, field_id, value='active.com')
-        self.assertFalse(self.check_that_error_message_is_correct(
-            'Only letters, numbers and dashes in the middle are allowed.', 1))
+        self.check_error_message_is_absent(
+            'Only letters, numbers and dashes in the middle are allowed.')
 
         self.fill_field(by.By.ID, field_id, value='domain')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Single-level domain is not appropriate.', 1))
+        self.check_error_message_is_present(
+            'Single-level domain is not appropriate.')
 
         self.fill_field(by.By.ID, field_id, value='domain.com')
-        self.assertFalse(self.check_that_error_message_is_correct(
-            'Single-level domain is not appropriate.', 1))
+        self.check_error_message_is_absent(
+            'Single-level domain is not appropriate.')
 
         self.fill_field(by.By.ID, field_id,
                         value='morethan15symbols.beforedot')
-        self.assertTrue(self.check_that_error_message_is_correct(
+        self.check_error_message_is_present(
             'NetBIOS name cannot be shorter than'
-            ' 1 symbol and longer than 15 symbols.', 1))
-
-        self.fill_field(by.By.ID, field_id,
-                        value='lessthan15.beforedot')
-        self.assertFalse(self.check_that_error_message_is_correct(
+            ' 1 symbol and longer than 15 symbols.')
+        self.fill_field(by.By.ID, field_id, value='lessthan15.beforedot')
+        self.check_error_message_is_absent(
             'NetBIOS name cannot be shorter than'
-            ' 1 symbol and longer than 15 symbols.', 1))
+            ' 1 symbol and longer than 15 symbols.')
 
         self.fill_field(by.By.ID, field_id, value='.domain.local')
-        self.assertTrue(self.check_that_error_message_is_correct(
+        self.check_error_message_is_present(
             'Period characters are allowed only when '
-            'they are used to delimit the components of domain style names',
-            1))
+            'they are used to delimit the components of domain style names')
 
         self.fill_field(by.By.ID, field_id, value='domain.local')
-        self.assertFalse(self.check_that_error_message_is_correct(
+        self.check_error_message_is_absent(
             'Period characters are allowed only when '
-            'they are used to delimit the components of domain style names',
-            1))
+            'they are used to delimit the components of domain style names')
 
-    @ordered
+    @utils.ordered
     def test_check_app_name_validation(self):
         """Test checks validation of field that usually define
         application name
@@ -298,31 +232,25 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
-        field_id = "{0}_0-name".format(testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.fill_field(by.By.ID, field_id, value='a')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Ensure this value has at least 2 characters (it has 1).', 1))
+        self.fill_field(by.By.NAME, '0-name', value='a')
+        self.check_error_message_is_present(
+            'Ensure this value has at least 2 characters (it has 1).')
 
-        self.fill_field(by.By.ID, field_id, value='@pp')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Just letters, numbers, underscores and hyphens are allowed.', 1))
+        self.fill_field(by.By.NAME, '0-name', value='@pp')
+        self.check_error_message_is_present(
+            'Just letters, numbers, underscores and hyphens are allowed.')
 
-        self.fill_field(by.By.ID, field_id, value='AppL1')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, '0-name', value='AppL1')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.LINK_TEXT, '+').is_displayed())
 
-    @ordered
+    @utils.ordered
     def test_check_required_field(self):
         """Test checks that fields with parameter 'required=True' in yaml form
         are truly required and can't be omitted
@@ -336,71 +264,21 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             4. Set app name and click 'Next',
             check that there is no error message
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'This field is required.', 1))
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+        self.check_error_message_is_present('This field is required.')
 
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, "0-name", "name")
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.LINK_TEXT, '+').is_displayed())
 
-    @ordered
-    def test_integer_field_validation(self):
-        """Test checks that only numbers can be written in integer field
-
-        Scenario:
-            1. Navigate to Application Catalog > Applications
-            2. Start to create MockApp
-            3. Set random string in the integer field and verify error message
-            4. Set number from allowable range in the integer field,
-            check that there is no error message
-            5. Set number that not in allowable range and check error message
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-
-        self.select_and_click_action_for_app('quick-add', testapp_id)
-        field_id = "{0}_0-integer".format(testapp_id)
-
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
-
-        self.fill_field(by.By.ID, field_id, value='0')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Ensure this value is greater than or equal to 1.', 1))
-
-        self.fill_field(by.By.ID, field_id, value='101')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Ensure this value is less than or equal to 100.', 1))
-
-        self.fill_field(by.By.ID, field_id, value='aaa')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'Enter a whole number.', 1))
-
-        self.fill_field(by.By.ID, field_id, "55")
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, '+').is_displayed())
-
-    @ordered
+    @utils.ordered
     def test_password_validation(self):
         """Test checks password validation
 
@@ -413,34 +291,26 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             field, check that validation failed
             5. Set correct password. Validation has to pass
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
-        field_id = "{0}_0-adminPassword".format(testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
-
-        self.fill_field(by.By.ID, field_id, value='123456')
-        self.assertTrue(self.check_that_error_message_is_correct(
-            'The password must contain at least one letter', 1))
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
-        self.fill_field(by.By.ID, "{0}-clone".format(field_id),
-                        value='P@ssw0rd')
-        self.assertFalse(self.check_that_error_message_is_correct(
-            'Passwords do not match', 1))
-        self.fill_field(by.By.ID, field_id, value='P@ssw0rd')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, "0-name", "name")
+        self.fill_field(by.By.NAME, '0-adminPassword', value='123456')
+        self.check_error_message_is_present(
+            'The password must contain at least one letter')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+        self.fill_field(by.By.NAME, "0-adminPassword-clone", value='P@ssw0rd')
+        self.check_error_message_is_absent('Passwords do not match')
+        self.fill_field(by.By.NAME, '0-adminPassword', value='P@ssw0rd')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.LINK_TEXT, '+').is_displayed())
 
-    @ordered
+
+class TestSuiteApplications(base.ApplicationTestCase):
+    @utils.ordered
     def test_check_transitions_from_one_wizard_to_another(self):
         """Test checks that transitions "Next" and "Back" are not broken
 
@@ -451,29 +321,24 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             will appear
             4. Click 'Back' and check that first wizard step is shown
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "name")
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, "0-name", "name")
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.LINK_TEXT, '+').is_displayed())
 
         self.driver.find_element_by_id(
-            'wizard_{0}_btn'.format(testapp_id)).click()
+            'wizard_{0}_btn'.format(self.mockapp_id)).click()
 
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.ID, "{0}_0-name".format(testapp_id)).is_displayed())
+            by.By.NAME, "0-name").is_displayed())
 
-    @ordered
+    @utils.ordered
     def test_check_ability_create_two_dependent_apps(self):
         """Test checks that using one creation form it is possible to
         add to related apps in the one environment
@@ -484,23 +349,19 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             3. Set app name and click on "Next"
             4. Click '+' and verify that creation of second app is possible
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
 
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "app1")
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, "0-name", "app1")
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
         self.driver.find_element_by_link_text('+').click()
-        self.fill_field(by.By.ID, "{0}_0-name".format(testapp_id), "app2")
+        self.fill_field(by.By.NAME, "0-name", "app2")
 
-    @ordered
+    @utils.ordered
     def test_creation_deletion_app(self):
         """Test check ability to create and delete test app
 
@@ -510,33 +371,26 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             3. Create TestApp app by filling the creation form
             4. Delete TestApp app from environment
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
-        self.select_and_click_action_for_app('quick-add', testapp_id)
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
-        self.fill_field(by.By.ID, '{0}_0-name'.format(testapp_id), 'TestA')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+        self.fill_field(by.By.NAME, '0-name'.format(self.mockapp_id), 'TestA')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.select_from_list('2-osImage', self.linux_image)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.select_from_list('2-osImage', 'New Image')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'TestA'))
+        self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
         self.delete_component('TestA')
-        self.assertFalse(self.check_element_on_page(by.By.LINK_TEXT,
-                                                    'TestA'))
+        WebDriverWait(self.driver, 10).until(lambda s: not s.find_element(
+            by.By.CSS_SELECTOR, 'div.alert-block').is_displayed())
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
 
-    @ordered
+    @utils.ordered
     def test_modify_package_name(self):
         """Test check ability to change name of the package
 
@@ -550,22 +404,22 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.select_action_for_package('PostgreSQL',
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, './/*[@data-display="PostgreSQL-modified"]'))
+        self.check_element_on_page(by.By.XPATH,
+                                   c.AppPackageDefinitions.format(
+                                       'PostgreSQL-modified'))
 
         self.select_action_for_package('PostgreSQL-modified',
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL')
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, './/*[@data-display="PostgreSQL"]'))
+        self.check_element_on_page(by.By.XPATH,
+                                   c.AppPackageDefinitions.format(
+                                       'PostgreSQL'))
 
-    @ordered
+    @utils.ordered
     def test_modify_package_add_tag(self):
         """Test check ability to add file in composed service
 
@@ -582,16 +436,14 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
         self.modify_package('tags', 'TEST_TAG')
 
-        app_id = self.get_element_id('PostgreSQL')
-
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Applications')
-        self.select_and_click_action_for_app('details', app_id)
-        self.check_element_on_page(
-            ".//*[@id='content_body']/div[2]/div/div/div[2]/div[2]/ul/li[6]",
-            'TEST_TAG')
+        self.select_and_click_action_for_app('details', self.postgre_id)
+        self.assertIn('TEST_TAG',
+                      self.driver.find_element_by_xpath(
+                          c.TagInDetails).text)
 
-    @ordered
+    @utils.ordered
     def test_download_package(self):
         """Test check ability to download package from repository
 
@@ -605,7 +457,7 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'download_package')
 
-    @ordered
+    @utils.ordered
     def test_check_opportunity_to_toggle_package(self):
         """Test check ability to make package active or inactive
 
@@ -631,7 +483,7 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.assertTrue(self.check_package_parameter(
             'PostgreSQL', '3', 'True'))
 
-    @ordered
+    @utils.ordered
     def test_check_info_about_app(self):
         """Test checks that information about app is available and truly.
 
@@ -640,36 +492,35 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             2. Choose some application and click on 'More info'
             3. Verify info about application
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        app_id = self.get_element_id('PostgreSQL')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
-        self.select_and_click_action_for_app('details', app_id)
+        self.select_and_click_action_for_app('details', self.mockapp_id)
 
-        self.assertIn('PostgreSQL is a powerful', self.driver.page_source)
+        self.assertEqual('MockApp for webUI tests',
+                         self.driver.find_element_by_xpath(
+                             "//div[@class='app-description']").text)
         self.driver.find_element_by_link_text('Requirements').click()
         self.driver.find_element_by_link_text('License').click()
 
-    @ordered
+    @utils.ordered
     def test_check_search_option(self):
         """Test checks that 'Search' option is operable.
 
         Scenario:
             1. Navigate to 'Application Catalog > Applications' panel
-            2. Set search criterion in the search field(e.g 'Telnet')
+            2. Set search criterion in the search field(e.g 'PostgreSQL')
             3. Click on 'Filter' and check result
         """
         self.go_to_submenu('Applications')
-        self.fill_field(by.By.NAME, 'search', 'Telnet')
+        self.fill_field(by.By.NAME, 'search', 'PostgreSQL')
         self.driver.find_element_by_id('apps__action_filter').click()
 
-        self.assertIn('Telnet', self.driver.page_source)
-        self.assertNotIn('PostgreSQL', self.driver.page_source)
+        self.check_element_on_page(by.By.XPATH,
+                                   c.App.format('PostgreSQL'))
+        self.check_element_not_on_page(by.By.XPATH,
+                                       c.App.format('MockApp'))
 
-    @ordered
+    @utils.ordered
     def test_filter_by_category(self):
         """Test checks ability to filter applications by category
         in Application Catalog page
@@ -678,33 +529,26 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             1. Navigate to 'Application Catalog' panel
             2. Select 'Databases' category in 'App Category' dropdown menu
             3. Verify that PostgreSQL is shown
-            4. Select 'Microsoft Services' category in
+            4. Select 'Web' category in
             'App Category' dropdown menu
-            5. Verify that AD is shown
+            5. Verify that MockApp is shown
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
 
-        package_category1 = self.get_element_id('PostgreSQL')
-        package_category2 = self.get_element_id('Active Directory')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
-        self.driver.find_element_by_xpath(".//*[@href='#']").click()
+        self.driver.find_element_by_xpath(
+            c.CategorySelector.format('All')).click()
         self.driver.find_element_by_link_text('Databases').click()
 
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, ".//*[@href='/{0}/murano/catalog/details/{1}']".
-            format(self.url_prefix, package_category1)))
+        self.check_element_on_page(by.By.XPATH, c.App.format('PostgreSQL'))
 
-        self.driver.find_element_by_xpath(".//*[@href='#']").click()
-        self.driver.find_element_by_link_text('Microsoft Services').click()
+        self.driver.find_element_by_xpath(
+            c.CategorySelector.format('Databases')).click()
+        self.driver.find_element_by_link_text('Web').click()
 
-        self.assertTrue(self.check_element_on_page(
-            by.By.XPATH, ".//*[@href='/{0}/murano/catalog/details/{1}']".
-            format(self.url_prefix, package_category2)))
+        self.check_element_on_page(by.By.XPATH, c.App.format('MockApp'))
 
-    @ordered
+    @utils.ordered
     def test_check_option_switch_env(self):
         """Test checks ability to switch environment and add app in other env
 
@@ -720,21 +564,14 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
             and go to the env2
             9. Check that added application is here
         """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        testapp_id = self.get_element_id('MockApp')
-
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Murano')
         self.go_to_submenu('Environments')
         self.create_environment('env1')
         self.go_to_submenu('Environments')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'env1'))
+        self.check_element_on_page(by.By.LINK_TEXT, 'env1')
         self.create_environment('env2')
         self.go_to_submenu('Environments')
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'env2'))
+        self.check_element_on_page(by.By.LINK_TEXT, 'env2')
 
         env_id = self.get_element_id('env2')
 
@@ -745,26 +582,22 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         self.driver.find_element_by_link_text("env2").click()
 
         self.select_and_click_action_for_app(
-            'add', '{0}/{1}'.format(testapp_id, env_id))
+            'add', '{0}/{1}'.format(self.mockapp_id, env_id))
 
-        self.fill_field(by.By.ID, '{0}_0-name'.format(testapp_id), 'TestA')
+        self.fill_field(by.By.NAME, '0-name', 'TestA')
         self.driver.find_element_by_xpath(
-            self.elements.get('button', 'ButtonSubmit')).click()
+            c.ButtonSubmit).click()
 
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.select_from_list('2-osImage', self.linux_image)
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.select_from_list('2-osImage', 'New Image')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.driver.find_element_by_xpath(
-            self.elements.get('button', 'InputSubmit')).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.assertTrue(self.check_element_on_page(by.By.LINK_TEXT,
-                                                   'TestA'))
+        self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
 
-    @ordered
+    @utils.ordered
     def test_modify_description(self):
         """Test check ability to change description of the package
 
@@ -775,13 +608,13 @@ class TestSuiteTwoSanityTests(OrderedMethodsUITestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('PostgreSQL',
+        self.select_action_for_package('MockApp',
                                        'modify_package')
 
         self.modify_package('description', 'New Description')
 
         self.navigate_to('Application_Catalog')
         self.go_to_submenu('Applications')
-        self.check_element_on_page(
-            ".//*[@class='app-description']",
-            'New Description')
+        self.assertEqual('New Description',
+                         self.driver.find_element_by_xpath(
+                             c.MockAppDescr).text)
