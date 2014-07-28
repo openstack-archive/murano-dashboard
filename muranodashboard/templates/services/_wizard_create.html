@@ -1,5 +1,7 @@
 <style>
     .italic {font-style:italic;}
+    .modal-body {max-height: 500px;overflow-y:scroll;}
+    .modal-body .left {width:336px;margin-right:10px;}
 </style>
 
 {% extends "common/_modal_form.html" %}
@@ -36,7 +38,7 @@
         {% if title %}
             <strong>{% blocktrans %}{{ title }}:{% endblocktrans %}</strong>
         {% endif %}
-        {% blocktrans %}{{ description }}{% endblocktrans %}
+        {% blocktrans with description|linebreaksbr as desc %}{{ desc }}{% endblocktrans %}
         </p>
     {% endfor %}
 </div>
