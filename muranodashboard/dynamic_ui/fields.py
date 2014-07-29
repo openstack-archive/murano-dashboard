@@ -451,6 +451,10 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
     pass
 
 
+class DynamicChoiceField(hz_forms.DynamicChoiceField, CustomPropertiesField):
+    pass
+
+
 class FlavorChoiceField(ChoiceField):
     def __init__(self, *args, **kwargs):
         if 'requirements' in kwargs:
@@ -479,7 +483,7 @@ class FlavorChoiceField(ChoiceField):
                 self.choices.append((flavor.name, flavor.name))
 
 
-class KeyPairChoiceField(ChoiceField):
+class KeyPairChoiceField(DynamicChoiceField):
     " This widget allows to select keypair for VMs "
     @with_request
     def update(self, request, **kwargs):
