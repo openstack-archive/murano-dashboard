@@ -47,6 +47,8 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
             '1', endpoint=cfg.common.murano_url,
             token=cls.keystone_client.auth_token)
         cls.url_prefix = urlparse.urlparse(cfg.common.horizon_url).path or ''
+        if cls.url_prefix.endswith('/'):
+            cls.url_prefix = cls.url_prefix[:-1]
 
     def setUp(self):
         super(UITestCase, self).setUp()
