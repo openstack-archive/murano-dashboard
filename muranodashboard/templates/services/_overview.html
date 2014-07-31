@@ -2,7 +2,7 @@
 {% load url from future %}
 
 <h3>{% trans "Component Details" %}</h3>
-<div class="status row-fluid detail">
+<div class="status row detail">
   <h4>{% blocktrans %}Info {% endblocktrans %}</h4>
   <dl>
       {% for key, value in service.items %}
@@ -30,7 +30,7 @@
 </div>
 
 {% for unit in units %}
-    <div class="status row-fluid detail">
+    <div class="status row detail">
     <h4>{% blocktrans %}Component unit{% endblocktrans %}{{ forloop.counter }} </h4>
     <hr class="header_rule">
     <dl>

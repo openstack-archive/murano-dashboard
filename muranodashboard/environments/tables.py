@@ -36,7 +36,7 @@ def _get_environment_status_and_version(request, table):
 class AddApplication(tables.LinkAction):
     name = 'AddApplication'
     verbose_name = _('Add Component')
-    classes = ('btn-launch',)
+    icon = 'plus'
 
     def allowed(self, request, environment):
         status, version = _get_environment_status_and_version(request,
@@ -55,6 +55,7 @@ class CreateEnvironment(tables.LinkAction):
     verbose_name = _('Create Environment')
     url = 'horizon:murano:environments:create_environment'
     classes = ('btn-launch', 'ajax-modal')
+    icon = 'plus'
 
     def allowed(self, request, datum):
         return True
@@ -87,6 +88,7 @@ class EditEnvironment(tables.LinkAction):
     verbose_name = _('Edit Environment')
     url = 'horizon:murano:environments:update_environment'
     classes = ('ajax-modal', 'btn-edit')
+    icon = 'edit'
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
@@ -125,7 +127,7 @@ class DeployEnvironment(tables.BatchAction):
     action_past = _('Deployed')
     data_type_singular = _('Environment')
     data_type_plural = _('Environment')
-    classes = 'btn-launch'
+    classes = ('btn-launch',)
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
@@ -148,7 +150,7 @@ class DeployThisEnvironment(tables.Action):
     name = 'deploy_env'
     verbose_name = _('Deploy This Environment')
     requires_input = False
-    classes = ('btn-launch')
+    classes = ('btn-launch',)
 
     def allowed(self, request, service):
         status, version = _get_environment_status_and_version(request,

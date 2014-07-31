@@ -32,7 +32,8 @@ class UploadPackage(tables.LinkAction):
     name = 'upload_package'
     verbose_name = _('Upload Package')
     url = 'horizon:murano:packages:upload'
-    classes = ('ajax-modal', 'btn-create')
+    classes = ('ajax-modal',)
+    icon = "plus"
 
     def allowed(self, request, image):
         _allowed = False
@@ -119,6 +120,7 @@ class ModifyPackage(tables.LinkAction):
     verbose_name = _('Modify Package')
     url = 'horizon:murano:packages:modify'
     classes = ('ajax-modal',)
+    icon = "edit"
 
     def allowed(self, request, environment):
         return True

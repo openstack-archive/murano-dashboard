@@ -12,13 +12,13 @@
 
 {% block main %}
 <div class="table_wrapper">
-  <div class="row-fluid">
-    <div class="span12">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <div class="btn-group pull-right">
-        {% with class='btn btn-small btn-add ajax-modal' %}
+        {% with class='btn btn-default btn-sm btn-add ajax-modal' %}
             {% include 'catalog/add_app.html' %}
         {% endwith %}
-        {% with class='btn btn-small btn-add ajax-modal' %}
+        {% with class='btn btn-default btn-sm btn-add ajax-modal' %}
             {% include 'catalog/quick_deploy.html' %}
         {% endwith %}
       </div>

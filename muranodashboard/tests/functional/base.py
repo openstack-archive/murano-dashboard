@@ -1,6 +1,7 @@
 import json
 import logging
 import sys
+import time
 import urlparse
 
 from glanceclient import client as gclient
@@ -90,6 +91,7 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
     def go_to_submenu(self, link):
         self.driver.find_element_by_partial_link_text(
             '{0}'.format(link)).click()
+        time.sleep(2)
 
     def check_panel_is_present(self, panel_name):
         self.assertIn(panel_name,
@@ -111,7 +113,7 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
             self.fail("Element {0} is not preset on the page".format(value))
 
     def check_element_not_on_page(self, method, value):
-        self.driver.implicitly_wait(2)
+        self.driver.implicitly_wait(3)
         present = True
         try:
             self.driver.find_element(method, value)
@@ -128,6 +130,10 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
             by.By.LINK_TEXT, 'Add Component').is_displayed())
+
+    def check_alert_message(self, driver):
+        el = driver.find_element_by_css_selector('div.alert')
+        return not el.is_displayed()
 
 
 class PackageBase(UITestCase):
@@ -197,6 +203,7 @@ class EnvironmentTestCase(UITestCase):
     def delete_environment(self, env_name):
         self.select_action_for_environment(env_name, 'delete')
         self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
+        WebDriverWait(self.driver, 10).until(self.check_alert_message)
 
     def edit_environment(self, old_name, new_name):
         self.select_action_for_environment(old_name, 'edit')
@@ -207,15 +214,17 @@ class EnvironmentTestCase(UITestCase):
         element_id = self.get_element_id(env_name)
         more_button = consts.More.format(element_id)
         self.driver.find_element_by_xpath(more_button).click()
-        self.driver.find_element_by_id(
-            "murano__row_{0}__action_{1}".format(element_id, action)).click()
+        btn_id = "murano__row_{0}__action_{1}".format(element_id, action)
+        WebDriverWait(self.driver, 10).until(
+            lambda s: s.find_element_by_id(btn_id).is_displayed)
+        self.driver.find_element_by_id(btn_id).click()
 
 
 class FieldsTestCase(PackageBase):
     def check_error_message_is_present(self, error_message):
         self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
         self.driver.find_element_by_xpath(
-            '//span[@class="help-inline"]'
+            '//div[@class="alert-message"]'
             '[contains(text(), "{0}")]'.format(error_message))
 
     def check_error_message_is_absent(self, error_message):
@@ -224,7 +233,7 @@ class FieldsTestCase(PackageBase):
         self.driver.implicitly_wait(2)
         try:
             self.driver.find_element_by_xpath(
-                '//span[@class="help-inline"]'
+                '//div[@class="alert-message"]'
                 '[contains(text(), "{0}")]'.format(error_message))
         except (exc.NoSuchElementException, exc.ElementNotVisibleException):
             log.info("Message {0} is not"
@@ -239,6 +248,7 @@ class ApplicationTestCase(ImageTestCase):
         self.driver.find_element_by_id(
             'services__row_{0}__action_delete'.format(component_id)).click()
         self.driver.find_element_by_link_text('Delete Component').click()
+        WebDriverWait(self.driver, 10).until(self.check_alert_message)
 
     def select_action_for_package(self, package, action):
         package_id = self.get_element_id(package)

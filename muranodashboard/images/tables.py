@@ -22,7 +22,8 @@ class MarkImage(tables.LinkAction):
     name = "mark_image"
     verbose_name = _("Mark Image")
     url = "horizon:murano:images:mark_image"
-    classes = ("ajax-modal", "btn-create")
+    classes = ("ajax-modal",)
+    icon = "plus"
 
     def allowed(self, request, image):
         return True

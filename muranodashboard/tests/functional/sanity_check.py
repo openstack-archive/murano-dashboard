@@ -367,11 +367,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.select_from_list('2-osImage', 'New Image')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
+        WebDriverWait(self.driver, 10).until(self.check_alert_message)
 
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
         self.delete_component('TestA')
-        WebDriverWait(self.driver, 10).until(lambda s: not s.find_element(
-            by.By.CSS_SELECTOR, 'div.alert-block').is_displayed())
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
 
     @utils.ordered
@@ -496,7 +495,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             3. Click on 'Filter' and check result
         """
         self.go_to_submenu('Applications')
-        self.fill_field(by.By.NAME, 'search', 'PostgreSQL')
+        self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', 'PostgreSQL')
         self.driver.find_element_by_id('apps__action_filter').click()
 
         self.check_element_on_page(by.By.XPATH,
@@ -573,7 +572,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             c.ButtonSubmit).click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-
         self.select_from_list('2-osImage', 'New Image')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 

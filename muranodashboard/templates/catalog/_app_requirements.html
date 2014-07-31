@@ -2,7 +2,7 @@
 {% load url from future %}
 
 
-<div class="status row-fluid detail app_requirements">
+<div class="status row detail app_requirements">
         {% if application.requirements %}
             <ul>{{ application.requirements|unordered_list }}</ul>
         {% else %}
