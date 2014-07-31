@@ -184,6 +184,14 @@ class ImageTestCase(PackageBase):
         self.driver.find_element_by_xpath(
             ".//*[@value = '{0}']".format(element)).click()
 
+    def repair_image(self):
+        self.driver.find_element_by_id(
+            'marked_images__action_mark_image').click()
+        self.select_from_list('image', self.image.name)
+        self.fill_field(by.By.ID, 'id_title', 'New Image')
+        self.select_from_list('type', 'Generic Linux')
+        self.select_and_click_element('Mark')
+
 
 class EnvironmentTestCase(UITestCase):
     def delete_environment(self, env_name):
