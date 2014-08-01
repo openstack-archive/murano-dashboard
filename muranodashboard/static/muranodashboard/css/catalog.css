@@ -1,6 +1,10 @@
 .table_header.catalog {
   border-bottom: 2px solid #e5e5e5;
-  min-width: 780px;
+  padding-bottom:5px;
+  margin-bottom: 10px;
+}
+.table_search {
+  min-width: 265px;
 }
 
 .catalog .table_actions {
@@ -15,16 +19,8 @@ h3.heading_switcher a.btn {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.catalog .table_search {
-  float: right;
-}
-
 .catalog .table_actions a, .catalog .table_actions button {
   margin-left: 0;
-}
-
-.env_switcher {
-  margin-left: 25px;
 }
 
 .catalog .row_actions button, .catalog .row_actions a {
@@ -62,9 +58,6 @@ h3.heading_switcher a.btn {
 .btn-link {
   padding: 5px 0;
 }
-.app-row {
-  overflow: hidden;
-}
 .centering {
   width: 100%;
   text-align: center;
@@ -79,29 +72,15 @@ h3.link:hover {
 h3.link .caret {
   border-top: 4px solid yellow !important;
 }
-/*.well {*/
-   /*border: 1px solid #aaa;*/
-   /*-moz-box-shadow: inset 1px 2px 8px #222;*/
-    /*-webkit-box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
-    /*box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
-  /**/
-/*}*/
-/*.well:hover {*/
-    /*float: none;*/
-    /*border: 1px solid #aaa;*/
-    /*background: #ccc;*/
-    /*-o-transform: scale(1.2);*/
-    /*-moz-transform: scale(1.2);*/
-    /*-webkit-transform: scale(1.2);*/
-    /*transform: scale(1.2);*/
-    /*-moz-box-shadow: inset 1px 2px 8px #222;*/
-    /*-webkit-box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
-    /*box-shadow: inset 1px 2px 8px rgba(0,0,0,0.7);*/
-    /*-o-transition: all .15s;*/
-    /*-moz-transition: all .15s ease-out;*/
-    /*-webkit-transition: all .15s ease-out;*/
-    /*transition: all .15s ease-out;*/
-/*}*/
+.well:hover {
+    float: none;
+    border: 1px solid #bbb;
+    background: #eee;
+    -o-transition: all .15s;
+    -moz-transition: all .15s ease-out;
+    -webkit-transition: all .15s ease-out;
+    transition: all .15s ease-out;
+}
 .row.app-list {
   margin-top: 20px;
   margin-bottom:20px;
@@ -120,10 +99,13 @@ h3.link .caret {
 .app-list .app h4 {;
   margin-bottom:0.25em;
 }
+.app-list .app .app-details-link {;
+  float: right;
+}
+
 .app-list .app .app-actions {
-  position:absolute;
-  bottom:15px;
-  right:15px;
+  float: right;
+  margin-top: 5px;
 }
 .app-actions div[class*='span'] {
   margin-left:0;
@@ -210,4 +192,52 @@ h3.link .caret {
 }
 .app_requirements ul li ul li {
   font-weight: normal;
+}
+
+/* Bootstrap 3 grid always applies 15px left and right padding on grid columns */
+/* special class to override first and last column in row */
+.col-row:first-child {
+  padding-left:0;
+}
+.col-row:last-child {
+  padding-right: 0;
+}
+
+/* LANDSCAPE PHONE TO SMALL DESKTOP & PORTRAIT TABLET */
+/* Workarounds/hacks for filter forms at top of catalog page when fluid grid... */
+/* changes layout due to device/width settings in Bootstrap 3's grid  */
+@media (max-width: 767px) {
+  .col-xs-12 .pull-right {
+    float: none !important;
+  }
+
+  .col-xs-12.col-row {
+    padding-left: 0;
+  }
+
+  .col-xs-12 .table_actions form {
+    float: none;
+    margin-left: 0;
+  }
+
+  .col-xs-12 .table_search {
+    margin-left: -5px;
+  }
+
+  .col-xs-12 .table_search .form-group {
+    float: left;
+    margin-right: 15px;
+  }
+
+  .col-xs-12 .table_search .form-control-feedback {
+    top: 0;
+  }
+
+  .app-list .app .app-details-link {
+    float: left;
+  }
+
+  .app-list .app .app-actions {
+    float: left;
+  }
 }
