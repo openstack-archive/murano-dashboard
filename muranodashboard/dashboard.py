@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import horizon
 
@@ -33,7 +34,7 @@ class ManagePanels(horizon.PanelGroup):
 
 
 class Murano(horizon.Dashboard):
-    name = _("Murano")
+    name = _(getattr(settings, 'MURANO_DASHBOARD_NAME', "Murano"))
     slug = "murano"
     panels = (DeployPanels, ManagePanels)
     default_panel = "environments"

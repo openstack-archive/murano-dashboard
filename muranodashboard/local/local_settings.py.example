@@ -448,3 +448,7 @@ SECURITY_GROUP_RULES = {
         'to_port': '3389',
     },
 }
+
+# Overrides the default dashboard name (Murano) that is displayed
+# in the main accordion navigation
+# MURANO_DASHBOARD_NAME = "Murano"
