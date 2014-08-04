@@ -97,6 +97,7 @@ EOF
 ###########################
 
 REMOVE=false
+TAG="master"
 
 for i in "$@"
 do
@@ -119,6 +120,10 @@ do
             ;;
             -c=*|--cache-dir=*)
             CACHE_DIR="${i#*=}"
+            shift
+            ;;
+            -t=*|--tag=*)
+            TAG="${i#*=}"
             shift
             ;;
             -r|--remove)
@@ -158,7 +163,12 @@ fi
 
 if [ -z "$INPUT" ]; then
     log "Downloading updated horizon config"
-    wget -q -O $OUTPUT "https://raw.githubusercontent.com/openstack/horizon/master/openstack_dashboard/settings.py"
+    settings="https://raw.githubusercontent.com/openstack/horizon/$TAG/openstack_dashboard/settings.py"
+    wget -q -O $OUTPUT $settings
+    if [ $? -ne 0 ];then
+        log "Unable to download horizon settings file from $settings"
+        exit 1
+     fi
 fi
 
 modify_horizon_config $OUTPUT
