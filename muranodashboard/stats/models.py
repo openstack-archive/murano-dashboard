@@ -44,18 +44,19 @@ class BillingStats(object):
             env_entry = utils.Bunch(name=env.name,
                                     id=env.id)
             services = self.build_service_list(request, env)
-            LOG.debug('Processing env: {0}'.format(env))
-            env_stats = self.get_stats_for_env(request, env.id)
-            stats_list = []
-            for entry in env_stats:
-                instance_id = entry.instance_id
-                service = services[instance_id]
-                stat_entry = utils.Bunch(**entry.to_dict())
-                stat_entry.service = service['name']
-                stat_entry.service_type = service['type']
-                stats_list.append(stat_entry)
-            env_entry.instances = stats_list
-            stats.append(env_entry)
+            if services:
+                LOG.debug('Processing env: {0}'.format(env))
+                env_stats = self.get_stats_for_env(request, env.id)
+                stats_list = []
+                for entry in env_stats:
+                    instance_id = entry.instance_id
+                    service = services[instance_id]
+                    stat_entry = utils.Bunch(**entry.to_dict())
+                    stat_entry.service = service['name']
+                    stat_entry.service_type = service['type']
+                    stats_list.append(stat_entry)
+                env_entry.instances = stats_list
+                stats.append(env_entry)
 
         LOG.debug('Created statistics: {0}'.format(stats))
         return stats
@@ -76,20 +77,23 @@ class BillingStats(object):
                 for _node in node:
                     _rec(_node)
 
-        for item in service:
-            _rec(item)
+        for attr in dir(service):
+            if not attr.startswith('_'):
+                _rec(getattr(service, attr))
         return ids
 
     def build_service_list(self, request, env):
-        serv_list = env_api.services_list(request, env.id)
+        serv_list = api.muranoclient(request).services.list(env.id)
         LOG.debug('Got Service List: {0}'.format(serv_list))
-        id_list = {}
+        ids = {}
         for service in serv_list:
-            ids = self._get_instances_ids(service)
-            storage = service['?'][consts.DASHBOARD_ATTRS_KEY]
-            info = {'name': storage['name'], 'type': service['?']['type']}
-            id_list.update(dict((_id, info) for _id in ids))
-        return id_list
+            id_list = self._get_instances_ids(service)
+            service_meta_info = getattr(service, '?')
+            storage = service_meta_info[consts.DASHBOARD_ATTRS_KEY]
+            info = {'name': storage['name'],
+                    'type': service_meta_info['type']}
+            ids.update(dict((_id, info) for _id in id_list))
+        return ids
 
 
 class Stats(object):
