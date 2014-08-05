@@ -95,13 +95,7 @@ class TestSuiteImage(base.ImageTestCase):
         self.driver.find_element_by_xpath(
             "//tr[td[contains(text(), 'RenamedImage')]]")
 
-        # rename back
-        self.driver.find_element_by_id(
-            'marked_images__action_mark_image').click()
-        self.select_from_list('image', self.image.name)
-        self.fill_field(by.By.ID, 'id_title', 'New Image')
-        self.select_from_list('type', 'Generic Linux')
-        self.select_and_click_element('Mark')
+        self.repair_image()
 
     @utils.ordered
     def test_check_image_info(self):
@@ -131,13 +125,7 @@ class TestSuiteImage(base.ImageTestCase):
         self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
         self.check_element_not_on_page(by.By, c.TestImage)
 
-        # repair image
-        self.driver.find_element_by_id(
-            'marked_images__action_mark_image').click()
-        self.select_from_list('image', self.image.name)
-        self.fill_field(by.By.ID, 'id_title', 'New Image')
-        self.select_from_list('type', 'Generic Linux')
-        self.select_and_click_element('Mark')
+        self.repair_image()
 
 
 class TestSuiteFields(base.FieldsTestCase):
