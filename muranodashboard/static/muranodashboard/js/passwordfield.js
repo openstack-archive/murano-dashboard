@@ -14,8 +14,8 @@
 */
 $(function() {
     function main_check(div, parameter1, parameter2, text){
-        var msg = "<span class='help-inline'>" + gettext(text) + '</span>'
-        var error_node = div.find("span.help-inline")
+        var msg = "<div class='alert alert-message alert-danger'>" + gettext(text) + '</div>'
+        var error_node = div.find("div.alert-message")
         var not_added;
         if (error_node.length) {
             not_added = false;
