@@ -389,6 +389,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
 
         self.check_element_on_page(by.By.XPATH,
                                    c.AppPackageDefinitions.format(
