@@ -21,6 +21,6 @@ from muranodashboard import dashboard
 class Statistics(horizon.Panel):
     name = _("Statistics")
     slug = "stats"
-
+    permissions = ('openstack.roles.admin',)
 
 dashboard.Murano.register(Statistics)
