@@ -1,5 +1,18 @@
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+import time
+
 from selenium.webdriver.common import by
-from selenium.webdriver.support.ui import WebDriverWait
 
 from muranodashboard.tests.functional import base
 from muranodashboard.tests.functional import consts as c
@@ -87,13 +100,12 @@ class TestSuiteImage(base.ImageTestCase):
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
 
-        self.select_from_list('image', self.image.name)
-        self.fill_field(by.By.ID, 'id_title', 'RenamedImage')
-        self.select_from_list('type', 'Generic Linux')
+        self.select_from_list('image', self.image.id)
+        new_title = 'RenamedImage ' + str(time.time())
+        self.fill_field(by.By.ID, 'id_title', new_title)
+        self.select_from_list('type', 'linux')
         self.select_and_click_element('Mark')
-
-        self.driver.find_element_by_xpath(
-            "//tr[td[contains(text(), 'RenamedImage')]]")
+        self.check_element_on_page(by.By.XPATH, c.TestImage.format(new_title))
 
         self.repair_image()
 
@@ -107,8 +119,9 @@ class TestSuiteImage(base.ImageTestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
-        self.driver.find_element_by_xpath(c.TestImage + '//a').click()
-        self.assertIn('New Image',
+        self.driver.find_element_by_xpath(
+            c.TestImage.format(self.image_title) + '//a').click()
+        self.assertIn(self.image_title,
                       self.driver.find_element(by.By.XPATH, c.ImageMeta).text)
 
     @utils.ordered
@@ -121,9 +134,11 @@ class TestSuiteImage(base.ImageTestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
-        self.driver.find_element_by_xpath(c.DeleteImageMeta).click()
+        self.driver.find_element_by_xpath(
+            c.DeleteImageMeta.format(self.image_title)).click()
         self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-        self.check_element_not_on_page(by.By, c.TestImage)
+        self.check_element_not_on_page(by.By,
+                                       c.TestImage.format(self.image_title))
 
         self.repair_image()
 
@@ -156,7 +171,6 @@ class TestSuiteFields(base.FieldsTestCase):
             12. Set "domain.local" as a domain name and check that
             error message didn't appear
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -216,7 +230,6 @@ class TestSuiteFields(base.FieldsTestCase):
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -231,8 +244,7 @@ class TestSuiteFields(base.FieldsTestCase):
 
         self.fill_field(by.By.NAME, '0-name', value='AppL1')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, '+').is_displayed())
+        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
 
     @utils.ordered
     def test_check_required_field(self):
@@ -248,7 +260,6 @@ class TestSuiteFields(base.FieldsTestCase):
             4. Set app name and click 'Next',
             check that there is no error message
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -259,8 +270,7 @@ class TestSuiteFields(base.FieldsTestCase):
         self.fill_field(by.By.NAME, "0-name", "name")
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, '+').is_displayed())
+        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
 
     @utils.ordered
     def test_password_validation(self):
@@ -275,7 +285,6 @@ class TestSuiteFields(base.FieldsTestCase):
             field, check that validation failed
             5. Set correct password. Validation has to pass
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -289,8 +298,7 @@ class TestSuiteFields(base.FieldsTestCase):
         self.check_error_message_is_absent('Passwords do not match')
         self.fill_field(by.By.NAME, '0-adminPassword', value='P@ssw0rd')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, '+').is_displayed())
+        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
 
 
 class TestSuiteApplications(base.ApplicationTestCase):
@@ -305,7 +313,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             will appear
             4. Click 'Back' and check that first wizard step is shown
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -313,14 +320,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.fill_field(by.By.NAME, "0-name", "name")
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, '+').is_displayed())
-
         self.driver.find_element_by_id(
             'wizard_{0}_btn'.format(self.mockapp_id)).click()
 
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.NAME, "0-name").is_displayed())
+        self.check_element_on_page(by.By.NAME, "0-name")
 
     @utils.ordered
     def test_check_ability_create_two_dependent_apps(self):
@@ -334,7 +337,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             4. Click '+' and verify that creation of second app is possible
         """
 
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -355,7 +357,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             3. Create TestApp app by filling the creation form
             4. Delete TestApp app from environment
         """
-        self.navigate_to('Murano')
+
         self.go_to_submenu('Applications')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -365,10 +367,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.select_from_list('2-osImage', 'New Image')
+        self.select_from_list('osImage', self.image.name)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        WebDriverWait(self.driver, 10).until(self.check_alert_message)
-
+        self.wait_element_is_clickable(by.By.LINK_TEXT, 'Add Component')
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
         self.delete_component('TestA')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
@@ -475,7 +476,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             2. Choose some application and click on 'More info'
             3. Verify info about application
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
         self.select_and_click_action_for_app('details', self.mockapp_id)
 
@@ -516,8 +516,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             'App Category' dropdown menu
             5. Verify that MockApp is shown
         """
-
-        self.navigate_to('Murano')
         self.go_to_submenu('Applications')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
@@ -547,7 +545,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
             and go to the env2
             9. Check that added application is here
         """
-        self.navigate_to('Murano')
         self.go_to_submenu('Environments')
         self.create_environment('env1')
         self.go_to_submenu('Environments')
@@ -572,7 +569,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             c.ButtonSubmit).click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.select_from_list('2-osImage', 'New Image')
+        self.select_from_list('osImage', self.image.name)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()

@@ -1,3 +1,15 @@
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
 import json
 import logging
 import sys
@@ -10,6 +22,7 @@ from muranoclient import client as mclient
 from selenium.common import exceptions as exc
 from selenium import webdriver
 import selenium.webdriver.common.by as by
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 import testtools
 
@@ -78,8 +91,10 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
         self.driver.find_element(by=by_find, value=field).send_keys(value)
 
     def get_element_id(self, el_name):
-        path = self.driver.find_element_by_xpath(
-            ".//*[@data-display='{0}']".format(el_name)).get_attribute("id")
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (by.By.XPATH, ".//*[@data-display='{0}']".format(el_name))))
+        path = el.get_attribute("id")
         return path.split('__')[-1]
 
     def select_and_click_action_for_app(self, action, app):
@@ -89,9 +104,9 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
                                                              app)).click()
 
     def go_to_submenu(self, link):
-        self.driver.find_element_by_partial_link_text(
-            '{0}'.format(link)).click()
-        time.sleep(2)
+        element = self.wait_element_is_clickable(by.By.PARTIAL_LINK_TEXT, link)
+        element.click()
+        self.wait_for_sidebar_is_loaded()
 
     def check_panel_is_present(self, panel_name):
         self.assertIn(panel_name,
@@ -99,17 +114,25 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
                           ".//*[@class='page-header']").text)
 
     def navigate_to(self, menu):
-        self.driver.find_element_by_xpath(getattr(consts, menu)).click()
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (by.By.XPATH, getattr(consts, menu))))
+        el.click()
+        self.wait_for_sidebar_is_loaded()
 
     def select_from_list(self, list_name, value):
-        self.driver.find_element_by_xpath(
-            "//select[@name='{0}']/option[text()='{1}']".
-            format(list_name, value)).click()
+        locator = (by.By.XPATH,
+                   "//select[contains(@name, '{0}')]"
+                   "/option[@value='{1}']".format(list_name, value))
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(locator))
+        el.click()
 
     def check_element_on_page(self, method, value):
         try:
-            self.driver.find_element(method, value)
-        except (exc.NoSuchElementException, exc.ElementNotVisibleException):
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((method, value)))
+        except exc.TimeoutException:
             self.fail("Element {0} is not preset on the page".format(value))
 
     def check_element_not_on_page(self, method, value):
@@ -128,12 +151,24 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
             'murano__action_CreateEnvironment').click()
         self.fill_field(by.By.ID, 'id_name', env_name)
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
-            by.By.LINK_TEXT, 'Add Component').is_displayed())
+        self.wait_element_is_clickable(by.By.LINK_TEXT, 'Add Component')
 
-    def check_alert_message(self, driver):
-        el = driver.find_element_by_css_selector('div.alert')
-        return not el.is_displayed()
+    def wait_for_alert_message(self):
+        locator = (by.By.CSS_SELECTOR, 'div.alert')
+        WebDriverWait(self.driver, 2).until(
+            EC.presence_of_element_located(locator))
+        WebDriverWait(self.driver, 6).until(
+            lambda driver: not driver.find_element(*locator).is_displayed())
+
+    def wait_element_is_clickable(self, method, element):
+        return WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((method, element)))
+
+    def wait_for_sidebar_is_loaded(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (by.By.CSS_SELECTOR, "div.sidebar dt.active")))
+        time.sleep(0.5)
 
 
 class PackageBase(UITestCase):
@@ -164,7 +199,8 @@ class ImageTestCase(PackageBase):
             service_type='image', endpoint_type='publicURL')
         cls.glance = gclient.Client('1', endpoint=glance_endpoint,
                                     token=cls.keystone_client.auth_token)
-        cls.image = cls.upload_image()
+        cls.image_title = 'New Image ' + str(time.time())
+        cls.image = cls.upload_image(cls.image_title)
 
     @classmethod
     def tearDownClass(cls):
@@ -172,10 +208,11 @@ class ImageTestCase(PackageBase):
         cls.glance.images.delete(cls.image.id)
 
     @classmethod
-    def upload_image(cls):
+    def upload_image(cls, title):
         try:
-            property = {'murano_image_info': json.dumps({'title': 'New Image',
+            property = {'murano_image_info': json.dumps({'title': title,
                                                          'type': 'linux'})}
+
             image = cls.glance.images.create(name='TestImage',
                                              disk_format='qcow2',
                                              size=0,
@@ -193,30 +230,31 @@ class ImageTestCase(PackageBase):
     def repair_image(self):
         self.driver.find_element_by_id(
             'marked_images__action_mark_image').click()
-        self.select_from_list('image', self.image.name)
-        self.fill_field(by.By.ID, 'id_title', 'New Image')
-        self.select_from_list('type', 'Generic Linux')
+        self.select_from_list('image', self.image.id)
+        self.fill_field(by.By.ID, 'id_title', self.image_title)
+        self.select_from_list('type', 'linux')
         self.select_and_click_element('Mark')
+        self.check_element_on_page(by.By.XPATH,
+                                   consts.TestImage.format(self.image_title))
 
 
 class EnvironmentTestCase(UITestCase):
     def delete_environment(self, env_name):
         self.select_action_for_environment(env_name, 'delete')
         self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
-        WebDriverWait(self.driver, 10).until(self.check_alert_message)
+        self.wait_for_alert_message()
 
     def edit_environment(self, old_name, new_name):
         self.select_action_for_environment(old_name, 'edit')
         self.fill_field(by.By.ID, 'id_name', new_name)
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.wait_for_alert_message()
 
     def select_action_for_environment(self, env_name, action):
         element_id = self.get_element_id(env_name)
         more_button = consts.More.format(element_id)
         self.driver.find_element_by_xpath(more_button).click()
         btn_id = "murano__row_{0}__action_{1}".format(element_id, action)
-        WebDriverWait(self.driver, 10).until(
-            lambda s: s.find_element_by_id(btn_id).is_displayed)
         self.driver.find_element_by_id(btn_id).click()
 
 
@@ -247,8 +285,10 @@ class ApplicationTestCase(ImageTestCase):
         component_id = self.get_element_id(component_name)
         self.driver.find_element_by_id(
             'services__row_{0}__action_delete'.format(component_id)).click()
-        self.driver.find_element_by_link_text('Delete Component').click()
-        WebDriverWait(self.driver, 10).until(self.check_alert_message)
+        el = self.wait_element_is_clickable(by.By.LINK_TEXT,
+                                            'Delete Component')
+        el.click()
+        self.wait_for_alert_message()
 
     def select_action_for_package(self, package, action):
         package_id = self.get_element_id(package)
