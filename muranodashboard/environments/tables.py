@@ -259,9 +259,9 @@ class ServicesTable(tables.DataTable):
         verbose_name = _('Components')
         status_columns = ['status']
         row_class = UpdateServiceRow
-        table_actions = (AddApplication, DeleteService,
-                         DeployThisEnvironment)
+        table_actions = (AddApplication, DeployThisEnvironment)
         row_actions = (DeleteService,)
+        multi_select = False
 
 
 class ShowDeploymentDetails(tables.LinkAction):
