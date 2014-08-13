@@ -441,15 +441,15 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.select_action_for_package('PostgreSQL', 'download_package')
 
     @utils.ordered
-    def test_check_opportunity_to_toggle_package(self):
+    def test_check_toggle_enabled_package(self):
         """Test check ability to make package active or inactive
 
         Scenario:
             1. Navigate to 'Package Definitions' page
-            2. Select some package and make it inactive ("More>Toggle Package")
-            3. Check that package became inactive
-            4. Select some package and make it active ("More>Toggle Package ")
-            5. Check that package became active
+            2. Select some package and make it inactive ("More>Toggle Active")
+            3. Check that package is inactive
+            4. Select some package and make it active ("More>Toggle Active ")
+            5. Check that package is active
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
@@ -457,14 +457,36 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'toggle_enabled')
 
-        self.assertTrue(self.check_package_parameter(
-            'PostgreSQL', '3', 'False'))
+        self.check_package_parameter('PostgreSQL', 'Active', 'False')
 
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'toggle_enabled')
 
-        self.assertTrue(self.check_package_parameter(
-            'PostgreSQL', '3', 'True'))
+        self.check_package_parameter('PostgreSQL', 'Active', 'True')
+
+    @utils.ordered
+    def test_check_toggle_public_package(self):
+        """Test check ability to make package active or inactive
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select some package and make it inactive ("More>Toggle Public")
+            3. Check that package is unpublic
+            4. Select some package and make it active ("More>Toggle Public ")
+            5. Check that package is public
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Public', 'False')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Public', 'True')
 
     @utils.ordered
     def test_check_info_about_app(self):

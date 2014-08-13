@@ -52,6 +52,7 @@ class UploadPackageForm(horizon_forms.SelfHandlingForm):
                               required=True)
     categories = forms.MultipleChoiceField(label=_('Application Category'),
                                            required=True)
+    is_public = forms.BooleanField(label=_("Public"), required=False)
 
     def __init__(self, request, **kwargs):
         super(UploadPackageForm, self).__init__(request, **kwargs)

@@ -254,8 +254,8 @@ class ApplicationTestCase(ImageTestCase):
         package_id = self.get_element_id(package)
         if action == 'more':
             self.driver.find_element_by_xpath(
-                ".//*[@id='packages__row__{0}']/td[6]/div/a[2]".
-                format(package_id)).click()
+                "//tr[@data-object-id='{0}']"
+                "//a[@data-toggle='dropdown']".format(package_id)).click()
             WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
                 by.By.XPATH,
                 ".//*[@id='packages__row_{0}__action_download_package']".
@@ -266,15 +266,17 @@ class ApplicationTestCase(ImageTestCase):
                 format(package_id, action)).click()
 
     def check_package_parameter(self, package, column, value):
-        package_id = self.get_element_id(package)
+        columns = {'Active': 3, 'Public': 4}
 
-        result = self.driver.find_element_by_xpath(
-            ".//*[@id='packages__row__{0}']/td[{1}]".
-            format(package_id, column)).text
-        if result == value:
-            return True
-        else:
-            return False
+        package_id = self.get_element_id(package)
+        column_num = str(columns[column])
+
+        column_element = self.driver.find_element_by_xpath(
+            "//tr[@data-object-id='{0}']/td[{1}]".format(package_id,
+                                                         column_num))
+        self.assertTrue(column_element.text == value,
+                        "'{0}' column doesn't contain '{1}'".format(column,
+                                                                    value))
 
     def modify_package(self, param, value):
         self.fill_field(by.By.ID, 'id_{0}'.format(param), value)
