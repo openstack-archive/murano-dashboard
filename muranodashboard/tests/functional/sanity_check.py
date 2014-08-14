@@ -619,3 +619,35 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.assertEqual('New Description',
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
+
+    @utils.ordered
+    def test_check_progress_bar(self):
+        """Test that progress bar appears only for 'Deploy in progress'
+
+        Scenario:
+            1. Navigate Applications and click MockApp 'Quick Deploy'
+            2. Check that for "Configuring" state progress bar is not seen
+            3. Click deploy
+            4. Check that for "Deploy in progress" state progress bar is seen
+        """
+        self.go_to_submenu('Applications')
+        self.select_and_click_action_for_app('quick-add', self.mockapp_id)
+        field_id = "{0}_0-name".format(self.mockapp_id)
+        self.fill_field(by.By.ID, field_id, value='TestApp')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.select_from_list('osImage', self.image.name)
+
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.check_element_on_page(by.By.XPATH, c.Status.format('Configuring'))
+        self.check_element_on_page(by.By.XPATH, c.CellStatusUp)
+
+        self.driver.find_element_by_css_selector(
+            '#services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Deploy in progress'))
+        self.check_element_on_page(by.By.XPATH, c.CellStatusUnknown)
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)

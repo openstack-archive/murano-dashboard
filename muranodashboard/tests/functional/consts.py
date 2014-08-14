@@ -14,3 +14,7 @@ TestImage = "//tr[td[contains(text(), '{0}')]]"
 DeleteImageMeta = TestImage + "//td//button[contains(text(), 'Delete Metadata')]"  # noqa
 ImageMeta = "//dl[dt[contains(text(), 'murano_image_info')]]/dd"
 More = "//tr[@id='murano__row__{0}']//a[@data-toggle='dropdown']"
+
+Status = "//td[contains(text(), '{0}')]"
+CellStatusUp = "//td[contains(@class, 'status_up')]"
+CellStatusUnknown = "//td[contains(@class, 'status_unknown')]"  # noqa
