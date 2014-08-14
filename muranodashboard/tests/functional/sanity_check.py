@@ -482,12 +482,12 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Public', 'False')
+        self.check_package_parameter('PostgreSQL', 'Public', 'True')
 
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Public', 'True')
+        self.check_package_parameter('PostgreSQL', 'Public', 'False')
 
     @utils.ordered
     def test_check_info_about_app(self):
