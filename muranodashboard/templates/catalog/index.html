@@ -19,7 +19,7 @@
     <div class="table_wrapper">
         <h3 class="quota-heading">Recent Activity</h3>
         {% if latest_list|length > 0 %}
-            <div class="app-row app-list row">
+            <div class="app-row app-list">
                 {% for app in latest_list %}
                     {% include 'catalog/app_tile.html' %}
                 {% endfor %}

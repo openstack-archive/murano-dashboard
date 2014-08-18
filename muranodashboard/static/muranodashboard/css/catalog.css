@@ -53,7 +53,7 @@ h3.heading_switcher a.btn {
   margin-top:15px;
 }
 .app-list .app-description {
-  height: 100px;
+  height: 135px;
 }
 .btn-link {
   padding: 5px 0;
@@ -86,21 +86,27 @@ h3.link .caret {
   margin-bottom:20px;
 }
 .app-list .app {
-  min-height:160px;
   position:relative;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
 }
 .app-list .app > div {
   margin:0;
 }
 .app-list .app div.description {
-  padding-left:20px;
   margin-left:0;
+  height: 100%;
 }
 .app-list .app h4 {;
   margin-bottom:0.25em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
-.app-list .app .app-details-link {;
-  float: right;
+.app-list .app p {
+  max-height: 75px;
+  overflow: hidden;
 }
 
 .app-list .app .app-actions {
@@ -123,6 +129,10 @@ h3.link .caret {
 }
 .app-meta {
   padding:10px;
+  background-color: #eeeeee;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
 }
 .tab-content {
   margin-bottom:10px;
@@ -132,15 +142,25 @@ h3.link .caret {
   padding-top:15px;
   margin-top:15px;
 }
+.app-supplier-data {
+  overflow: hidden;
+  padding-left: 10px;
+}
+
+.app-meta ul {
+    padding: 15px 0;
+}
 .app-icon {
   line-height:0;
   overflow:hidden;
   margin-left:0;
-  max-height:70px
+  padding: 0;
+  float: left;
+  max-width: 80px;
 }
 .app-icon img {
-  max-height:70px;
-  margin:0px;
+    max-height:70px;
+    margin: 0;
 }
 
 #environment_switcher {

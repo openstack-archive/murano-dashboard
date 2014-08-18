@@ -14,7 +14,7 @@
      </div>
 
    {% if app.supplier.Name %}
-   <div class="app-supplier">
+   <div class="app-supplier clearfix">
      {% if app.supplier.Logo %}
      <div class="app-icon">
        <img src="{% url 'horizon:murano:catalog:supplier_images' app.id %}" />
