@@ -142,7 +142,7 @@ def environments_list(request):
     for index, env in enumerate(environments):
         environments[index].has_services = False
         environment = environment_get(request, env.id)
-        for service in environment.services:
+        for service in environment.services or []:
             if service:
                 environments[index].has_services = True
             break
@@ -204,7 +204,7 @@ def services_list(request, environment_id):
     except exc.HTTPNotFound:
         reports = {}
 
-    for service_item in environment.services:
+    for service_item in environment.services or []:
         service_data = service_item
         service_id = service_data['?']['id']
 
