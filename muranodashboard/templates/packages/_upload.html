@@ -1,0 +1,52 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load static %}
+{% load url from future %}
+
+{% block form_id %}upload_package{% endblock %}
+{% block form_action %}{% url 'horizon:murano:packages:upload' %}{% endblock %}
+{% block form_attrs %}enctype="multipart/form-data"{% endblock %}
+
+{% block modal_id %}upload_package_modal{% endblock %}
+{% block modal-header %}{% trans 'Upload Package' %}{% endblock %}
+
+{% block modal-body %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/one_field_form.css' %}">
+    <div class="left" >
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+            {{ form }}
+        {% endfor %}
+    {% else %}
+        <fieldset>
+        {% with form=wizard.form %}
+            {% include "horizon/common/_form_fields.html" %}
+        {% endwith %}
+        </fieldset>
+    {% endif %}
+    </div>
+    <div class="right">
+        {% if wizard.steps.prev %}
+            {% include 'packages/_package_params.html' %}
+        {% else %}
+            <h3>{% trans 'Description:' %}</h3>
+            <p>{% blocktrans %}Choose a zip archive to upload.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Murano package should contain:<br>
+                * Manifest file;<br>
+                * UI definition folder;<br>
+                * Classes definition folder;<br>
+                * Execution plans folder.{% endblocktrans %}</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block modal-footer %}
+    {% if wizard.steps.prev %}
+        <input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Create' %}"/>
+    {% else %}
+         <input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Next' %}"/>
+    {% endif %}
+    <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}

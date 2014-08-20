@@ -154,7 +154,8 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
         self.wait_element_is_clickable(by.By.LINK_TEXT, 'Add Component')
 
     def wait_for_alert_message(self):
-        locator = (by.By.CSS_SELECTOR, 'div.alert')
+        locator = (by.By.CSS_SELECTOR, 'div.alert-success')
+        log.debug("Waiting for a success message")
         WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
         WebDriverWait(self.driver, 6).until(
@@ -293,9 +294,10 @@ class ApplicationTestCase(ImageTestCase):
     def select_action_for_package(self, package, action):
         package_id = self.get_element_id(package)
         if action == 'more':
-            self.driver.find_element_by_xpath(
-                "//tr[@data-object-id='{0}']"
-                "//a[@data-toggle='dropdown']".format(package_id)).click()
+            el = self.wait_element_is_clickable(
+                by.By.XPATH, "//tr[@data-object-id='{0}']"
+                             "//a[@data-toggle='dropdown']".format(package_id))
+            el.click()
             WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
                 by.By.XPATH,
                 ".//*[@id='packages__row_{0}__action_download_package']".

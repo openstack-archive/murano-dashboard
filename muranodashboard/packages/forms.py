@@ -15,7 +15,6 @@
 import logging
 
 from django.conf import settings
-from django.core.files import uploadedfile
 from django.core.urlresolvers import reverse
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -25,7 +24,6 @@ from horizon import messages
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
-from muranodashboard.catalog import views
 
 
 LOG = logging.getLogger(__name__)
@@ -37,27 +35,8 @@ except ValueError:
     MAX_FILE_SIZE_MB = 5
 
 
-def split_post_data(post):
-    data, files = {}, {}
-    for key, value in post.iteritems():
-        if isinstance(value, uploadedfile.InMemoryUploadedFile):
-            files[key] = value
-        else:
-            data[key] = value
-    return data, files
-
-
-class UploadPackageForm(horizon_forms.SelfHandlingForm):
-    package = forms.FileField(label=_('Application .zip package'),
-                              required=True)
-    categories = forms.MultipleChoiceField(label=_('Application Category'),
-                                           required=True)
-    is_public = forms.BooleanField(label=_("Public"), required=False)
-
-    def __init__(self, request, **kwargs):
-        super(UploadPackageForm, self).__init__(request, **kwargs)
-        categories = api.muranoclient(request).packages.categories()
-        self.fields['categories'].choices = [(c, c) for c in categories]
+class UploadPackageFileForm(forms.Form):
+    package = forms.FileField(label=_('Application .zip package'))
 
     def clean_package(self):
         package = self.cleaned_data.get('package')
@@ -70,55 +49,59 @@ class UploadPackageForm(horizon_forms.SelfHandlingForm):
                 raise forms.ValidationError(msg)
         return package
 
-    def handle(self, request, data):
-        LOG.debug('Uploading package {0}'.format(data))
-        try:
-            data, files = split_post_data(data)
-            package = api.muranoclient(request).packages.create(data, files)
 
-            @views.update_latest_apps
-            def _handle(_request, app_id):
-                messages.success(_request, _('Package uploaded.'))
-                return package
-
-            return _handle(request, app_id=package.id)
-
-        except exc.HTTPException:
-            LOG.exception(_('Uploading package failed'))
-            redirect = reverse('horizon:murano:packages:index')
-            exceptions.handle(request,
-                              _('Unable to upload package'),
-                              redirect=redirect)
-
-
-class CheckboxInput(forms.CheckboxInput):
-    def __init__(self):
-        super(CheckboxInput, self).__init__(attrs={'class': 'checkbox'})
-
-    class Media:
-        css = {'all': ('muranodashboard/css/checkbox.css',)}
-
-
-class ModifyPackageForm(horizon_forms.SelfHandlingForm):
+class UpdatePackageForm(forms.Form):
     name = forms.CharField(label=_('Name'))
-    categories = forms.MultipleChoiceField(label=_('Categories'))
-    tags = forms.CharField(label=_('Tags'), required=False)
+    categories = forms.MultipleChoiceField(label=_('Application Category'))
+    tags = forms.CharField(label=_('Tags'),
+                           required=False,
+                           help_text='Provide comma-separated list of words,'
+                                     ' associated with the package')
     is_public = forms.BooleanField(label=_('Public'),
                                    required=False,
-                                   widget=CheckboxInput)
+                                   widget=forms.CheckboxInput)
     enabled = forms.BooleanField(label=_('Active'),
                                  required=False,
-                                 widget=CheckboxInput)
+                                 widget=forms.CheckboxInput)
     description = forms.CharField(label=_('Description'),
                                   widget=forms.Textarea,
                                   required=False)
 
-    def __init__(self, request, *args, **kwargs):
-        super(ModifyPackageForm, self).__init__(request, *args, **kwargs)
-        category_values = api.muranoclient(request).packages.categories()
-        categories = self.fields['categories']
-        categories.choices = [(c, c) for c in category_values]
-        categories.initial = kwargs.get('initial', {}).get('categories')
+    def __init__(self, request, package, *args, **kwargs):
+        super(UpdatePackageForm, self).__init__(*args, **kwargs)
+        if package.type == 'Application':
+            self.fields['categories'].choices = [('',
+                                                  'No categories available')]
+            try:
+                categories = api.muranoclient(request).packages.categories()
+                if categories:
+                    self.fields['categories'].choices = [(c, c)
+                                                         for c in categories]
+                if package.categories:
+                    self.fields['categories'].initial = dict(
+                        (key, True) for key in package.categories)
+            except (exc.HTTPException, Exception):
+                msg = 'Unable to get list of categories'
+                LOG.exception(msg)
+                redirect = reverse('horizon:murano:packages:index')
+                exceptions.handle(request,
+                                  _(msg),
+                                  redirect=redirect)
+        else:
+            del self.fields['categories']
+        self.fields['name'].initial = package.name
+        self.fields['tags'].initial = ', '.join(package.tags)
+        self.fields['is_public'].initial = package.is_public
+        self.fields['enabled'].initial = package.enabled
+        self.fields['description'].initial = package.description
+
+
+class ModifyPackageForm(UpdatePackageForm, horizon_forms.SelfHandlingForm):
+    def __init__(self, *args, **kwargs):
+        package = kwargs['initial']['package']
+        request = kwargs['initial']['request']
+        super(ModifyPackageForm, self).__init__(request, package,
+                                                *args, **kwargs)
 
     def handle(self, request, data):
         app_id = self.initial.get('app_id')

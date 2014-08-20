@@ -14,6 +14,7 @@
 
 from django.conf import urls
 
+from muranodashboard.packages import forms
 from muranodashboard.packages import views
 
 
@@ -22,8 +23,9 @@ urlpatterns = urls.patterns(
     urls.url(r'^$', views.PackageDefinitionsView.as_view(),
              name='index'),
 
-    urls.url(r'^upload$', views.UploadPackageView.as_view(),
-             name='upload'),
+    urls.url(r'^upload$', views.UploadPackageWizard.as_view(
+        [forms.UploadPackageFileForm, forms.UpdatePackageForm]),
+        name='upload'),
 
     urls.url(r'^modify/(?P<app_id>[^/]+)?$',
              views.ModifyPackageView.as_view(),
