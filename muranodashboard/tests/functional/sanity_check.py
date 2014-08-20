@@ -642,13 +642,14 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.check_element_on_page(by.By.XPATH, c.Status.format('Configuring'))
-        self.check_element_on_page(by.By.XPATH, c.CellStatusUp)
+        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
 
         self.driver.find_element_by_css_selector(
             '#services__action_deploy_env').click()
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Deploy in progress'))
-        self.check_element_on_page(by.By.XPATH, c.CellStatusUnknown)
+        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('unknown'))
         self.check_element_on_page(by.By.XPATH,
-                                   c.Status.format('Ready'),
+                                   c.Status.format('Deploy FAILURE'),
                                    sec=90)
+        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('down'))
