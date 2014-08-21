@@ -97,10 +97,16 @@ class TestRequirementsTab(helpers.APITestCase):
 
         # Should return the requirements list used by the template file.
         r._get_requirements()
-        self.assertEqual(['Instance flavor:', ['Minimum disk size: 10GB',
-                                               'Minimum RAM size: 2048MB',
-                                               'Minimum vCPUs: 2']],
-                         r.app.requirements)
+
+        self.assertIn('Instance flavor:', r.app.requirements)
+        flavor_req = r.app.requirements[1]
+
+        self.assertIn('Minimum disk size: 10GB',
+                      flavor_req)
+        self.assertIn('Minimum vCPUs: 2',
+                      flavor_req)
+        self.assertIn('Minimum RAM size: 2048MB',
+                      flavor_req)
 
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_no_requirements(self, mock_services):
@@ -118,4 +124,4 @@ class TestRequirementsTab(helpers.APITestCase):
 
         # Should return an empty requirements list
         r._get_requirements()
-        self.assertEqual([], r.app.requirements)
+        self.assertListEqual([], r.app.requirements)

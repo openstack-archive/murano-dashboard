@@ -2,7 +2,8 @@ import socket
 
 SECRET_KEY = 'HELLA_SECRET!'
 
-DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3'}}
+DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
+                         'NAME': 'test'}}
 
 from muranodashboard.settings import *  # noqa
 

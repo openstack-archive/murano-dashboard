@@ -650,6 +650,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    c.Status.format('Deploy in progress'))
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('unknown'))
         self.check_element_on_page(by.By.XPATH,
-                                   c.Status.format('Deploy FAILURE'),
+                                   c.Status.format('Ready'),
                                    sec=90)
-        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('down'))
+        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
