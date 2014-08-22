@@ -22,7 +22,6 @@ from horizon import tables
 
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
-from muranodashboard.openstack.common import timeutils
 
 
 def _get_environment_status_and_version(request, table):
@@ -67,17 +66,12 @@ class CreateEnvironment(tables.LinkAction):
 class DeleteEnvironment(tables.DeleteAction):
     data_type_singular = _('Environment')
     data_type_plural = _('Environments')
+    action_past = _('Start Deleting')
 
     def allowed(self, request, environment):
         if environment:
-            environment = api.environment_get(request, environment.id)
-            if environment.status == consts.STATUS_ID_DEPLOYING:
-                deployment = api.deployments_list(request, environment.id)[0]
-                last_action = timeutils.parse_strtime(
-                    deployment.started.replace(' ', 'T'),
-                    timeutils._ISO8601_TIME_FORMAT)
-                return timeutils.is_older_than(last_action, 15 * 60)
-            return environment.status not in consts.NO_ACTION_ALLOWED_STATUSES
+            return environment.status not in (consts.STATUS_ID_DEPLOYING,
+                                              consts.STATUS_ID_DELETING)
         return True
 
     def action(self, request, environment_id):
@@ -102,6 +96,7 @@ class EditEnvironment(tables.LinkAction):
 class DeleteService(tables.DeleteAction):
     data_type_singular = _('Component')
     data_type_plural = _('Components')
+    action_past = _('Start Deleting')
 
     def allowed(self, request, service=None):
         status, version = _get_environment_status_and_version(request,
@@ -132,9 +127,9 @@ class DeployEnvironment(tables.BatchAction):
 
     def allowed(self, request, environment):
         status = getattr(environment, 'status', None)
-        if status not in consts.NO_ACTION_ALLOWED_STATUSES:
-            return True
-        if environment.version == 0 and not environment.has_services:
+        if not environment.has_new_services:
+            return False
+        if status in consts.NO_ACTION_ALLOWED_STATUSES:
             return False
         return True
 
@@ -156,7 +151,8 @@ class DeployThisEnvironment(tables.Action):
     def allowed(self, request, service):
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
-        if status == consts.STATUS_ID_DEPLOYING:
+        if (status in consts.NO_ACTION_ALLOWED_STATUSES
+                or status == consts.STATUS_ID_READY):
             return False
 
         apps = self.table.data

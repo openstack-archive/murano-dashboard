@@ -122,8 +122,7 @@ class Session(object):
         """
         #We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
-        session_id = sessions[environment_id] \
-            if environment_id in sessions else None
+        session_id = sessions.get(environment_id, '')
         if session_id:
             LOG.debug("Using session_id {0} for the environment {1}".format(
                 session_id, environment_id))
@@ -133,6 +132,19 @@ class Session(object):
         return session_id
 
 
+def _update_env(env):
+    env.has_new_services = False
+    if env.services:
+        for service in env.services:
+            if service['?']['status'] == 'pending':
+                env.has_new_services = True
+
+    if not env.has_new_services and env.version == 0:
+        if env.status == consts.STATUS_ID_READY:
+            env.status = consts.STATUS_ID_NEW
+    return env
+
+
 def environments_list(request):
     environments = []
     client = api.muranoclient(request)
@@ -140,15 +152,8 @@ def environments_list(request):
         environments = client.environments.list()
     LOG.debug('Environment::List {0}'.format(environments))
     for index, env in enumerate(environments):
-        environments[index].has_services = False
-        environment = environment_get(request, env.id)
-        for service in environment.services or []:
-            if service:
-                environments[index].has_services = True
-            break
-        if not environments[index].has_services:
-            if environments[index].status == consts.STATUS_ID_READY:
-                environments[index].status = consts.STATUS_ID_NEW
+        environments[index] = environment_get(request, env.id)
+
     return environments
 
 
@@ -171,6 +176,8 @@ def environment_get(request, environment_id):
               format(environment_id, session_id))
     client = api.muranoclient(request)
     env = client.environments.get(environment_id, session_id)
+    env = _update_env(env)
+
     LOG.debug('Environment::Get {0}'.format(env))
     return env
 
@@ -194,7 +201,7 @@ def services_list(request, environment_id):
 
     services = []
     # need to create new session to see services deployed be other user
-    session_id = Session.get_or_create(request, environment_id)
+    session_id = Session.get(request, environment_id)
 
     get_environment = api.muranoclient(request).environments.get
     environment = get_environment(environment_id, session_id)
@@ -202,6 +209,8 @@ def services_list(request, environment_id):
         client = api.muranoclient(request)
         reports = client.environments.last_status(environment_id, session_id)
     except exc.HTTPNotFound:
+        LOG.exception(_('Could not get last status for '
+                        'the {0} environment').format(environment_id))
         reports = {}
 
     for service_item in environment.services or []:
