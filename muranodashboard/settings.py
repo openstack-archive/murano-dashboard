@@ -23,7 +23,20 @@ import warnings
 
 from django.utils.translation import ugettext_lazy as _
 import xstatic.main
+import xstatic.pkg.angular
+import xstatic.pkg.angular_cookies
+import xstatic.pkg.angular_mock
+import xstatic.pkg.d3
+import xstatic.pkg.hogan
+import xstatic.pkg.jasmine
 import xstatic.pkg.jquery
+import xstatic.pkg.jquery_migrate
+import xstatic.pkg.jquery_quicksearch
+import xstatic.pkg.jquery_tablesorter
+import xstatic.pkg.jsencrypt
+import xstatic.pkg.qunit
+import xstatic.pkg.rickshaw
+import xstatic.pkg.spin
 
 from openstack_dashboard import exceptions
 
@@ -56,7 +69,7 @@ STATIC_URL = '/static/'
 ROOT_URLCONF = 'openstack_dashboard.urls'
 
 HORIZON_CONFIG = {
-    'dashboards': ('project', 'admin', 'settings', 'router',),
+    'dashboards': ('project', 'admin', 'router',),
     'default_dashboard': 'project',
     'user_home': 'openstack_dashboard.views.get_user_home',
     'ajax_queue_limit': 10,
@@ -136,7 +149,34 @@ STATICFILES_FINDERS = (
 )
 
 STATICFILES_DIRS = (
-    ('horizon/lib/jquery', xstatic.main.XStatic(xstatic.pkg.jquery).base_dir),
+    ('horizon/lib/angular',
+        xstatic.main.XStatic(xstatic.pkg.angular).base_dir),
+    ('horizon/lib/angular',
+        xstatic.main.XStatic(xstatic.pkg.angular_cookies).base_dir),
+    ('horizon/lib/angular',
+        xstatic.main.XStatic(xstatic.pkg.angular_mock).base_dir),
+    ('horizon/lib',
+        xstatic.main.XStatic(xstatic.pkg.d3).base_dir),
+    ('horizon/lib',
+        xstatic.main.XStatic(xstatic.pkg.hogan).base_dir),
+    ('horizon/lib/jasmine-1.3.1',
+        xstatic.main.XStatic(xstatic.pkg.jasmine).base_dir),
+    ('horizon/lib/jquery',
+        xstatic.main.XStatic(xstatic.pkg.jquery).base_dir),
+    ('horizon/lib/jquery',
+        xstatic.main.XStatic(xstatic.pkg.jquery_migrate).base_dir),
+    ('horizon/lib/jquery',
+        xstatic.main.XStatic(xstatic.pkg.jquery_quicksearch).base_dir),
+    ('horizon/lib/jquery',
+        xstatic.main.XStatic(xstatic.pkg.jquery_tablesorter).base_dir),
+    ('horizon/lib/jsencrypt',
+        xstatic.main.XStatic(xstatic.pkg.jsencrypt).base_dir),
+    ('horizon/lib/qunit',
+        xstatic.main.XStatic(xstatic.pkg.qunit).base_dir),
+    ('horizon/lib',
+        xstatic.main.XStatic(xstatic.pkg.rickshaw).base_dir),
+    ('horizon/lib',
+        xstatic.main.XStatic(xstatic.pkg.spin).base_dir),
 )
 
 COMPRESS_PRECOMPILERS = (
@@ -182,7 +222,8 @@ SESSION_TIMEOUT = 1800
 SESSION_COOKIE_MAX_SIZE = 4093
 
 # when doing upgrades, it may be wise to stick to PickleSerializer
-# TODO(mrunge): remove after Icehouse
+# NOTE(berendt): Check during the K-cycle if this variable can be removed.
+#                https://bugs.launchpad.net/horizon/+bug/1349463
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 LANGUAGES = (
