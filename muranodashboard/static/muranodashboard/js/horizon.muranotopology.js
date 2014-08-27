@@ -256,7 +256,7 @@ function ajax_poll(poll_time){
 
 if ($(murano_container).length){
   var width = $(murano_container).width(),
-    height = 500,
+    height = 1040,
     environment_id = $("#environment_id").data("environment_id"),
     ajax_url = '/murano/'+environment_id+'/services/get_d3_data',
     graph = $("#d3_data").data("d3_data"),
