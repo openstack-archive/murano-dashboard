@@ -627,7 +627,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         Scenario:
             1. Navigate Applications and click MockApp 'Quick Deploy'
-            2. Check that for "Configuring" state progress bar is not seen
+            2. Check that for "Ready to deploy" state progress bar is not seen
             3. Click deploy
             4. Check that for "Deploy in progress" state progress bar is seen
         """
@@ -641,7 +641,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.check_element_on_page(by.By.XPATH, c.Status.format('Configuring'))
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready to deploy'))
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
 
         self.driver.find_element_by_css_selector(

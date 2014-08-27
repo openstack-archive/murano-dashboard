@@ -70,7 +70,7 @@ STATUS_DISPLAY_CHOICES = (
     (STATUS_ID_READY, 'Ready'),
     (STATUS_ID_DEPLOYING, 'Deploy in progress'),
     (STATUS_ID_DELETING, 'Delete in progress'),
-    (STATUS_ID_PENDING, 'Configuring'),
+    (STATUS_ID_PENDING, 'Ready to deploy'),
     (STATUS_ID_NEW, 'Ready to configure'),
     (STATUS_ID_DELETE_FAILURE, 'Delete FAILURE'),
     (STATUS_ID_DEPLOY_FAILURE, 'Deploy FAILURE'),
