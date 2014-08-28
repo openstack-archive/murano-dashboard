@@ -66,7 +66,7 @@ class DownloadPackage(tables.Action):
 
             content_type = 'application/octet-stream'
             response = http.HttpResponse(body, content_type=content_type)
-            response['Content-Disposition'] = 'filename={name}.package'.format(
+            response['Content-Disposition'] = 'filename={name}.zip'.format(
                 name=self.get_package_name(data_table, app_id))
             return response
         except exc.HTTPException:
