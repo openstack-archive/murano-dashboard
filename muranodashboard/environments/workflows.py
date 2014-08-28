@@ -108,7 +108,13 @@ class CreateEnvironment(workflows.Workflow):
 
 
 class UpdateEnvironmentInfoAction(workflows.Action):
-    name = forms.CharField(required=True)
+    name = forms.CharField(
+        label=_("Environment Name"),
+        required=True,
+        validators=[validators.RegexValidator('^[a-zA-Z]+[\w-]*$')],
+        error_messages={'invalid': 'Environment name must contain only '
+                                   'alphanumeric or "_-." characters,'
+                                   ' must start with alpha'})
 
     def handle(self, request, data):
         try:
