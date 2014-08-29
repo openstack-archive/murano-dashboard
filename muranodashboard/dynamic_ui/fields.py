@@ -36,8 +36,8 @@ import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
-from muranodashboard.common import utils
 from muranodashboard.environments import api as env_api
+from muranodashboard.openstack.common import versionutils
 
 
 LOG = logging.getLogger(__name__)
@@ -557,8 +557,8 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
-@utils.deprecated(
-    as_of=utils.deprecated.JUNO,
+@versionutils.deprecated(
+    as_of=versionutils.deprecated.JUNO,
     in_favor_of='type boolean (regular BooleanField)',
     remove_in=1)
 class FloatingIpBooleanField(BooleanField):
@@ -716,8 +716,8 @@ def make_select_cls(fqns):
     return DynamicSelect
 
 
-@utils.deprecated(
-    as_of=utils.deprecated.JUNO,
+@versionutils.deprecated(
+    as_of=versionutils.deprecated.JUNO,
     in_favor_of='type io.murano.windows.ActiveDirectory with a custom '
                 'emptyValueMessage attribute',
     remove_in=1)
