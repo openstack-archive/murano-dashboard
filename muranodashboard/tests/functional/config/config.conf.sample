@@ -1,4 +1,4 @@
-[common]
+[murano]
 horizon_url = http://127.0.0.1/horizon
 murano_url = http://127.0.0.1:8082
 user = WebTestUser
