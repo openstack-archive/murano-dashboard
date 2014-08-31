@@ -12,6 +12,7 @@
 
 import json
 import logging
+import os
 import sys
 import time
 import urlparse
@@ -46,11 +47,7 @@ else:
         pass
 
 
-class OrderedMethodMixin(object):
-    __metaclass__ = utils.OrderedMethodMetaclass
-
-
-class UITestCase(OrderedMethodMixin, BaseDeps):
+class UITestCase(BaseDeps):
     @classmethod
     def setUpClass(cls):
         cls.keystone_client = ksclient.Client(username=cfg.common.user,
@@ -71,6 +68,7 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
         self.driver.maximize_window()
         self.driver.get(cfg.common.horizon_url + '/')
         self.driver.implicitly_wait(30)
+        self.addOnException(self.take_screenshot)
         self.log_in()
 
     def tearDown(self):
@@ -79,6 +77,22 @@ class UITestCase(OrderedMethodMixin, BaseDeps):
 
         for env in self.murano_client.environments.list():
             self.murano_client.environments.delete(env.id)
+
+    def take_screenshot(self, exception):
+        """Taking screenshot on error
+
+        This decorators will take a screenshot of the browser
+        when the test failed or when exception raised on the test.
+        Screenshot will be saved as PNG inside screenshots folder.
+
+        """
+        name = self._testMethodName
+        log.exception('{0} failed'.format(name))
+        screenshot_dir = './screenshots'
+        if not os.path.exists(screenshot_dir):
+            os.makedirs(screenshot_dir)
+        filename = os.path.join(screenshot_dir, name + '.png')
+        self.driver.get_screenshot_as_file(filename)
 
     def log_in(self):
         self.fill_field(by.By.ID, 'id_username', cfg.common.user)
