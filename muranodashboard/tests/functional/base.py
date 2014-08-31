@@ -263,8 +263,7 @@ class FieldsTestCase(PackageBase):
     def check_error_message_is_present(self, error_message):
         self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
         self.driver.find_element_by_xpath(
-            '//div[@class="alert-message"]'
-            '[contains(text(), "{0}")]'.format(error_message))
+            consts.ErrorMessage.format(error_message))
 
     def check_error_message_is_absent(self, error_message):
         self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
@@ -272,8 +271,7 @@ class FieldsTestCase(PackageBase):
         self.driver.implicitly_wait(2)
         try:
             self.driver.find_element_by_xpath(
-                '//div[@class="alert-message"]'
-                '[contains(text(), "{0}")]'.format(error_message))
+                consts.ErrorMessage.format(error_message))
         except (exc.NoSuchElementException, exc.ElementNotVisibleException):
             log.info("Message {0} is not"
                      " present on the page".format(error_message))

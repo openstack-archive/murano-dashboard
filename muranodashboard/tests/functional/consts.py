@@ -17,3 +17,5 @@ More = "//tr[@id='murano__row__{0}']//a[@data-toggle='dropdown']"
 
 Status = "//td[contains(text(), '{0}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
+
+ErrorMessage = '//span[contains(@class, "alert-danger") and contains(text(), "{0}")]'  # noqa
