@@ -16,34 +16,28 @@ from selenium.webdriver.common import by
 
 from muranodashboard.tests.functional import base
 from muranodashboard.tests.functional import consts as c
-from muranodashboard.tests.functional import utils
 
 
 class TestSuiteSmoke(base.UITestCase):
     """This class keeps smoke tests which check operability of all main panels
     """
-    @utils.ordered
     def test_smoke_environments_panel(self):
         self.go_to_submenu('Environments')
         self.check_panel_is_present('Environments')
 
-    @utils.ordered
     def test_smoke_applications_panel(self):
         self.go_to_submenu('Applications')
         self.check_panel_is_present('Applications')
 
-    @utils.ordered
     def test_smoke_statistics_panel(self):
         self.go_to_submenu('Statistics')
         self.check_panel_is_present('Murano Status')
 
-    @utils.ordered
     def test_smoke_images_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
         self.check_panel_is_present('Marked Images')
 
-    @utils.ordered
     def test_smoke_package_definitions_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
@@ -51,7 +45,6 @@ class TestSuiteSmoke(base.UITestCase):
 
 
 class TestSuiteEnvironment(base.EnvironmentTestCase):
-    @utils.ordered
     def test_create_delete_environment(self):
         """Test check ability to create and delete environment
 
@@ -66,7 +59,6 @@ class TestSuiteEnvironment(base.EnvironmentTestCase):
         self.delete_environment('test_create_del_env')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'test_create_del_env')
 
-    @utils.ordered
     def test_edit_environment(self):
         """Test check ability to change environment name
 
@@ -86,7 +78,6 @@ class TestSuiteEnvironment(base.EnvironmentTestCase):
 
 
 class TestSuiteImage(base.ImageTestCase):
-    @utils.ordered
     def test_rename_image(self):
         """Test check ability to mark murano image
 
@@ -109,7 +100,6 @@ class TestSuiteImage(base.ImageTestCase):
 
         self.repair_image()
 
-    @utils.ordered
     def test_check_image_info(self):
         """Test check ability to view image details
 
@@ -124,7 +114,6 @@ class TestSuiteImage(base.ImageTestCase):
         self.assertIn(self.image_title,
                       self.driver.find_element(by.By.XPATH, c.ImageMeta).text)
 
-    @utils.ordered
     def test_delete_image(self):
         """Test check ability to delete image
 
@@ -144,7 +133,6 @@ class TestSuiteImage(base.ImageTestCase):
 
 
 class TestSuiteFields(base.FieldsTestCase):
-    @utils.ordered
     def test_check_domain_name_field_validation(self):
         """Test checks that validation of domain name field work
         and appropriate error message is appeared after entering
@@ -219,7 +207,6 @@ class TestSuiteFields(base.FieldsTestCase):
             'Period characters are allowed only when '
             'they are used to delimit the components of domain style names')
 
-    @utils.ordered
     def test_check_app_name_validation(self):
         """Test checks validation of field that usually define
         application name
@@ -246,7 +233,6 @@ class TestSuiteFields(base.FieldsTestCase):
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
 
-    @utils.ordered
     def test_check_required_field(self):
         """Test checks that fields with parameter 'required=True' in yaml form
         are truly required and can't be omitted
@@ -272,7 +258,6 @@ class TestSuiteFields(base.FieldsTestCase):
 
         self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
 
-    @utils.ordered
     def test_password_validation(self):
         """Test checks password validation
 
@@ -302,7 +287,6 @@ class TestSuiteFields(base.FieldsTestCase):
 
 
 class TestSuiteApplications(base.ApplicationTestCase):
-    @utils.ordered
     def test_check_transitions_from_one_wizard_to_another(self):
         """Test checks that transitions "Next" and "Back" are not broken
 
@@ -325,7 +309,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.NAME, "0-name")
 
-    @utils.ordered
     def test_check_ability_create_two_dependent_apps(self):
         """Test checks that using one creation form it is possible to
         add to related apps in the one environment
@@ -347,7 +330,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_link_text('+').click()
         self.fill_field(by.By.NAME, "0-name", "app2")
 
-    @utils.ordered
     def test_creation_deletion_app(self):
         """Test check ability to create and delete test app
 
@@ -374,7 +356,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.delete_component('TestA')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
 
-    @utils.ordered
     def test_modify_package_name(self):
         """Test check ability to change name of the package
 
@@ -404,7 +385,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    c.AppPackageDefinitions.format(
                                        'PostgreSQL'))
 
-    @utils.ordered
     def test_modify_package_add_tag(self):
         """Test check ability to add file in composed service
 
@@ -428,7 +408,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
                       self.driver.find_element_by_xpath(
                           c.TagInDetails).text)
 
-    @utils.ordered
     def test_download_package(self):
         """Test check ability to download package from repository
 
@@ -442,7 +421,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.select_action_for_package('PostgreSQL', 'more')
         self.select_action_for_package('PostgreSQL', 'download_package')
 
-    @utils.ordered
     def test_check_toggle_enabled_package(self):
         """Test check ability to make package active or inactive
 
@@ -466,7 +444,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_package_parameter('PostgreSQL', 'Active', 'True')
 
-    @utils.ordered
     def test_check_toggle_public_package(self):
         """Test check ability to make package active or inactive
 
@@ -490,7 +467,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_package_parameter('PostgreSQL', 'Public', 'False')
 
-    @utils.ordered
     def test_check_info_about_app(self):
         """Test checks that information about app is available and truly.
 
@@ -508,7 +484,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_link_text('Requirements').click()
         self.driver.find_element_by_link_text('License').click()
 
-    @utils.ordered
     def test_check_search_option(self):
         """Test checks that 'Search' option is operable.
 
@@ -526,7 +501,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_not_on_page(by.By.XPATH,
                                        c.App.format('MockApp'))
 
-    @utils.ordered
     def test_filter_by_category(self):
         """Test checks ability to filter applications by category
         in Application Catalog page
@@ -552,7 +526,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.XPATH, c.App.format('MockApp'))
 
-    @utils.ordered
     def test_check_option_switch_env(self):
         """Test checks ability to switch environment and add app in other env
 
@@ -599,7 +572,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
 
-    @utils.ordered
     def test_modify_description(self):
         """Test check ability to change description of the package
 
@@ -621,7 +593,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
 
-    @utils.ordered
     def test_check_progress_bar(self):
         """Test that progress bar appears only for 'Deploy in progress'
 
