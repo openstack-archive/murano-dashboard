@@ -24,16 +24,16 @@ $(function() {
             if ( urls[0].length ) {
                 // if instead of single url there is an Application name + url
                 // then it was created by custom FQN reference and not by vanilla horizon
-                $('div.input a[class*=btn]').filter(function() {
+                $('div.dynamic-select a[class*=btn]').filter(function() {
                     return !$(this).hasClass(CUSTOM_CTRL_CLS);
                 }).remove();
                 if ( urls.length == 1 ) {
                     $button = $("<a href='" + urls[0][1] + "' " +
                         "data-add-to-field='" + $this.attr("id") + "' " +
-                        "class='btn ajax-add ajax-modal btn-inline " +
+                        "class='btn ajax-add ajax-modal btn-default " +
                         CUSTOM_CTRL_CLS + "'>+</a>");
                 } else {
-                    $button = $("<div class='btn-group' id='" +
+                    $button = $("<div class='dynamic-select' id='" +
                         $this.attr("id") + "-button' ><button type='button' class='btn " +
                         "btn-default dropdown-toggle " + CUSTOM_CTRL_CLS + "' " +
                         "data-toggle='dropdown'>+</button>" +
