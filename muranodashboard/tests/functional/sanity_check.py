@@ -354,138 +354,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.select_from_list('osImage', self.image.name)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.wait_element_is_clickable(by.By.LINK_TEXT, 'Add Component')
+        self.wait_element_is_clickable(by.By.ID, c.AddComponent)
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
         self.delete_component('TestA')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
-
-    def test_modify_package_name(self):
-        """Test check ability to change name of the package
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select package and click on 'Modify Package'
-            3. Rename package
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('PostgreSQL',
-                                       'modify_package')
-        self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
-        self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.wait_for_alert_message()
-
-        self.check_element_on_page(by.By.XPATH,
-                                   c.AppPackageDefinitions.format(
-                                       'PostgreSQL-modified'))
-
-        self.select_action_for_package('PostgreSQL-modified',
-                                       'modify_package')
-        self.fill_field(by.By.ID, 'id_name', 'PostgreSQL')
-        self.driver.find_element_by_xpath(c.InputSubmit).click()
-
-        self.check_element_on_page(by.By.XPATH,
-                                   c.AppPackageDefinitions.format(
-                                       'PostgreSQL'))
-
-    def test_modify_package_add_tag(self):
-        """Test check ability to add file in composed service
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Click on "Compose Service"  and create new service
-            3. Manage composed service: add file
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('PostgreSQL',
-                                       'modify_package')
-
-        self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
-        self.modify_package('tags', 'TEST_TAG')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-        self.select_and_click_action_for_app('details', self.postgre_id)
-        self.assertIn('TEST_TAG',
-                      self.driver.find_element_by_xpath(
-                          c.TagInDetails).text)
-
-    def test_download_package(self):
-        """Test check ability to download package from repository
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select PostgreSQL package and click on "More>Download Package"
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'download_package')
-
-    def test_check_toggle_enabled_package(self):
-        """Test check ability to make package active or inactive
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select some package and make it inactive ("More>Toggle Active")
-            3. Check that package is inactive
-            4. Select some package and make it active ("More>Toggle Active ")
-            5. Check that package is active
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
-
-        self.check_package_parameter('PostgreSQL', 'Active', 'False')
-
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
-
-        self.check_package_parameter('PostgreSQL', 'Active', 'True')
-
-    def test_check_toggle_public_package(self):
-        """Test check ability to make package active or inactive
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select some package and make it inactive ("More>Toggle Public")
-            3. Check that package is unpublic
-            4. Select some package and make it active ("More>Toggle Public ")
-            5. Check that package is public
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
-
-        self.check_package_parameter('PostgreSQL', 'Public', 'True')
-
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
-
-        self.check_package_parameter('PostgreSQL', 'Public', 'False')
-
-    def test_check_info_about_app(self):
-        """Test checks that information about app is available and truly.
-
-        Scenario:
-            1. Navigate to 'Application Catalog > Applications' panel
-            2. Choose some application and click on 'More info'
-            3. Verify info about application
-        """
-        self.go_to_submenu('Applications')
-        self.select_and_click_action_for_app('details', self.mockapp_id)
-
-        self.assertEqual('MockApp for webUI tests',
-                         self.driver.find_element_by_xpath(
-                             "//div[@class='app-description']").text)
-        self.driver.find_element_by_link_text('Requirements').click()
-        self.driver.find_element_by_link_text('License').click()
 
     def test_check_search_option(self):
         """Test checks that 'Search' option is operable.
@@ -575,27 +447,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
 
-    def test_modify_description(self):
-        """Test check ability to change description of the package
-
-        Scenario:
-            1. Navigate to 'Package Definitions' page
-            2. Select package and click on 'Modify Package'
-            3. Change description
-        """
-        self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('MockApp',
-                                       'modify_package')
-
-        self.modify_package('description', 'New Description')
-
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
-        self.assertEqual('New Description',
-                         self.driver.find_element_by_xpath(
-                             c.MockAppDescr).text)
-
     def test_check_progress_bar(self):
         """Test that progress bar appears only for 'Deploy in progress'
 
@@ -653,3 +504,172 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_link_text('Actions').click()
 
         self.check_element_on_page(by.By.LINK_TEXT, 'deploy')
+
+    def test_check_info_about_app(self):
+        """Test checks that information about app is available and truly.
+
+        Scenario:
+            1. Navigate to 'Application Catalog > Applications' panel
+            2. Choose some application and click on 'More info'
+            3. Verify info about application
+        """
+        self.go_to_submenu('Applications')
+        self.select_and_click_action_for_app('details', self.mockapp_id)
+
+        self.assertEqual('MockApp for webUI tests',
+                         self.driver.find_element_by_xpath(
+                             "//div[@class='app-description']").text)
+        self.driver.find_element_by_link_text('Requirements').click()
+        self.driver.find_element_by_link_text('License').click()
+
+
+class TestSuitePackages(base.PackageTestCase):
+    def test_modify_package_name(self):
+        """Test check ability to change name of the package
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select package and click on 'Modify Package'
+            3. Rename package
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        self.select_action_for_package('PostgreSQL',
+                                       'modify_package')
+        self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.AppPackageDefinitions.format(
+                                       'PostgreSQL-modified'))
+
+        self.select_action_for_package('PostgreSQL-modified',
+                                       'modify_package')
+        self.fill_field(by.By.ID, 'id_name', 'PostgreSQL')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.AppPackageDefinitions.format(
+                                       'PostgreSQL'))
+
+    def test_modify_package_add_tag(self):
+        """Test that new tag is shown in description
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Click on "Modify Package" and add new tag
+            3. Got to the Application Catalog page
+            4. Check, that new tag is browsed in application description
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        self.select_action_for_package('PostgreSQL',
+                                       'modify_package')
+
+        self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
+        self.modify_package('tags', 'TEST_TAG')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        self.select_and_click_action_for_app('details', self.postgre_id)
+        self.assertIn('TEST_TAG',
+                      self.driver.find_element_by_xpath(
+                          c.TagInDetails).text)
+
+    def test_download_package(self):
+        """Test check ability to download package from repository
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select PostgreSQL package and click on "More>Download Package"
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'download_package')
+
+    def test_check_toggle_enabled_package(self):
+        """Test check ability to make package active or inactive
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select some package and make it inactive ("More>Toggle Active")
+            3. Check that package is inactive
+            4. Select some package and make it active ("More>Toggle Active ")
+            5. Check that package is active
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Active', 'False')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Active', 'True')
+
+    def test_check_toggle_public_package(self):
+        """Test check ability to make package active or inactive
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select some package and make it inactive ("More>Toggle Public")
+            3. Check that package is unpublic
+            4. Select some package and make it active ("More>Toggle Public ")
+            5. Check that package is public
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Public', 'True')
+
+        self.select_action_for_package('PostgreSQL', 'more')
+        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+
+        self.check_package_parameter('PostgreSQL', 'Public', 'False')
+
+    def test_modify_description(self):
+        """Test check ability to change description of the package
+
+        Scenario:
+            1. Navigate to 'Package Definitions' page
+            2. Select package and click on 'Modify Package'
+            3. Change description
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        self.select_action_for_package('MockApp',
+                                       'modify_package')
+
+        self.modify_package('description', 'New Description')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        self.assertEqual('New Description',
+                         self.driver.find_element_by_xpath(
+                             c.MockAppDescr).text)
+
+    def test_upload_package(self):
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        el = self.driver.find_element_by_css_selector(
+            "input[name='0-package']")
+        el.send_keys(self.archive)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.driver.find_element_by_css_selector(c.DatabaseCategory).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackageDefinitions.format(self.archive_name))

@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import sys
+import testtools
 import time
 import urlparse
 
@@ -25,7 +26,6 @@ from selenium import webdriver
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import testtools
 
 import config.config as cfg
 from muranodashboard.tests.functional import consts
@@ -107,7 +107,7 @@ class UITestCase(BaseDeps):
     def get_element_id(self, el_name):
         el = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
-                (by.By.XPATH, ".//*[@data-display='{0}']".format(el_name))))
+                (by.By.XPATH, consts.AppPackageDefinitions.format(el_name))))
         path = el.get_attribute("id")
         return path.split('__')[-1]
 
@@ -161,17 +161,17 @@ class UITestCase(BaseDeps):
         self.driver.implicitly_wait(30)
 
     def create_environment(self, env_name):
-        self.driver.find_element_by_id(
-            'murano__action_CreateEnvironment').click()
+        self.driver.find_element_by_id(consts.CreateEnvironment).click()
         self.fill_field(by.By.ID, 'id_name', env_name)
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.wait_element_is_clickable(by.By.LINK_TEXT, 'Add Component')
+        self.wait_for_alert_message()
 
     def wait_for_alert_message(self):
         locator = (by.By.CSS_SELECTOR, 'div.alert-success')
         log.debug("Waiting for a success message")
         WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
+
         self.driver.find_element_by_css_selector('a.close').click()
 
     def wait_element_is_clickable(self, method, element):
@@ -334,7 +334,7 @@ class ApplicationTestCase(ImageTestCase):
     def modify_package(self, param, value):
         self.fill_field(by.By.ID, 'id_{0}'.format(param), value)
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.driver.refresh()
+        self.wait_for_alert_message()
 
     def start_deploy(self, app_id, app_name='TestApp'):
         self.go_to_submenu('Applications')
@@ -349,3 +349,25 @@ class ApplicationTestCase(ImageTestCase):
 
         self.driver.find_element_by_css_selector(
             '#services__action_deploy_env').click()
+
+
+class PackageTestCase(ApplicationTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(ApplicationTestCase, cls).setUpClass()
+        cls.archive_name = "ToUpload"
+        cls.archive = utils.compose_package(cls.archive_name,
+                                            consts.Manifest,
+                                            consts.PackageDir)
+
+    @classmethod
+    def tearDownClass(cls):
+        super(ApplicationTestCase, cls).tearDownClass()
+        if os.path.exists(consts.Manifest):
+            os.remove(consts.Manifest)
+        if os.path.exists(cls.archive):
+            os.remove(cls.archive)
+
+        for package in cls.murano_client.packages.list():
+            if package.name == cls.archive_name:
+                cls.murano_client.packages.delete(package.id)
