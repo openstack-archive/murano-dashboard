@@ -314,4 +314,4 @@ def get_deployment_descr(request, environment_id, deployment_id):
 
 def load_environment_data(request, environment_id):
     environment = environment_get(request, environment_id)
-    return topology.render_d3_data(environment)
+    return topology.render_d3_data(request, environment)

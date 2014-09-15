@@ -16,7 +16,19 @@ import json
 import types
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.core.urlresolvers import reverse
 from django.template import loader
+
+from muranodashboard.api import packages as pkg_cli
+
+
+def get_app_image(request, app_fqdn):
+    package = pkg_cli.app_by_fqn(request, app_fqdn)
+    url = static('dashboard/img/stack-green.svg')
+    if package:
+        app_id = package.id
+        url = reverse("horizon:murano:catalog:images", args=(app_id,))
+    return url
 
 
 def _get_environment_status_message(entity):
@@ -62,6 +74,13 @@ def _application_info(application, app_image, status):
                                    context)
 
 
+def _network_info(name, image):
+    context = {'name': name,
+               'image': image}
+    return loader.render_to_string('services/_network_info.html',
+                                   context)
+
+
 def _unit_info(unit, unit_image):
     data = dict(unit)
     data['type'] = _truncate_type(data['type'], 45)
@@ -98,9 +117,12 @@ def _create_empty_node():
 
 def _create_ext_network_node(name):
     node = _create_empty_node()
-    node.update({'name': name,
-                 'image': static('dashboard/img/lb-green.svg'),
-                 'link_type': 'relation'})
+    node.update({'id': name,
+                 'image': static('muranodashboard/images/ext-net.png'),
+                 'link_type': 'relation',
+                 'info_box': _network_info(name, static(
+                     'dashboard/img/lb-green.svg'))}
+                )
     return node
 
 
@@ -119,7 +141,16 @@ def _is_atomic(elt):
     return not isinstance(value, (types.DictType, types.ListType))
 
 
-def render_d3_data(environment):
+def check_service_references(node, node_data, srv_list):
+    node_id = node_data['?']['id']
+    for service in srv_list:
+        for k, v in service.iteritems():
+            if v == node_id:
+                node['required_by'].append(service['?']['id'])
+                node['link_type'] = 'relation'
+
+
+def render_d3_data(request, environment):
     if not environment:
         return None
 
@@ -138,34 +169,36 @@ def render_d3_data(environment):
     })
     d3_data['environment'] = environment_node
 
-    service_image = static('dashboard/img/stack-green.svg')
     unit_image = static('dashboard/img/server-green.svg')
 
     for service in environment.services:
         in_progress, status_message = _get_environment_status_message(service)
         required_by = None
-        if hasattr(service, 'assignFloatingIP'):
-            if ext_net_name:
-                required_by = ext_net_name
-            else:
-                ext_net_name = 'External_Network'
-                ext_network_node = _create_ext_network_node(ext_net_name)
-                d3_data['nodes'].append(ext_network_node)
-                required_by = ext_net_name
+        if 'instance' in service:
+            if service['instance'].get('assignFloatingIp', False):
+                if ext_net_name:
+                    required_by = ext_net_name
+                else:
+                    ext_net_name = 'External_Network'
+                    ext_network_node = _create_ext_network_node(ext_net_name)
+                    d3_data['nodes'].append(ext_network_node)
+                    required_by = ext_net_name
 
         service_node = _create_empty_node()
+        service_image = get_app_image(request, service['?']['type'])
         service_node.update({
             'name': service.get('name', ''),
             'status': status_message,
             'image': service_image,
             'id': service['?']['id'],
-            'link_type': 'unit',
+            'link_type': 'relation',
             'in_progress': in_progress,
             'info_box': _application_info(
                 service, service_image, status_message)
         })
         if required_by:
-            service_node['required_by'] = [required_by]
+            service_node['required_by'].append(required_by)
+        check_service_references(service_node, service, environment.services)
         d3_data['nodes'].append(service_node)
 
         def rec(node_data, node_key, parent_node=None):
@@ -180,7 +213,8 @@ def render_d3_data(environment):
                                 ('type', node_type),
                                 ('name', node_data.get('name', node_key))])
                 if parent_node is not None:
-                    node['required_by'] = [parent_node['?']['id']]
+                    node['required_by'].append(parent_node['?']['id'])
+
                 node.update({
                     'id': node_data['?']['id'],
                     'info_box': _unit_info(atomics, unit_image),
