@@ -172,8 +172,7 @@ class UITestCase(BaseDeps):
         log.debug("Waiting for a success message")
         WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
-        WebDriverWait(self.driver, 6).until(
-            lambda driver: not driver.find_element(*locator).is_displayed())
+        self.driver.find_element_by_css_selector('a.close').click()
 
     def wait_element_is_clickable(self, method, element):
         return WebDriverWait(self.driver, 10).until(
