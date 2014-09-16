@@ -687,8 +687,6 @@ def make_select_cls(fqns):
             else:
                 self.empty_value_message = _('Select Application')
 
-            self.empty_value_message = empty_value_message
-
         @with_request
         def update(self, request, environment_id, **kwargs):
             def _make_link():
