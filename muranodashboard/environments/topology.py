@@ -169,7 +169,8 @@ def render_d3_data(request, environment):
     })
     d3_data['environment'] = environment_node
 
-    unit_image = static('dashboard/img/server-green.svg')
+    unit_image_active = static('dashboard/img/server-green.svg')
+    unit_image_non_active = static('dashboard/img/server-gray.svg')
 
     for service in environment.services:
         in_progress, status_message = _get_environment_status_message(service)
@@ -214,11 +215,14 @@ def render_d3_data(request, environment):
                                 ('name', node_data.get('name', node_key))])
                 if parent_node is not None:
                     node['required_by'].append(parent_node['?']['id'])
-
+                if len(node_data.get('ipAddresses', [])) > 0:
+                    image = unit_image_active
+                else:
+                    image = unit_image_non_active
                 node.update({
                     'id': node_data['?']['id'],
-                    'info_box': _unit_info(atomics, unit_image),
-                    'image': unit_image,
+                    'info_box': _unit_info(atomics, image),
+                    'image': image,
                     'link_type': 'unit',
                     'in_progress': in_progress})
                 d3_data['nodes'].append(node)
