@@ -50,6 +50,7 @@ TYPES.update({
     'image': fields.ImageChoiceField,
     'azone': fields.AZoneChoiceField,
     'text': (fields.CharField, forms.Textarea),
+    'choice': fields.ChoiceField,
     'floatingip': fields.FloatingIpBooleanField
 })
 
