@@ -13,15 +13,33 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+DEBUGLVL=2
 SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
-INC_FILE="$SCRIPT_DIR/common.inc"
-if [ -f "$INC_FILE" ]; then
-    source "$INC_FILE"
-else
-    log "Can't load \"$INC_FILE\" or file not found, exiting!"
-    exit 1
-fi
 LOGFILE="/tmp/murano_settings_update_run.log"
+
+if [ "$DEBUGLVL" -eq 4 ]; then
+    set -o xtrace
+fi
+
+function log {
+    if [ "$DEBUGLVL" -gt 0 ]; then
+        chars=$(echo "@$" | wc -c)
+        case $DEBUGLVL in
+            1)
+                echo -e "LOG:>$@"
+            ;;
+            2)
+                echo -e "$(date +"%m-%d-%Y %H:%M") LOG:>$@" | tee --append $LOGFILE
+            ;;
+            3)
+                echo -e "$(date +"%m-%d-%Y %H:%M") LOG:>$@" >> $LOGFILE
+            ;;
+            4)
+                echo -e "$(date +"%m-%d-%Y %H:%M") LOG:>$@" | tee --append $LOGFILE
+            ;;
+        esac
+    fi
+}
 
 function modify_horizon_config()
 {
