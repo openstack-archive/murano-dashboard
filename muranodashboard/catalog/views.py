@@ -170,6 +170,11 @@ def clear_forms_data(func):
         fqn = pkg_api.get_app_fqn(request, app_id)
         LOG.debug('Clearing forms data for application {0}.'.format(fqn))
         services.get_apps_data(request)[app_id] = {}
+        LOG.debug('Clearing any leftover wizard step data.')
+        for key in request.session.keys():
+            # TODO(tsufiev): unhardcode the prefix for wizard step data
+            if key.startswith('wizard_wizard'):
+                request.session.pop(key)
         return func(request, **kwargs)
 
     return __inner
