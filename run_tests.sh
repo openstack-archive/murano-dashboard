@@ -76,6 +76,18 @@ makemessages=0
 compilemessages=0
 manage=0
 
+# There's no /usr/bin/coverage in Debian and Ubuntu,
+# though using "python -m coverage" will fail in a
+# python 2.6 venv. Which is why we do what's below,
+# to make sure it works everywhere.
+COVERAGE_CMD=`which coverage || true`
+if [ -z "${COVERAGE_CMD}" ] ; then
+	COVERAGE_CMD=`which python-coverage || true`
+fi
+if [ -z "${COVERAGE_CMD}" ] ; then
+	COVERAGE_CMD="python -m coverage"
+fi
+
 # Jenkins sets a "JOB_NAME" variable, if it's not set, we'll make it "default"
 [ "$JOB_NAME" ] || JOB_NAME="default"
 
@@ -292,8 +304,8 @@ function run_tests_all {
   if [ "$NOSE_WITH_HTML_OUTPUT" = '1' ]; then
     export NOSE_HTML_OUT_FILE='horizon_nose_results.html'
   fi
-  ${command_wrapper} coverage erase
-  ${command_wrapper} coverage run -p $root/manage.py test horizon --settings=horizon.test.settings $testopts
+  ${command_wrapper} ${COVERAGE_CMD} erase
+  ${command_wrapper} ${COVERAGE_CMD} run -p $root/manage.py test horizon --settings=horizon.test.settings $testopts
   # get results of the Horizon tests
   HORIZON_RESULT=$?
 
@@ -302,15 +314,15 @@ function run_tests_all {
   if [ "$NOSE_WITH_HTML_OUTPUT" = '1' ]; then
     export NOSE_HTML_OUT_FILE='dashboard_nose_results.html'
   fi
-  ${command_wrapper} coverage run -p $root/manage.py test openstack_dashboard --settings=openstack_dashboard.test.settings $testopts
+  ${command_wrapper} ${COVERAGE_CMD} run -p $root/manage.py test openstack_dashboard --settings=openstack_dashboard.test.settings $testopts
   # get results of the openstack_dashboard tests
   DASHBOARD_RESULT=$?
 
   if [ $with_coverage -eq 1 ]; then
     echo "Generating coverage reports"
-    ${command_wrapper} coverage combine
-    ${command_wrapper} coverage xml -i --omit='/usr*,setup.py,*egg*,.venv/*'
-    ${command_wrapper} coverage html -i --omit='/usr*,setup.py,*egg*,.venv/*' -d reports
+    ${command_wrapper} ${COVERAGE_CMD} combine
+    ${command_wrapper} ${COVERAGE_CMD} xml -i --omit='/usr*,setup.py,*egg*,.venv/*'
+    ${command_wrapper} ${COVERAGE_CMD} html -i --omit='/usr*,setup.py,*egg*,.venv/*' -d reports
   fi
   # Remove the leftover coverage files from the -p flag earlier.
   rm -f .coverage.*
