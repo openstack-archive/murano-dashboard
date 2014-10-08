@@ -467,8 +467,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    c.Status.format('Ready to deploy'))
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
 
-        self.driver.find_element_by_css_selector(
-            '#services__action_deploy_env').click()
+        self.driver.find_element_by_id('services__action_deploy_env').click()
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Deploying'))
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('unknown'))
@@ -504,9 +503,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             7. Check that application's actions are present
         """
         self.add_app_to_env(self.mockapp_id)
-
-        self.driver.find_element_by_css_selector(
-            '#services__action_deploy_env').click()
+        self.driver.find_element_by_id('services__action_deploy_env').click()
 
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
@@ -534,6 +531,54 @@ class TestSuiteApplications(base.ApplicationTestCase):
                              "//div[@class='app-description']").text)
         self.driver.find_element_by_link_text('Requirements').click()
         self.driver.find_element_by_link_text('License').click()
+
+    def test_check_topology_page(self):
+        """Test checks that topology tab is available
+        and topology page displays correctly
+
+        Scenario:
+            1. Navigate Applications and click MockApp 'Quick Deploy'
+            2. Click deploy
+            3. Wait 'Ready' status
+            4. Click on 'Topology' tab
+            5. Check that status is 'Waiting for deployment' is displayed
+            6. Check that app logo is present on page
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.driver.find_element_by_link_text('Topology').click()
+
+        self.assertEqual(
+            'Status: Waiting for deployment',
+            self.driver.find_element_by_css_selector('#stack_box > p').text)
+
+        self.check_element_on_page(by.By.TAG_NAME, 'image')
+
+    def test_check_deployment_history(self):
+        """Test checks that deployment history tab is available
+        and deployment logs are present and correctly
+
+        Scenario:
+            1. Navigate Applications and click MockApp 'Quick Deploy'
+            2. Click deploy
+            3. Wait 'Ready' status
+            4. Click on 'Deployment History' tab
+            5. Click 'Show Details' button
+            6. Click 'Logs' button
+            7. Check that app deployment message is present in logs
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+
+        self.driver.find_element_by_link_text('Deployment History').click()
+        self.driver.find_element_by_link_text('Show Details').click()
+        self.driver.find_element_by_link_text('Logs').click()
+
+        self.assertIn('Follow the white rabbit',
+                      self.driver.find_element_by_class_name('logs').text)
 
 
 class TestSuitePackages(base.PackageTestCase):

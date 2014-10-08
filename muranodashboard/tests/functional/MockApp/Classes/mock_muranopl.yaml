@@ -13,3 +13,5 @@ Properties:
 Workflow:
   deploy:
     Usage: Action
+    Body:
+      - $this.find(std:Environment).reporter.report($this, 'Follow the white rabbit')
