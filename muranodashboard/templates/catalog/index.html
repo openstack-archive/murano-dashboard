@@ -17,7 +17,7 @@
 
 {% block main %}
     <div class="table_wrapper">
-        <h3 class="quota-heading">Recent Activity</h3>
+        <h3 class="quota-heading">{%  trans 'Recent Activity' %}</h3>
         {% if latest_list|length > 0 %}
             <div class="app-row app-list">
                 {% for app in latest_list %}
@@ -34,7 +34,7 @@
 
             <div class="table_actions clearfix row">
                 <div class="col-xs-12 col-sm-3 col-md-4 col-lg-4 col-row">
-                    <h3 class="heading_switcher">App Category: <div class="header dropdown">
+                    <h3 class="heading_switcher">{% trans 'App Category:' %} <div class="header dropdown">
                     <a href="#" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                         {{ current_category }}  <b class="caret"></b></a>
                       <ul class="dropdown-menu row_actions clearfix">
@@ -86,10 +86,10 @@
             <div class="btn-toolbar centering">
               <div class="btn-group">
                   {% if view.has_prev_page %}
-                      <a class="btn btn-default" href="{{ view.prev_page_url }}">Previous Page</a>
+                      <a class="btn btn-default" href="{{ view.prev_page_url }}">{% trans "Previous Page" %}</a>
                   {% endif %}
                   {% if view.has_next_page %}
-                      <a class="btn btn-default" href="{{ view.next_page_url }}">Next Page</a>
+                      <a class="btn btn-default" href="{{ view.next_page_url }}">{% trans "Next Page" %}</a>
                   {% endif %}
               </div>
             </div>

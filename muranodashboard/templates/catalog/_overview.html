@@ -7,9 +7,9 @@
      <div class="app-metadata">
        <div class="app-description">{% if app.description %}{{ app.description|safe }}{% endif %}</div>
        <ul>
-        {% if app.author %}<li><strong>Provided By:</strong> {{ app.author }}</li>{% endif %}
-        {% if app.tags %}<li><strong>Tags:</strong> {{ app.tags|join:", " }}</li>{% endif %}
-        {% if app.categories %}<li><strong>Categories:</strong> {{ app.categories|join:", " }}</li>{% endif %}
+        {% if app.author %}<li><strong>{% trans "Provided By" %}:</strong>{{ app.author }}</li>{% endif %}
+        {% if app.tags %}<li><strong>{% trans "Tags" %}:</strong> {{ app.tags|join:", " }}</li>{% endif %}
+        {% if app.categories %}<li><strong>{% trans "Categories" %}:</strong> {{ app.categories|join:", " }}</li>{% endif %}
        </ul>
      </div>
 
