@@ -698,6 +698,7 @@ def make_select_cls(fqns):
                     _app = pkg_api.app_by_fqn(request, _fqn)
                     if _app is None:
                         msg = "Application with FQN='{0}' doesn't exist"
+                        messages.error(request, msg.format(_fqn))
                         raise KeyError(msg.format(_fqn))
                     args = (_app.id, environment_id, False, True)
                     return _app.name, reverse(ns_url, args=args)
