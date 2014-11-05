@@ -78,12 +78,11 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         LOG.debug('Marking image with specified metadata: {0}'.format(data))
 
         image_id = data['image']
-        properties = {
-            'murano_image_info': json.dumps({
-                'title': data['title'],
-                'type': data['type']
-            })
-        }
+        properties = glance.image_get(request, image_id).properties
+        properties['murano_image_info'] = json.dumps({
+            'title': data['title'],
+            'type': data['type']
+        })
 
         try:
             img = glance.image_update(request, image_id, properties=properties)
