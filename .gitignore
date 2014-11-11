@@ -13,6 +13,7 @@ pep8.txt
 pylint.txt
 reports
 muranodashboard/local/local_settings.py
+muranodashboard/settings.py
 /static/
 docs/build/
 docs/source/sourcecode
