@@ -427,18 +427,23 @@ class IndexView(list_view.ListView):
             query_params = {}
         category = self.get_current_category()
         search = self.request.GET.get('search')
+
         if search:
             query_params['search'] = search
         else:
             if category != ALL_CATEGORY_NAME:
                 query_params['category'] = category
 
+        query_params['order_by'] = self.request.GET.get('order_by', 'name')
+        query_params['sort_dir'] = self.request.GET.get('sort_dir', 'asc')
         return query_params
 
     def get_queryset(self):
         query_params = self.get_query_params(internal_query=True)
         marker = self.request.GET.get('marker')
-        sort_dir = self.request.GET.get('sort_dir')
+
+        sort_key = query_params['order_by']
+        sort_dir = query_params['sort_dir']
 
         packages = []
         with api.handled_exceptions(self.request):
@@ -447,7 +452,7 @@ class IndexView(list_view.ListView):
                 marker=marker, page_size=self.paginate_by, sort_dir=sort_dir)
 
         if sort_dir == 'desc':
-            packages.reverse()
+            packages.sort(key=lambda x: getattr(x, sort_key), reverse=True)
         return packages
 
     def get_template_names(self):
