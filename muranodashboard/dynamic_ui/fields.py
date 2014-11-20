@@ -481,6 +481,11 @@ class FlavorChoiceField(ChoiceField):
                 if flavor.ram < self.requirements.get('min_memory_mb', 0):
                     continue
                 self.choices.append((flavor.name, flavor.name))
+        # Search through selected flavors
+        for flavor_name, flavor_name in self.choices:
+            if 'medium' in flavor_name:
+                self.initial = flavor_name
+                break
 
 
 class KeyPairChoiceField(DynamicChoiceField):
