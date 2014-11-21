@@ -39,8 +39,7 @@ STATUS_ID_DEPLOY_FAILURE = 'deploy failure'
 STATUS_ID_NEW = 'new'
 
 NO_ACTION_ALLOWED_STATUSES = (STATUS_ID_DEPLOYING,
-                              STATUS_ID_DELETING,
-                              STATUS_ID_DEPLOY_FAILURE)
+                              STATUS_ID_DELETING)
 
 DEP_STATUS_ID_RUNNING = 'running'
 DEP_STATUS_ID_RUNNING_W_ERRORS = 'running_w_errors'
