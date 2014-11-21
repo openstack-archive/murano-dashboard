@@ -92,7 +92,6 @@ class ApplicationActions(generic.View):
             messages.error(request, msg)
         url = reverse('horizon:murano:environments:services',
                       args=(environment_id,))
-
         return http.HttpResponseRedirect(url)
 
 
