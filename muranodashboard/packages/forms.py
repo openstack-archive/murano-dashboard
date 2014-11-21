@@ -50,9 +50,8 @@ class UploadPackageFileForm(forms.Form):
         return package
 
 
-class UpdatePackageForm(forms.Form):
+class PackageParamsMixin(forms.Form):
     name = forms.CharField(label=_('Name'))
-    categories = forms.MultipleChoiceField(label=_('Application Category'))
     tags = forms.CharField(label=_('Tags'),
                            required=False,
                            help_text='Provide comma-separated list of words,'
@@ -67,11 +66,33 @@ class UpdatePackageForm(forms.Form):
                                   widget=forms.Textarea,
                                   required=False)
 
-    def __init__(self, request, package, *args, **kwargs):
+    def set_initial(self, package):
+        self.fields['name'].initial = package.name
+        self.fields['tags'].initial = ', '.join(package.tags)
+        self.fields['is_public'].initial = package.is_public
+        self.fields['enabled'].initial = package.enabled
+        self.fields['description'].initial = package.description
+
+
+class UpdatePackageForm(PackageParamsMixin):
+    def __init__(self, *args, **kwargs):
+        package = kwargs.pop('package')
         super(UpdatePackageForm, self).__init__(*args, **kwargs)
+
+        self.set_initial(package)
+
+
+class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
+    def __init__(self, request, *args, **kwargs):
+        super(ModifyPackageForm, self).__init__(request, *args, **kwargs)
+
+        package = kwargs['initial']['package']
+        self.set_initial(package)
+
         if package.type == 'Application':
-            self.fields['categories'].choices = [('',
-                                                  'No categories available')]
+            self.fields['categories'] = forms.MultipleChoiceField(
+                label=_('Application Category'),
+                choices=[('', 'No categories available')])
             try:
                 categories = api.muranoclient(request).packages.categories()
                 if categories:
@@ -87,21 +108,6 @@ class UpdatePackageForm(forms.Form):
                 exceptions.handle(request,
                                   _(msg),
                                   redirect=redirect)
-        else:
-            del self.fields['categories']
-        self.fields['name'].initial = package.name
-        self.fields['tags'].initial = ', '.join(package.tags)
-        self.fields['is_public'].initial = package.is_public
-        self.fields['enabled'].initial = package.enabled
-        self.fields['description'].initial = package.description
-
-
-class ModifyPackageForm(UpdatePackageForm, horizon_forms.SelfHandlingForm):
-    def __init__(self, *args, **kwargs):
-        package = kwargs['initial']['package']
-        request = kwargs['initial']['request']
-        super(ModifyPackageForm, self).__init__(request, package,
-                                                *args, **kwargs)
 
     def handle(self, request, data):
         app_id = self.initial.get('app_id')
@@ -116,4 +122,26 @@ class ModifyPackageForm(UpdatePackageForm, horizon_forms.SelfHandlingForm):
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to modify package'),
+                              redirect=redirect)
+
+
+class SelectCategories(forms.Form):
+
+    categories = forms.MultipleChoiceField(label=_('Application Category'))
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super(SelectCategories, self).__init__(*args, **kwargs)
+
+        try:
+            categories = api.muranoclient(request).packages.categories()
+            if categories:
+                self.fields['categories'].choices = [(c, c)
+                                                     for c in categories]
+        except (exc.HTTPException, Exception):
+            msg = 'Unable to get list of categories'
+            LOG.exception(msg)
+            redirect = reverse('horizon:murano:packages:index')
+            exceptions.handle(request,
+                              _(msg),
                               redirect=redirect)

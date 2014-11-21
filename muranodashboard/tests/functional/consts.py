@@ -17,7 +17,7 @@ More = "//tr[@id='murano__row__{0}']//a[@data-toggle='dropdown']"
 Status = "//td[contains(text(), '{0}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
 ErrorMessage = '//span[contains(@class, "alert-danger") and contains(text(), "{0}")]'  # noqa
-DatabaseCategory = "select[name='1-categories'] > option[value='Databases']"
+DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"

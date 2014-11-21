@@ -28,8 +28,12 @@
     {% endif %}
     </div>
     <div class="right">
-        {% if wizard.steps.prev %}
+        {% if wizard.steps.prev == 'upload' %}
             {% include 'packages/_package_params.html' %}
+        {% elif wizard.steps.prev == 'modify' %}
+            <h3>{% trans 'Description:' %}</h3>
+            <p>{% blocktrans %}<strong>Categories</strong> Provide one or several categories for a package{% endblocktrans %}</p>
+            <p>{% blocktrans %} Specifying a category helps to filter applications easier in th catalog. {% endblocktrans %}</p>
         {% else %}
             <h3>{% trans 'Description:' %}</h3>
             <p>{% blocktrans %}Choose a zip archive to upload.{% endblocktrans %}</p>
@@ -43,10 +47,10 @@
 {% endblock %}
 
 {% block modal-footer %}
-    {% if wizard.steps.prev %}
-        <input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Create' %}"/>
+    {% if wizard.steps.next %}
+        <input type='submit' class='btn btn-primary pull-right'  value='{% trans 'Next' %}'/>
     {% else %}
-         <input type="submit" class="btn btn-primary pull-right"  value="{% trans 'Next' %}"/>
+        <input type='submit' class='btn btn-primary pull-right'  value='{% trans 'Create' %}'/>
     {% endif %}
-    <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+    <a href='{% url 'horizon:murano:packages:index' %}' class='btn btn-default secondary cancel close'>{% trans 'Cancel' %}</a>
 {% endblock %}
