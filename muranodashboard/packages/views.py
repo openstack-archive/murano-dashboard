@@ -14,6 +14,7 @@
 
 import logging
 
+import bs4 as bs
 from django.contrib.formtools.wizard import views as wizard_views
 from django.core.files import storage
 from django.core.urlresolvers import reverse
@@ -33,6 +34,7 @@ from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import consts
 from muranodashboard.packages import forms
 from muranodashboard.packages import tables
+
 LOG = logging.getLogger(__name__)
 
 FORMS = [('upload', forms.UploadPackageFileForm),
@@ -124,11 +126,22 @@ class UploadPackageWizard(views.ModalFormMixin,
                 _update_latest_apps(request=self.request, app_id=package.id)
 
                 step_data['package'] = package
-            except (exc.HTTPException, Exception):
-                LOG.exception(_('Uploading package failed'))
+            except (exc.HTTPException, Exception) as e:
+                reason = ''
+                if getattr(e, 'details'):
+                    soup = bs.BeautifulSoup(e.details)
+                    body = soup.body.text
+                     # Note(efedorova): User message in webob exceptions
+                     # is the last sentence in the body.
+                     # Also Python new line symbols need to be removed
+                    reason = [i.strip()
+                              for i in str(body).split('\n') if i.strip()][-1]
+
+                msg = _('Uploading package failed. {0}').format(reason)
+                LOG.exception(msg)
                 redirect = reverse('horizon:murano:packages:index')
                 exceptions.handle(self.request,
-                                  _('Unable to upload package'),
+                                  msg,
                                   redirect=redirect)
         return step_data
 
