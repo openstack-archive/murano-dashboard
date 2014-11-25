@@ -26,6 +26,8 @@ from muranodashboard.environments import api
 
 
 LOG = logging.getLogger(__name__)
+HELP_TEXT = _("Environment names must contain only alphanumeric or '_-.'"
+              " characters and must start with alpha")
 
 
 class SelectProjectUserAction(workflows.Action):
@@ -57,11 +59,10 @@ class SelectProjectUser(workflows.Step):
 class ConfigureEnvironmentAction(workflows.Action):
     name = forms.CharField(
         label=_("Environment Name"),
+        help_text=HELP_TEXT,
         required=True,
         validators=[validators.RegexValidator('^[a-zA-Z]+[\w-]*$')],
-        error_messages={'invalid': 'Environment name must contain only '
-                                   'alphanumeric or "_-." characters,'
-                                   ' must start with alpha'})
+        error_messages={'invalid': HELP_TEXT})
 
     class Meta:
         name = _("Environment")
@@ -110,11 +111,10 @@ class CreateEnvironment(workflows.Workflow):
 class UpdateEnvironmentInfoAction(workflows.Action):
     name = forms.CharField(
         label=_("Environment Name"),
+        help_text=HELP_TEXT,
         required=True,
         validators=[validators.RegexValidator('^[a-zA-Z]+[\w-]*$')],
-        error_messages={'invalid': 'Environment name must contain only '
-                                   'alphanumeric or "_-." characters,'
-                                   ' must start with alpha'})
+        error_messages={'invalid': HELP_TEXT})
 
     def handle(self, request, data):
         try:
@@ -132,7 +132,9 @@ class UpdateEnvironmentInfoAction(workflows.Action):
     class Meta:
         name = _("Environment Info")
         slug = 'environment_info'
-        help_text = _("From here you can edit the environment details.")
+        help_text = _("Environment defines the run time context for the "
+                      "application including all the application images, "
+                      "automatically generated network configuration")
 
 
 class UpdateEnvironmentInfo(workflows.Step):
