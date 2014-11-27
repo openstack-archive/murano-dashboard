@@ -5,6 +5,7 @@ django-nose
 nose
 openstack.nose_plugin>=0.7
 nosehtmloutput>=0.0.3
+selenium
 
 testtools>=0.9.34
 mock>=1.0

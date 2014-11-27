@@ -25,7 +25,7 @@ from selenium.common import exceptions as exc
 from selenium import webdriver
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import ui
 
 import config.config as cfg
 from muranodashboard.tests.functional import consts
@@ -105,7 +105,7 @@ class UITestCase(BaseDeps):
         self.driver.find_element(by=by_find, value=field).send_keys(value)
 
     def get_element_id(self, el_name):
-        el = WebDriverWait(self.driver, 10).until(
+        el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (by.By.XPATH, consts.AppPackageDefinitions.format(el_name))))
         path = el.get_attribute("id")
@@ -128,7 +128,7 @@ class UITestCase(BaseDeps):
                           ".//*[@class='page-header']").text)
 
     def navigate_to(self, menu):
-        el = WebDriverWait(self.driver, 10).until(
+        el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (by.By.XPATH, getattr(consts, menu))))
         el.click()
@@ -138,13 +138,13 @@ class UITestCase(BaseDeps):
         locator = (by.By.XPATH,
                    "//select[contains(@name, '{0}')]"
                    "/option[@value='{1}']".format(list_name, value))
-        el = WebDriverWait(self.driver, 10).until(
+        el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(locator))
         el.click()
 
     def check_element_on_page(self, method, value, sec=10):
         try:
-            WebDriverWait(self.driver, sec).until(
+            ui.WebDriverWait(self.driver, sec).until(
                 EC.presence_of_element_located((method, value)))
         except exc.TimeoutException:
             self.fail("Element {0} is not preset on the page".format(value))
@@ -169,17 +169,17 @@ class UITestCase(BaseDeps):
     def wait_for_alert_message(self):
         locator = (by.By.CSS_SELECTOR, 'div.alert-success')
         log.debug("Waiting for a success message")
-        WebDriverWait(self.driver, 2).until(
+        ui.WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
 
         self.driver.find_element_by_css_selector('a.close').click()
 
     def wait_element_is_clickable(self, method, element):
-        return WebDriverWait(self.driver, 10).until(
+        return ui.WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((method, element)))
 
     def wait_for_sidebar_is_loaded(self):
-        WebDriverWait(self.driver, 10).until(
+        ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (by.By.CSS_SELECTOR, "div.sidebar dt.active")))
         time.sleep(0.5)
@@ -309,7 +309,7 @@ class ApplicationTestCase(ImageTestCase):
                 by.By.XPATH, "//tr[@data-object-id='{0}']"
                              "//a[@data-toggle='dropdown']".format(package_id))
             el.click()
-            WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            ui.WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
                 by.By.XPATH,
                 ".//*[@id='packages__row_{0}__action_download_package']".
                 format(package_id)).is_displayed())
