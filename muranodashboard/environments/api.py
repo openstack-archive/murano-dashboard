@@ -1,4 +1,4 @@
-#    Copyright (c) 2013 Mirantis, Inc.
+# Copyright (c) 2013 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -42,6 +42,14 @@ def get_status_messages_for_service(request, service_id, environment_id):
     return result
 
 
+def create_session(request, environment_id):
+    sessions = request.session.get('sessions', {})
+    id = api.muranoclient(request).sessions.configure(environment_id).id
+    sessions[environment_id] = id
+    request.session['sessions'] = sessions
+    return id
+
+
 class Session(object):
     @staticmethod
     def get_or_create(request, environment_id):
@@ -57,13 +65,8 @@ class Session(object):
 
         if environment_id in sessions:
             id = sessions[environment_id]
-
         else:
-            client = api.muranoclient(request)
-            id = client.sessions.configure(environment_id).id
-
-            sessions[environment_id] = id
-            request.session['sessions'] = sessions
+            id = create_session(environment_id, request)
         return id
 
     @staticmethod
@@ -81,12 +84,6 @@ class Session(object):
         sessions = request.session.get('sessions', {})
         client = api.muranoclient(request)
 
-        def create_session(request, environment_id):
-            id = client.sessions.configure(environment_id).id
-            sessions[environment_id] = id
-            request.session['sessions'] = sessions
-            return id
-
         if environment_id in sessions:
             id = sessions[environment_id]
             try:
@@ -98,9 +95,10 @@ class Session(object):
                           "for the environment {0}".format(environment_id))
                 return create_session(request, environment_id)
             else:
-                if session_data.state == "deployed":
+                if session_data.state in [consts.STATUS_ID_DEPLOY_FAILURE,
+                                          consts.STATUS_ID_READY]:
                     del sessions[environment_id]
-                    LOG.debug("The existent session has status 'deployed'."
+                    LOG.debug("The existent session has been already deployed."
                               " Creating a new session "
                               "for the environment {0}".format(environment_id))
                     return create_session(request, environment_id)
@@ -183,7 +181,7 @@ def environment_get(request, environment_id):
 
 
 def environment_deploy(request, environment_id):
-    session_id = Session.get(request, environment_id)
+    session_id = Session.get_or_create_or_delete(request, environment_id)
     LOG.debug('Session::Get <Id: {0}>'.format(session_id))
     env = api.muranoclient(request).sessions.deploy(environment_id, session_id)
     LOG.debug('Environment::Deploy <EnvId: {0}, SessionId: {1}>'
