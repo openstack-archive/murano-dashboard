@@ -339,13 +339,3 @@ if DEBUG:
 # below may be omitted, though it should not be harmful
 from openstack_auth import utils as auth_utils
 auth_utils.patch_middleware_get_user()
-#START_MURANO_DASHBOARD
-HORIZON_CONFIG['dashboards'] += ('murano',)
-INSTALLED_APPS += ('muranodashboard', 'floppyforms',)
-MIDDLEWARE_CLASSES += ('muranodashboard.middleware.ExceptionMiddleware',)
-#NETWORK_TOPOLOGY = 'routed'
-#MURANO_API_URL = 'http://localhost:8082'
-#if murano-api is set up with ssl, uncomment next strings
-#MURANO_API_INSECURE = True
-MAX_FILE_SIZE_MB = 5
-#END_MURANO_DASHBOARD
