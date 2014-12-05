@@ -4,5 +4,7 @@ iso8601>=0.1.9
 six>=1.7.0
 PyYAML>=3.1.0
 django-floppyforms>=1.1
+
+# not listed in global requirements
 yaql>=0.2.3,<0.3
 python-muranoclient>=0.5.5
