@@ -231,7 +231,8 @@ class TestSuiteFields(base.FieldsTestCase):
 
         self.fill_field(by.By.NAME, '0-name', value='AppL1')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
-        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
+        self.wait_element_is_clickable(by.By.CSS_SELECTOR,
+                                       'span.glyphicon-plus')
 
     def test_check_required_field(self):
         """Test checks that fields with parameter 'required=True' in yaml form
@@ -256,7 +257,8 @@ class TestSuiteFields(base.FieldsTestCase):
         self.fill_field(by.By.NAME, "0-name", "name")
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
-        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
+        self.wait_element_is_clickable(by.By.CSS_SELECTOR,
+                                       'span.glyphicon-plus')
 
     def test_password_validation(self):
         """Test checks password validation
@@ -283,7 +285,8 @@ class TestSuiteFields(base.FieldsTestCase):
         self.check_error_message_is_absent('Passwords do not match')
         self.fill_field(by.By.NAME, '0-adminPassword', value='P@ssw0rd')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
-        self.wait_element_is_clickable(by.By.LINK_TEXT, '+')
+        self.wait_element_is_clickable(by.By.CSS_SELECTOR,
+                                       'span.glyphicon-plus')
 
 
 class TestSuiteApplications(base.ApplicationTestCase):
@@ -327,7 +330,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.fill_field(by.By.NAME, "0-name", "app1")
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
 
-        self.driver.find_element_by_link_text('+').click()
+        self.driver.find_element_by_css_selector('span.glyphicon-plus').click()
         self.fill_field(by.By.NAME, "0-name", "app2")
 
     def test_creation_deletion_app(self):
