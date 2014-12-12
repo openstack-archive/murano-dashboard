@@ -6,20 +6,38 @@
   <h4>{% blocktrans %}Info {% endblocktrans %}</h4>
   <dl>
       {% for key, value in service.items %}
-        {% if  key == 'instance' %}
+        {% if  key == 'Instance' %}
             <dt>Component instance name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:instances:detail' value.id %}">
                     {{ value.name }}
                 </a>
             </dd><br>
-        {% elif  key == 'stack'%}
+        {% elif  key == 'Instances' %}
+            {% for instance in value %}
+                <dt>Component instance{{forloop.counter}} name</dt>
+                <dd>
+                    <a href=" {% url 'horizon:project:instances:detail' instance.id %}">
+                        {{ instance.name }}
+                    </a>
+                </dd><br>
+            {% endfor %}
+        {% elif  key == 'Stack'%}
             <dt>Heat stack name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:stacks:detail' value.id %}">
                     {{ value.name }}
                 </a>
             </dd><br>
+        {% elif  key == 'Stacks'%}
+            {% for stack in value %}
+                <dt>Heat stack{{forloop.counter}} name</dt>
+                <dd>
+                    <a href=" {% url 'horizon:project:stacks:detail' stack.id %}">
+                        {{ stack.name }}
+                    </a>
+                </dd><br>
+            {% endfor %}
         {% else %}
             <dt>{% blocktrans %} {{ key }} {% endblocktrans %}</dt>
             <dd>{% blocktrans %} {{ value }}  {% endblocktrans %}</dd>
@@ -28,33 +46,3 @@
       {% endfor %}
   </dl>
 </div>
-
-{% for unit in units %}
-    <div class="status row detail">
-    <h4>{% blocktrans %}Component unit{% endblocktrans %}{{ forloop.counter }} </h4>
-    <hr class="header_rule">
-    <dl>
-    {% for key, value in unit.items %}
-        {% if  key == 'instance' %}
-            <dt>Component instance name</dt>
-            <dd>
-                <a href=" {% url 'horizon:project:instances:detail' value.id %}">
-                    {{ value.name }}
-                </a>
-            </dd><br>
-         {% elif  key == 'stack'%}
-            <dt>Heat stack name</dt>
-            <dd>
-                <a href=" {% url 'horizon:project:stacks:detail' value.id %}">
-                    {{ value.name }}
-                </a>
-            </dd><br>
-        {% else %}
-            <dt>{% blocktrans %} {{ key }} {% endblocktrans %}</dt>
-            <dd>{% blocktrans %} {{ value }}  {% endblocktrans %}</dd>
-            <br>
-        {% endif %}
-        </dl>
-    {% endfor %}
-      </div>
- {% endfor %}
