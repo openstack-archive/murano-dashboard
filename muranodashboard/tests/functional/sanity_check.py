@@ -29,10 +29,6 @@ class TestSuiteSmoke(base.UITestCase):
         self.go_to_submenu('Applications')
         self.check_panel_is_present('Applications')
 
-    def test_smoke_statistics_panel(self):
-        self.go_to_submenu('Statistics')
-        self.check_panel_is_present('Murano Status')
-
     def test_smoke_images_panel(self):
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
