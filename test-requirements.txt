@@ -1,3 +1,6 @@
+# The order of packages is significant, because pip processes them in the order
+# of appearance. Changing the order has an impact on the overall integration
+# process, which may cause wedges in the gate later.
 hacking>=0.8.0,<0.9
 
 coverage>=3.6
@@ -7,15 +10,14 @@ openstack.nose_plugin>=0.7
 nosehtmloutput>=0.0.3
 selenium
 
-testtools>=0.9.34
+testtools>=0.9.36,!=1.2.0
 mock>=1.0
 mox>=0.5.3
 
 # Docs Requirements
-sphinx>=1.1.2,<1.2
-docutils==0.9.1
+sphinx>=1.1.2,!=1.2.0,!=1.3b1,<1.3
 
 # Horizon requirements
-Django>=1.4,<1.7
-django_compressor>=1.3
-django_openstack_auth>=1.1.4
+Django>=1.4.2,<1.7
+django_compressor>=1.4
+django_openstack_auth>=1.1.7
