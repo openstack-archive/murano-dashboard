@@ -193,15 +193,6 @@ h3.link .caret {
   width: 150px;
   line-height: 22px;
 }
-.server-stats {
-  margin: 10px 0;
-}
-.server-stats .label {
-  margin-right:12px;
-}
-.server-stats meter {
-  margin-right:20px;
-}
 .app-icon.server {
   margin-right:20px;
 }
