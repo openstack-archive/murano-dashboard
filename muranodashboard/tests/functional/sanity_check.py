@@ -659,10 +659,12 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.driver.find_element_by_id(c.UploadPackage).click()
         el = self.driver.find_element_by_css_selector(
-            "input[name='0-package']")
+            "input[name='upload-package']")
         el.send_keys(self.archive)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
+        # No application data modification is needed
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.driver.find_element_by_css_selector(c.DatabaseCategory).click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 

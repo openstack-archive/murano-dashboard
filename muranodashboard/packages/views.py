@@ -35,6 +35,20 @@ from muranodashboard.packages import forms
 from muranodashboard.packages import tables
 LOG = logging.getLogger(__name__)
 
+FORMS = [('upload', forms.UploadPackageFileForm),
+         ('modify', forms.UpdatePackageForm),
+         ('add_category', forms.SelectCategories)]
+
+
+def is_app(wizard):
+    """Return true if uploading package is an application.
+       In that case, category selection from need to be shown.
+    """
+    step_data = wizard.storage.get_step_data('upload')
+    if step_data:
+        return step_data['package'].type == 'Application'
+    return False
+
 
 class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
@@ -66,10 +80,13 @@ class UploadPackageWizard(views.ModalFormMixin,
                           wizard_views.SessionWizardView):
     file_storage = storage.FileSystemStorage(location=consts.CACHE_DIR)
     template_name = 'packages/upload.html'
+    condition_dict = {'add_category': is_app}
 
     def done(self, form_list, **kwargs):
-        data = self.get_cleaned_data_for_step('1')
-        app_id = self.storage.get_step_data('0')['package'].id
+        data = self.get_all_cleaned_data()
+        app_id = self.storage.get_step_data('upload')['package'].id
+        # Remove package file from result data
+        del data['package']
 
         redirect = reverse('horizon:murano:packages:index')
         try:
@@ -89,12 +106,12 @@ class UploadPackageWizard(views.ModalFormMixin,
 
     def process_step(self, form):
         @catalog_views.update_latest_apps
-        def _report_success(request, app_id):
-            messages.success(request,
-                             _('Package {0} uploaded').format(pkg.name))
+        def _update_latest_apps(request, app_id):
+            LOG.info('Adding {0} application to the'
+                     ' latest apps list'.format(app_id))
 
         step_data = self.get_form_step_data(form)
-        if self.steps.current == '0':
+        if self.steps.current == 'upload':
             pkg = form.cleaned_data['package']
             try:
                 data = {}
@@ -102,22 +119,26 @@ class UploadPackageWizard(views.ModalFormMixin,
                 LOG.debug('Uploading {0} package'.format(pkg.name))
                 package = api.muranoclient(self.request).packages.create(data,
                                                                          files)
-                _report_success(self.request, app_id=package.id)
+                messages.success(self.request,
+                                 _('Package {0} uploaded').format(pkg.name))
+                _update_latest_apps(request=self.request, app_id=package.id)
 
                 step_data['package'] = package
             except (exc.HTTPException, Exception):
                 LOG.exception(_('Uploading package failed'))
                 redirect = reverse('horizon:murano:packages:index')
                 exceptions.handle(self.request,
-                                  _('Unable to modify package'),
+                                  _('Unable to upload package'),
                                   redirect=redirect)
         return step_data
 
     def get_form_kwargs(self, step=None):
         kwargs = {}
-        if step == '1':
-            package = self.storage.get_step_data('0')['package']
-            kwargs.update({'request': self.request, 'package': package})
+        if step == 'add_category':
+            kwargs.update({'request': self.request})
+        if step == 'modify':
+            package = self.storage.get_step_data('upload').get('package')
+            kwargs.update({'package': package})
         return kwargs
 
 
@@ -133,7 +154,6 @@ class ModifyPackageView(views.ModalFormView):
         return {
             'package': package,
             'app_id': app_id,
-            'request': self.request
         }
 
     def get_context_data(self, **kwargs):

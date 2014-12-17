@@ -15,11 +15,11 @@
 </div>
 <div class='right'>
     {% include 'packages/_package_params.html' %}
+    <p>{% blocktrans %}<strong>Categories</strong> Provide one or several categories for a package{% endblocktrans %}</p>
 </div>
 {% endblock %}
 
 {% block modal-footer %}
-    {{ form.media }}
-    <input class='btn btn-primary pull-right' type='submit' value='{% trans 'Submit' %}' />
+    <input type='submit' class='btn btn-primary pull-right' value='{% trans 'Update' %}' />
     <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}
