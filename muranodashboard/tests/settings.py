@@ -5,7 +5,7 @@ SECRET_KEY = 'HELLA_SECRET!'
 DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
                          'NAME': 'test'}}
 
-from muranodashboard.settings import *  # noqa
+from horizon.test.settings import *  # noqa
 
 socket.setdefaulttimeout(1)
 
