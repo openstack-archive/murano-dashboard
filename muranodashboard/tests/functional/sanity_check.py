@@ -797,3 +797,24 @@ class TestSuitePackages(base.PackageTestCase):
         el = self.driver.find_element_by_xpath(
             c.AppPackageDefinitions.format(pkg_name) + '/td[4]')
         self.assertEqual(el.text.strip().lower(), 'true')
+
+    def test_category_management(self):
+        """Test application category adds and deletes succesfully
+
+        Scenario:
+            1. Navigate to 'Categories' page
+            2. Click on 'Add Category' button
+            3. Create new category and check it's browsed in the table
+            4. Delete new category and check it's not browsed anymore
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+        self.driver.find_element_by_id(c.AddCategory).click()
+        self.fill_field(by.By.XPATH, "//input[@id='id_name']", 'TEST_CATEGORY')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
+        delete_new_category_btn = c.DeleteCategory.format('TEST_CATEGORY')
+        self.driver.find_element_by_xpath(delete_new_category_btn).click()
+        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
