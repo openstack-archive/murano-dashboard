@@ -49,7 +49,7 @@ from muranodashboard.environments import consts
 
 LOG = logging.getLogger(__name__)
 ALL_CATEGORY_NAME = 'All'
-LATEST_APPS_QUEUE_LIMIT = 6
+LATEST_APPS_QUEUE_LIMIT = 3
 
 
 class DictToObj(object):
