@@ -476,6 +476,19 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    sec=90)
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
 
+    def test_check_overview_tab(self):
+        """Test check that created application overview tab browsed correctly
+
+        Scenario:
+            1. Navigate Applications and click MockApp 'Quick Deploy'
+            2. Click on application name to go to the detail page
+        """
+        app_name = 'NewTestApp'
+        self.add_app_to_env(self.mockapp_id, app_name)
+        self.driver.find_element_by_link_text(app_name).click()
+        self.check_element_on_page(
+            by.By.XPATH, "//dd[contains(text(), {0})]".format(app_name))
+
     def test_check_actions_tab(self):
         """Test check that action tab in deployed application is available
         and actions are display in the corresponding tab
@@ -489,7 +502,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
             6. Click on 'Actions' tab
             7. Check that application's actions are present
         """
-        self.start_deploy(self.mockapp_id)
+        self.add_app_to_env(self.mockapp_id)
+
+        self.driver.find_element_by_css_selector(
+            '#services__action_deploy_env').click()
 
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
