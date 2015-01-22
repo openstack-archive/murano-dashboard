@@ -56,7 +56,10 @@ class OverviewTab(tabs.Tab):
         def get_instance_and_stack(instance_data, request):
             instance_name = instance_data['name']
             stack_name = ''
+            instance_result_data = {}
+            stack_result_data = {}
             instances, more = nova_api.server_list(request)
+
             for instance in instances:
                 if instance_name in instance.name:
                     instance_result_data = {'name': instance.name,
@@ -101,7 +104,8 @@ class OverviewTab(tabs.Tab):
         if hasattr(service_data, 'instance'):
             instance, stack = get_instance_and_stack(
                 service_data['instance'], request)
-            detail_info['Instance'] = instance
+            if instance:
+                detail_info['Instance'] = instance
             if stack:
                 detail_info['Stack'] = stack
 

@@ -336,7 +336,7 @@ class ApplicationTestCase(ImageTestCase):
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
         self.wait_for_alert_message()
 
-    def start_deploy(self, app_id, app_name='TestApp'):
+    def add_app_to_env(self, app_id, app_name='TestApp'):
         self.go_to_submenu('Applications')
         self.select_and_click_action_for_app('quick-add', app_id)
         field_id = "{0}_0-name".format(app_id)
@@ -346,9 +346,6 @@ class ApplicationTestCase(ImageTestCase):
         self.select_from_list('osImage', self.image.name)
 
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-
-        self.driver.find_element_by_css_selector(
-            '#services__action_deploy_env').click()
 
 
 class PackageTestCase(ApplicationTestCase):
