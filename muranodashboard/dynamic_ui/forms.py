@@ -105,8 +105,11 @@ def _collect_fields(field_specs, form_name, service):
         elif isinstance(spec, basestring) and helpers.is_localizable(keys):
             return key, _(spec)
         else:
-            if key == 'hidden' and spec is True:
-                return 'widget', forms.HiddenInput
+            if key == 'hidden':
+                if spec:
+                    return 'widget', forms.HiddenInput
+                else:
+                    return 'widget', None
             elif key == 'regexp_validator':
                 return 'validators', [helpers.prepare_regexp(spec)]
             else:
