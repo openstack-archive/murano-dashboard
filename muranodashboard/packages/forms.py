@@ -92,7 +92,8 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
         if package.type == 'Application':
             self.fields['categories'] = forms.MultipleChoiceField(
                 label=_('Application Category'),
-                choices=[('', 'No categories available')])
+                choices=[('', 'No categories available')],
+                required=False)
             try:
                 categories = api.muranoclient(request).packages.categories()
                 if categories:
@@ -127,7 +128,10 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
 
 class SelectCategories(forms.Form):
 
-    categories = forms.MultipleChoiceField(label=_('Application Category'))
+    categories = forms.MultipleChoiceField(
+        label=_('Application Category'),
+        choices=[('', 'No categories available')],
+        required=False)
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
