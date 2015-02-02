@@ -175,7 +175,7 @@ def render_d3_data(request, environment):
     for service in environment.services:
         in_progress, status_message = _get_environment_status_message(service)
         required_by = None
-        if 'instance' in service:
+        if 'instance' in service and service['instance'] is not None:
             if service['instance'].get('assignFloatingIp', False):
                 if ext_net_name:
                     required_by = ext_net_name
