@@ -343,7 +343,7 @@ class ApplicationTestCase(ImageTestCase):
         self.fill_field(by.By.ID, field_id, value=app_name)
         self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.select_from_list('osImage', self.image.name)
+        self.select_from_list('osImage', self.image.id)
 
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
 

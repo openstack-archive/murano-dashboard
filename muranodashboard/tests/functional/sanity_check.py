@@ -348,7 +348,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
-        self.select_from_list('osImage', self.image.name)
+        self.select_from_list('osImage', self.image.id)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.wait_element_is_clickable(by.By.ID, c.AddComponent)
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
@@ -436,7 +436,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             c.ButtonSubmit).click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.select_from_list('osImage', self.image.name)
+        self.select_from_list('osImage', self.image.id)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -458,7 +458,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.fill_field(by.By.ID, field_id, value='TestApp')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.select_from_list('osImage', self.image.name)
+        self.select_from_list('osImage', self.image.id)
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
