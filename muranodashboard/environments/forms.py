@@ -47,7 +47,7 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
             name = data.get('name', '')
             msg = _("Unable to create environment {0}").format(name)
             LOG.exception(msg)
-            exceptions.handle(request)
+            exceptions.handle(request, ignore=True)
             messages.error(request, msg)
             return False
 
