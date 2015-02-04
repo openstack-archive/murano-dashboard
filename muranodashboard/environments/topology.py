@@ -141,15 +141,6 @@ def _is_atomic(elt):
     return not isinstance(value, (types.DictType, types.ListType))
 
 
-def check_service_references(node, node_data, srv_list):
-    node_id = node_data['?']['id']
-    for service in srv_list:
-        for k, v in service.iteritems():
-            if v == node_id:
-                node['required_by'].append(service['?']['id'])
-                node['link_type'] = 'relation'
-
-
 def render_d3_data(request, environment):
     if not environment:
         return None
@@ -172,6 +163,82 @@ def render_d3_data(request, environment):
     unit_image_active = static('dashboard/img/server-green.svg')
     unit_image_non_active = static('dashboard/img/server-gray.svg')
 
+    node_refs = {}
+
+    def get_image(fqdn, node_data):
+        if fqdn.startswith('io.murano.resources'):
+            if len(node_data.get('ipAddresses', [])) > 0:
+                image = unit_image_active
+            else:
+                image = unit_image_non_active
+        else:
+            image = get_app_image(request, fqdn)
+        return image
+
+    def rec(node_data, node_key, parent_node=None):
+        if not isinstance(node_data, dict):
+            return
+        node_type = node_data.get('?', {}).get('type')
+        node_id = node_data.get('?', {}).get('id')
+        atomics, containers = _split_seq_by_predicate(
+            node_data.iteritems(), _is_atomic)
+        if node_type and node_data is not parent_node:
+            node = _create_empty_node()
+            node_refs[node_id] = node
+            atomics.extend([('id', node_data['?']['id']),
+                            ('type', node_type),
+                            ('name', node_data.get('name', node_key))])
+
+            image = get_image(node_type, node_data)
+            node.update({
+                'id': node_id,
+                'info_box': _unit_info(atomics, image),
+                'image': image,
+                'link_type': 'unit',
+                'in_progress': in_progress})
+            d3_data['nodes'].append(node)
+
+        for key, value in containers:
+            if key == '?':
+                continue
+            if isinstance(value, dict):
+                rec(value, key, node_data)
+            elif isinstance(value, list):
+                for index, val in enumerate(value):
+                    rec(val, '{0}[{1}]'.format(key, index), node_data)
+
+    def build_links_rec(node_data, parent_node=None):
+        if not isinstance(node_data, dict):
+            return
+        node_id = node_data.get('?', {}).get('id')
+        if not node_id:
+            return
+        node = node_refs[node_id]
+
+        atomics, containers = _split_seq_by_predicate(
+            node_data.iteritems(), _is_atomic)
+
+        # the actual second pass of node linking
+        if parent_node is not None:
+            node['required_by'].append(parent_node['?']['id'])
+            node['link_type'] = 'aggregation'
+
+        for key, value in atomics:
+            if value in node_refs:
+                remote_node = node_refs[value]
+                if node_id not in remote_node['required_by']:
+                    remote_node['required_by'].append(node_id)
+                    remote_node['link_type'] = 'reference'
+
+        for key, value in containers:
+            if key == '?':
+                continue
+            if isinstance(value, dict):
+                build_links_rec(value, node_data)
+            elif isinstance(value, list):
+                for val in value:
+                    build_links_rec(val, node_data)
+
     for service in environment.services:
         in_progress, status_message = _get_environment_status_message(service)
         required_by = None
@@ -187,11 +254,13 @@ def render_d3_data(request, environment):
 
         service_node = _create_empty_node()
         service_image = get_app_image(request, service['?']['type'])
+        node_id = service['?']['id']
+        node_refs[node_id] = service_node
         service_node.update({
             'name': service.get('name', ''),
             'status': status_message,
             'image': service_image,
-            'id': service['?']['id'],
+            'id': node_id,
             'link_type': 'relation',
             'in_progress': in_progress,
             'info_box': _application_info(
@@ -199,43 +268,10 @@ def render_d3_data(request, environment):
         })
         if required_by:
             service_node['required_by'].append(required_by)
-        check_service_references(service_node, service, environment.services)
         d3_data['nodes'].append(service_node)
-
-        def rec(node_data, node_key, parent_node=None):
-            if not isinstance(node_data, types.DictType):
-                return
-            node_type = node_data.get('?', {}).get('type')
-            atomics, containers = _split_seq_by_predicate(
-                node_data.iteritems(), _is_atomic)
-            if node_type and node_data is not parent_node:
-                node = _create_empty_node()
-                atomics.extend([('id', node_data['?']['id']),
-                                ('type', node_type),
-                                ('name', node_data.get('name', node_key))])
-                if parent_node is not None:
-                    node['required_by'].append(parent_node['?']['id'])
-                if len(node_data.get('ipAddresses', [])) > 0:
-                    image = unit_image_active
-                else:
-                    image = unit_image_non_active
-                node.update({
-                    'id': node_data['?']['id'],
-                    'info_box': _unit_info(atomics, image),
-                    'image': image,
-                    'link_type': 'unit',
-                    'in_progress': in_progress})
-                d3_data['nodes'].append(node)
-
-            for key, value in containers:
-                if key == '?':
-                    continue
-                if isinstance(value, types.DictType):
-                    rec(value, key, node_data)
-                elif isinstance(value, types.ListType):
-                    for index, val in enumerate(value):
-                        rec(val, '{0}[{1}]'.format(key, index), node_data)
-
         rec(service, None, service)
+
+    for service in environment.services:
+        build_links_rec(service)
 
     return json.dumps(d3_data)
