@@ -444,13 +444,13 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
 
     def test_check_progress_bar(self):
-        """Test that progress bar appears only for 'Deploy in progress'
+        """Test that progress bar appears only for 'Deploying' status
 
         Scenario:
             1. Navigate Applications and click MockApp 'Quick Deploy'
             2. Check that for "Ready to deploy" state progress bar is not seen
             3. Click deploy
-            4. Check that for "Deploy in progress" state progress bar is seen
+            4. Check that for "Deploying" status progress bar is seen
         """
         self.go_to_submenu('Applications')
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
@@ -469,7 +469,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_css_selector(
             '#services__action_deploy_env').click()
         self.check_element_on_page(by.By.XPATH,
-                                   c.Status.format('Deploy in progress'))
+                                   c.Status.format('Deploying'))
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('unknown'))
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
