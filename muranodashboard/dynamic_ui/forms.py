@@ -148,6 +148,8 @@ class UpdatableFieldsForm(forms.Form):
     `self.initial' dictionary, in the second case request should be provided
     directly in `request' parameter.
     """
+    required_css_class = 'required'
+
     def update_fields(self, request=None):
         # Create 'Confirm Password' fields by duplicating password fields
         while True:
