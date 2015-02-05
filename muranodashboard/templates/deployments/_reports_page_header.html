@@ -3,17 +3,13 @@
 {% block page_header %}
   <div class='page-header'>
       <h2>
-          {% blocktrans %}Deployment information{% endblocktrans %}
-      </h2>
-
-      <h3>
           <a href=" {% url 'horizon:murano:environments:index' %}">
-              {% blocktrans %}environments{% endblocktrans %}
+              {% blocktrans %}Environments{% endblocktrans %}
           </a> >
           <a href=" {% url 'horizon:murano:environments:services' environment_id %}?tab=environment_details__deployments">
-              {% blocktrans %} environment {{ environment_name }}{% endblocktrans %}
+              {% blocktrans %} Environment {{ environment_name }}{% endblocktrans %}
           </a> >
-          deployment at {{ deployment_start_time }}
-      </h3>
+          Deployment at {{ deployment_start_time }}
+      </h2>
   </div>
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'horizon/common/_data_table.html' %}
+{% load i18n %}
+{% block title %}{% trans "Environments" %}{% endblock %}
+
+{% block table_caption %}
+    <tr class='table_caption'>
+      <th class='table_header' colspan='{{ columns|length }}'>
+        {# <h3 class='table_title'>{{ table }}</h3> #}
+        {{ table.render_table_actions }}
+      </th>
+    </tr>
+{% endblock table_caption %}
