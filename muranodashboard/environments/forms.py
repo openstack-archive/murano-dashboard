@@ -14,43 +14,62 @@
 
 import logging
 
-from muranodashboard.dynamic_ui import fields
+from django.core import validators
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+from horizon import exceptions
+from horizon import forms as horizon_forms
+from horizon import messages
+
+from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
+NAME_VALIDATORS = [validators.RegexValidator('^[a-zA-Z]+[\w-]*$')]
+HELP_TEXT = _("Environment names must contain only alphanumeric or '_-.'"
+              " characters and must start with alpha")
 
 
-def filter_service_by_image_type(service, request):
-    def find_image_field():
-        for form_cls in service.forms:
-            for field in form_cls.base_fields.itervalues():
-                if isinstance(field, fields.ImageChoiceField):
-                    return field
-        return None
+class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
 
-    filtered = False
-    image_field = find_image_field()
-    if not image_field:
-        message = "Please provide Image field description in UI definition"
-        return filtered, message
-    specified_image_type = getattr(image_field, 'image_type', None)
-    if not specified_image_type:
-        message = "Please provide 'imageType' parameter in Image field " \
-                  "description in UI definition"
-        return filtered, message
+    name = forms.CharField(label="Environment Name",
+                           validators=NAME_VALIDATORS,
+                           error_messages={'invalid': HELP_TEXT},
+                           max_length=255)
 
-    registered_murano_images = []
-    available_images = fields.get_murano_images(request)
-    for image in available_images:
-        registered_murano_images.append(image.murano_property.get('type'))
+    def handle(self, request, data):
+        try:
+            env = api.environment_create(request, data)
+            request.session['env_id'] = env.id
+            messages.success(request,
+                             'Created environment "%s"'.format(data['name']))
+            return True
+        except Exception:
+            name = data.get('name', '')
+            msg = _("Unable to create environment {0}").format(name)
+            LOG.exception(msg)
+            exceptions.handle(request)
+            messages.error(request, msg)
+            return False
 
-    if registered_murano_images:
-        for type in registered_murano_images:
-            if specified_image_type in type:
-                filtered = True
-                break
-    if not filtered:
-        message = 'Murano image type "{0}" is not registered'.format(
-            specified_image_type)
-    else:
-        message = ''
-    return filtered, message
+
+class EditEnvironmentView(horizon_forms.SelfHandlingForm):
+
+    name = forms.CharField(label="Environment Name",
+                           validators=NAME_VALIDATORS,
+                           error_messages={'invalid': HELP_TEXT},
+                           max_length=255)
+
+    def handle(self, request, data):
+        try:
+            env_id = self.initial['environment_id']
+            env = api.environment_update(request, env_id, data['name'])
+
+            messages.success(request,
+                             "Edited environment '{0}'".format(data['name']))
+            return env
+        except Exception:
+            name = data.get('name', '')
+            msg = _("Unable to edit environment {0}").format(name)
+            LOG.exception(msg)
+            exceptions.handle(request)
+            messages.error(request, msg)

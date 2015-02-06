@@ -20,16 +20,17 @@ from django import http
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from horizon import exceptions
+from horizon.forms import views
 from horizon import messages
 from horizon import tables
 from horizon import tabs
-from horizon import workflows
+from horizon.utils import memoized
 
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
+from muranodashboard.environments import forms as env_forms
 from muranodashboard.environments import tables as env_tables
 from muranodashboard.environments import tabs as env_tabs
-from muranodashboard.environments import workflows as env_workflows
 
 
 LOG = logging.getLogger(__name__)
@@ -132,43 +133,47 @@ class DetailServiceView(tabs.TabView):
         return self.tab_group_class(request, service=service, **kwargs)
 
 
-class CreateEnvironmentView(workflows.WorkflowView):
-    workflow_class = env_workflows.CreateEnvironment
+class CreateEnvironmentView(views.ModalFormView):
+    form_class = env_forms.CreateEnvironmentForm
     template_name = 'environments/create.html'
+    context_object_name = 'environment'
 
-    def get_initial(self):
-        initial = super(CreateEnvironmentView, self).get_initial()
-        initial['project_id'] = self.request.user.tenant_id
-        initial['user_id'] = self.request.user.id
-        return initial
+    def get_success_url(self):
+        env_id = self.request.session.get('env_id')
+        if env_id:
+            del self.request.session['env_id']
+            return reverse("horizon:murano:environments:services",
+                           args=[env_id])
+        return reverse_lazy('horizon:murano:environments:index')
 
 
-class EditEnvironmentView(workflows.WorkflowView):
-    workflow_class = env_workflows.UpdateEnvironment
+class EditEnvironmentView(views.ModalFormView):
+    form_class = env_forms.EditEnvironmentView
     template_name = 'environments/update.html'
-    success_url = reverse_lazy("horizon:murano:environments:index")
+    context_object_name = 'environment'
+    success_url = reverse_lazy('horizon:murano:environments:index')
 
     def get_context_data(self, **kwargs):
         context = super(EditEnvironmentView, self).get_context_data(**kwargs)
-        context["environment_id"] = self.kwargs['environment_id']
+        env_id = getattr(self.get_object(), 'id')
+        context["env_id"] = env_id
         return context
 
-    def get_object(self, *args, **kwargs):
-        if not hasattr(self, "_object"):
-            environment_id = self.kwargs['environment_id']
-            try:
-                self._object = \
-                    api.environment_get(self.request, environment_id)
-            except Exception:
-                redirect = reverse("horizon:murano:environments:index")
-                msg = _('Unable to retrieve environment details.')
-                exceptions.handle(self.request, msg, redirect=redirect)
-        return self._object
+    @memoized.memoized_method
+    def get_object(self):
+        environment_id = self.kwargs['environment_id']
+        try:
+            return api.environment_get(self.request, environment_id)
+        except Exception:
+            redirect = reverse("horizon:murano:environments:index")
+            msg = _('Unable to retrieve environment details.')
+            exceptions.handle(self.request, msg, redirect=redirect)
 
     def get_initial(self):
         initial = super(EditEnvironmentView, self).get_initial()
+        name = getattr(self.get_object(), 'name', '')
         initial.update({'environment_id': self.kwargs['environment_id'],
-                        'name': getattr(self.get_object(), 'name', '')})
+                        'name': name})
         return initial
 
 
