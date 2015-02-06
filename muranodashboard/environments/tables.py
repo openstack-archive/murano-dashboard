@@ -197,7 +197,7 @@ class DeployThisEnvironment(tables.Action):
 
 class ShowEnvironmentServices(tables.LinkAction):
     name = 'show'
-    verbose_name = _('Components')
+    verbose_name = _('Manage Components')
     url = 'horizon:murano:environments:services'
 
     def allowed(self, request, environment):
