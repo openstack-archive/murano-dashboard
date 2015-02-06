@@ -163,7 +163,7 @@ class UITestCase(BaseDeps):
     def create_environment(self, env_name):
         self.driver.find_element_by_id(consts.CreateEnvironment).click()
         self.fill_field(by.By.ID, 'id_name', env_name)
-        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.driver.find_element_by_id(consts.ConfirmCreateEnvironment).click()
         self.wait_for_alert_message()
 
     def wait_for_alert_message(self):

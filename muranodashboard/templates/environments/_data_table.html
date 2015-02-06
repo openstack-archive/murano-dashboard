@@ -1,0 +1,21 @@
+{% extends 'common/_data_table.html' %}
+{% load i18n %}
+{% block title %}{% trans "Environments" %}{% endblock %}
+
+{% block table_body %}
+  <tbody>
+  {% for row in rows %}
+    {{ row.render }}
+  {% empty %}
+  <tr class="{% cycle 'odd' 'even' %} empty">
+    <td colspan="{{ table.get_columns|length }}">
+      <h4 class="no_envs">{{ table.get_empty_message }}</h4>
+      <div class="add_env">
+        <a href="{% url 'horizon:murano:environments:create_environment' %}" class="btn btn-primary">
+          <i class="fa fa-plus-circle"></i>  Add New
+        </a></div>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+{% endblock table_body %}
