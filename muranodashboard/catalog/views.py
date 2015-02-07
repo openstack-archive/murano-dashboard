@@ -85,6 +85,16 @@ def get_environments_context(request):
     return context
 
 
+def get_categories_list(request):
+    categories = []
+    with api.handled_exceptions(request):
+        client = api.muranoclient(request)
+        categories = client.packages.categories()
+    if ALL_CATEGORY_NAME not in categories:
+        categories.insert(0, ALL_CATEGORY_NAME)
+    return categories
+
+
 @auth_dec.login_required
 def switch(request, environment_id,
            redirect_field_name=auth.REDIRECT_FIELD_NAME):
@@ -509,15 +519,8 @@ class IndexView(list_view.ListView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
 
-        categories = []
-        with api.handled_exceptions(self.request):
-            client = api.muranoclient(self.request)
-            categories = client.packages.categories()
-        if ALL_CATEGORY_NAME not in categories:
-            categories.insert(0, ALL_CATEGORY_NAME)
-
         context.update({
-            'categories': categories,
+            'categories': get_categories_list(self.request),
             'current_category': self.get_current_category(),
             'latest_list': clean_latest_apps(self.request)
         })

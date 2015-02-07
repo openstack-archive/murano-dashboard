@@ -76,9 +76,125 @@ h3.heading_switcher a.btn {
   padding: 5px 0;
 }
 .centering {
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
 }
+
+.draggable_app img {
+  margin-bottom: 5px;
+  display: block;
+}
+
+.draggable_app .well {
+  margin-bottom: 0;
+}
+
+@media (max-width: 916px) {
+  .draggable_app .well, .no_apps.well {
+    min-height: 120px;
+  }
+}
+
+@media (min-width: 916px) and (max-width: 1158px) {
+  .draggable_app .well, .no_apps.well {
+    min-height: 105px;
+  }
+}
+
+.has-feedback .form-control-feedback {
+  top: 10px;
+}
+
+.draggable_app {
+  font-size: 11px;
+}
+
+.draggable_app.col-xs-2 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.carousel-inner .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.carousel {
+	padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 30px;
+  left: -10px;
+  bottom: 0;
+  width: 30px;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  font-size: 20px;
+  color: #666;
+  text-align: center;
+  text-shadow: none;
+}
+
+.carousel-control:hover:focus {
+  color: #d93c27;
+}
+
+.carousel-control:hover {
+  color: #d93c27;
+  opacity: 1;
+}
+
+.carousel-control:focus {
+  color: #666;
+}
+
+.carousel-control.left {
+  background: inherit;
+}
+
+.carousel-control.right {
+  background: inherit;
+}
+
+.extra_title {
+  padding-left: 8px;
+}
+
+.draggable_app .well:hover {
+  border-color: #d93c27;
+  background: #fff;
+}
+
+#envAppsCategory > button{
+  margin-top: 8px;
+}
+
+#envAppsCategory > h4 {
+  position: absolute;
+  left: -110px;
+  top: 7px;
+}
+
+#envAppsFilter {
+  margin-top: 15px;
+}
+
+div.drop_component {
+  border: 2px #ccc dashed;
+  width: 85%;
+  margin: 0 auto -2px;
+  border-radius: 5px;
+}
+
+div.drop_component.over {
+  background-color: #ffffc0;
+  border-color: #e8c502;
+}
+
 h3.link {
   color: yellow;
   opacity: 0.5;

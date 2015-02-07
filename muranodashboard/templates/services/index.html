@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load horizon %}
+{% load custom_filters %}
 {% block title %}{% trans "Components" %}{% endblock %}
 
 {% block page_header %}
   {% include "services/_page_header.html" %}
 {% endblock page_header %}
 {% block main %}
+  <input type="hidden" id="environmentId" value="{{ environment_id }}">
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
   {{ tab_group.render }}
@@ -17,4 +20,24 @@
 {% block css %}
   {% include "_stylesheets.html" %}
   <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}"/>
+{% endblock %}
+
+{% block js %}
+  {% include 'horizon/_scripts.html' %}
+  <script src="{% static 'muranodashboard/js/load-modals.js' %}"></script>
+  <script type="text/template" id="app_tile_small">
+      {% jstemplate %}
+        {% url 'horizon:murano:catalog:images' '[[app_id]]' as image_url %}
+        {% url 'horizon:murano:catalog:add' '[[app_id]]' '[[environment_id]]' 'True' 'True' as add_url %}
+        <div class="col-xs-2 draggable_app">
+          <div class="well well-sm" draggable="true">
+            <img class="centering" src="{{ image_url|unquote }}"
+                 height="50" width="50" draggable="false"/>
+            <input type="hidden" value="{{ add_url|unquote }}"/>
+            <div class="centering">[[app_name]]</div>
+          </div>
+        </div>
+      {% endjstemplate %}
+   </script>
+   <script src="{% static 'muranodashboard/js/draggable-components.js' %}"></script>
 {% endblock %}

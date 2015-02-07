@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load url from future %}
+
+<div class="col-xs-2 draggable_app">
+  <div class="well well-sm" draggable="true">
+    <img class="centering" src="{% url 'horizon:murano:catalog:images' app.id %}"
+         height="50" width="50" draggable="false"/>
+    <input type="hidden" value="{% url 'horizon:murano:catalog:add' app.id environment_id 'True' 'True' %}"/>
+    <div class="centering">{{ app.name }}</div>
+  </div>
+</div>
+

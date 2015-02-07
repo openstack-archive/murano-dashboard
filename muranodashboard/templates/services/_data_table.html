@@ -1,0 +1,79 @@
+{% extends 'common/_data_table.html' %}
+{% load i18n %}
+{% load custom_filters %}
+{% block title %}{% trans "Components" %}{% endblock %}
+
+{% block table_caption %}
+  {% if table.actions_allowed %}
+    <div class="row">
+      <div class="col-xs-4">
+        <h3 class="table_title extra_title">{% trans "Application Components" %}</h3>
+      </div>
+      <div class="col-xs-offset-2 col-xs-3">
+        <div class="dropdown" id="envAppsCategory">
+          {% with categories=table.get_categories_list %}
+            <h4>{% trans 'App category' %}</h4>
+            <button class="btn btn-default dropdown-toggle"
+                    type="button"  aria-expanded="true">
+              <span id="envAppsCategoryName">{{ categories.0 }}</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="envAppsCategory">
+              {% for category in categories %}
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ category }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endwith %}
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <div class="has-feedback" id="envAppsFilter">
+          <input class="form-control" value="{{ search }}" type="text"
+                 placeholder="Find in a selected category">
+          <span class="fa fa-search form-control-feedback"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+    {% with apps=table.get_apps_list %}
+        {% if apps|length %}
+            <div id="apps_carousel" class="carousel">
+              <input type="hidden" id="apps_carousel_contents" value="{{ apps }}">
+              <div class="carousel-inner"></div>
+              <a class="left carousel-control" href="#apps_carousel" data-slide="prev">
+                <i class="fa fa-chevron-left"></i>
+              </a>
+              <a class="right carousel-control" href="#apps_carousel" data-slide="next">
+                <i class="fa fa-chevron-right"></i>
+              </a>
+            </div>
+        {% else %}
+          <div class="well">
+             <h4>No Application Components match the current category and/or filter string</h4>
+          </div>
+        {% endif %}
+    {% endwith %}
+  {% endif %}
+
+  <tr class='table_caption'>
+    <th class='table_header' colspan='{{ columns|length }}'>
+      <h3 class='table_title'>{{ table }}</h3>
+      {{ table.render_table_actions }}
+    </th>
+  </tr>
+{% endblock table_caption %}
+
+{% block table_body %}
+  <tbody>
+  {% if table.actions_allowed %}
+    <tr><td colspan="{{ table.get_columns|length }}">
+      <div class="drop_component">
+        <h4 class="centering"><i class="fa fa-bullseye"></i> {% trans 'Drop component here to add it' %}</h4></div>
+    </td></tr>
+  {% endif %}
+  {% for row in rows %}
+    {{ row.render }}
+  {% endfor %}
+  </tbody>
+{% endblock table_body %}
