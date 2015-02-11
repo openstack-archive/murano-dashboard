@@ -41,7 +41,7 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
             env = api.environment_create(request, data)
             request.session['env_id'] = env.id
             messages.success(request,
-                             'Created environment "%s"'.format(data['name']))
+                             'Created environment "{0}"'.format(data['name']))
             return True
         except Exception:
             name = data.get('name', '')
