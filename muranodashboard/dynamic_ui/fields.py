@@ -23,7 +23,6 @@ from django.core import validators as django_validator
 from django import forms
 from django.template import defaultfilters
 from django.template import loader
-from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
 import floppyforms
 from horizon import exceptions
@@ -504,7 +503,7 @@ class ImageChoiceField(ChoiceField):
 
     @with_request
     def update(self, request, **kwargs):
-        image_mapping, image_choices = {}, []
+        image_map, image_choices = {}, []
         murano_images = get_murano_images(request)
         for image in murano_images:
             murano_data = image.murano_property
@@ -519,10 +518,10 @@ class ImageChoiceField(ChoiceField):
                 if (not itype.startswith(prefix) and
                         not self.image_type == itype):
                     continue
-            image_mapping[smart_text(title)] = image.name
+            image_map[image.id] = title
 
-        for name in sorted(image_mapping.keys()):
-            image_choices.append((image_mapping[name], name))
+        for id_, title in sorted(image_map.iteritems(), key=lambda e: e[1]):
+            image_choices.append((id_, title))
         if image_choices:
             image_choices.insert(0, ("", _("Select Image")))
         else:
