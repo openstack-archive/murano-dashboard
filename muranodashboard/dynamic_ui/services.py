@@ -182,9 +182,9 @@ def get_app_field_descriptions(request, app_id, index):
 
     form_cls = app.forms[index]
     descriptions = []
-    for field in form_cls.base_fields.itervalues():
+    for name, field in form_cls.base_fields.iteritems():
         title = field.description_title
         description = field.description
         if description:
-            descriptions.append((title, description))
+            descriptions.append((name, title, description))
     return descriptions
