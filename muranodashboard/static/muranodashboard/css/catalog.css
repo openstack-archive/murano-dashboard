@@ -284,3 +284,34 @@ h3.link .caret {
   font-weight: bold;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+.steps_list_container {
+  margin: 0 -15px;
+  border-top: #d3d3d3 1px solid;
+}
+
+.steps_list {
+  padding: 10px 20px 0 20px;
+}
+
+.steps_list li {
+  padding-bottom: 7px;
+}
+
+.steps_list li.done {
+  color: #c8c6c8;
+}
+
+button.wizard_cancel {
+  margin-right: 10px;
+}
+
+h3 .wizard_title {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.steps_list li.active {
+  color: #d93c27;
+  font-weight: bold;
+}

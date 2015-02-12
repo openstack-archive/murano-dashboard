@@ -284,6 +284,13 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         fmt = utils.BlankFormatter()
         return fmt.format('{0}_{app_id}', base, **kwargs)
 
+    def get_form_prefix(self, step=None, form=None):
+        if step is None:
+            return self.steps.step0
+        else:
+            index0 = self.steps.all.index(step)
+            return str(index0)
+
     def done(self, form_list, **kwargs):
         app_id = kwargs['app_id']
         app_name = services.get_service_name(self.request, app_id)
