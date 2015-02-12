@@ -51,14 +51,15 @@ def compose_package(app_name, manifest, package_dir):
     prepare_manifest(app_name, manifest)
 
     name = app_name + '.zip'
-    zip_file = zipfile.ZipFile(name, 'w')
+
+    __location = os.path.dirname(os.path.abspath(__file__))
+    archive_path = os.path.join(__location, name)
+
+    zip_file = zipfile.ZipFile(archive_path, 'w')
     for root, dirs, files in os.walk(package_dir):
         for f in files:
             zip_file.write(
                 os.path.join(root, f),
                 arcname=os.path.join(os.path.relpath(root, package_dir), f))
-
-    __location = os.path.dirname(os.path.abspath(__file__))
-    archive_path = os.path.join(__location, name)
 
     return archive_path
