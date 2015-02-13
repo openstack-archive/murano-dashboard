@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
 import logging
 
 from django.core.urlresolvers import reverse
@@ -193,6 +194,12 @@ class EnvironmentTopologyTab(tabs.Tab):
     slug = "topology"
     template_name = "services/_detail_topology.html"
     preload = False
+
+    def allowed(self, request):
+        if self.data.get('d3_data'):
+            if json.loads(self.data['d3_data'])['environment']['status']:
+                return True
+        return False
 
     def get_context_data(self, request):
         context = {}
