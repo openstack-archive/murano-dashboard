@@ -678,6 +678,14 @@ def make_select_cls(fqns):
         fqns = (fqns,)
 
     class Widget(hz_forms.fields.DynamicSelectWidget):
+        def __init__(self, attrs=None, **kwargs):
+            if attrs is None:
+                attrs = {'class': 'murano_add_select'}
+            else:
+                attrs.setdefault('class', '')
+                attrs['class'] += ' murano_add_select'
+            super(Widget, self).__init__(attrs=attrs, **kwargs)
+
         class Media:
             js = ('muranodashboard/js/add-select.js',)
 
@@ -711,6 +719,10 @@ def make_select_cls(fqns):
             choices = [('', self.empty_value_message)]
             choices.extend([(app['?']['id'], app.name) for app in apps])
             self.choices = choices
+            # NOTE(tsufiev): streamline the drop-down UX: auto-select the
+            # single available option in a drop-down
+            if len(choices) == 2:
+                self.initial = choices[1][0]
 
         def clean(self, value):
             value = super(DynamicSelect, self).clean(value)
