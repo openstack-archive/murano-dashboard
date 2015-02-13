@@ -6,7 +6,10 @@
 {% endblock %}
 {% block form_id %}form_{{ app_id }}{% endblock %}
 {% block modal_id %}modal_{{ app_id }}{% endblock %}
-{% block modal-header %}{% trans "Add Application to " %}&ldquo;{{ environment_name }}&rdquo;{% endblock %}
+{% block modal-header %}
+  <img src="{% url 'horizon:murano:catalog:images' app_id %}" height="25" width="25"/>
+  {% trans "Configure Application: " %}{{ service_name }}
+{% endblock %}
 
 {% block modal-body %}
 <div class="left">
