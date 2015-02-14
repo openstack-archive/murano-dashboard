@@ -279,8 +279,12 @@ def service_get(request, environment_id, service_id):
 
 def extract_actions_list(service):
     actions_data = service['?'].get('_actions', {})
-    return dict((action_id, action.get('name')) for (action_id, action)
-                in actions_data.iteritems() if action.get('enabled'))
+
+    def make_action_datum(action_id, _action):
+        return dict(_action.items() + [('id', action_id)])
+
+    return [make_action_datum(_id, action) for (_id, action) in
+            actions_data.iteritems() if action.get('enabled')]
 
 
 def run_action(request, environment_id, action_id):

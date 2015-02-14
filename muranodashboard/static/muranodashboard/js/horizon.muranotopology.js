@@ -280,7 +280,7 @@ if ($(murano_container).length){
              .attr("id","clipCircle")
              .append("svg:circle")
              .attr("cursor","pointer")
-              .attr("r", "28px");
+              .attr("r", "38px");
 
   svg.append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here

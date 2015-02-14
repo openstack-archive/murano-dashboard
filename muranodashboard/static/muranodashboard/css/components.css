@@ -1,0 +1,9 @@
+.modal-close {
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.modal-close button + .tooltip {
+  font-size: 17px;
+  width: 500px;
+}

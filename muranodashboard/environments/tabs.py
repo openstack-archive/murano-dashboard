@@ -128,22 +128,6 @@ class OverviewTab(tabs.Tab):
         return {'service': detail_info}
 
 
-class AppActionsTab(tabs.Tab):
-    name = _('Actions')
-    slug = '_actions'
-    template_name = 'services/_actions.html'
-
-    def get_context_data(self, request):
-        data = self.tab_group.kwargs['service']
-        return {'actions': api.extract_actions_list(data),
-                'service_id': self.tab_group.kwargs['service_id'],
-                'environment_id': self.tab_group.kwargs['environment_id']}
-
-    def allowed(self, request):
-        environment_id = self.tab_group.kwargs['environment_id']
-        return api.action_allowed(request, environment_id)
-
-
 class ServiceLogsTab(tabs.Tab):
     name = _("Logs")
     slug = "service_logs"
@@ -212,7 +196,7 @@ class EnvironmentTopologyTab(tabs.Tab):
 
 class EnvironmentServicesTab(tabs.TableTab):
     name = _("Components")
-    slug = "serviceslist"
+    slug = "services"
     table_classes = (tables.ServicesTable,)
     template_name = "services/_service_list.html"
     preload = False
@@ -273,7 +257,7 @@ class EnvironmentDetailsTabs(tabs.TabGroup):
 
 class ServicesTabs(tabs.TabGroup):
     slug = "services_details"
-    tabs = (OverviewTab, AppActionsTab, ServiceLogsTab)
+    tabs = (OverviewTab, ServiceLogsTab)
 
 
 class DeploymentDetailsTabs(tabs.TabGroup):

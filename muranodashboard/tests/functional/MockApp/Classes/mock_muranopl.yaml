@@ -10,8 +10,12 @@ Properties:
   name:
     Contract: $.string().notNull()
 
-Workflow:
-  deploy:
+Methods:
+  testAction:
     Usage: Action
     Body:
+      - sleep(3)
+      - $this.find(std:Environment).reporter.report($this, 'Completed')
+  deploy:
+     Body:
       - $this.find(std:Environment).reporter.report($this, 'Follow the white rabbit')

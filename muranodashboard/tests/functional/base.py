@@ -194,7 +194,7 @@ class UITestCase(BaseDeps):
 
     def select_action_for_environment(self, env_name, action):
         element_id = self.get_element_id(env_name)
-        more_button = consts.More.format(element_id)
+        more_button = consts.More.format('murano', element_id)
         self.driver.find_element_by_xpath(more_button).click()
         btn_id = "murano__row_{0}__action_{1}".format(element_id, action)
         self.driver.find_element_by_id(btn_id).click()

@@ -504,18 +504,16 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(
             by.By.XPATH, "//dd[contains(text(), {0})]".format(app_name))
 
-    def test_check_actions_tab(self):
-        """Test check that action tab in deployed application is available
-        and actions are display in the corresponding tab
+    def test_ensure_actions(self):
+        """Checks that action is available for deployed application
 
         Scenario:
             1. Navigate Applications and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on application
-            5. Check that 'Actions' tab is present
-            6. Click on 'Actions' tab
-            7. Check that application's actions are present
+            5. Check that defined action name is in the list of app 'actions'
+
         """
         self.add_app_to_env(self.mockapp_id)
         self.driver.find_element_by_id('services__action_deploy_env').click()
@@ -523,16 +521,16 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
-
-        self.driver.find_element_by_link_text('TestApp').click()
-        self.check_element_on_page(by.By.LINK_TEXT, 'Actions')
-        self.driver.find_element_by_link_text('Actions').click()
-
-        self.check_element_on_page(by.By.LINK_TEXT, 'deploy')
+        el = self.wait_element_is_clickable(by.By.XPATH,
+                                            c.More.format('services', ''))
+        el.click()
+        self.driver.find_element_by_xpath(c.Action).click()
+        self.driver.find_element_by_css_selector('.modal-close button').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   "//*[contains(text(), 'Completed')]")
 
     def test_check_info_about_app(self):
-        """Test checks that information about app is available and truly.
-
+        """Test checks that information about app is available and tr
         Scenario:
             1. Navigate to 'Application Catalog > Applications' panel
             2. Choose some application and click on 'More info'

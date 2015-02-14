@@ -36,17 +36,21 @@ urlpatterns = urls.patterns(
              views.EnvironmentDetails.as_view(),
              name='services'),
 
-    urls.url(ENVIRONMENT_ID +
-             r'/(?P<service_id>[^/]+)/actions/(?P<action_id>[^/]+)$',
-             views.ApplicationActions.as_view(),
-             name='actions'),
-
     urls.url(ENVIRONMENT_ID + r'/services/get_d3_data$',
              views.JSONView.as_view(), name='d3_data'),
 
     urls.url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
              views.DetailServiceView.as_view(),
              name='service_details'),
+
+    urls.url(ENVIRONMENT_ID + r'/start_action/(?P<action_id>[^/]+)/$',
+             views.StartActionView.as_view(),
+             name='start_action'),
+
+    urls.url(ENVIRONMENT_ID +
+             r'/actions/(?P<task_id>[^/]+)(?:/(?P<optional>[^/]+))?/$',
+             views.ActionResultView.as_view(),
+             name='action_result'),
 
     urls.url(r'^(?P<instance_id>[^/]+)/$',
              inst_view.DetailView.as_view(),
