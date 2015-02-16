@@ -25,6 +25,7 @@ InputSubmit = "//input[@type='submit']"
 ConfirmDeletion = "//div[@class='modal-footer']//a[contains(text(), 'Delete')]"  # noqa
 UploadPackage = 'packages__action_upload_package'
 CreateEnvironment = 'murano__action_CreateEnvironment'
+ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 
 # Panel's

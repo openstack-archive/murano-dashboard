@@ -34,6 +34,7 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
     name = forms.CharField(label="Environment Name",
                            validators=NAME_VALIDATORS,
                            error_messages={'invalid': HELP_TEXT},
+                           help_text=HELP_TEXT,
                            max_length=255)
 
     def handle(self, request, data):

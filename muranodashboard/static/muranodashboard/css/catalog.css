@@ -20,6 +20,14 @@ h3.heading_switcher {
   font-size: 18px;
 }
 
+.add_env {
+  margin-left: auto;
+  margin-right: auto;
+}
+.no_envs {
+  color: slategray;
+}
+
 .link.reference {
   stroke-dasharray: 5,5;
 }

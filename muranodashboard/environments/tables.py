@@ -57,7 +57,7 @@ class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
     verbose_name = _('Create Environment')
     url = 'horizon:murano:environments:create_environment'
-    classes = ('btn-launch', 'ajax-modal')
+    classes = ('btn-launch', 'add_env')
     redirect_url = "horizon:project:murano:environments"
     icon = 'plus'
 
@@ -233,9 +233,10 @@ class EnvironmentsTable(tables.DataTable):
     class Meta:
         name = 'murano'
         verbose_name = _('Environments')
-        template = 'common/_data_table.html'
+        template = 'environments/_data_table.html'
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
+        no_data_message = _('NO ENVIRONMENTS')
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        EditEnvironment, DeleteEnvironment)
