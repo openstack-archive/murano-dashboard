@@ -2,18 +2,15 @@
 {% load url from future %}
 {% block page_header %}
   <div class='page-header'>
-
-      <h2> {% blocktrans %}Component Details: {{ service_name }} {% endblocktrans %}
-      </h2>
-      <h3>
+      <h2>
           <a href=" {% url 'horizon:murano:environments:index' %}">
-              {% blocktrans %}environments{% endblocktrans %}
+              {% blocktrans %}Environments{% endblocktrans %}
           </a> >
           <a href=" {% url 'horizon:murano:environments:services' service.environment_id %}">
-              {% blocktrans %}environment {{ environment_name }}{% endblocktrans %}
+              {% blocktrans %}Environment {{ environment_name }}{% endblocktrans %}
           </a>
-          {% blocktrans %} > component {{ service_name }}{% endblocktrans %}
+          {% blocktrans %} > Component:  {{ service_name }}{% endblocktrans %}
 
-      </h3>
+      </h2>
   </div>
 {% endblock %}

@@ -164,6 +164,7 @@ class PackageDefinitionsTable(tables.DataTable):
     class Meta:
         name = 'packages'
         verbose_name = _('Package Definitions')
+        template = 'common/_data_table.html'
         table_actions = (UploadPackage,
                          ToggleEnabled,
                          TogglePublicEnabled,
