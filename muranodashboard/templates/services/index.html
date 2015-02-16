@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 {% block title %}{% trans "Components" %}{% endblock %}
 
 {% block page_header %}
@@ -13,3 +14,7 @@
 </div>
 {% endblock %}
 
+{% block css %}
+  {% include "_stylesheets.html" %}
+  <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}"/>
+{% endblock %}

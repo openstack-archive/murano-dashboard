@@ -20,6 +20,10 @@ h3.heading_switcher {
   font-size: 18px;
 }
 
+.link.reference {
+  stroke-dasharray: 5,5;
+}
+
 h3.heading_switcher a.btn {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

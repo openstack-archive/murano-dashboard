@@ -65,7 +65,7 @@ function update(){
 }
 
 function tick() {
-  link.attr('d', drawLink).style('stroke-width', 3);
+  link.attr('d', drawLink).style('stroke-width', 3).attr('marker-end', "url(#end)");
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
@@ -158,8 +158,8 @@ function build_node_links(node){
 
     if (push_link === true && (source_idx && target_idx)){
       links.push({
-        'source':source_idx,
-        'target':target_idx,
+        'target':source_idx,
+        'source':target_idx,
         'value':1,
         'link_type': node.link_type
       });
@@ -175,8 +175,8 @@ function build_reverse_links(node){
         //if new node is required by existing node, push new link
         if(node.id === dependency){
           links.push({
-            'source':findNodeIndex(nodes[i].id),
-            'target':findNodeIndex(node.id),
+            'target':findNodeIndex(nodes[i].id),
+            'source':findNodeIndex(node.id),
             'value':1,
             'link_type': nodes[i].link_type
           });
@@ -263,8 +263,8 @@ if ($(murano_container).length){
     force = d3.layout.force()
       .nodes(graph.nodes)
       .links([])
-      .gravity(0.3)
-      .charge(-2000)
+      .gravity(0.25)
+      .charge(-3000)
       .linkDistance(100)
       .size([width, height])
       .on("tick", tick),
@@ -281,6 +281,20 @@ if ($(murano_container).length){
              .append("svg:circle")
              .attr("cursor","pointer")
               .attr("r", "28px");
+
+  svg.append("svg:defs").selectAll("marker")
+    .data(["end"])      // Different link/path types can be defined here
+  .enter().append("svg:marker")    // This section adds in the arrows
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 25)
+    .attr("refY", 0)
+    .attr("fill", "#999")
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("svg:path")
+    .attr("d", "M0,-3L10,0L0,3");
 
   build_links();
   update();
