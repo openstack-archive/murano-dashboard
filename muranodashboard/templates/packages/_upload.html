@@ -32,16 +32,16 @@
             {% include 'packages/_package_params.html' %}
         {% elif wizard.steps.prev == 'modify' %}
             <h3>{% trans 'Description:' %}</h3>
-            <p>{% blocktrans %}<strong>Categories</strong> Provide one or several categories for a package{% endblocktrans %}</p>
-            <p>{% blocktrans %} Specifying a category helps to filter applications easier in th catalog. {% endblocktrans %}</p>
+            <p>{% blocktrans %}<strong>Categories</strong> Select up to multiple categories for a package{% endblocktrans %}</p>
+            <p>{% blocktrans %} Specifying a category helps filter applications the catalog. {% endblocktrans %}</p>
         {% else %}
             <h3>{% trans 'Description:' %}</h3>
-            <p>{% blocktrans %}Choose a zip archive to upload.{% endblocktrans %}</p>
-            <p>{% blocktrans %}Murano package should contain:<br>
-                * Manifest file;<br>
-                * UI definition folder;<br>
-                * Classes definition folder;<br>
-                * Execution plans folder.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Choose a Zip archive to upload into the catalog.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Packages should contain:<br>
+                * Manifest file<br>
+                * UI definition folder<br>
+                * Classes definition folder<br>
+                * Execution plans folder{% endblocktrans %}</p>
         {% endif %}
     </div>
 {% endblock %}

@@ -7,7 +7,7 @@
   <dl>
       {% for key, value in service.items %}
         {% if  key == 'Instance' %}
-            <dt>Component instance name</dt>
+            <dt>Instance name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:instances:detail' value.id %}">
                     {{ value.name }}
@@ -15,7 +15,7 @@
             </dd><br>
         {% elif  key == 'Instances' %}
             {% for instance in value %}
-                <dt>Component instance{{forloop.counter}} name</dt>
+                <dt>Instance{{forloop.counter}} name</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:instances:detail' instance.id %}">
                         {{ instance.name }}
@@ -23,7 +23,7 @@
                 </dd><br>
             {% endfor %}
         {% elif  key == 'Stack'%}
-            <dt>Heat stack name</dt>
+            <dt>Heat Orchestration stack name</dt>
             <dd>
                 <a href=" {% url 'horizon:project:stacks:detail' value.id %}">
                     {{ value.name }}
@@ -31,7 +31,7 @@
             </dd><br>
         {% elif  key == 'Stacks'%}
             {% for stack in value %}
-                <dt>Heat stack{{forloop.counter}} name</dt>
+                <dt>Heat Orchestration stack{{forloop.counter}} name</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:stacks:detail' stack.id %}">
                         {{ stack.name }}

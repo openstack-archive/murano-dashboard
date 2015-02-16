@@ -90,7 +90,7 @@ class Session(object):
                 session_data = client.sessions.get(environment_id, id)
             except exc.HTTPForbidden:
                 del sessions[environment_id]
-                LOG.debug("The environment is deploying by other user."
+                LOG.debug("The environment is being deployed by other user."
                           "Creating a new session "
                           "for the environment {0}".format(environment_id))
                 return create_session(request, environment_id)
@@ -98,7 +98,7 @@ class Session(object):
                 if session_data.state in [consts.STATUS_ID_DEPLOY_FAILURE,
                                           consts.STATUS_ID_READY]:
                     del sessions[environment_id]
-                    LOG.debug("The existent session has been already deployed."
+                    LOG.debug("The existing session has been already deployed."
                               " Creating a new session "
                               "for the environment {0}".format(environment_id))
                     return create_session(request, environment_id)
@@ -213,7 +213,7 @@ def services_list(request, environment_id):
         client = api.muranoclient(request)
         reports = client.environments.last_status(environment_id, session_id)
     except exc.HTTPNotFound:
-        LOG.exception(_('Could not get last status for '
+        LOG.exception(_('Could not retrieve latest status for '
                         'the {0} environment').format(environment_id))
         reports = {}
 

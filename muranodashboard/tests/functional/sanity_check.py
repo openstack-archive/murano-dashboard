@@ -13,6 +13,7 @@
 import time
 
 from selenium.webdriver.common import by
+import testtools
 
 from muranodashboard.tests.functional import base
 from muranodashboard.tests.functional import consts as c
@@ -370,6 +371,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_not_on_page(by.By.XPATH,
                                        c.App.format('MockApp'))
 
+    @testtools.skip('Skipped until #1422633 will be fixed')
     def test_filter_by_category(self):
         """Test checks ability to filter applications by category
         in Application Catalog page
@@ -395,6 +397,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.XPATH, c.App.format('MockApp'))
 
+    @testtools.skip('Skipped until #1422633 will be fixed')
     def test_check_option_switch_env(self):
         """Test checks ability to switch environment and add app in other env
 
