@@ -76,7 +76,22 @@ class UITestCase(BaseDeps):
         self.driver.quit()
 
         for env in self.murano_client.environments.list():
-            self.murano_client.environments.delete(env.id)
+            self.remove_environment(env.id)
+
+    def remove_environment(self, environment_id, timeout=180):
+        self.murano_client.environments.delete(environment_id)
+
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                self.murano_client.environments.get(environment_id)
+                time.sleep(1)
+            except Exception:
+                # TODO(smurashov): bug/1378764 replace Exception to NotFound
+                return
+        raise Exception(
+            'Environment {0} was not deleted in {1} seconds'.format(
+                environment_id, timeout))
 
     def take_screenshot(self, exception):
         """Taking screenshot on error
@@ -349,6 +364,7 @@ class ApplicationTestCase(ImageTestCase):
         self.select_from_list('osImage', self.image.id)
 
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.wait_for_alert_message()
 
 
 class PackageTestCase(ApplicationTestCase):
