@@ -40,7 +40,7 @@ class TestSuiteSmoke(base.UITestCase):
         self.check_panel_is_present('Package Definitions')
 
 
-class TestSuiteEnvironment(base.EnvironmentTestCase):
+class TestSuiteEnvironment(base.ApplicationTestCase):
     def test_create_delete_environment(self):
         """Test check ability to create and delete environment
 
@@ -71,6 +71,24 @@ class TestSuiteEnvironment(base.EnvironmentTestCase):
         self.edit_environment(old_name='test_edit_env', new_name='edited_env')
         self.check_element_on_page(by.By.LINK_TEXT, 'edited_env')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'test_edit_env')
+
+    def test_create_env_from_the_catalog_page(self):
+        """Test create environment from the catalog page
+
+        Scenario:
+           1. Go the the Applications page
+           2. Press 'Create Env'
+           3. Make sure that it's possible to chose just created environment
+        """
+        self.go_to_submenu('Applications')
+        self.driver.find_elements_by_xpath(
+            "//a[contains(text(), 'Create Env')]")[0].click()
+        self.fill_field(by.By.ID, 'id_name', 'TestEnv')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH,
+            "//div[@id='environment_switcher']/a[contains(text(), 'TestEnv')]")
 
 
 class TestSuiteImage(base.ImageTestCase):

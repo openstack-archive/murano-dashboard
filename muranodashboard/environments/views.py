@@ -138,7 +138,14 @@ class CreateEnvironmentView(views.ModalFormView):
     template_name = 'environments/create.html'
     context_object_name = 'environment'
 
+    def get_form(self, form_class):
+        if 'next' in self.request.GET:
+            self.request.session['next_url'] = self.request.GET['next']
+        return super(CreateEnvironmentView, self).get_form(form_class)
+
     def get_success_url(self):
+        if 'next_url' in self.request.session:
+            return self.request.session['next_url']
         env_id = self.request.session.get('env_id')
         if env_id:
             del self.request.session['env_id']

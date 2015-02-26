@@ -181,6 +181,24 @@ class UITestCase(BaseDeps):
         self.driver.find_element_by_id(consts.ConfirmCreateEnvironment).click()
         self.wait_for_alert_message()
 
+    def delete_environment(self, env_name):
+        self.select_action_for_environment(env_name, 'delete')
+        self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
+        self.wait_for_alert_message()
+
+    def edit_environment(self, old_name, new_name):
+        self.select_action_for_environment(old_name, 'edit')
+        self.fill_field(by.By.ID, 'id_name', new_name)
+        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.wait_for_alert_message()
+
+    def select_action_for_environment(self, env_name, action):
+        element_id = self.get_element_id(env_name)
+        more_button = consts.More.format(element_id)
+        self.driver.find_element_by_xpath(more_button).click()
+        btn_id = "murano__row_{0}__action_{1}".format(element_id, action)
+        self.driver.find_element_by_id(btn_id).click()
+
     def wait_for_alert_message(self):
         locator = (by.By.CSS_SELECTOR, 'div.alert-success')
         log.debug("Waiting for a success message")
@@ -268,26 +286,6 @@ class ImageTestCase(PackageBase):
         self.select_and_click_element('Mark')
         self.check_element_on_page(by.By.XPATH,
                                    consts.TestImage.format(self.image_title))
-
-
-class EnvironmentTestCase(UITestCase):
-    def delete_environment(self, env_name):
-        self.select_action_for_environment(env_name, 'delete')
-        self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
-        self.wait_for_alert_message()
-
-    def edit_environment(self, old_name, new_name):
-        self.select_action_for_environment(old_name, 'edit')
-        self.fill_field(by.By.ID, 'id_name', new_name)
-        self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.wait_for_alert_message()
-
-    def select_action_for_environment(self, env_name, action):
-        element_id = self.get_element_id(env_name)
-        more_button = consts.More.format(element_id)
-        self.driver.find_element_by_xpath(more_button).click()
-        btn_id = "murano__row_{0}__action_{1}".format(element_id, action)
-        self.driver.find_element_by_id(btn_id).click()
 
 
 class FieldsTestCase(PackageBase):
