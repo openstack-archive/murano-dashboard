@@ -713,6 +713,10 @@ class TestSuitePackages(base.PackageTestCase):
                              c.MockAppDescr).text)
 
     def test_upload_package(self):
+        """Test package uploading via Package Definitions view.
+           Skip category selection step.
+
+        """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
@@ -724,7 +728,6 @@ class TestSuitePackages(base.PackageTestCase):
 
         # No application data modification is needed
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        self.driver.find_element_by_css_selector(c.DatabaseCategory).click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.wait_for_alert_message()
