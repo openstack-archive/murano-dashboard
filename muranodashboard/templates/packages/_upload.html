@@ -8,10 +8,11 @@
 {% block form_attrs %}enctype="multipart/form-data"{% endblock %}
 
 {% block modal_id %}upload_package_modal{% endblock %}
-{% block modal-header %}{% trans 'Upload Package' %}{% endblock %}
+{% block modal-header %}{% trans 'Import Package' %}{% endblock %}
 
 {% block modal-body %}
     <link rel="stylesheet" href="{% static 'muranodashboard/css/one_field_form.css' %}">
+    <script type="text/javascript" src="{% static 'muranodashboard/js/upload_form.js' %}"></script>
     <div class="left" >
     {{ wizard.management_form }}
     {% if wizard.form.forms %}
@@ -35,13 +36,25 @@
             <p>{% blocktrans %}<strong>Categories</strong> Select up to multiple categories for a package{% endblocktrans %}</p>
             <p>{% blocktrans %} Specifying a category helps filter applications the catalog. {% endblocktrans %}</p>
         {% else %}
-            <h3>{% trans 'Description:' %}</h3>
-            <p>{% blocktrans %}Choose a Zip archive to upload into the catalog.{% endblocktrans %}</p>
-            <p>{% blocktrans %}Packages should contain:<br>
-                * Manifest file<br>
-                * UI definition folder<br>
-                * Classes definition folder<br>
-                * Execution plans folder{% endblocktrans %}</p>
+            <div class='description-upload'>
+                <h3>{% trans 'Description:' %}</h3>
+                <p>{% blocktrans %}Choose a Zip archive to upload into the catalog.{% endblocktrans %}</p>
+                <p>{% blocktrans %}Packages should contain:<br>
+                    * Manifest file<br>
+                    * UI definition folder<br>
+                    * Classes definition folder<br>
+                    * Execution plans folder{% endblocktrans %}</p>
+            </div>
+            <div class='description-by_name'>
+                <h3>{% trans 'Description:' %}</h3>
+                <p>{% blocktrans %}<strong>Package Name:</strong> Fully qualified package name.{% endblocktrans %}</p>
+                <p>{% blocktrans %}<strong>Package Version:</strong> Optional version of the package name.{% endblocktrans %}</p>
+                <p>{% blocktrans %}The package is going to be imported from {{murano_repo_url}} repository.{% endblocktrans %}</p>
+            </div>
+            <div class='description-by_url'>
+                <h3>{% trans 'Description:' %}</h3>
+                <p>{% blocktrans %}<strong>Package URL:</strong> HTTP/HTTPS URL of the package file.{% endblocktrans %}</p>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

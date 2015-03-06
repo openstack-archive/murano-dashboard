@@ -28,9 +28,9 @@ from muranodashboard import api
 LOG = logging.getLogger(__name__)
 
 
-class UploadPackage(tables.LinkAction):
+class ImportPackage(tables.LinkAction):
     name = 'upload_package'
-    verbose_name = _('Upload Package')
+    verbose_name = _('Import Package')
     url = 'horizon:murano:packages:upload'
     classes = ('ajax-modal',)
     icon = "plus"
@@ -165,7 +165,7 @@ class PackageDefinitionsTable(tables.DataTable):
         name = 'packages'
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
-        table_actions = (UploadPackage,
+        table_actions = (ImportPackage,
                          ToggleEnabled,
                          TogglePublicEnabled,
                          DeletePackage)

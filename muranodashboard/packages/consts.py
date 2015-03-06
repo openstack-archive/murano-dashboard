@@ -1,4 +1,4 @@
-#    Copyright (c) 2013 Mirantis, Inc.
+#    Copyright (c) 2015 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -12,21 +12,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.conf import urls
+import logging
 
-from muranodashboard.packages import views
+from django.conf import settings
+
+LOG = logging.getLogger(__name__)
 
 
-urlpatterns = urls.patterns(
-    '',
-    urls.url(r'^$', views.PackageDefinitionsView.as_view(),
-             name='index'),
+MURANO_REPO_URL = getattr(settings, 'MURANO_REPO_URL',
+                          'http://127.0.0.1/')
 
-    urls.url(r'^upload$', views.ImportPackageWizard.as_view(
-        views.FORMS), name='upload'),
-
-    urls.url(r'^modify/(?P<app_id>[^/]+)?$',
-             views.ModifyPackageView.as_view(),
-             name='modify'),
-
-)
+try:
+    MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
+except ValueError:
+    LOG.warning("MAX_FILE_SIZE_MB parameter has the incorrect value.")
+    MAX_FILE_SIZE_MB = 5

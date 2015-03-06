@@ -521,6 +521,8 @@ SECURITY_GROUP_RULES = {
     },
 }
 
+MURANO_REPO_URL = 'http://127.0.0.1/'
+
 # Deprecation Notice:
 #
 # The setting FLAVOR_EXTRA_KEYS has been deprecated.
@@ -548,3 +550,7 @@ SECURITY_GROUP_RULES = {
 # auth_token middleware are using. Allowed values are the
 # algorithms supported by Python's hashlib library.
 #OPENSTACK_TOKEN_HASH_ALGORITHM = 'md5'
+
+# Overrides the default dashboard name (Murano) that is displayed
+# in the main accordion navigation
+# MURANO_DASHBOARD_NAME = "Murano"
