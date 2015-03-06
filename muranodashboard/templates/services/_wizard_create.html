@@ -30,10 +30,12 @@
 </div>
 <div class="right">
     <h3> {% blocktrans %} {{ service_name }} Application{% endblocktrans %} </h3>
-    {% for title, description in field_descriptions %}
+    {% for name, title, description in field_descriptions %}
         <p>
         {% if title %}
-            <strong>{% blocktrans %}{{ title }}:{% endblocktrans %}</strong>
+            <strong data-field-name="{{ wizard.steps.current }}-{{ name }}">
+              {% blocktrans %}{{ title }}:{% endblocktrans %}
+            </strong>
         {% endif %}
         {% blocktrans with description|linebreaksbr as desc %}{{ desc }}{% endblocktrans %}
         </p>
@@ -44,13 +46,39 @@
 {% block modal-footer %}
     <script type="text/javascript">
         $(function() {
-            {# Make element ids unique per-wizard to avoid interference #}
-            {# upon pressing 'Back' button while creating one application #}
-            {# from another #}
-            var btn_id = '#{{ prefix }}_btn', val_id = '#{{ prefix }}_val';
-            $(btn_id).click(function() {
-                $(val_id).val('{{ wizard.steps.prev }}')
-            });
+          {# Make element ids unique per-wizard to avoid interference #}
+          {# upon pressing 'Back' button while creating one application #}
+          {# from another #}
+          var btn_id = '#{{ prefix }}_btn', val_id = '#{{ prefix }}_val';
+          $(btn_id).click(function() {
+            $(val_id).val('{{ wizard.steps.prev }}')
+          });
+          $('#modal_wrapper').on('new_modal', function(evt, modal) {
+            var $modal = $(modal);
+            $modal.find('.form-group input, select').each(function(index, elem) {
+              var $elem = $(elem),
+                  name = $elem.attr('name'),
+                  $descEntry = $modal.find('strong[data-field-name*="'+name+'"]'),
+                  $button = elem.tagName == 'SELECT' && $elem.next().find('a'),
+                  bindHandler = function($el) {
+                    $el.blur(function() {
+                      $descEntry.children('i').remove()
+                      $descEntry.removeClass('selected-field')
+                    }).focus(function() {
+                      // remove <i> if previous form  without submit
+                      $descEntry.children('i').remove()
+                      $descEntry.addClass('selected-field')
+                      $descEntry.prepend(
+                              "<i class='fa fa-chevron-circle-right'></i>")
+                    })
+                  };
+              bindHandler($elem);
+              // track both parts of add-select widget
+              if ( $button && $button.length ) {
+                bindHandler($button);
+              }
+            }).filter(':first').trigger('focus');
+          });
         });
     </script>
     {{ wizard.form.media }}

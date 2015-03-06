@@ -394,3 +394,9 @@ h3.link .caret {
 .modal-header img {
   margin-top: -7px;
 }
+.selected-field {
+  color: #428BCA;
+  margin-left: -12px;
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
