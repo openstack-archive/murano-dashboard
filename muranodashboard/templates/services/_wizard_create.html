@@ -7,8 +7,25 @@
 {% block form_id %}form_{{ app_id }}{% endblock %}
 {% block modal_id %}modal_{{ app_id }}{% endblock %}
 {% block modal-header %}
-  <img src="{% url 'horizon:murano:catalog:images' app_id %}" height="25" width="25"/>
-  {% trans "Configure Application: " %}{{ service_name }}
+  <span class="wizard_title">
+    <img src="{% url 'horizon:murano:catalog:images' app_id %}" height="25" width="25"/>
+    {% trans "Configure Application: " %}{{ service_name }}
+  </span>
+{% endblock %}
+{% block steps-list %}
+  <div class="steps_list_container">
+    <ul class="steps_list list-inline">
+      {% with steps=wizard.steps %}
+        {% for step in steps.all %}
+          {% with counter0=forloop.counter0 %}
+            <li class="{% if counter0 == steps.step0 %}active {% elif counter0 < steps.step0 %}done{% endif %}">
+              {{ step }}
+            </li>
+          {% endwith %}
+        {% endfor %}
+      {% endwith %}
+    </ul>
+  </div>
 {% endblock %}
 
 {% block modal-body %}
@@ -33,7 +50,7 @@
     {% for name, title, description in field_descriptions %}
         <p>
         {% if title %}
-            <strong data-field-name="{{ wizard.steps.current }}-{{ name }}">
+            <strong data-field-name="{{ wizard.steps.step0 }}-{{ name }}">
               {% blocktrans %}{{ title }}:{% endblocktrans %}
             </strong>
         {% endif %}
@@ -93,7 +110,7 @@
     {% endif %}
 	{% if wizard.steps.index > 0 %}
         <input type="submit" class="btn btn-primary pull-right" value="{{ next }}"/>
-        <button name="wizard_goto_step" type="submit" class="btn btn-small"
+        <button name="wizard_goto_step" type="submit" class="btn btn-small wizard_cancel"
                 id="{{ prefix }}_btn">{% trans "Back" %}</button>
     {% else %}
         <button name="wizard_goto_step" type="submit" class="btn btn-small">

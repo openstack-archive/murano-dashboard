@@ -17,6 +17,9 @@ import os
 import re
 import yaql
 
+from django.utils.encoding import force_text
+from django.utils.translation import ugettext_lazy as _
+
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
@@ -71,15 +74,16 @@ class Service(object):
 
         if forms:
             for data in forms:
-                name, field_specs, validators = self.extract_form_data(data)
-                self._add_form(name, field_specs, validators)
+                (name, field_specs, validators,
+                 verbose_name) = self.extract_form_data(data)
+                self._add_form(name, field_specs, validators, verbose_name)
 
         # Add ManageWorkflowForm
         workflow_form = catalog_forms.WorkflowManagementForm
         self._add_form(workflow_form.name, workflow_form.field_specs,
-                       workflow_form.validators)
+                       workflow_form.validators, _("What's next?"))
 
-    def _add_form(self, _name, _specs, _validators):
+    def _add_form(self, _name, _specs, _validators, _verbose_name=None):
         import muranodashboard.dynamic_ui.forms as forms
 
         class Form(forms.ServiceConfigurationForm):
@@ -87,6 +91,7 @@ class Service(object):
 
             service = self
             name = _name
+            verbose_name = _verbose_name
             field_specs = _specs
             validators = _validators
 
@@ -96,7 +101,8 @@ class Service(object):
     def extract_form_data(form_data):
         form_name = form_data.keys()[0]
         form_data = form_data[form_name]
-        return form_name, form_data['fields'], form_data.get('validators', [])
+        return (form_name, form_data['fields'],
+                form_data.get('validators', []), form_data.get('name'))
 
     def extract_attributes(self):
         self.context.set_data(self.cleaned_data)
@@ -155,13 +161,24 @@ def condition_getter(request, kwargs):
         return not wizard.get_wizard_flag('drop_wm_form')
 
     app = import_app(request, kwargs['app_id'])
-    last_form_key = str(len(app.forms) - 1)
-    return {last_form_key: _func}
+    key = force_text(_get_form_name(len(app.forms) - 1, app.forms[-1]()))
+
+    return {key: _func}
+
+
+def _get_form_name(i, form, step_tmpl='Step {0}'):
+    name = form.verbose_name
+    return step_tmpl.format(i + 1) if name is None else name
 
 
 def get_app_forms(request, kwargs):
     app = import_app(request, kwargs.get('app_id'))
-    return app.forms
+
+    def get_form_name(i, form):
+        return _get_form_name(i, form, _('Step {0}'))
+
+    step_names = [get_form_name(*pair) for pair in enumerate(app.forms)]
+    return zip(step_names, app.forms)
 
 
 def service_type_from_id(service_id):
