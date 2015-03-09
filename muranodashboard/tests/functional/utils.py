@@ -55,11 +55,12 @@ def compose_package(app_name, manifest, package_dir):
     __location = os.path.dirname(os.path.abspath(__file__))
     archive_path = os.path.join(__location, name)
 
-    zip_file = zipfile.ZipFile(archive_path, 'w')
-    for root, dirs, files in os.walk(package_dir):
-        for f in files:
-            zip_file.write(
-                os.path.join(root, f),
-                arcname=os.path.join(os.path.relpath(root, package_dir), f))
+    with zipfile.ZipFile(archive_path, 'w') as zip_file:
+        for root, dirs, files in os.walk(package_dir):
+            for f in files:
+                zip_file.write(
+                    os.path.join(root, f),
+                    arcname=os.path.join(os.path.relpath(root, package_dir), f)
+                )
 
     return archive_path
