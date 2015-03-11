@@ -1,5 +1,5 @@
 import os
-from oslo.config import cfg
+from oslo_config import cfg
 
 murano_group = cfg.OptGroup(name='murano', title="murano configs")
 
