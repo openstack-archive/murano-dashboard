@@ -20,7 +20,6 @@ import yaql
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 
-from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
 from muranodashboard.dynamic_ui import helpers
@@ -187,11 +186,6 @@ def service_type_from_id(service_id):
         return match.group(1)
     else:  # if no number suffix found, it was service_type itself passed in
         return service_id
-
-
-def get_service_name(request, app_id):
-    package = api.muranoclient(request).packages.get(app_id)
-    return package.name
 
 
 def get_app_field_descriptions(request, app_id, index):

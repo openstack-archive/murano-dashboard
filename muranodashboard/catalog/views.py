@@ -303,7 +303,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
 
     def done(self, form_list, **kwargs):
         app_id = kwargs['app_id']
-        app_name = services.get_service_name(self.request, app_id)
+        app_name = pkg_api.get_service_name(self.request, app_id)
 
         service = form_list[0].service
         attributes = service.extract_attributes()
