@@ -27,6 +27,7 @@ from horizon import tables as horizon_tables
 from horizon.utils import functions as utils
 from muranoclient.common import exceptions as exc
 from muranoclient.common import utils as muranoclient_utils
+from openstack_dashboard.api import glance
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
@@ -125,6 +126,7 @@ class ImportPackageWizard(views.ModalFormMixin,
             import_type = form.cleaned_data['import_type']
             data = {}
             f = None
+            base_url = packages_consts.MURANO_REPO_URL
 
             if import_type == 'upload':
                 pkg = form.cleaned_data['package']
@@ -138,13 +140,12 @@ class ImportPackageWizard(views.ModalFormMixin,
                     name, version=version,
                     path='/apps/',
                     extension='.zip',
-                    base_url=packages_consts.MURANO_REPO_URL,
+                    base_url=base_url,
                 )
 
             try:
                 package = muranoclient_utils.Package.fromFile(f)
                 name = package.manifest['FullName']
-                files = {name: package.file()}
             except Exception as e:
                 msg = _("Package creation failed"
                         "Reason: {0}").format(e)
@@ -153,9 +154,41 @@ class ImportPackageWizard(views.ModalFormMixin,
                 raise exceptions.Http302(
                     reverse('horizon:murano:packages:index'))
 
+            reqs = package.requirements(base_url=base_url)
+            glance_client = glance.glanceclient(self.request, version='1')
+            original_package = reqs.pop(name)
+            for dep_name, dep_package in reqs.iteritems():
+                try:
+                    muranoclient_utils.ensure_images(
+                        glance_client=glance_client,
+                        image_specs=dep_package.images(),
+                        base_url=base_url)
+                except Exception as e:
+                    msg = _("Error {0} occurred while installing "
+                            "images for {1}").format(e, name)
+                    messages.error(self.request, msg)
+                    LOG.exception(msg)
+                try:
+                    files = {dep_name: dep_package.file()}
+                    package = api.muranoclient(self.request).packages.create(
+                        data, files)
+                    messages.success(
+                        self.request,
+                        _('Package {0} uploaded').format(dep_name)
+                    )
+                    _update_latest_apps(
+                        request=self.request, app_id=package.id)
+                except Exception as e:
+                    msg = _("Error {0} occurred while "
+                            "installing package {1}").format(e, dep_name)
+                    messages.error(self.request, msg)
+                    LOG.exception(msg)
+                    continue
+
             try:
-                package = api.muranoclient(self.request).packages.create(data,
-                                                                         files)
+                files = {name: original_package.file()}
+                package = api.muranoclient(self.request).packages.create(
+                    data, files)
                 messages.success(self.request,
                                  _('Package {0} uploaded').format(name))
                 _update_latest_apps(request=self.request, app_id=package.id)
