@@ -1,0 +1,50 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load static %}
+{% load url from future %}
+
+{% block form_id %}import_bundle{% endblock %}
+{% block form_action %}{% url 'horizon:murano:packages:import_bundle' %}{% endblock %}
+
+{% block modal_id %}upload_package_modal{% endblock %}
+{% block modal-header %}{% trans 'Import Package' %}{% endblock %}
+
+{% block modal-body %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/one_field_form.css' %}">
+    <script type="text/javascript" src="{% static 'muranodashboard/js/import_bundle_form.js' %}"></script>
+    <div class="left" >
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+            {{ form }}
+        {% endfor %}
+    {% else %}
+        <fieldset>
+        {% with form=wizard.form %}
+            {% include "horizon/common/_form_fields.html" %}
+        {% endwith %}
+        </fieldset>
+    {% endif %}
+    </div>
+    <div class="right">
+        <div class='description-by_name'>
+            <h3>{% trans 'Description:' %}</h3>
+            <p>{% blocktrans %}<strong>Bundle Name: </strong>Bundle's full name.{% endblocktrans %}</p>
+            <p>{% blocktrans %}The bundle is going to be installed from {{murano_repo_url}} repository.{% endblocktrans %}</p>
+        </div>
+        <div class='description-by_url'>
+            <h3>{% trans 'Description:' %}</h3>
+            <p>{% blocktrans %}<strong>Bundle URL:</strong> HTTP/HTTPS URL of the bundle file.{% endblocktrans %}</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modal-footer %}
+    {% if wizard.steps.next %}
+        <input type='submit' class='btn btn-primary pull-right'  value='{% trans 'Next' %}'/>
+    {% else %}
+        <input type='submit' class='btn btn-primary pull-right'  value='{% trans 'Create' %}'/>
+    {% endif %}
+    <a href='{% url 'horizon:murano:packages:index' %}' class='btn btn-default secondary cancel close'>{% trans 'Cancel' %}</a>
+{% endblock %}

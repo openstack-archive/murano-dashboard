@@ -34,6 +34,37 @@ IMPORT_TYPE_CHOICES = [
     ('by_url', _('URL')),
 ]
 
+IMPORT_BUNDLE_TYPE_CHOICES = [
+    ('by_name', _('Repository')),
+    ('by_url', _('URL')),
+]
+
+
+class ImportBundleForm(forms.Form):
+    import_type = forms.ChoiceField(
+        label=_("Package Bundle Source"),
+        choices=IMPORT_BUNDLE_TYPE_CHOICES)
+
+    url = forms.URLField(
+        label=_("Bundle URL"),
+        required=False,
+        help_text=_('An external http/https URL to load the bundle from.'))
+    name = forms.CharField(
+        label=_("Bundle Name"),
+        required=False,
+        help_text=_("Name of the bundle i.e. 'bundle.json'"))
+
+    def clean(self):
+        cleaned_data = super(ImportBundleForm, self).clean()
+        import_type = cleaned_data.get('import_type')
+        if import_type == 'by_name' and not cleaned_data.get('name'):
+            msg = _('Please supply a package name')
+            raise forms.ValidationError(msg)
+        elif import_type == 'by_url' and not cleaned_data.get('url'):
+            msg = _('Please supply a package url')
+            raise forms.ValidationError(msg)
+        return cleaned_data
+
 
 class ImportPackageForm(forms.Form):
     import_type = forms.ChoiceField(
