@@ -12,7 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
 import logging
+import sys
 
 from django.contrib.formtools.wizard import views as wizard_views
 from django.core.files import storage
@@ -325,8 +327,19 @@ class ImportPackageWizard(views.ModalFormMixin,
                     self.request,
                     msg,
                     redirect=reverse('horizon:murano:packages:index'))
-            except Exception as e:
-                msg = _("Uploading package failed. {0}").format(e.message)
+            except Exception as original_e:
+                exc_info = sys.exc_info()
+                if hasattr(original_e, 'details'):
+                    try:
+                        error = json.loads(original_e.details).get('error')
+                        reason = ''
+                        if error:
+                            reason = error.get('message')
+                    except ValueError:
+                        # Let horizon operate with original exception
+                        raise exc_info[0], exc_info[1], exc_info[2]
+
+                msg = _('Uploading package failed. {0}').format(reason)
                 LOG.exception(msg)
                 exceptions.handle(
                     self.request,
