@@ -545,7 +545,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
                          self.driver.find_element_by_xpath(
                              "//div[@class='app-description']").text)
         self.driver.find_element_by_link_text('Requirements').click()
+        self.driver.find_element_by_class_name('app_requirements')
         self.driver.find_element_by_link_text('License').click()
+        self.driver.find_element_by_class_name('app_license')
 
     def test_check_topology_page(self):
         """Test checks that topology tab is available
