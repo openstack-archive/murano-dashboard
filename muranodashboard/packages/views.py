@@ -206,11 +206,25 @@ class ImportPackageWizard(views.ModalFormMixin,
                     'version', 'name'):
             del data[key]
 
+        dep_pkgs = self.storage.get_step_data('upload').get(
+            'dependencies', [])
+
         redirect = reverse('horizon:murano:packages:index')
+        dep_data = {'enabled': data['enabled'],
+                    'is_public': data['is_public']}
+        murano_client = api.muranoclient(self.request)
+        for dep_pkg in dep_pkgs:
+            try:
+                murano_client.packages.update(dep_pkg.id, dep_data)
+            except Exception as e:
+                msg = _("Couldn't update package {0} parameters. Error: {1}")\
+                    .format(dep_pkg.fully_qualified_name, e)
+                LOG.warning(msg)
+                messages.warning(self.request, msg)
+
         try:
             data['tags'] = [t.strip() for t in data['tags'].split(',')]
-            api.muranoclient(self.request).packages.update(app_id,
-                                                           data)
+            murano_client.packages.update(app_id, data)
         except (exc.HTTPException, Exception):
             LOG.exception(_('Modifying package failed'))
             exceptions.handle(self.request,
@@ -264,6 +278,7 @@ class ImportPackageWizard(views.ModalFormMixin,
             reqs = package.requirements(base_url=base_url)
             glance_client = glance.glanceclient(self.request, version='1')
             original_package = reqs.pop(name)
+            step_data['dependencies'] = []
             for dep_name, dep_package in reqs.iteritems():
                 try:
                     muranoclient_utils.ensure_images(
@@ -285,6 +300,7 @@ class ImportPackageWizard(views.ModalFormMixin,
                     )
                     _update_latest_apps(
                         request=self.request, app_id=package.id)
+                    step_data['dependencies'].append(package)
                 except Exception as e:
                     msg = _("Error {0} occurred while "
                             "installing package {1}").format(e, dep_name)
