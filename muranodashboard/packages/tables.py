@@ -28,6 +28,14 @@ from muranodashboard import api
 LOG = logging.getLogger(__name__)
 
 
+class ImportBundle(tables.LinkAction):
+    name = 'import_bundle'
+    verbose_name = _('Import Bundle')
+    url = 'horizon:murano:packages:import_bundle'
+    classes = ('ajax-modal',)
+    icon = "plus"
+
+
 class ImportPackage(tables.LinkAction):
     name = 'upload_package'
     verbose_name = _('Import Package')
@@ -166,6 +174,7 @@ class PackageDefinitionsTable(tables.DataTable):
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
         table_actions = (ImportPackage,
+                         ImportBundle,
                          ToggleEnabled,
                          TogglePublicEnabled,
                          DeletePackage)

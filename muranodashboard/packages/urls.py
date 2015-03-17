@@ -25,6 +25,9 @@ urlpatterns = urls.patterns(
     urls.url(r'^upload$', views.ImportPackageWizard.as_view(
         views.FORMS), name='upload'),
 
+    urls.url(r'^import_bundle$', views.ImportBundleWizard.as_view(
+        views.BUNDLE_FORMS), name='import_bundle'),
+
     urls.url(r'^modify/(?P<app_id>[^/]+)?$',
              views.ModifyPackageView.as_view(),
              name='modify'),
