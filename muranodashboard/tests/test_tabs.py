@@ -34,7 +34,7 @@ class TestLicenseTab(helpers.APITestCase):
                 description='Lorem ipsum dolor sit '
                             'amet, consectetur adipiscing elit.')
         }
-        mock_services.get_app_forms.return_value = [m]
+        mock_services.get_app_forms.return_value = [('', m)]
 
         # Fake an application object, needed when instantiating tabs.
         app = mock.MagicMock()
@@ -56,7 +56,7 @@ class TestLicenseTab(helpers.APITestCase):
         # Fake the services.get_app_forms() call.
         m = mock.MagicMock()
         m.base_fields = {}
-        mock_services.get_app_forms.return_value = [m]
+        mock_services.get_app_forms.return_value = [('', m)]
 
         # Fake an application object, needed when instantiating tabs.
         app = mock.MagicMock()
@@ -87,7 +87,7 @@ class TestRequirementsTab(helpers.APITestCase):
                 'min_memory_mb': 2048
             })
         }
-        mock_services.get_app_forms.return_value = [m]
+        mock_services.get_app_forms.return_value = [('', m)]
 
         app = mock.MagicMock()
         app.id = 1
@@ -114,7 +114,7 @@ class TestRequirementsTab(helpers.APITestCase):
 
         m = mock.MagicMock()
         m.base_fields = {}
-        mock_services.get_app_forms.return_value = [m]
+        mock_services.get_app_forms.return_value = [('', m)]
 
         app = mock.MagicMock()
         app.id = 1
