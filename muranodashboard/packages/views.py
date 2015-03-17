@@ -14,7 +14,6 @@
 
 import logging
 
-import bs4 as bs
 from django.contrib.formtools.wizard import views as wizard_views
 from django.core.files import storage
 from django.core.urlresolvers import reverse
@@ -27,17 +26,19 @@ from horizon import messages
 from horizon import tables as horizon_tables
 from horizon.utils import functions as utils
 from muranoclient.common import exceptions as exc
+from muranoclient.common import utils as muranoclient_utils
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import consts
+from muranodashboard.packages import consts as packages_consts
 from muranodashboard.packages import forms
 from muranodashboard.packages import tables
 
 LOG = logging.getLogger(__name__)
 
-FORMS = [('upload', forms.UploadPackageFileForm),
+FORMS = [('upload', forms.ImportPackageForm),
          ('modify', forms.UpdatePackageForm),
          ('add_category', forms.SelectCategories)]
 
@@ -78,17 +79,24 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
         return packages
 
 
-class UploadPackageWizard(views.ModalFormMixin,
+class ImportPackageWizard(views.ModalFormMixin,
                           wizard_views.SessionWizardView):
     file_storage = storage.FileSystemStorage(location=consts.CACHE_DIR)
     template_name = 'packages/upload.html'
     condition_dict = {'add_category': is_app}
 
+    def get_context_data(self, **kwargs):
+        context = super(ImportPackageWizard, self).get_context_data(**kwargs)
+        context['murano_repo_url'] = packages_consts.MURANO_REPO_URL
+        return context
+
     def done(self, form_list, **kwargs):
         data = self.get_all_cleaned_data()
         app_id = self.storage.get_step_data('upload')['package'].id
         # Remove package file from result data
-        del data['package']
+        for key in ('package', 'import_type', 'url',
+                    'version', 'name'):
+            del data[key]
 
         redirect = reverse('horizon:murano:packages:index')
         try:
@@ -114,35 +122,60 @@ class UploadPackageWizard(views.ModalFormMixin,
 
         step_data = self.get_form_step_data(form)
         if self.steps.current == 'upload':
-            pkg = form.cleaned_data['package']
+            import_type = form.cleaned_data['import_type']
+            data = {}
+            f = None
+
+            if import_type == 'upload':
+                pkg = form.cleaned_data['package']
+                f = pkg.file
+            elif import_type == 'by_url':
+                f = form.cleaned_data['url']
+            elif import_type == 'by_name':
+                name = form.cleaned_data['name']
+                version = form.cleaned_data['version']
+                f = muranoclient_utils.to_url(
+                    name, version=version,
+                    path='/apps/',
+                    extension='.zip',
+                    base_url=packages_consts.MURANO_REPO_URL,
+                )
+
             try:
-                data = {}
-                files = {pkg.name: pkg.file}
-                LOG.debug('Uploading {0} package'.format(pkg.name))
+                package = muranoclient_utils.Package.fromFile(f)
+                name = package.manifest['FullName']
+                files = {name: package.file()}
+            except Exception as e:
+                msg = _("Package creation failed"
+                        "Reason: {0}").format(e)
+                LOG.exception(msg)
+                messages.error(self.request, msg)
+                raise exceptions.Http302(
+                    reverse('horizon:murano:packages:index'))
+
+            try:
                 package = api.muranoclient(self.request).packages.create(data,
                                                                          files)
                 messages.success(self.request,
-                                 _('Package {0} uploaded').format(pkg.name))
+                                 _('Package {0} uploaded').format(name))
                 _update_latest_apps(request=self.request, app_id=package.id)
 
                 step_data['package'] = package
-            except (exc.HTTPException, Exception) as e:
-                reason = ''
-                if getattr(e, 'details'):
-                    soup = bs.BeautifulSoup(e.details)
-                    body = soup.body.text
-                     # Note(efedorova): User message in webob exceptions
-                     # is the last sentence in the body.
-                     # Also Python new line symbols need to be removed
-                    reason = [i.strip()
-                              for i in str(body).split('\n') if i.strip()][-1]
 
-                msg = _('Uploading package failed. {0}').format(reason)
+            except exc.HTTPConflict:
+                msg = _("Package with specified name already exists")
                 LOG.exception(msg)
-                redirect = reverse('horizon:murano:packages:index')
-                exceptions.handle(self.request,
-                                  msg,
-                                  redirect=redirect)
+                exceptions.handle(
+                    self.request,
+                    msg,
+                    redirect=reverse('horizon:murano:packages:index'))
+            except Exception as e:
+                msg = _("Uploading package failed. {0}").format(e.message)
+                LOG.exception(msg)
+                exceptions.handle(
+                    self.request,
+                    msg,
+                    redirect=reverse('horizon:murano:packages:index'))
         return step_data
 
     def get_form_kwargs(self, step=None):

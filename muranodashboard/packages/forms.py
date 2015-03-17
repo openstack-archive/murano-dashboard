@@ -14,7 +14,6 @@
 
 import logging
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -24,30 +23,62 @@ from horizon import messages
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
+from muranodashboard.packages import consts
 
 
 LOG = logging.getLogger(__name__)
 
-try:
-    MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
-except ValueError:
-    LOG.warning("MAX_FILE_SIZE_MB parameter has the incorrect value.")
-    MAX_FILE_SIZE_MB = 5
+IMPORT_TYPE_CHOICES = [
+    ('upload', _('File')),
+    ('by_name', _('Repository')),
+    ('by_url', _('URL')),
+]
 
 
-class UploadPackageFileForm(forms.Form):
-    package = forms.FileField(label=_('Application .zip package'))
+class ImportPackageForm(forms.Form):
+    import_type = forms.ChoiceField(
+        label=_("Package Source"),
+        choices=IMPORT_TYPE_CHOICES)
+
+    url = horizon_forms.URLField(
+        label=_("Package URL"),
+        required=False,
+        help_text=_('An external http/https URL to load the package from.'))
+    name = horizon_forms.CharField(label=_("Package Name"), required=False)
+    version = horizon_forms.CharField(label=_("Package Version"),
+                                      required=False)
+
+    package = forms.FileField(label=_('Application Package'),
+                              required=False,
+                              help_text=_('A local zip file to upload'))
 
     def clean_package(self):
         package = self.cleaned_data.get('package')
         if package:
-            max_size_in_bytes = MAX_FILE_SIZE_MB << 20
+            max_size_in_bytes = consts.MAX_FILE_SIZE_MB << 20
             if package.size > max_size_in_bytes:
-                msg = _('It is restricted to upload files larger than '
-                        '{0} MB.').format(MAX_FILE_SIZE_MB)
+                msg = _('It is forbidden to upload files larger than '
+                        '{0} MB.').format(consts.MAX_FILE_SIZE_MB)
                 LOG.error(msg)
                 raise forms.ValidationError(msg)
         return package
+
+    def clean(self):
+        cleaned_data = super(ImportPackageForm, self).clean()
+        import_type = cleaned_data.get('import_type')
+        if import_type == 'upload' and not cleaned_data.get('package'):
+            msg = _('Please supply a package file')
+            LOG.error(msg)
+            raise forms.ValidationError(msg)
+        elif import_type == 'by_name' and not cleaned_data.get('name'):
+            msg = _('Please supply a package name')
+            LOG.error(msg)
+            raise forms.ValidationError(msg)
+        elif import_type == 'by_url' and not cleaned_data.get('url'):
+            msg = _('Please supply a package url')
+            LOG.error(msg)
+            raise forms.ValidationError(msg)
+        return cleaned_data
 
 
 class PackageParamsMixin(forms.Form):
