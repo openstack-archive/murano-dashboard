@@ -23,9 +23,8 @@ import inspect
 import pkg_resources
 import six
 
-from muranodashboard.openstack.common.gettextutils import _
-# NOTE(efedorova): Do not remove, duplication log option would raised
-from openstack_dashboard.openstack.common import log as logging
+from muranodashboard.openstack.common._i18n import _
+from muranodashboard.openstack.common import log as logging
 
 
 LOG = logging.getLogger(__name__)

@@ -1,6 +1,4 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
-# Copyright 2013 OpenStack, LLC
+# Copyright 2013 OpenStack Foundation
 # Copyright 2013 IBM Corp.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,17 +16,24 @@
 """Provides methods needed by installation script for OpenStack development
 virtual environments.
 
+Since this script is used to bootstrap a virtualenv from the system's Python
+environment, it should be kept strictly compatible with Python 2.6.
+
 Synced in from openstack-common
 """
 
-import argparse
+from __future__ import print_function
+
+import optparse
 import os
 import subprocess
 import sys
 
 
 class InstallVenv(object):
-    def __init__(self, root, venv, requirements, test_requirements, py_version,
+
+    def __init__(self, root, venv, requirements,
+                 test_requirements, py_version,
                  project):
         self.root = root
         self.venv = venv
@@ -38,7 +43,7 @@ class InstallVenv(object):
         self.project = project
 
     def die(self, message, *args):
-        print >> sys.stderr, message % args
+        print(message % args, file=sys.stderr)
         sys.exit(1)
 
     def check_python_version(self):
@@ -87,15 +92,15 @@ class InstallVenv(object):
         virtual environment.
         """
         if not os.path.isdir(self.venv):
-            print 'Creating venv...',
+            print('Creating venv...', end=' ')
             if no_site_packages:
                 self.run_command(['virtualenv', '-q', '--no-site-packages',
                                  self.venv])
             else:
                 self.run_command(['virtualenv', '-q', self.venv])
-            print 'done.'
+            print('done.')
         else:
-            print "venv already exists..."
+            print("venv already exists...")
             pass
 
     def pip_install(self, *args):
@@ -104,29 +109,24 @@ class InstallVenv(object):
                          redirect_output=False)
 
     def install_dependencies(self):
-        print 'Installing dependencies with pip (this can take a while)...'
+        print('Installing dependencies with pip (this can take a while)...')
 
         # First things first, make sure our venv has the latest pip and
-        # setuptools
-        # change pip version to latest after bug with pytz will be resolved
-        # https://bugs.launchpad.net/pytz/+bug/1204837
-        self.pip_install('pip==1.3.1')
+        # setuptools and pbr
+        self.pip_install('pip>=1.4')
         self.pip_install('setuptools')
+        self.pip_install('pbr')
 
-        self.pip_install('-r', self.requirements)
-        self.pip_install('-r', self.test_requirements)
-
-    def post_process(self):
-        self.get_distro().post_process()
+        self.pip_install('-r', self.requirements, '-r', self.test_requirements)
 
     def parse_args(self, argv):
         """Parses command-line arguments."""
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-n', '--no-site-packages',
-                            action='store_true',
-                            help="Do not inherit packages from global Python "
-                                 "install")
-        return parser.parse_args(argv[1:])
+        parser = optparse.OptionParser()
+        parser.add_option('-n', '--no-site-packages',
+                          action='store_true',
+                          help="Do not inherit packages from global Python "
+                               "install.")
+        return parser.parse_args(argv[1:])[0]
 
 
 class Distro(InstallVenv):
@@ -140,24 +140,16 @@ class Distro(InstallVenv):
             return
 
         if self.check_cmd('easy_install'):
-            print 'Installing virtualenv via easy_install...',
+            print('Installing virtualenv via easy_install...', end=' ')
             if self.run_command(['easy_install', 'virtualenv']):
-                print 'Succeeded'
+                print('Succeeded')
                 return
             else:
-                print 'Failed'
+                print('Failed')
 
         self.die('ERROR: virtualenv not found.\n\n%s development'
                  ' requires virtualenv, please install it using your'
                  ' favorite package management tool' % self.project)
-
-    def post_process(self):
-        """Any distribution-specific post-processing gets done here.
-
-        In particular, this is useful for applying patches to code inside
-        the venv.
-        """
-        pass
 
 
 class Fedora(Distro):
@@ -170,40 +162,11 @@ class Fedora(Distro):
         return self.run_command_with_code(['rpm', '-q', pkg],
                                           check_exit_code=False)[1] == 0
 
-    def yum_install(self, pkg, **kwargs):
-        print "Attempting to install '%s' via yum" % pkg
-        self.run_command(['sudo', 'yum', 'install', '-y', pkg], **kwargs)
-
-    def apply_patch(self, originalfile, patchfile):
-        self.run_command(['patch', originalfile, patchfile])
-
     def install_virtualenv(self):
         if self.check_cmd('virtualenv'):
             return
 
         if not self.check_pkg('python-virtualenv'):
-            self.yum_install('python-virtualenv', check_exit_code=False)
+            self.die("Please install 'python-virtualenv'.")
 
         super(Fedora, self).install_virtualenv()
-
-    def post_process(self):
-        """Workaround for a bug in eventlet.
-
-        This currently affects RHEL6.1, but the fix can safely be
-        applied to all RHEL and Fedora distributions.
-
-        This can be removed when the fix is applied upstream.
-
-        Nova: https://bugs.launchpad.net/nova/+bug/884915
-        Upstream: https://bitbucket.org/which_linden/eventlet/issue/89
-        """
-
-        # Install "patch" program if it's not there
-        if not self.check_pkg('patch'):
-            self.yum_install('patch')
-
-        # Apply the eventlet patch
-        self.apply_patch(os.path.join(self.venv, 'lib', self.py_version,
-                                      'site-packages',
-                                      'eventlet/green/subprocess.py'),
-                         'contrib/redhat-eventlet.patch')
