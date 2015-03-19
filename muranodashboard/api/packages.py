@@ -103,7 +103,13 @@ def get_app_supplier_logo(request, app_id):
     return api.muranoclient(request).packages.get_supplier_logo(app_id)
 
 
-@cache.with_cache('package')
+@cache.with_cache('package_fqn')
 def get_app_fqn(request, app_id):
     package = api.muranoclient(request).packages.get(app_id)
     return package.fully_qualified_name
+
+
+@cache.with_cache('package_name')
+def get_service_name(request, app_id):
+    package = api.muranoclient(request).packages.get(app_id)
+    return package.name
