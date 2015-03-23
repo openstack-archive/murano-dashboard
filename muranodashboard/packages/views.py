@@ -111,10 +111,11 @@ class ImportBundleWizard(views.ModalFormMixin,
                     form.cleaned_data['name'],
                     path='/bundles/',
                     base_url=base_url,
+                    extension='.bundle',
                 )
 
             try:
-                bundle = muranoclient_utils.Bundle.fromFile(f)
+                bundle = muranoclient_utils.Bundle.from_file(f)
             except Exception as e:
                 msg = _("Bundle creation failed"
                         "Reason: {0}").format(e)
@@ -126,16 +127,15 @@ class ImportBundleWizard(views.ModalFormMixin,
             glance_client = glance.glanceclient(self.request, version='1')
 
             for package_spec in bundle.package_specs():
-                f = muranoclient_utils.to_url(
-                    package_spec.get('Name'),
-                    version=package_spec.get('Version'),
-                    path='/apps/',
-                    extension='.zip',
-                    base_url=base_url,
-                )
 
                 try:
-                    package = muranoclient_utils.Package.fromFile(f)
+                    package = muranoclient_utils.Package.from_location(
+                        package_spec['Name'],
+                        version=package_spec.get('Version'),
+                        url=package_spec.get('Url'),
+                        base_url=base_url,
+                        path=None,
+                    )
                 except Exception as e:
                     msg = _("Error {0} occurred while parsing package {1}")\
                         .format(e, package_spec.get('Name'))
@@ -146,10 +146,16 @@ class ImportBundleWizard(views.ModalFormMixin,
                 reqs = package.requirements(base_url=base_url)
                 for dep_name, dep_package in reqs.iteritems():
                     try:
-                        muranoclient_utils.ensure_images(
+                        imgs = muranoclient_utils.ensure_images(
                             glance_client=glance_client,
                             image_specs=dep_package.images(),
                             base_url=base_url)
+                        for img in imgs:
+                            msg = _("Added {0}, {1} image to glance").format(
+                                img['name'], img['id'],
+                            )
+                            messages.success(self.request, msg)
+                            LOG.info(msg)
                     except Exception as e:
                         msg = _("Error {0} occurred while installing "
                                 "images for {1}").format(e, dep_name)
@@ -265,7 +271,7 @@ class ImportPackageWizard(views.ModalFormMixin,
                 )
 
             try:
-                package = muranoclient_utils.Package.fromFile(f)
+                package = muranoclient_utils.Package.from_file(f)
                 name = package.manifest['FullName']
             except Exception as e:
                 msg = _("Package creation failed"
@@ -281,10 +287,17 @@ class ImportPackageWizard(views.ModalFormMixin,
             step_data['dependencies'] = []
             for dep_name, dep_package in reqs.iteritems():
                 try:
-                    muranoclient_utils.ensure_images(
+
+                    imgs = muranoclient_utils.ensure_images(
                         glance_client=glance_client,
                         image_specs=dep_package.images(),
                         base_url=base_url)
+                    for img in imgs:
+                        msg = _("Added {0}, {1} image to glance").format(
+                            img['name'], img['id'],
+                        )
+                        messages.success(self.request, msg)
+                        LOG.info(msg)
                 except Exception as e:
                     msg = _("Error {0} occurred while installing "
                             "images for {1}").format(e, name)
