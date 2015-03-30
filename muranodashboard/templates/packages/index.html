@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 {% block title %}{% trans "Package Definitions" %}{% endblock %}
 
 {% block page_header %}
   {% include "horizon/common/_page_header.html" with title=_("Package Definitions") %}
+  <link rel="stylesheet" href="{% static 'muranodashboard/css/packages.css' %}">
 {% endblock page_header %}
-
 {% block main %}
   {{ table.render }}
 {% endblock %}
