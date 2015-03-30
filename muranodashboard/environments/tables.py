@@ -296,6 +296,7 @@ class ServicesTable(tables.DataTable):
     def get_row_actions(self, datum):
         actions = super(ServicesTable, self).get_row_actions(datum)
         environment_id = self.kwargs['environment_id']
+        app_actions = []
         for action_datum in api.extract_actions_list(datum):
             _classes = ('murano_action',)
 
@@ -320,7 +321,11 @@ class ServicesTable(tables.DataTable):
             bound_action.datum = datum
             if issubclass(bound_action.__class__, tables.LinkAction):
                 bound_action.bound_url = bound_action.get_link_url(datum)
-            actions.append(bound_action)
+            app_actions.append(bound_action)
+        if app_actions:
+            # Show native actions first (such as "Delete Component") and
+            # then add sorted application actions
+            actions.extend(sorted(app_actions, key=lambda x: x.name))
         return actions
 
     class Meta:
