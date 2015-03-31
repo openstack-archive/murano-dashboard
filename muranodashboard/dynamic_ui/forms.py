@@ -152,19 +152,19 @@ class UpdatableFieldsForm(forms.Form):
 
     def update_fields(self, request=None):
         # Create 'Confirm Password' fields by duplicating password fields
-        while True:
-            index, inserted = 0, False
-            for name, field in self.fields.iteritems():
-                if isinstance(field, fields.PasswordField) and \
-                        not field.has_clone:
-                    self.fields.insert(index + 1,
-                                       field.get_clone_name(name),
-                                       field.clone_field())
-                    inserted = True
-                    break
-                index += 1
-            if not inserted:
-                break
+
+        # django.utils.datastructures.SortedDict for Django < 1.7
+        # collections.OrderedDict for Django >= 1.7
+        updated_fields = self.fields.__class__()
+
+        for name, field in self.fields.iteritems():
+            updated_fields[name] = field
+            if (isinstance(field, fields.PasswordField) and
+                    not field.has_clone and field.original):
+                updated_fields[
+                    field.get_clone_name(name)] = field.clone_field()
+
+        self.fields = updated_fields
 
         for name, field in self.fields.iteritems():
             if hasattr(field, 'update'):

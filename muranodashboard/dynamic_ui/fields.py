@@ -202,6 +202,7 @@ class PasswordField(CharField):
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
     has_clone = False
+    original = True
     validate_password = django_validator.RegexValidator(
         password_re, _('The password must contain at least one letter, one   \
                                number and one special character'), 'invalid')
@@ -211,7 +212,7 @@ class PasswordField(CharField):
         return name + '-clone'
 
     def compare(self, name, form_data):
-        if self.is_original() and self.required:
+        if self.original and self.required:
             # run compare only for original fields
             # do not run compare for hidden fields (they are not required)
             if form_data.get(name) != form_data.get(self.get_clone_name(name)):
@@ -252,13 +253,11 @@ class PasswordField(CharField):
         result.error_messages = copy.deepcopy(self.error_messages)
         return result
 
-    def is_original(self):
-        return hasattr(self, 'original') and self.original
-
     def clone_field(self):
         self.has_clone = True
+
         field = copy.deepcopy(self)
-        self.original = True
+        field.original = False
         field.label = _('Confirm password')
         field.error_messages['required'] = _('Please confirm your password')
         field.help_text = _('Retype your password')
