@@ -14,7 +14,6 @@ TEMPLATE_DEBUG = DEBUG
 
 TESTSERVER = 'http://testserver'
 
-INSTALLED_APPS += ('django_nose',)
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
