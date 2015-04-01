@@ -283,16 +283,11 @@ class ImportPackageWizard(views.ModalFormMixin,
                 raise exceptions.Http302(
                     reverse('horizon:murano:packages:index'))
 
-            reqs = package.requirements(base_url=base_url)
-            glance_client = glance.glanceclient(self.request, version='1')
-            original_package = reqs.pop(name)
-            step_data['dependencies'] = []
-            for dep_name, dep_package in reqs.iteritems():
+            def _ensure_images(name, package):
                 try:
-
                     imgs = muranoclient_utils.ensure_images(
                         glance_client=glance_client,
-                        image_specs=dep_package.images(),
+                        image_specs=package.images(),
                         base_url=base_url)
                     for img in imgs:
                         msg = _("Added {0}, {1} image to glance").format(
@@ -305,6 +300,13 @@ class ImportPackageWizard(views.ModalFormMixin,
                             "images for {1}").format(e, name)
                     messages.error(self.request, msg)
                     LOG.exception(msg)
+
+            reqs = package.requirements(base_url=base_url)
+            glance_client = glance.glanceclient(self.request, version='1')
+            original_package = reqs.pop(name)
+            step_data['dependencies'] = []
+            for dep_name, dep_package in reqs.iteritems():
+                _ensure_images(dep_name, dep_package)
                 try:
                     files = {dep_name: dep_package.file()}
                     package = api.muranoclient(self.request).packages.create(
@@ -323,6 +325,10 @@ class ImportPackageWizard(views.ModalFormMixin,
                     LOG.exception(msg)
                     continue
 
+            # add main packages images
+            _ensure_images(name, original_package)
+
+            # import main package itself
             try:
                 files = {name: original_package.file()}
                 package = api.muranoclient(self.request).packages.create(
