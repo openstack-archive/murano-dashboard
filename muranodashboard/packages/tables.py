@@ -141,7 +141,20 @@ class DeletePackage(tables.DeleteAction):
     def delete(self, request, obj_id):
         try:
             api.muranoclient(request).packages.delete(obj_id)
-        except exc.HTTPException:
+        except exc.HTTPNotFound:
+            msg = _("Package with id {0} is not found").format(obj_id)
+            LOG.exception(msg)
+            exceptions.handle(
+                self.request,
+                msg,
+                redirect=reverse('horizon:murano:packages:index'))
+        except exc.HTTPForbidden:
+            msg = _("You are not allowed to delete this package")
+            LOG.exception(msg)
+            exceptions.handle(
+                request, msg,
+                redirect=reverse('horizon:murano:packages:index'))
+        except Exception:
             LOG.exception(_('Unable to delete package in murano-api server'))
             exceptions.handle(request,
                               _('Unable to remove package.'),

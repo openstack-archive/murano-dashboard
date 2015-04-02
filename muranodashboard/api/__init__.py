@@ -65,6 +65,10 @@ def handled_exceptions(request):
         msg = _('Operation is forbidden by murano-api server.')
         LOG.exception(msg)
         _handle_message(request, msg)
+    except exc.NotFound:
+        msg = _('Requested object is not found on murano server.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
 
 
 def _get_endpoint(request):
