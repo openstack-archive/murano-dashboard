@@ -751,3 +751,49 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_on_page(
             by.By.XPATH, c.AppPackageDefinitions.format(self.archive_name))
+
+        # public
+        el = self.driver.find_element_by_xpath(
+            c.AppPackageDefinitions.format(self.archive_name) + '/td[3]')
+        self.assertEqual(el.text.strip().lower(), 'true')
+        # enabled
+        el = self.driver.find_element_by_xpath(
+            c.AppPackageDefinitions.format(self.archive_name) + '/td[4]')
+        self.assertEqual(el.text.strip().lower(), 'false')
+
+    def test_upload_package_modify(self):
+        """Test package modifying a package after uploading it."""
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-package']")
+        el.send_keys(self.archive)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        pkg_name = self.alt_archive_name
+        self.fill_field(by.By.CSS_SELECTOR,
+                        "input[name='modify-name']", pkg_name)
+        self.driver.find_element_by_css_selector(
+            "input[name=modify-is_public]"
+        ).click()
+        self.driver.find_element_by_css_selector(
+            "input[name=modify-enabled]"
+        ).click()
+
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
+        # public
+        el = self.driver.find_element_by_xpath(
+            c.AppPackageDefinitions.format(pkg_name) + '/td[3]')
+        self.assertEqual(el.text.strip().lower(), 'false')
+        # enabled
+        el = self.driver.find_element_by_xpath(
+            c.AppPackageDefinitions.format(pkg_name) + '/td[4]')
+        self.assertEqual(el.text.strip().lower(), 'true')

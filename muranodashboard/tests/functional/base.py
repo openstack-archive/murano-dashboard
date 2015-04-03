@@ -370,9 +370,17 @@ class PackageTestCase(ApplicationTestCase):
     def setUpClass(cls):
         super(ApplicationTestCase, cls).setUpClass()
         cls.archive_name = "ToUpload"
+        cls.alt_archive_name = "ModifiedAfterUpload"
         cls.archive = utils.compose_package(cls.archive_name,
                                             consts.Manifest,
                                             consts.PackageDir)
+
+    def tearDown(self):
+        super(PackageTestCase, self).tearDown()
+
+        for package in self.murano_client.packages.list(include_disabled=True):
+            if package.name in [self.archive_name, self.alt_archive_name]:
+                self.murano_client.packages.delete(package.id)
 
     @classmethod
     def tearDownClass(cls):
@@ -381,7 +389,3 @@ class PackageTestCase(ApplicationTestCase):
             os.remove(consts.Manifest)
         if os.path.exists(cls.archive):
             os.remove(cls.archive)
-
-        for package in cls.murano_client.packages.list():
-            if package.name == cls.archive_name:
-                cls.murano_client.packages.delete(package.id)

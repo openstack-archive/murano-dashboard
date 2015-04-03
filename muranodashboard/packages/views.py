@@ -211,7 +211,7 @@ class ImportPackageWizard(views.ModalFormMixin,
         app_id = self.storage.get_step_data('upload')['package'].id
         # Remove package file from result data
         for key in ('package', 'import_type', 'url',
-                    'version', 'name'):
+                    'repo_version', 'repo_name'):
             del data[key]
 
         dep_pkgs = self.storage.get_step_data('upload').get(
