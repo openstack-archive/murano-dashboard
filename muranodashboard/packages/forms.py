@@ -75,9 +75,10 @@ class ImportPackageForm(forms.Form):
         label=_("Package URL"),
         required=False,
         help_text=_('An external http/https URL to load the package from.'))
-    name = horizon_forms.CharField(label=_("Package Name"), required=False)
-    version = horizon_forms.CharField(label=_("Package Version"),
-                                      required=False)
+    repo_name = horizon_forms.CharField(label=_("Package Name"),
+                                        required=False)
+    repo_version = horizon_forms.CharField(label=_("Package Version"),
+                                           required=False)
 
     package = forms.FileField(label=_('Application Package'),
                               required=False,

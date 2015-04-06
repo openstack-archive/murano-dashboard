@@ -19,24 +19,24 @@ $(function() {
         var upload_type = $(this).val();
         if (upload_type === 'upload') {
             upload_form.find('input[name=upload-url]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-name]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-version]').closest('.form-group').hide();
+            upload_form.find('input[name=upload-repo_name]').closest('.form-group').hide();
+            upload_form.find('input[name=upload-repo_version]').closest('.form-group').hide();
             upload_form.find('input[name=upload-package]').closest('.form-group').show();
             upload_form.find('.description-upload').show();
             upload_form.find('.description-by_name').hide();
             upload_form.find('.description-by_url').hide();
         } else if (upload_type === 'by_name') {
             upload_form.find('input[name=upload-url]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-name]').closest('.form-group').show();
-            upload_form.find('input[name=upload-version]').closest('.form-group').show();
+            upload_form.find('input[name=upload-repo_name]').closest('.form-group').show();
+            upload_form.find('input[name=upload-repo_version]').closest('.form-group').show();
             upload_form.find('input[name=upload-package]').closest('.form-group').hide();
             upload_form.find('.description-upload').hide();
             upload_form.find('.description-by_name').show();
             upload_form.find('.description-by_url').hide();
         } else if (upload_type === 'by_url') {
             upload_form.find('input[name=upload-url]').closest('.form-group').show();
-            upload_form.find('input[name=upload-name]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-version]').closest('.form-group').hide();
+            upload_form.find('input[name=upload-repo_name]').closest('.form-group').hide();
+            upload_form.find('input[name=upload-repo_version]').closest('.form-group').hide();
             upload_form.find('input[name=upload-package]').closest('.form-group').hide();
             upload_form.find('.description-upload').hide();
             upload_form.find('.description-by_name').hide();
