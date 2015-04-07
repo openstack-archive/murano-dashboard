@@ -233,6 +233,13 @@ class ImportPackageWizard(views.ModalFormMixin,
         try:
             data['tags'] = [t.strip() for t in data['tags'].split(',')]
             murano_client.packages.update(app_id, data)
+        except exc.HTTPForbidden:
+            msg = _("You are not allowed to change"
+                    " this properties of the package")
+            LOG.exception(msg)
+            exceptions.handle(
+                self.request, msg,
+                redirect=reverse('horizon:murano:packages:index'))
         except (exc.HTTPException, Exception):
             LOG.exception(_('Modifying package failed'))
             exceptions.handle(self.request,
