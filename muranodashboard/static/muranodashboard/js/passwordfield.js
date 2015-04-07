@@ -14,8 +14,8 @@
 */
 $(function() {
     function main_check(div, parameter1, parameter2, text){
-        var msg = "<div class='alert alert-message alert-danger'>" + gettext(text) + '</div>'
-        var error_node = div.find("div.alert-message")
+        var msg = "<div class='alert alert-message alert-danger'>" + gettext(text) + '</div>';
+        var error_node = div.find("div.alert-message");
         var not_added;
         if (error_node.length) {
             not_added = false;
@@ -23,10 +23,10 @@ $(function() {
         } else {
             not_added = true;
 
-        };
+        }
         if (parameter1 != parameter2 && not_added) {
             div.addClass("error");
-            div.find("label").after(msg)
+            div.find("label").after(msg);
         } else if (parameter1 == parameter2) {
             div.removeClass("error");
             error_node.remove();
@@ -35,49 +35,51 @@ $(function() {
 
     function check_passwords_match(event) {
         var $this = $(event.target);
-        var password = $this.closest(".form-field").prev().find("input").val();
+        var password = $this.closest(".form-field,.form-group").prev().find("input").val();
         var confirm_password = $this.val();
-        var div = $this.closest(".form-field");
-        main_check(div, password,confirm_password, "Passwords do not match")
+        var div = $this.closest(".form-field,.form-group");
+        main_check(div, password,confirm_password, "Passwords do not match");
     }
 
     function check_strength_remove_err_if_matches(event){
         var $this = $(event.target);
+        foo = $this;
         var password = $this.val();
-        var div_confirm = $this.closest(".form-field").next();
-        var confirm_password = div_confirm.find("input").val();
-        var div = $this.closest(".form-field").next();
+
+        var confirm_pass_id = $this.attr('id') + '-clone';
+        var confirm_password = $('#' + confirm_pass_id).val();
+        var div = $this.closest(".form-field,.form-group").next();
         if (confirm_password.length){
             main_check(div, password, confirm_password, "Passwords do not match");
         }
-        var text = "Your password should have at least"
+        var text = "Your password should have at least";
         var meet_requirements = true;
         if (password.length<7){
             text += " 7 characters";
             meet_requirements = false;
         }
-        if (password.match(/[A-Z]+/) == null){
+        if (password.match(/[A-Z]+/) === null){
             text += " 1 capital letter";
             meet_requirements = false;
         }
-        if (password.match(/[a-z]+/) == null) {
+        if (password.match(/[a-z]+/) === null) {
             text += " 1 non-capital letter";
             meet_requirements = false;
         }
-        if (password.match(/[0-9]+/) == null){
+        if (password.match(/[0-9]+/) === null){
             text += " 1 digit";
             meet_requirements = false;
         }
 
-        if (password.match(/[!@#$%^&*()_+|\/.,~?><:{}]+/) == null) {
+        if (password.match(/[!@#$%^&*()_+|\/.,~?><:{}]+/) === null) {
             text += " 1 specical character";
             meet_requirements = false;
         }
-        var div = $this.closest(".form-field")
+
+        div = $this.closest(".form-field,.form-group");
         main_check(div, meet_requirements, true, text);
-    };
+    }
 
-    $("input[id$='Password'][type='password']").change(check_strength_remove_err_if_matches);
-    $("input[id*='assword-clone'][type='password']").change(check_passwords_match);
-
+    $("input[id$='assword'][type='password']").keyup(check_strength_remove_err_if_matches);
+    $("input[id$='assword-clone'][type='password']").keyup(check_passwords_match);
 });
