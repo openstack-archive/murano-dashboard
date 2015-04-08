@@ -30,7 +30,7 @@ class DeployPanels(horizon.PanelGroup):
 class ManagePanels(horizon.PanelGroup):
     slug = "manage_metadata"
     name = _("Manage")
-    panels = ("images", "packages")
+    panels = ("images", "packages", "categories")
 
 
 class Murano(horizon.Dashboard):

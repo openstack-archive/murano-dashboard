@@ -27,6 +27,8 @@ UploadPackage = 'packages__action_upload_package'
 CreateEnvironment = 'murano__action_CreateEnvironment'
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
+AddCategory = "categories__action_add_category"
+DeleteCategory = "//tr[td[contains(text(), '{0}')]]//button[contains(@id, 'action_delete')]"  # noqa
 
 # Panel's
 
