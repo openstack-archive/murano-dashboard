@@ -11,7 +11,6 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
 import logging
 
 from django.core import validators
@@ -21,6 +20,7 @@ from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages
 
+from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
@@ -44,11 +44,16 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
             messages.success(request,
                              'Created environment "{0}"'.format(data['name']))
             return True
-        except Exception:
-            name = data.get('name', '')
-            msg = _("Unable to create environment {0}").format(name)
+        except exc.HTTPConflict:
+            msg = _('Environment with specified name already exists')
             LOG.exception(msg)
             exceptions.handle(request, ignore=True)
+            messages.error(request, msg)
+            return False
+        except Exception:
+            msg = _('Failed to create environment')
+            LOG.exception(msg)
+            exceptions.handle(request)
             messages.error(request, msg)
             return False
 
