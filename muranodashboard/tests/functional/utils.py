@@ -17,6 +17,7 @@ import yaml
 import zipfile
 
 from oslo_log import log
+from selenium.webdriver.support import wait
 
 import config.config as cfg
 from muranodashboard.tests.functional import consts
@@ -113,3 +114,22 @@ def compose_bundle(bundle_path, app_names):
 
 def glare_enabled():
     return cfg.common.packages_service == "glare"
+
+
+class wait_for_page_change(object):
+    """Waits until current page change in a browser."""
+    def __init__(self, driver, timeout=30):
+        self.driver = driver
+        self.timeout = timeout
+
+    def __enter__(self):
+        self.old_page = self.driver.find_element_by_tag_name('html')
+
+    def page_has_loaded(self):
+        new_page = self.driver.find_element_by_tag_name('html')
+        return new_page.id != self.old_page.id
+
+    def __exit__(self, *_):
+        wait.WebDriverWait(self.driver, timeout=self.timeout).until(
+            lambda _: self.page_has_loaded()
+        )
