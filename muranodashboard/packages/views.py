@@ -355,10 +355,10 @@ class ImportPackageWizard(views.ModalFormMixin,
                     redirect=reverse('horizon:murano:packages:index'))
             except Exception as original_e:
                 exc_info = sys.exc_info()
+                reason = ''
                 if hasattr(original_e, 'details'):
                     try:
                         error = json.loads(original_e.details).get('error')
-                        reason = ''
                         if error:
                             reason = error.get('message')
                     except ValueError:
