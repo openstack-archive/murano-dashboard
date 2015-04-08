@@ -46,3 +46,8 @@ $(function() {
     import_type.change();
 });
 
+$(function() {
+    $('#upload_package_modal .close').on('click', function() {
+        location.reload();
+    });
+});
