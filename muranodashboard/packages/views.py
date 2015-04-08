@@ -34,6 +34,7 @@ from openstack_dashboard.api import glance
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
+from muranodashboard.common import utils as muranodashboard_utils
 from muranodashboard.environments import consts
 from muranodashboard.packages import consts as packages_consts
 from muranodashboard.packages import forms
@@ -176,6 +177,15 @@ class ImportBundleWizard(views.ModalFormMixin,
                     except exc.HTTPConflict:
                         msg = _("Package {0} already registered.").format(
                             dep_name)
+                        messages.warning(self.request, msg)
+                        LOG.exception(msg)
+                    except exc.HTTPException as e:
+                        reason = muranodashboard_utils.parse_api_error(
+                            getattr(e, 'details', ''))
+                        if not reason:
+                            raise
+                        msg = _("Package {0} upload failed. {1}").format(
+                            dep_name, reason)
                         messages.warning(self.request, msg)
                         LOG.exception(msg)
                     except Exception as e:
@@ -353,6 +363,17 @@ class ImportPackageWizard(views.ModalFormMixin,
                     self.request,
                     msg,
                     redirect=reverse('horizon:murano:packages:index'))
+            except exc.HTTPException as e:
+                reason = muranodashboard_utils.parse_api_error(
+                    getattr(e, 'details', ''))
+                if not reason:
+                    raise
+                LOG.exception(reason)
+                exceptions.handle(
+                    self.request,
+                    reason,
+                    redirect=reverse('horizon:murano:packages:index'))
+
             except Exception as original_e:
                 exc_info = sys.exc_info()
                 if hasattr(original_e, 'details'):
