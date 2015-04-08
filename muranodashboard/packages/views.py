@@ -270,8 +270,8 @@ class ImportPackageWizard(views.ModalFormMixin,
             elif import_type == 'by_url':
                 f = form.cleaned_data['url']
             elif import_type == 'by_name':
-                name = form.cleaned_data['name']
-                version = form.cleaned_data['version']
+                name = form.cleaned_data['repo_name']
+                version = form.cleaned_data['repo_version']
                 f = muranoclient_utils.to_url(
                     name, version=version,
                     path='/apps/',

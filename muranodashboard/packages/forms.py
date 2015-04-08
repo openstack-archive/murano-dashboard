@@ -104,7 +104,7 @@ class ImportPackageForm(forms.Form):
             msg = _('Please supply a package file')
             LOG.error(msg)
             raise forms.ValidationError(msg)
-        elif import_type == 'by_name' and not cleaned_data.get('name'):
+        elif import_type == 'by_name' and not cleaned_data.get('repo_name'):
             msg = _('Please supply a package name')
             LOG.error(msg)
             raise forms.ValidationError(msg)
