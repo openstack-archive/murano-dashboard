@@ -21,6 +21,7 @@ import re
 from django.core.urlresolvers import reverse
 from django.core import validators as django_validator
 from django import forms
+from django.http import Http404
 from django.template import defaultfilters
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
@@ -708,7 +709,7 @@ def make_select_cls(fqns):
                     if _app is None:
                         msg = "Application with FQN='{0}' doesn't exist"
                         messages.error(request, msg.format(_fqn))
-                        raise KeyError(msg.format(_fqn))
+                        raise Http404(msg.format(_fqn))
                     args = (_app.id, environment_id, False, True)
                     return _app.name, reverse(ns_url, args=args)
                 return json.dumps([_reverse(cls) for cls in fqns])
