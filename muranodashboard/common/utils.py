@@ -12,7 +12,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import bs4
 import string
+
+
+def parse_api_error(api_error_html):
+    error_html = bs4.BeautifulSoup(api_error_html)
+    body = error_html.find('body')
+    if not body:
+        return None
+    h1 = body.find('h1')
+    if h1:
+        h1.replace_with('')
+    return body.text.strip()
 
 
 def ensure_python_obj(obj):
