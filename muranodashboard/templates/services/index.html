@@ -35,7 +35,9 @@
             <img class="centering" src="{{ image_url|unquote }}"
                  height="50" width="50" draggable="false"/>
             <input type="hidden" value="{{ add_url|unquote }}"/>
-            <div class="centering">[[app_name]]</div>
+
+            <div class="centering may_overflow">[[app_name]]</div>
+          </div>
           </div>
         </div>
       {% endjstemplate %}

@@ -132,7 +132,18 @@ $(function() {
         ev.preventDefault();
       }
     });
+    // show full name on text overflow
+    $('.may_overflow').each(function() {
+      $(this).bind('mouseenter', function () {
+        var $this = $(this);
 
+        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+          $this.attr('title', $this.text());
+        }
+      });
+    });
+
+    // actions
     function hideSpinner() {
       horizon.modals.spinner.modal('hide');
     }
@@ -162,8 +173,8 @@ $(function() {
             '><button class="btn btn-sm btn-danger" data-placement="right"' +
             ' data-original-title="Action result won\'t be available">Stop Waiting</button></div>'
           var modal_content = horizon.modals.spinner.find(".modal-content");
-          modal_content.append(button)
-            $('.modal-close button').tooltip();
+          modal_content.append(button);
+          $('.modal-close button').tooltip();
           $('.modal-close button').on("click", function () {
             window.clearInterval(intervalId);
             document.location = $form.attr('action');
@@ -223,6 +234,8 @@ $(function() {
         }
         event.preventDefault();
       });
-    }
+   }
+
   }
+
 });
