@@ -102,8 +102,8 @@ h3.heading_switcher a.btn {
   }
 }
 
-.has-feedback .form-control-feedback {
-  top: 10px;
+.search-icon {
+  line-height: 32px;
 }
 
 .draggable_app {
