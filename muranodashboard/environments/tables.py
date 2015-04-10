@@ -67,7 +67,7 @@ class CreateEnvironment(tables.LinkAction):
     icon = 'plus'
 
     def allowed(self, request, datum):
-        return True
+        return True if self.table.data else False
 
     def action(self, request, environment):
         try:

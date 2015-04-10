@@ -175,8 +175,13 @@ class UITestCase(BaseDeps):
                                   " while it should't".format(value))
         self.driver.implicitly_wait(30)
 
-    def create_environment(self, env_name):
-        self.driver.find_element_by_id(consts.CreateEnvironment).click()
+    def create_environment(self, env_name, by_id=False):
+        if by_id:
+            self.driver.find_element_by_id(
+                'murano__action_CreateEnvironment').click()
+        else:
+            self.driver.find_element_by_css_selector(
+                consts.CreateEnvironment).click()
         self.fill_field(by.By.ID, 'id_name', env_name)
         self.driver.find_element_by_id(consts.ConfirmCreateEnvironment).click()
         self.wait_for_alert_message()
