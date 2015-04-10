@@ -66,7 +66,7 @@ class UITestCase(BaseDeps):
 
         self.driver = webdriver.Firefox()
         self.driver.maximize_window()
-        self.driver.get(cfg.common.horizon_url + '/')
+        self.driver.get(cfg.common.horizon_url + '/murano/environments/')
         self.driver.implicitly_wait(30)
         self.addOnException(self.take_screenshot)
         self.log_in()
