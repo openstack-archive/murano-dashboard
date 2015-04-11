@@ -432,7 +432,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.create_environment('env1')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.LINK_TEXT, 'env1')
-        self.create_environment('env2')
+        self.create_environment('env2', by_id=True)
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.LINK_TEXT, 'env2')
 

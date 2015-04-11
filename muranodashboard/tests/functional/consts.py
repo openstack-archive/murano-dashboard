@@ -24,7 +24,7 @@ ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"
 InputSubmit = "//input[@type='submit']"
 ConfirmDeletion = "//div[@class='modal-footer']//a[contains(text(), 'Delete')]"  # noqa
 UploadPackage = 'packages__action_upload_package'
-CreateEnvironment = 'murano__action_CreateEnvironment'
+CreateEnvironment = ".add_env .btn"
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"
