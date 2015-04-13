@@ -59,8 +59,8 @@ class AppRequirementsTab(tabs.Tab):
             for key in step.base_fields:
                 # Check for instance size requirements in the UI yaml file.
                 if key == 'flavor':
-                    if hasattr(step.base_fields[key], 'requirements'):
-                        reqs = step.base_fields[key].requirements
+                    reqs = getattr(step.base_fields[key], 'requirements', '')
+                    if reqs:
                         # Make the requirement values screen-printable.
                         self.app.requirements.append('Instance flavor:')
                         requirements = []

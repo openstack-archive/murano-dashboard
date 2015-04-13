@@ -32,9 +32,9 @@ class TestFlavorField(helpers.APITestCase):
         novaclient.flavors = self.mox.CreateMockAnything()
         # Set up the Flavor list
         novaclient.flavors.list().MultipleTimes().AndReturn(
-            [FlavorFlave('small', vcpus=1, disk=500, ram=1),
-             FlavorFlave('medium', vcpus=2, disk=1000, ram=2),
-             FlavorFlave('large', vcpus=3, disk=750, ram=4)])
+            [FlavorFlave('small', vcpus=1, disk=50, ram=1000),
+             FlavorFlave('medium', vcpus=2, disk=100, ram=2000),
+             FlavorFlave('large', vcpus=3, disk=750, ram=4000)])
 
     def test_no_filter(self):
         """Check that all flavors are returned."""
@@ -66,12 +66,12 @@ class TestFlavorField(helpers.APITestCase):
         """Check that one flavor is returned."""
         self.mox.ReplayAll()
 
-        # Fake a requirement for 2 CPUs and 1000 disk, should return medium
+        # Fake a requirement for 2 CPUs and 200 GB disk, should return medium
         f = fields.FlavorChoiceField(
-            requirements={'min_vcpus': 2, 'min_disk': 1000})
+            requirements={'min_vcpus': 2, 'min_disk': 200})
         initial_request = {}
         f.update(initial_request, self.request)
-        self.assertEqual([('medium', 'medium')], f.choices)
+        self.assertEqual([('large', 'large')], f.choices)
 
     def test_no_matches_filter(self):
         """Check that no flavors are returned."""
