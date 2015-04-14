@@ -536,6 +536,7 @@ class IndexView(list_view.ListView):
         if search:
             context['search'] = search
 
+        context['tenant_id'] = self.request.session['token'].tenant['id']
         context.update(get_environments_context(self.request))
 
         return context
