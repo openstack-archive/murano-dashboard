@@ -77,7 +77,12 @@ $(function() {
               environment_id: environmentId,
               app_id: pkg.id
             });
+            // tenant_id is obtained from corresponding Django template
+            if (tenant_id === pkg.owner_id) {
+              html = $(html).find('img.ribbon').remove().end();
+            }
             $(html).appendTo($item);
+
           });
           $item.appendTo($carouselInner);
         });

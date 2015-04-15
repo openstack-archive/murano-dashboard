@@ -76,6 +76,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
             msg = _("Sorry, this environment doesn't exist anymore")
             redirect = reverse("horizon:murano:environments:index")
             exceptions.handle(self.request, msg, redirect=redirect)
+        context['tenant_id'] = self.request.session['token'].tenant['id']
         return context
 
 

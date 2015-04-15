@@ -93,6 +93,9 @@ h3.heading_switcher a.btn {
   margin-bottom: 0;
 }
 
+.draggable_app .may_overflow {
+    margin-left: 14px;
+}
 @media (min-width: 1020px) {
   .draggable_app .well, .no_apps.well {
     min-height: 105px;
@@ -201,6 +204,15 @@ h3.link:hover {
 }
 h3.link .caret {
   border-top: 4px solid yellow !important;
+}
+.app .ribbon {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+.draggable_app .ribbon{
+    position: absolute;
+    bottom: -4px;
 }
 .well:hover {
     float: none;
