@@ -4,9 +4,23 @@
 {% block title %}{% trans "Package Definitions" %}{% endblock %}
 
 {% block page_header %}
-  {% include "horizon/common/_page_header.html" with title=_("Package Definitions") %}
-  <link rel="stylesheet" href="{% static 'muranodashboard/css/packages.css' %}">
+    {% include "horizon/common/_page_header.html" with title=_("Package Definitions") %}
+    <link rel="stylesheet"
+          href="{% static 'muranodashboard/css/packages.css' %}">
 {% endblock page_header %}
 {% block main %}
-  {{ table.render }}
+    {{ table.render }}
+    <script>
+        var tenant_id = "{{tenant_id}}";
+        $('tbody tr').each(function (i) {
+            pkg_owner = $.trim($(this).find('td').eq(6).text());
+            if (pkg_owner != tenant_id) {
+                $(this).find('td').eq(1).append(
+                                '<i class="fa fa-user-plus"' +
+                                ' data-toggle="tooltip"' +
+                                ' title="This package belongs to other tenant"></i>');
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+    </script>
 {% endblock %}

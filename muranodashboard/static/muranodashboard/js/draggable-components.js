@@ -63,6 +63,12 @@ $(function() {
       environmentId = $('#environmentId').val();
 
     function fillCarousel(apps) {
+      var i = apps.length;
+      while (i--) {
+        if (tenant_id !== apps[i].owner_id && apps[i].is_public == false) {
+          apps.splice(i, 1);
+        }
+      }
       if (apps.length) {
         apps.subdivide(6).forEach(function (chunk, index) {
           var $item = $('<div class="item"></div>'),
@@ -82,12 +88,10 @@ $(function() {
               html = $(html).find('img.ribbon').remove().end();
             }
             $(html).appendTo($item);
-
           });
           $item.appendTo($carouselInner);
         });
         $('div.carousel-control').removeClass('item')
-        $carousel.show();
         bindAppTileHandlers();
       } else {
         $carousel.hide();
