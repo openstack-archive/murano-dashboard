@@ -480,6 +480,7 @@ class IndexView(list_view.ListView):
             return self._more
         else:
             query_params = self.get_query_params(internal_query=True)
+            query_params['sort_dir'] = 'asc'
             packages, more = pkg_api.package_list(
                 self.request, filters=query_params, paginate=True,
                 marker=self.get_marker(), page_size=1)
@@ -512,14 +513,19 @@ class IndexView(list_view.ListView):
 
     def prev_page_url(self):
         query_params = self.get_query_params()
-        query_params.update({'marker': self.get_marker(0),
-                             'sort_dir': 'desc'})
+        sort_dir = self.request.GET.get('sort_dir') or 'asc'
+        query_params['marker'] = self.get_marker(0) \
+            if sort_dir == 'asc' else self.get_marker()
+        query_params['sort_dir'] = 'desc'
         return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
                                 http_utils.urlencode(query_params))
 
     def next_page_url(self):
         query_params = self.get_query_params()
-        query_params['marker'] = self.get_marker()
+        sort_dir = self.request.GET.get('sort_dir') or 'asc'
+        query_params['marker'] = self.get_marker() \
+            if sort_dir == 'asc' else self.get_marker(0)
+        query_params['sort_dir'] = 'asc'
         return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
                                 http_utils.urlencode(query_params))
 
