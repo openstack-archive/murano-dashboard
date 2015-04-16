@@ -15,7 +15,7 @@
             <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 description">
                 <h4>{{ app.name }}</h4>
 
-                <p title="{{ app.description }}">{{ app.description|striptags|truncatechars:130 }}</p>
+                <p>{{ app.description|striptags|truncatechars:130 }}</p>
 
                 <div class="app-details-link"><a
                         href="{% url 'horizon:murano:catalog:application_details' app.id %}"
