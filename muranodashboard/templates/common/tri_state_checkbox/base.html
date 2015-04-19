@@ -1,0 +1,14 @@
+<ul>
+{% for choice, label, value in values %}
+    <li>
+        {% with id=attrs.id|add:forloop.counter %}
+            {% include 'common/tri_state_checkbox/input.html' %}
+            <label {% if attrs.id %}
+                   for="{{ id }}"
+                   {% endif %}>
+            {{ label }}
+            </label>
+        {% endwith %}
+    </li>
+{% endfor %}
+</ul>

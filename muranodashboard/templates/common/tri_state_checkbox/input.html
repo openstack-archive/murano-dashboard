@@ -1,0 +1,16 @@
+<input type="checkbox"
+    {% for attr, value in attrs.iteritems %}
+      {% if attr != 'name' and attr != 'id' and attr != 'value' %}
+        {{ attr }}="{{ value }}"
+      {% endif %}
+    {% endfor %} />
+<input type="hidden"
+    data-tri-state-checkbox
+    {% if attrs.id %}
+        id="{{ id }}"
+    {% endif %}
+    {% for attr, value in attrs.iteritems %}
+        {{ attr }}="{{ value }}"
+    {% endfor %}
+    name="{{ name }}"
+    value="{{ choice }}={{ value }}" />
