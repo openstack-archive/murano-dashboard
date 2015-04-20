@@ -178,6 +178,9 @@ class PackageDefinitionsTable(tables.DataTable):
     is_public = tables.Column('is_public', verbose_name=_('Public'))
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
+    owner = tables.Column('owner_id',
+                          verbose_name=_('Owner'),
+                          hidden=True)
 
     def get_object_display(self, datum):
         return datum.name

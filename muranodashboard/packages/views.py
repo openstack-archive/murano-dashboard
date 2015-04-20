@@ -84,6 +84,12 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
 
         return packages
 
+    def get_context_data(self, **kwargs):
+        context = super(PackageDefinitionsView,
+                        self).get_context_data(**kwargs)
+        context['tenant_id'] = self.request.session['token'].tenant['id']
+        return context
+
 
 class ImportBundleWizard(views.ModalFormMixin,
                          wizard_views.SessionWizardView):
