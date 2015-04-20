@@ -54,7 +54,7 @@ class ImportBundleForm(forms.Form):
     name = forms.CharField(
         label=_("Bundle Name"),
         required=False,
-        help_text=_("Name of the bundle i.e. 'bundle.json'"))
+        help_text=_("Name of the bundle."))
 
     def clean(self):
         cleaned_data = super(ImportBundleForm, self).clean()
@@ -77,14 +77,24 @@ class ImportPackageForm(forms.Form):
         label=_("Package URL"),
         required=False,
         help_text=_('An external http/https URL to load the package from.'))
-    repo_name = horizon_forms.CharField(label=_("Package Name"),
-                                        required=False)
-    repo_version = horizon_forms.CharField(label=_("Package Version"),
-                                           required=False)
+    repo_name = horizon_forms.CharField(
+        label=_("Package Name"),
+        required=False,
+        help_text=_(
+            'Package name in the repository, usually a fully qualified name'),
+    )
+    repo_version = horizon_forms.CharField(
+        label=_("Package version"),
+        required=False)
 
     package = forms.FileField(label=_('Application Package'),
                               required=False,
                               help_text=_('A local zip file to upload'))
+
+    def __init__(self, *args, **kwargs):
+        super(ImportPackageForm, self).__init__(*args, **kwargs)
+        self.fields['repo_version'].widget.attrs['placeholder'] = \
+            _('Optional')
 
     def clean_package(self):
         package = self.cleaned_data.get('package')

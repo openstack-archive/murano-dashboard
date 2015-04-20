@@ -16,6 +16,10 @@
 $(function() {
     var upload_form = $('#import_bundle');
     var import_type = upload_form.find('[name=upload-import_type]');
+
+    upload_form.find('input[name=upload-url]').closest('.form-group').addClass('required');
+    upload_form.find('input[name=upload-name]').closest('.form-group').addClass('required');
+
     import_type.change(function(){
         var upload_type = $(this).val();
         if (upload_type === 'by_name') {
