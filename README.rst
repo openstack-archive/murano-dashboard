@@ -14,10 +14,9 @@ Murano. With murano-dashboard user is able to easily manage and control
 application catalog, running applications and created environments alongside
 with all other OpenStack resources.
 
-For developer purpose, please run *./prepare_murano.sh* and provide
-openstack_dashboard directory location. It will configure horizon to enable
-Murano. Also it will copy opensatck_dashboard settings file to be able to run developer server,
-to debug muranodashboard.
+For developer purpose, please place OpenStack Dashboard extension file, located
+at *local/_50_murano.py* under horizon/openstack_dashboard/local/enabled
+directory and run horizon as usually.
 
 Project Resources
 -----------------

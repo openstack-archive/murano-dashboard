@@ -6,8 +6,10 @@
 {% block title %}{% trans "Applications" %}{% endblock %}
 
 {% block page_header %}
-    <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
-    <link rel="stylesheet" href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'muranodashboard/css/catalog.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
     {% include "horizon/common/_page_header.html" with title=_("Applications") %}
 {% endblock page_header %}
 
@@ -17,7 +19,7 @@
 
 {% block main %}
     <div class="table_wrapper">
-        <h3 class="quota-heading">{%  trans 'Recent Activity' %}</h3>
+        <h3 class="quota-heading">{% trans 'Recent Activity' %}</h3>
         {% if latest_list|length > 0 %}
             <div class="app-row app-list">
                 {% for app in latest_list %}
@@ -33,12 +35,16 @@
                 <div class="col-xs-12 col-sm-3 col-md-4 col-lg-4 col-row">
                     <h3 class="heading_switcher">{% trans 'App Category:' %}
                         <div class="header dropdown">
-                            <a href="#" class="btn btn-sm btn-default dropdown-toggle">
-                            {{ current_category }}  <b class="caret"></b></a>
+                            <a href="#"
+                               class="btn btn-sm btn-default dropdown-toggle">
+                                {{ current_category }} <b
+                                    class="caret"></b></a>
                             <ul class="dropdown-menu row_actions clearfix">
                                 {% for category in categories %}
-                                    <li class="clearfix"><a tabindex="-1" href="
-                                    {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}" class="btn btn-small">
+                                    <li class="clearfix"><a tabindex="-1"
+                                                            href="
+                                    {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}"
+                                                            class="btn btn-small">
                                         {{ category }}</a></li>
                                 {% endfor %}
                             </ul>
@@ -53,13 +59,19 @@
 
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-row">
                     <div class="table_search client pull-right">
-                        <form class="search" method="GET" action="{% url 'horizon:murano:catalog:index' %}">
+                        <form class="search" method="GET"
+                              action="{% url 'horizon:murano:catalog:index' %}">
                             <div class="form-group has-feedback">
-                                <input class="form-control" value="{{ search }}" type="text" name="search" placeholder="Filter">
+                                <input class="form-control"
+                                       value="{{ search }}" type="text"
+                                       name="search" placeholder="Filter">
                                 <span class="glyphicon glyphicon-search form-control-feedback search-icon"></span>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-default btn-sm" id="apps__action_filter">Filter</button>
+                                <button type="submit"
+                                        class="btn btn-default btn-sm"
+                                        id="apps__action_filter">Filter
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -76,18 +88,31 @@
             </div>
             <div class="col-row col-xs-12">
                 <div class="btn-toolbar centering">
-                  <div class="btn-group">
-                      {% if view.has_prev_page %}
-                          <a class="btn btn-default" href="{{ view.prev_page_url }}">{% trans "Previous Page" %}</a>
-                      {% endif %}
-                      {% if view.has_next_page %}
-                          <a class="btn btn-default" href="{{ view.next_page_url }}">{% trans "Next Page" %}</a>
-                      {% endif %}
-                  </div>
+                    <div class="btn-group">
+                        {% if view.has_prev_page %}
+                            <a class="btn btn-default"
+                               href="{{ view.prev_page_url }}">{% trans "Previous Page" %}</a>
+                        {% endif %}
+                        {% if view.has_next_page %}
+                            <a class="btn btn-default"
+                               href="{{ view.next_page_url }}">{% trans "Next Page" %}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% else %}
             <p class="col-xs-12 alert alert-info">{% trans "There are no applications in the catalog." %}</p>
         {% endif %}
     </div>
+    <script>
+        $('.description h4').each(function () {
+            $(this).bind('mouseenter', function () {
+                var $this = $(this);
+
+                if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                    $this.attr('title', $this.text());
+                }
+            });
+        });
+    </script>
 {% endblock %}
