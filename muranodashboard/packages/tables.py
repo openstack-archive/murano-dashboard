@@ -18,8 +18,8 @@ from django.core.urlresolvers import reverse
 from django import http
 from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from horizon import exceptions
-from horizon import messages
 from horizon import tables
 
 from muranoclient.common import exceptions as exc
@@ -87,51 +87,50 @@ class DownloadPackage(tables.Action):
 
 class ToggleEnabled(tables.BatchAction):
     name = 'toggle_enabled'
-    data_type_singular = _('Active')
-    data_type_plural = _('Active')
-    action_present = _('Toggle')
-    action_past = _('Toggled')
+    verbose_name = _("Toggle Enabled")
 
-    def handle(self, table, request, obj_ids):
-        for obj_id in obj_ids:
-            try:
-                api.muranoclient(request).packages.toggle_active(obj_id)
-            except exc.HTTPException:
-                LOG.exception(_('Toggling package state in package '
-                                'repository failed'))
-                exceptions.handle(request,
-                                  _('Unable to toggle package state.'))
-            else:
-                obj = table.get_object_by_id(obj_id)
-                obj.enabled = not obj.enabled
-                messages.success(
-                    request,
-                    _("Package '{0}' successfully toggled").format(obj.name))
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Toggle Active",
+            u"Toggle Active",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Toggled Active",
+            u"Toggled Active",
+            count
+        )
+
+    def action(self, request, obj_id):
+        api.muranoclient(request).packages.toggle_active(obj_id)
 
 
 class TogglePublicEnabled(tables.BatchAction):
     name = 'toggle_public_enabled'
-    data_type_singular = _('Public')
-    data_type_plural = _('Public')
-    action_present = _('Toggle')
-    action_past = _('Toggled')
+    verbose_name = _("Toggle Public")
 
-    def handle(self, table, request, obj_ids):
-        for obj_id in obj_ids:
-            try:
-                api.muranoclient(request).packages.toggle_public(obj_id)
-            except exc.HTTPException:
-                LOG.exception(_('Toggling package public state in package '
-                                'repository failed'))
-                exceptions.handle(request,
-                                  _('Unable to toggle package public state.'))
-            else:
-                obj = table.get_object_by_id(obj_id)
-                obj.is_public = not obj.is_public
-                messages.success(
-                    request,
-                    _("Public state for package '{0}' is successfully toggled")
-                    .format(obj.name))
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Toggle Public",
+            u"Toggle Public",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Toggled Public",
+            u"Toggled Public",
+            count
+        )
+
+    def action(self, request, obj_id):
+        api.muranoclient(request).packages.toggle_public(obj_id)
 
 
 class DeletePackage(tables.DeleteAction):
