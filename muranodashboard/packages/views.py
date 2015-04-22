@@ -341,6 +341,11 @@ class ImportPackageWizard(views.ModalFormMixin,
                     _update_latest_apps(
                         request=self.request, app_id=package.id)
                     step_data['dependencies'].append(package)
+                except exc.HTTPConflict:
+                    msg = _("Package {0} already registered.").format(
+                        dep_name)
+                    messages.warning(self.request, msg)
+                    LOG.exception(msg)
                 except Exception as e:
                     msg = _("Error {0} occurred while "
                             "installing package {1}").format(e, dep_name)
