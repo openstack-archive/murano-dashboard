@@ -72,6 +72,11 @@ h3.heading_switcher a.btn {
 .app-list .app-description {
   height: 135px;
 }
+
+.app-list .app-description h4 {
+  margin-top: 0;
+}
+
 .btn-link {
   padding: 5px 0;
 }
@@ -93,9 +98,14 @@ h3.heading_switcher a.btn {
   margin-bottom: 0;
 }
 
-.draggable_app .may_overflow {
-    margin-left: 14px;
+.well .app-actions-container {
+    padding-right: 0;
 }
+
+.draggable_app .may_overflow {
+  max-width: 85%;
+}
+
 @media (min-width: 1020px) {
   .draggable_app .well, .no_apps.well {
     min-height: 105px;
@@ -121,14 +131,15 @@ h3.heading_switcher a.btn {
 }
 
 .carousel {
-	padding: 0 40px;
+  padding: 0 40px;
   margin-bottom: 20px;
+  margin-top: 2px;
 }
 
 .carousel-control {
   position: absolute;
-  top: 30px;
-  left: -10px;
+  top: 38px;
+  left: -7px;
   bottom: 0;
   width: 30px;
   opacity: 1;
@@ -158,10 +169,23 @@ h3.heading_switcher a.btn {
 
 .carousel-control.right {
   background: inherit;
+  right: 7px;
+}
+
+.category-title {
+  float: left;
+  line-height: 26px;
+  margin-right: 8px;
+  margin-top: 20px;
+  font-family: anivers;
+  font-weight: normal;
 }
 
 .extra_title {
-  padding-left: 8px;
+  line-height: 26px;
+  font-family: anivers;
+  font-weight: normal;
+  font-size: 24px;
 }
 
 .draggable_app .well:hover {
@@ -169,8 +193,12 @@ h3.heading_switcher a.btn {
   background: #fff;
 }
 
+#envAppsCategory.dropdown {
+  min-width: 160px;
+}
+
 #envAppsCategory > button{
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 #envAppsCategory > h4 {
@@ -223,10 +251,20 @@ h3.link .caret {
     -webkit-transition: all .15s ease-out;
     transition: all .15s ease-out;
 }
+
+.row.row-header {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 .row.app-list {
   margin-top: 20px;
   margin-bottom:20px;
 }
+.row .filter-bar {
+  position: absolute;
+  right: 18px;
+}
+
 .app-list .app {
   position:relative;
   -moz-border-radius: 8px;
@@ -240,7 +278,7 @@ h3.link .caret {
   margin-left:0;
   height: 100%;
 }
-.app-list .app h4 {;
+.app-list .app h4 {
   margin-bottom:0.25em;
   text-overflow: ellipsis;
   white-space: nowrap;
