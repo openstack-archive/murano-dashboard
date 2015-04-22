@@ -182,11 +182,14 @@ class PackageDefinitionsTable(tables.DataTable):
                           verbose_name=_('Owner'),
                           hidden=True)
 
-    def get_object_display(self, datum):
-        return datum.name
+    def get_prev_pagination_string(self):
+        pagination_string = super(
+            PackageDefinitionsTable, self).get_prev_pagination_string()
+        return pagination_string + "&sort_dir=desc"
 
     class Meta:
         name = 'packages'
+        prev_pagination_param = 'marker'
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
         table_actions = (ImportPackage,
