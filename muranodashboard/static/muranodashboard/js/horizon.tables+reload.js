@@ -2,7 +2,7 @@ $(function() {
   function reload() {
     $('td[class^="status"]').each(function () {
       status = $(this).text().trim();
-      if (status === 'Ready' || status === 'Deploy Failed') {
+      if (status === 'Ready' || status === 'Deploy FAILURE') {
         location.reload(true);
       }
     });
@@ -95,7 +95,6 @@ $(function() {
                 horizon.datatables.qs[$table.attr('id')].cache();
               }
             }
-            reload();
           },
           complete: function (jqXHR, textStatus) {
             // Revalidate the button check for the updated table
@@ -113,6 +112,7 @@ $(function() {
             // Limit the interval to 30 secs
             if(next_poll > 30 * 1000) { next_poll = 30 * 1000; }
             setTimeout(horizon.datatables.update, next_poll);
+            reload();
           }
         });
       });
