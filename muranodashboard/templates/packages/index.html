@@ -18,7 +18,7 @@
                 $(this).find('td').eq(1).append(
                                 '<i class="fa fa-user-plus"' +
                                 ' data-toggle="tooltip"' +
-                                ' title="This package belongs to other tenant"></i>');
+                                ' title="{% trans "This package belongs to another tenant" %}"></i>');
             }
         });
         $('[data-toggle="tooltip"]').tooltip();
