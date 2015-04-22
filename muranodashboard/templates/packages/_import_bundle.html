@@ -38,7 +38,9 @@
             <p>{% blocktrans %}<strong>Bundle URL:</strong> HTTP/HTTPS URL of the bundle file.{% endblocktrans %}</p>
         </div>
         <div class='description-common'>
-            <p>{% blocktrans %}Note: You'll have to configure each package installed from this bundle separately.{% endblocktrans %}</p>
+            <p>{% blocktrans %}<strong><i>Note: </i></strong>You'll have to configure each package installed from this bundle separately.
+            <br>If packages depend upon other packages and/or require specific glance images, those are going to be installed with them from murano repository.
+            {% endblocktrans %}</p>
         </div>
     </div>
 {% endblock %}
