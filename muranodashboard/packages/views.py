@@ -63,24 +63,53 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
 
+    _more = False
+    _prev = False
+
     def has_more_data(self, table):
         return self._more
 
+    def has_prev_data(self, table):
+        return self._prev
+
     def get_data(self):
+        sort_dir = self.request.GET.get('sort_dir', 'asc')
         opts = {
             'include_disabled': True,
-            'owned': True
+            'owned': True,
+            'sort_dir': sort_dir,
         }
         marker = self.request.GET.get(
             tables.PackageDefinitionsTable._meta.pagination_param, None)
 
         packages = []
-        self._more = False
         page_size = utils.get_page_size(self.request)
         with api.handled_exceptions(self.request):
-            packages, self._more = pkg_api.package_list(
+            packages, extra = pkg_api.package_list(
                 self.request, marker=marker, filters=opts, paginate=True,
                 page_size=page_size)
+
+            if sort_dir == 'asc':
+                self._more = extra
+            else:
+                packages = list(reversed(packages))
+                self._prev = extra
+
+            if packages:
+                if sort_dir == 'asc':
+                    backward_marker = packages[0].id
+                    opts['sort_dir'] = 'desc'
+                else:
+                    backward_marker = packages[-1].id
+                    opts['sort_dir'] = 'asc'
+                __, extra = pkg_api.package_list(
+                    self.request, filters=opts, paginate=True,
+                    marker=backward_marker, page_size=0)
+
+                if sort_dir == 'asc':
+                    self._prev = extra
+                else:
+                    self._more = extra
 
         return packages
 
