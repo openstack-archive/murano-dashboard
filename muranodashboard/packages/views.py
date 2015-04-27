@@ -76,7 +76,6 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
         sort_dir = self.request.GET.get('sort_dir', 'asc')
         opts = {
             'include_disabled': True,
-            'owned': True,
             'sort_dir': sort_dir,
         }
         marker = self.request.GET.get(
@@ -102,6 +101,7 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
                 else:
                     backward_marker = packages[-1].id
                     opts['sort_dir'] = 'asc'
+
                 __, extra = pkg_api.package_list(
                     self.request, filters=opts, paginate=True,
                     marker=backward_marker, page_size=0)
