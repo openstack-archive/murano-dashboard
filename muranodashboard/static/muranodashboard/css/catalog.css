@@ -441,6 +441,13 @@ h3.link .caret {
 .modal-header img {
   margin-top: -7px;
 }
+
+.modal-dialog h3, span.wizard_title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .selected-field {
   color: #428BCA;
   margin-left: -12px;
