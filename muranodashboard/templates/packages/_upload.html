@@ -55,6 +55,9 @@
                 <h3>{% trans 'Description:' %}</h3>
                 <p>{% blocktrans %}<strong>Package URL:</strong> HTTP/HTTPS URL of the package file.{% endblocktrans %}</p>
             </div>
+            <div class='description-common'>
+                <p>{% blocktrans %}<strong><i>Note: </i></strong>If the package depends upon other packages and/or requires specific glance images, those are going to be installed with it from murano repository.{% endblocktrans %}</p>
+            </div>
         {% endif %}
     </div>
 {% endblock %}
