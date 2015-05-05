@@ -483,6 +483,7 @@ class IndexView(list_view.ListView):
         else:
             query_params = self.get_query_params(internal_query=True)
             query_params['sort_dir'] = 'asc'
+            query_params['catalog'] = True
             packages, more = pkg_api.package_list(
                 self.request, filters=query_params, paginate=True,
                 marker=self.get_marker(), page_size=1)
