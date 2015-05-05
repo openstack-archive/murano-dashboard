@@ -282,7 +282,8 @@ class ServicesTable(tables.DataTable):
         packages = []
         with api_utils.handled_exceptions(self.request):
             packages, self._more = pkg_api.package_list(
-                self.request, filters={'type': 'Application'})
+                self.request,
+                filters={'type': 'Application', 'catalog': True})
         return json.dumps([package.to_dict() for package in packages])
 
     def actions_allowed(self):
