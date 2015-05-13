@@ -54,8 +54,8 @@ def package_list(request, marker=None, filters=None, paginate=False,
     return packages, has_more_data
 
 
-def app_by_fqn(request, fqn):
-    apps = api.muranoclient(request).packages.filter(fqn=fqn)
+def app_by_fqn(request, fqn, catalog=True):
+    apps = api.muranoclient(request).packages.filter(fqn=fqn, catalog=catalog)
     try:
         return apps.next()
     except StopIteration:
