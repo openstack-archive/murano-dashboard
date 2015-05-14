@@ -5,4 +5,6 @@ six>=1.7.0
 PyYAML>=3.1.0
 django-floppyforms>=1.1
 yaql>=0.2.3,<0.3
-python-muranoclient>=0.5.5
+python-muranoclient>=0.5.5,<0.5.6
+django-pyscss>=1.0.3,!=2.0.0  # BSD License (2 clause)
+Django>=1.4,<1.7
