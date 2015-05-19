@@ -73,6 +73,11 @@ class EditEnvironmentView(horizon_forms.SelfHandlingForm):
             messages.success(request,
                              "Edited environment '{0}'".format(data['name']))
             return env
+        except exc.HTTPConflict:
+            msg = _('Environment with specified name already exists')
+            LOG.exception(msg)
+            exceptions.handle(request, ignore=True)
+            messages.error(request, msg)
         except Exception:
             name = data.get('name', '')
             msg = _("Unable to edit environment {0}").format(name)
