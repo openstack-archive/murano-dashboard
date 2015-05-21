@@ -378,7 +378,7 @@ class EnvConfigTable(tables.DataTable):
     name = tables.Column('name',
                          verbose_name=_('Name'))
     _type = tables.Column(
-        lambda datum: datum['?'][consts.DASHBOARD_ATTRS_KEY]['name'],
+        lambda datum: get_service_type(datum) or 'Unknown',
         verbose_name=_('Type'))
 
     def get_object_id(self, datum):
