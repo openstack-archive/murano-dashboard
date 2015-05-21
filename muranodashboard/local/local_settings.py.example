@@ -521,7 +521,7 @@ SECURITY_GROUP_RULES = {
     },
 }
 
-MURANO_REPO_URL = 'http://127.0.0.1/'
+MURANO_REPO_URL = 'http://storage.apps.openstack.org'
 
 # Deprecation Notice:
 #
