@@ -9,12 +9,12 @@ compose reliable application environments with the push of a button.
 
 Murano Dashboard
 ----------------
-Murano Dashboard an extension for OpenStack Dashboard that provides UI for
-Murano. With murano-dashboard user is able to easily manage and control
-application catalog, running applications and created environments alongside
+Murano Dashboard is an extension for OpenStack Dashboard that provides a UI for
+Murano. With murano-dashboard, a user is able to easily manage and control
+an application catalog, running applications and created environments alongside
 with all other OpenStack resources.
 
-For developer purpose, please place OpenStack Dashboard extension file, located
+For developer purposes, please place OpenStack Dashboard extension file, located
 at *local/_50_murano.py* under horizon/openstack_dashboard/local/enabled
 directory and run horizon as usual.
 
