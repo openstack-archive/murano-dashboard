@@ -566,6 +566,7 @@ class BooleanField(forms.BooleanField, CustomPropertiesField):
         else:
             widget = forms.CheckboxInput(attrs={'class': 'checkbox'})
         kwargs['widget'] = widget
+        kwargs['required'] = False
         super(BooleanField, self).__init__(*args, **kwargs)
 
 
