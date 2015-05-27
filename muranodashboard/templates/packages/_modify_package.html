@@ -1,4 +1,4 @@
-{% extends 'common/_modal_form.html' %}
+{% extends 'horizon/common/_modal_form.html' %}
 {% load i18n %}
 {% load url from future %}
 
@@ -7,16 +7,10 @@
 
 {% block modal-header %}{% trans 'Modify Package' %}{% endblock %}
 {% block modal_id %}modify_package_modal{% endblock %}
-{% block modal-body %}
-<div class='left'>
-    <fieldset>
-    {% include 'horizon/common/_form_fields.html' %}
-    </fieldset>
-</div>
-<div class='right'>
+
+{% block modal-body-right %}
     {% include 'packages/_package_params.html' %}
     <p>{% blocktrans %}<strong>Categories</strong> Select up to multiple categories for a package.{% endblocktrans %}</p>
-</div>
 {% endblock %}
 
 {% block modal-footer %}

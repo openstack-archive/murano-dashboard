@@ -1,6 +1,6 @@
-{% extends "common/_modal_form.html" %}
+{% extends "horizon/common/_modal_form.html" %}
 {% load i18n humanize %}
-{% load url from future %} {# fix for django 1.4.9 on CentOS #}
+{% load url from future %}
 {% block form_action %}
     {% url 'horizon:murano:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}

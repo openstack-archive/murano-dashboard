@@ -13,7 +13,7 @@
 #    under the License.
 
 from django.core.urlresolvers import reverse_lazy
-
+from django.utils.translation import ugettext_lazy as _
 
 from horizon.forms import views
 from horizon import tables as horizon_tables
@@ -36,6 +36,11 @@ class CategoriesView(horizon_tables.DataTableView):
 
 class AddCategoryView(views.ModalFormView):
     form_class = forms.AddCategoryForm
+    form_id = 'add_category_form'
+    modal_header = _('Add Category')
     template_name = 'categories/add.html'
     context_object_name = 'category'
+    page_title = _('Add Application Category')
     success_url = reverse_lazy('horizon:murano:categories:index')
+    submit_label = _('Add')
+    submit_url = reverse_lazy('horizon:murano:categories:add')

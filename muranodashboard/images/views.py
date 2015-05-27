@@ -46,6 +46,11 @@ class MarkedImagesView(horizon_tables.DataTableView):
 
 class MarkImageView(views.ModalFormView):
     form_class = forms.MarkImageForm
+    form_id = 'mark_murano_image_form'
+    modal_header = _('Add Murano Metadata')
     template_name = 'images/mark.html'
     context_object_name = 'image'
+    page_title = _("Update Image")
     success_url = reverse_lazy('horizon:murano:images:index')
+    submit_label = _('Mark Image')
+    submit_url = reverse_lazy('horizon:murano:images:mark_image')

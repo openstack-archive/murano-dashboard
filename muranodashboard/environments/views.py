@@ -119,8 +119,13 @@ class DetailServiceView(tabs.TabbedTableView):
 
 class CreateEnvironmentView(views.ModalFormView):
     form_class = env_forms.CreateEnvironmentForm
+    form_id = 'create_environment_form'
+    modal_header = _('Create Environment')
     template_name = 'environments/create.html'
+    page_title = _('Create Environment')
     context_object_name = 'environment'
+    submit_label = _('Create')
+    submit_url = reverse_lazy('horizon:murano:environments:create_environment')
 
     def get_form(self, form_class):
         if 'next' in self.request.GET:
@@ -139,15 +144,20 @@ class CreateEnvironmentView(views.ModalFormView):
 
 
 class EditEnvironmentView(views.ModalFormView):
-    form_class = env_forms.EditEnvironmentView
+    form_class = env_forms.EditEnvironmentForm
+    form_id = 'update_environment_form'
+    modal_header = _('Edit Environment')
     template_name = 'environments/update.html'
-    context_object_name = 'environment'
+    page_title = _('Edit Environment')
+    submit_url = 'horizon:murano:environments:update_environment'
+    submit_label = _('Edit')
     success_url = reverse_lazy('horizon:murano:environments:index')
 
     def get_context_data(self, **kwargs):
         context = super(EditEnvironmentView, self).get_context_data(**kwargs)
         env_id = getattr(self.get_object(), 'id')
-        context["env_id"] = env_id
+        context['env_id'] = env_id
+        context['submit_url'] = reverse(self.submit_url, args=(env_id,))
         return context
 
     @memoized.memoized_method

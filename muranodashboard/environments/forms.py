@@ -58,7 +58,7 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
             return False
 
 
-class EditEnvironmentView(horizon_forms.SelfHandlingForm):
+class EditEnvironmentForm(horizon_forms.SelfHandlingForm):
 
     name = forms.CharField(label="Environment Name",
                            validators=NAME_VALIDATORS,

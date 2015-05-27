@@ -109,7 +109,7 @@ class TestSuiteImage(base.ImageTestCase):
         new_title = 'RenamedImage ' + str(time.time())
         self.fill_field(by.By.ID, 'id_title', new_title)
         self.select_from_list('type', 'linux')
-        self.select_and_click_element('Mark')
+        self.select_and_click_element('Mark Image')
         self.check_element_on_page(by.By.XPATH, c.TestImage.format(new_title))
 
         self.repair_image()
