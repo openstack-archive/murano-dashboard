@@ -23,6 +23,7 @@ from django import forms
 from django.template import defaultfilters
 from django.template import loader
 from django.utils.encoding import smart_text
+from django.utils import html
 from django.utils.translation import ugettext_lazy as _
 import floppyforms
 from horizon import exceptions
@@ -146,12 +147,19 @@ class RawProperty(object):
         return property(_get, _set, _del)
 
 
+FIELD_ARGS_TO_ESCAPE = ['help_text', 'initial', 'description', 'label']
+
+
 class CustomPropertiesField(forms.Field):
     def __init__(self, description=None, description_title=None,
                  *args, **kwargs):
         self.description = description
         self.description_title = (description_title or
                                   unicode(kwargs.get('label', '')))
+
+        for arg in FIELD_ARGS_TO_ESCAPE:
+            if kwargs.get(arg):
+                kwargs[arg] = html.escape(unicode(kwargs[arg]))
 
         validators = []
         for validator in kwargs.get('validators', []):
@@ -706,7 +714,8 @@ def make_select_cls(fqns):
             self.widget.add_item_link = _make_link
             apps = env_api.service_list_by_fqns(request, environment_id, fqns)
             choices = [('', self.empty_value_message)]
-            choices.extend([(app['?']['id'], app.name) for app in apps])
+            choices.extend([(app['?']['id'],
+                             html.escape(app.name)) for app in apps])
             self.choices = choices
 
         def clean(self, value):
