@@ -108,15 +108,9 @@ class EnvLogsTab(tabs.Tab):
 
     def get_context_data(self, request):
         reports = self.tab_group.kwargs['logs']
-        lines = []
-        for r in reports:
-            line = format_log(r.created.replace('T', ' ') + ' - ' + r.text,
-                              r.level)
-            lines.append(line)
-        result = '\n'.join(lines)
-        if not result:
-            result = '\n'
-        return {"reports": result}
+        for report in reports:
+            report.created = report.created.replace('T', ' ')
+        return {"reports": reports}
 
 
 class EnvConfigTab(tabs.TableTab):
@@ -215,13 +209,3 @@ class ServicesTabs(tabs.TabGroup):
 class DeploymentDetailsTabs(tabs.TabGroup):
     slug = "deployment_details"
     tabs = (EnvConfigTab, EnvLogsTab,)
-
-
-def format_log(message, level):
-    if level == 'warning' or level == 'error':
-        frm = "<b><span style='color:#{0}' title='{1}'>{2}</span></b>"
-        return frm.format(consts.LOG_LEVEL_TO_COLOR[level],
-                          consts.LOG_LEVEL_TO_TEXT[level],
-                          message)
-    else:
-        return message

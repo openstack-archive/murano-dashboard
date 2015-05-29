@@ -85,14 +85,3 @@ DEPLOYMENT_STATUS_DISPLAY_CHOICES = (
     (DEP_STATUS_ID_SUCCESS, 'Successful'),
     ('', 'Unknown'),
 )
-
-#---- Logs in Table Consts ----#
-LOG_LEVEL_TO_COLOR = {
-    'warning': "DF7401",
-    'error': "FF0000"
-}
-
-LOG_LEVEL_TO_TEXT = {
-    'warning': "Warning",
-    'error': "Error"
-}
