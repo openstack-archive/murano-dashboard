@@ -28,6 +28,7 @@ from django.core.urlresolvers import reverse
 from django import http
 from django import shortcuts
 from django.utils import decorators as django_dec
+from django.utils import html
 from django.utils import http as http_utils
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import list as list_view
@@ -366,7 +367,9 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         # that way until we move here from django Wizard to horizon workflow
         if views.ADD_TO_FIELD_HEADER in self.request.META:
             field_id = self.request.META[views.ADD_TO_FIELD_HEADER]
-            response = http.HttpResponse(json.dumps([obj_id, obj_name]))
+            response = http.HttpResponse(json.dumps(
+                [obj_id, html.escape(obj_name)]
+            ))
             response["X-Horizon-Add-To-Field"] = field_id
             return response
         else:
