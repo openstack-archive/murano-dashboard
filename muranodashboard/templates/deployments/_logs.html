@@ -2,8 +2,8 @@
 <div class="clearfix">
   <h3 class="table-title">{% trans "Deployment Logs" %}</h3>
 </div>
-<pre class="logs">
-    {% autoescape off %}
-{{ reports }}
-    {% endautoescape  %}
+<div class="reports logs">
+    {% for report in reports %}
+        <div title="{{report.level|capfirst}}" class="report-{{report.level}}">{{report.created}} &mdash; {{report.text | urlize}}</div>
+    {% endfor %}
 </pre>

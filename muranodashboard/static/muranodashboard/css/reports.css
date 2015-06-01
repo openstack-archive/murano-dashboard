@@ -1,0 +1,23 @@
+.reports {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.42857;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.reports .report-error {
+    color: #ff0000;
+    font-weight: bold;
+}
+.reports .report-warning {
+    color: #df7401;
+    font-weight: bold;
+}
