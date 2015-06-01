@@ -66,7 +66,7 @@ class UITestCase(BaseDeps):
 
         self.driver = webdriver.Firefox()
         self.driver.maximize_window()
-        self.driver.get(cfg.common.horizon_url + '/murano/environments/')
+        self.driver.get(cfg.common.horizon_url + '/murano/environments')
         self.driver.implicitly_wait(30)
         self.addOnException(self.take_screenshot)
         self.log_in()
@@ -113,7 +113,9 @@ class UITestCase(BaseDeps):
         self.fill_field(by.By.ID, 'id_username', cfg.common.user)
         self.fill_field(by.By.ID, 'id_password', cfg.common.password)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        self.driver.find_element_by_xpath(consts.Murano).click()
+        murano = self.driver.find_element_by_xpath(consts.Murano)
+        if 'active' not in murano.get_attribute('class'):
+            murano.click()
 
     def fill_field(self, by_find, field, value):
         self.driver.find_element(by=by_find, value=field).clear()
@@ -146,7 +148,8 @@ class UITestCase(BaseDeps):
         el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (by.By.XPATH, getattr(consts, menu))))
-        el.click()
+        if 'active' not in el.get_attribute('class'):
+            el.click()
         self.wait_for_sidebar_is_loaded()
 
     def select_from_list(self, list_name, value):

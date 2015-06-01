@@ -10,12 +10,20 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import multiprocessing
+import os
+import shutil
+import SimpleHTTPServer
+import SocketServer
+import tempfile
 import time
 
 from selenium.webdriver.common import by
+from selenium.webdriver.support import ui
 
 from muranodashboard.tests.functional import base
 from muranodashboard.tests.functional import consts as c
+from muranodashboard.tests.functional import utils
 
 
 class TestSuiteSmoke(base.UITestCase):
@@ -818,3 +826,74 @@ class TestSuitePackages(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
+
+
+class TestSuiteRepository(base.PackageTestCase):
+    _apps_to_delete = set()
+
+    def _compose_app(self, name):
+        package_dir = os.path.join(self.serve_dir, 'apps/', name)
+        shutil.copytree(c.PackageDir, package_dir)
+
+        app_name = utils.compose_package(
+            name,
+            os.path.join(package_dir, 'manifest.yaml'),
+            package_dir,
+            archive_dir=os.path.join(self.serve_dir, 'apps/'),
+        )
+        self._apps_to_delete.add(name)
+        return app_name
+
+    def setUp(self):
+        super(TestSuiteRepository, self).setUp()
+        self.serve_dir = tempfile.mkdtemp(suffix="repo")
+
+        def serve_function():
+            class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+                pass
+            os.chdir(self.serve_dir)
+            httpd = SocketServer.TCPServer(
+                ("127.0.0.1", 8099),
+                Handler, bind_and_activate=False)
+            httpd.allow_reuse_address = True
+            httpd.server_bind()
+            httpd.server_activate()
+            httpd.serve_forever()
+
+        self.p = multiprocessing.Process(target=serve_function)
+        self.p.start()
+
+    def tearDown(self):
+        super(TestSuiteRepository, self).tearDown()
+        self.p.terminate()
+        for package in self.murano_client.packages.list(include_disabled=True):
+            if package.name in self._apps_to_delete:
+                self.murano_client.packages.delete(package.id)
+        shutil.rmtree(self.serve_dir)
+
+    def test_import_package_by_url(self):
+        """Test package importing via url."""
+
+        pkg_name = "dummy_package"
+        self._compose_app(pkg_name)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-url']")
+        el.send_keys("http://127.0.0.1:8099/apps/{0}.zip".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        # No application data modification is needed
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))

@@ -39,7 +39,7 @@ def upload_app_package(client, app_name, data):
         os.remove(consts.Manifest)
 
 
-def compose_package(app_name, manifest, package_dir):
+def compose_package(app_name, manifest, package_dir, archive_dir=None):
     def prepare_manifest(app_name, manifest):
         with open(manifest, 'w') as f:
             fqn = 'io.murano.apps.' + app_name
@@ -52,8 +52,9 @@ def compose_package(app_name, manifest, package_dir):
 
     name = app_name + '.zip'
 
-    __location = os.path.dirname(os.path.abspath(__file__))
-    archive_path = os.path.join(__location, name)
+    if not archive_dir:
+        archive_dir = os.path.dirname(os.path.abspath(__file__))
+    archive_path = os.path.join(archive_dir, name)
 
     with zipfile.ZipFile(archive_path, 'w') as zip_file:
         for root, dirs, files in os.walk(package_dir):
