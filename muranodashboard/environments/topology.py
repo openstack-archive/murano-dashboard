@@ -20,6 +20,7 @@ from django.core.urlresolvers import reverse
 from django.template import loader
 
 from muranodashboard.api import packages as pkg_cli
+from muranodashboard.environments import consts
 
 
 def get_app_image(request, app_fqdn):
@@ -39,14 +40,16 @@ def _get_environment_status_message(entity):
 
     in_progress = True
     status_message = ''
-    if status in ('pending', 'ready'):
+    if status in (consts.STATUS_ID_PENDING, consts.STATUS_ID_READY):
         in_progress = False
-    if status == 'pending':
+    if status == consts.STATUS_ID_PENDING:
         status_message = 'Waiting for deployment'
-    elif status == 'ready':
+    elif status == consts.STATUS_ID_READY:
         status_message = 'Deployed'
-    elif status == 'deploying':
+    elif status == consts.STATUS_ID_DEPLOYING:
         status_message = 'Deployment is in progress'
+    elif status == consts.STATUS_ID_DEPLOY_FAILURE:
+        status_message = 'Deployment failed'
     return in_progress, status_message
 
 
