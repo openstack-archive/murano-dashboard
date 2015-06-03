@@ -163,9 +163,11 @@ def environment_create(request, parameters):
     return env
 
 
-def environment_delete(request, environment_id):
-    LOG.debug('Environment::Delete <Id: {0}>'.format(environment_id))
-    return api.muranoclient(request).environments.delete(environment_id)
+def environment_delete(request, environment_id, abandon=False):
+    action = 'Abandon' if abandon else 'Delete'
+    LOG.debug('Environment::{0} <Id : {1}>'.format(action, environment_id))
+    return api.muranoclient(request).environments.delete(
+        environment_id, abandon)
 
 
 def environment_get(request, environment_id):
