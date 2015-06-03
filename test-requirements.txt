@@ -4,9 +4,9 @@
 hacking>=0.10.0,<0.11
 
 coverage>=3.6
-django-nose
+django-nose>=1.2
 nose
-oslo.config>=1.9.3,<1.10.0  # Apache-2.0
+oslo.config>=1.11.0  # Apache-2.0
 openstack.nose_plugin>=0.7
 nosehtmloutput>=0.0.3
 selenium
