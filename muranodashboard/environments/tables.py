@@ -17,6 +17,7 @@ import logging
 
 from django.core.urlresolvers import reverse
 from django import shortcuts
+from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
@@ -271,7 +272,8 @@ class ServicesTable(tables.DataTable):
                            status_choices=consts.STATUS_CHOICES,
                            display_choices=consts.STATUS_DISPLAY_CHOICES)
     operation = tables.Column('operation',
-                              verbose_name=_('Last operation'))
+                              verbose_name=_('Last operation'),
+                              filters=(defaultfilters.urlize, ))
     operation_updated = tables.Column('operation_updated',
                                       verbose_name=_('Time updated'))
 
