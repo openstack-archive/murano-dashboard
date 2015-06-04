@@ -39,16 +39,23 @@ def upload_app_package(client, app_name, data):
         os.remove(consts.Manifest)
 
 
-def compose_package(app_name, manifest, package_dir, archive_dir=None):
-    def prepare_manifest(app_name, manifest):
-        with open(manifest, 'w') as f:
-            fqn = 'io.murano.apps.' + app_name
-            MANIFEST['FullName'] = fqn
-            MANIFEST['Name'] = app_name
-            MANIFEST['Classes'] = {fqn: 'mock_muranopl.yaml'}
-            f.write(yaml.dump(MANIFEST, default_flow_style=False))
-
-    prepare_manifest(app_name, manifest)
+def compose_package(app_name, manifest, package_dir,
+                    require=None, archive_dir=None):
+    """Composes package `app_name` with `manifest` file as a template for the
+    manifest and files from `package_dir`.
+    Includes `require` section if any in the manifest file.
+    Puts the resulting .zip file into `acrhive_dir` if present or in the
+    `package_dir`.
+    """
+    with open(manifest, 'w') as f:
+        fqn = 'io.murano.apps.' + app_name
+        mfest_copy = MANIFEST.copy()
+        mfest_copy['FullName'] = fqn
+        mfest_copy['Name'] = app_name
+        mfest_copy['Classes'] = {fqn: 'mock_muranopl.yaml'}
+        if require:
+            mfest_copy['Require'] = require
+        f.write(yaml.dump(mfest_copy, default_flow_style=False))
 
     name = app_name + '.zip'
 

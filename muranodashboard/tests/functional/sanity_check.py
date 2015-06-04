@@ -831,7 +831,7 @@ class TestSuitePackages(base.PackageTestCase):
 class TestSuiteRepository(base.PackageTestCase):
     _apps_to_delete = set()
 
-    def _compose_app(self, name):
+    def _compose_app(self, name, require=None):
         package_dir = os.path.join(self.serve_dir, 'apps/', name)
         shutil.copytree(c.PackageDir, package_dir)
 
@@ -839,6 +839,7 @@ class TestSuiteRepository(base.PackageTestCase):
             name,
             os.path.join(package_dir, 'manifest.yaml'),
             package_dir,
+            require=require,
             archive_dir=os.path.join(self.serve_dir, 'apps/'),
         )
         self._apps_to_delete.add(name)
@@ -853,7 +854,7 @@ class TestSuiteRepository(base.PackageTestCase):
                 pass
             os.chdir(self.serve_dir)
             httpd = SocketServer.TCPServer(
-                ("127.0.0.1", 8099),
+                ("0.0.0.0", 8099),
                 Handler, bind_and_activate=False)
             httpd.allow_reuse_address = True
             httpd.server_bind()
@@ -869,6 +870,7 @@ class TestSuiteRepository(base.PackageTestCase):
         for package in self.murano_client.packages.list(include_disabled=True):
             if package.name in self._apps_to_delete:
                 self.murano_client.packages.delete(package.id)
+                self._apps_to_delete.remove(package.name)
         shutil.rmtree(self.serve_dir)
 
     def test_import_package_by_url(self):
@@ -897,3 +899,39 @@ class TestSuiteRepository(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_on_page(
             by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
+
+    def test_import_package_from_repo(self):
+        """Test package importing via fqn from repo with dependant apps."""
+
+        pkg_name_parent = "PackageParent"
+        pkg_name_child = "PackageChild"
+        pkg_name_grand_child = "PackageGrandChild"
+
+        self._compose_app(pkg_name_parent, require={pkg_name_child: ''})
+        self._compose_app(pkg_name_child,
+                          require={pkg_name_grand_child: '0.1'})
+        pkg_name_grand_child += '.0.1'
+        self._compose_app(pkg_name_grand_child)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Package Definitions')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name_parent))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        pkg_names = [pkg_name_parent, pkg_name_child, pkg_name_grand_child]
+        for pkg_name in pkg_names:
+            self.check_element_on_page(
+                by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
