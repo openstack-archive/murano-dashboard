@@ -20,7 +20,7 @@ LOG = logging.getLogger(__name__)
 
 
 MURANO_REPO_URL = getattr(settings, 'MURANO_REPO_URL',
-                          'http://127.0.0.1/')
+                          'http://storage.apps.openstack.org')
 
 try:
     MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
