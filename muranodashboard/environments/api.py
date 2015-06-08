@@ -37,8 +37,8 @@ def get_status_messages_for_service(request, service_id, environment_id):
                 environment_id, deployment.id, service_id)
 
             for report in reports:
-                result += report.created.replace('T', ' ') + ' - ' + str(
-                    report.text) + '\n'
+                result += report.created.replace('T', ' ') + ' - ' + \
+                    report.text + '\n'
     return result
 
 
@@ -201,7 +201,7 @@ def action_allowed(request, environment_id):
 
 def services_list(request, environment_id):
     def strip(msg, to=100):
-        return '%s...' % msg[:to] if len(msg) > to else msg
+        return u'%s...' % msg[:to] if len(msg) > to else msg
 
     services = []
     # need to create new session to see services deployed be other user
@@ -222,7 +222,7 @@ def services_list(request, environment_id):
         service_id = service_data['?']['id']
 
         if service_id in reports and reports[service_id]:
-            last_operation = strip(str(reports[service_id].text))
+            last_operation = strip(reports[service_id].text)
             time = reports[service_id].updated.replace('T', ' ')
         else:
             last_operation = 'Component draft created' \
