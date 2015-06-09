@@ -33,8 +33,8 @@
             {% include 'packages/_package_params.html' %}
         {% elif wizard.steps.prev == 'modify' %}
             <h3>{% trans 'Description:' %}</h3>
-            <p>{% blocktrans %}<strong>Categories</strong> Select up to multiple categories for a package{% endblocktrans %}</p>
-            <p>{% blocktrans %} Specifying a category helps filter applications the catalog. {% endblocktrans %}</p>
+            <p>{% blocktrans %}<strong>Categories</strong> Select one or more categories for a package{% endblocktrans %}</p>
+            <p>{% blocktrans %} Specifying a category helps to filter applications in the catalog {% endblocktrans %}</p>
         {% else %}
             <div class='description-upload'>
                 <h3>{% trans 'Description:' %}</h3>
