@@ -45,7 +45,7 @@ from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import services
 from muranodashboard.environments import api as env_api
 from muranodashboard.environments import consts
-
+from muranodashboard.packages import consts as pkg_consts
 
 LOG = logging.getLogger(__name__)
 ALL_CATEGORY_NAME = 'All'
@@ -543,7 +543,8 @@ class IndexView(list_view.ListView):
 
         context['tenant_id'] = self.request.session['token'].tenant['id']
         context.update(get_environments_context(self.request))
-
+        context['repo_url'] = pkg_consts.MURANO_REPO_URL
+        context['pkg_def_url'] = reverse('horizon:murano:packages:index')
         return context
 
 
