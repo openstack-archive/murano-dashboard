@@ -2,10 +2,6 @@
 {% load i18n %}
 {% block title %}{% trans "Mark Image" %}{% endblock %}
 
-{% block page_header %}
-  {% include 'horizon/common/_page_header.html' with title=_('Mark image with Metadata') %}
-{% endblock page_header %}
-
 {% block main %}
   {% include 'images/_mark.html' %}
 {% endblock %}

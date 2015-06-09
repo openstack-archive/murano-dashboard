@@ -291,7 +291,7 @@ class ImageTestCase(PackageBase):
         self.select_from_list('image', self.image.id)
         self.fill_field(by.By.ID, 'id_title', self.image_title)
         self.select_from_list('type', 'linux')
-        self.select_and_click_element('Mark')
+        self.select_and_click_element('Mark Image')
         self.check_element_on_page(by.By.XPATH,
                                    consts.TestImage.format(self.image_title))
 

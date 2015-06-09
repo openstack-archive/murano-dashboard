@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{% trans "Add category" %}{% endblock %}
-
-{% block page_header %}
-  {% include 'horizon/common/_page_header.html' with title=_('Add Category') %}
-{% endblock page_header %}
+{% block title %}{% trans "Add Category" %}{% endblock %}
 
 {% block main %}
   {% include 'categories/_add.html' %}
