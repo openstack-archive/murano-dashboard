@@ -38,7 +38,8 @@ import yaql
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.environments import api as env_api
-from muranodashboard.openstack.common import versionutils
+
+from oslo_log import versionutils
 
 
 LOG = logging.getLogger(__name__)
