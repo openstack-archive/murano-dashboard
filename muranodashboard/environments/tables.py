@@ -76,7 +76,7 @@ class CreateEnvironment(tables.LinkAction):
         except Exception as e:
             msg = (_('Unable to create environment {0}'
                      ' due to: {1}').format(environment, e))
-            LOG.info(msg)
+            LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)
 
@@ -99,7 +99,31 @@ class DeleteEnvironment(tables.DeleteAction):
         except Exception as e:
             msg = (_('Unable to delete environment {0}'
                      ' due to: {1}').format(environment_id, e))
-            LOG.info(msg)
+            LOG.error(msg)
+            redirect = reverse(self.redirect_url)
+            exceptions.handle(request, msg, redirect=redirect)
+
+
+class AbandonEnvironment(tables.DeleteAction):
+    help_text = _("This action cannot be undone. Any resources created by "
+                  "this environment will have to be released manually.")
+    name = 'abandon'
+    action_present = _('Abandon')
+    action_past = _('Abandoned')
+    data_type_singular = _('Environment')
+    data_type_plural = _('Environments')
+    redirect_url = "horizon:project:murano:environments"
+
+    def allowed(self, request, environment):
+        return True
+
+    def action(self, request, environment_id):
+        try:
+            api.environment_delete(request, environment_id, True)
+        except Exception as e:
+            msg = (_('Unable to abandon an environment {0}'
+                     ' due to: {1}').format(environment_id, e))
+            LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)
 
@@ -245,7 +269,7 @@ class EnvironmentsTable(tables.DataTable):
         no_data_message = _('NO ENVIRONMENTS')
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       EditEnvironment, DeleteEnvironment)
+                       EditEnvironment, DeleteEnvironment, AbandonEnvironment)
         multi_select = False
 
 
