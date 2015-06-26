@@ -15,6 +15,7 @@
 import logging
 import os
 import re
+import semantic_version
 import yaql
 
 from django.utils.encoding import force_text
@@ -57,10 +58,11 @@ class Service(object):
     because Service instance is re-created on each request from UI definition
     stored at local file-system cache .
     """
-    def __init__(self, cleaned_data, forms=None, templates=None,
+    def __init__(self, cleaned_data, version, forms=None, templates=None,
                  application=None, **kwargs):
         self.cleaned_data = cleaned_data
         self.templates = templates or {}
+        self.spec_version = str(version)
 
         if application is None:
             raise ValueError('Application section is required')
@@ -75,15 +77,20 @@ class Service(object):
             setattr(self, key, value)
 
         if forms:
-            for data in forms:
-                (name, field_specs, validators,
-                 verbose_name) = self.extract_form_data(data)
-                self._add_form(name, field_specs, validators, verbose_name)
+            for counter, data in enumerate(forms):
+                name, field_specs, validators = self.extract_form_data(data)
+                self._add_form(name, field_specs, validators)
 
         # Add ManageWorkflowForm
         workflow_form = catalog_forms.WorkflowManagementForm
-        self._add_form(workflow_form.name, workflow_form.field_specs,
-                       workflow_form.validators, _("What's next?"))
+        if semantic_version.Version.coerce(self.spec_version) >= \
+                semantic_version.Version.coerce('2.2'):
+            app_name_field = workflow_form.name_field(self._get_app_name())
+            workflow_form.field_specs.insert(0, app_name_field)
+
+        self._add_form(workflow_form.name,
+                       workflow_form.field_specs,
+                       workflow_form.validators)
 
     def _add_form(self, _name, _specs, _validators, _verbose_name=None):
         import muranodashboard.dynamic_ui.forms as forms
@@ -98,19 +105,32 @@ class Service(object):
 
         self.forms.append(Form)
 
+    def _get_app_name(self):
+        try:
+            return self.application['?']['type'].split('.')[-1]
+        except KeyError:
+            LOG.info(_("Service key '?' or 'type' parameter is"
+                       " missing in application object model"))
+            self.application.setdefault('?', {})
+            return ''
+
     @staticmethod
-    def extract_form_data(form_data):
-        form_name = form_data.keys()[0]
-        form_data = form_data[form_name]
-        return (form_name, form_data['fields'],
-                form_data.get('validators', []), form_data.get('name'))
+    def extract_form_data(data):
+        for form_name, form_data in data.iteritems():
+            return form_name, form_data['fields'], form_data.get('validators',
+                                                                 [])
 
     def extract_attributes(self):
         self.context.set_data(self.cleaned_data)
         for name, template in self.templates.iteritems():
             self.context.set_data(template, name)
-
-        return helpers.evaluate(self.application, self.context)
+        if semantic_version.Version.coerce(self.spec_version) \
+                >= semantic_version.Version.coerce('2.2'):
+            management_form = catalog_forms.WorkflowManagementForm.name
+            name = self.context.get_data()[management_form]['application_name']
+            self.application['?']['name'] = name
+        attributes = helpers.evaluate(self.application, self.context)
+        return attributes
 
     def get_data(self, form_name, expr, data=None):
         """Try to get value from cleaned data, if none found, use raw data."""
@@ -140,7 +160,8 @@ def import_app(request, app_id):
     ui_desc = pkg_api.get_app_ui(request, app_id)
     fqn = pkg_api.get_app_fqn(request, app_id)
     LOG.debug('Using data {0} for app {1}'.format(app_data, fqn))
-    version.check_version(ui_desc.pop('Version', 1))
+    app_version = ui_desc.pop('Version', version.LATEST_FORMAT_VERSION)
+    version.check_version(app_version)
     service = dict(
         (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
 
@@ -151,13 +172,48 @@ def import_app(request, app_id):
         app.set_data(app_data)
     else:
         LOG.debug('Creating new forms for app {0}'.format(fqn))
-        app = _apps[app_id] = Service(app_data, **service)
+        app = _apps[app_id] = Service(app_data, app_version, **service)
     return app
 
 
 def condition_getter(request, kwargs):
+    """Define wizard conditional dictionary.
+
+    This function generates conditional dictionary for application creation
+       wizard. The last form of the wizard may be a management form, that
+       is provided by murano, not by a user. But in some cases this field
+       should be hidden. So here all situations are proceeded.
+       Management form may contain the following fields:
+       * continue adding applications chechkbox
+         Hidden, when user adds an app from 'quick deploy' and from
+        the other form (while creating depending app with '+' sign
+       * automatic inserted name
+         Hidden, if app version not higher then 2.0
+
+       So if both fields should not be shown - the management form is hidden.
+    """
     def _func(wizard):
-        return not wizard.get_wizard_flag('drop_wm_form')
+        # Get last key in OrderDict
+        last_step = next(reversed(wizard.form_list))
+        app_spec_version = wizard.form_list[last_step].service.spec_version
+        hide_stay_at_catalog_dialog = wizard.get_wizard_flag('drop_wm_form')
+        # Hide management form if version is old and additional dialog should
+        # not be shown
+        if not semantic_version.Version.coerce(app_spec_version) >= \
+                semantic_version.Version.coerce('2.2')\
+                and hide_stay_at_catalog_dialog:
+            return False
+        last_form_fields = wizard.form_list[last_step].base_fields
+        # If version is old, do not ask for app name
+        if not semantic_version.Version.coerce(app_spec_version) >= \
+                semantic_version.Version.coerce('2.2'):
+            if 'application_name' in last_form_fields.keys():
+                del last_form_fields['application_name']
+        # If workflow checkbox is not needed, remove it
+        if hide_stay_at_catalog_dialog:
+            if 'stay_at_the_catalog' in last_form_fields.keys():
+                del last_form_fields['stay_at_the_catalog']
+        return True
 
     app = import_app(request, kwargs['app_id'])
     key = force_text(_get_form_name(len(app.forms) - 1, app.forms[-1]()))
