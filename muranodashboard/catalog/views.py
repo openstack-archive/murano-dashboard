@@ -35,8 +35,8 @@ from horizon import exceptions
 from horizon.forms import views
 from horizon import messages
 from horizon import tabs
-
 from muranoclient.common import exceptions as exc
+
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import tabs as catalog_tabs

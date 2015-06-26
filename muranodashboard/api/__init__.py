@@ -20,10 +20,9 @@ from django.contrib.messages import api as msg_api
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
-from openstack_dashboard.api import base
-
 import muranoclient.client as client
 from muranoclient.common import exceptions as exc
+from openstack_dashboard.api import base
 
 
 LOG = logging.getLogger(__name__)
@@ -68,7 +67,7 @@ def handled_exceptions(request):
 
 
 def _get_endpoint(request):
-    #prefer location specified in settings for dev purposes
+    # prefer location specified in settings for dev purposes
     endpoint = getattr(settings, 'MURANO_API_URL', None)
 
     if not endpoint:

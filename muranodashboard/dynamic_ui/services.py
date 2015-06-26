@@ -15,6 +15,7 @@
 import logging
 import os
 import re
+
 import yaql
 
 from muranodashboard import api

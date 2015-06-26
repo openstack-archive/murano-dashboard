@@ -15,7 +15,6 @@
 import copy
 import json
 import logging
-import netaddr
 import re
 
 from django.core.urlresolvers import reverse
@@ -30,11 +29,12 @@ from horizon import exceptions
 from horizon import forms as hz_forms
 from horizon import messages
 from horizon import tables
+from muranoclient.common import exceptions as muranoclient_exc
+import netaddr
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
 import yaql
 
-from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.environments import api as env_api
 from muranodashboard.openstack.common import versionutils
