@@ -24,7 +24,7 @@ from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
 
 LOG = logging.getLogger(__name__)
-NAME_VALIDATORS = [validators.RegexValidator('^[a-zA-Z]+[\w-]*$')]
+NAME_VALIDATORS = [validators.RegexValidator('^[a-zA-Z]+[\w.-]*$')]
 HELP_TEXT = _("Environment names must contain only alphanumeric or '_-.'"
               " characters and must start with alpha")
 
