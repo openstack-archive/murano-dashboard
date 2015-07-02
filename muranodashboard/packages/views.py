@@ -296,6 +296,24 @@ class ImportPackageWizard(views.ModalFormMixin,
             messages.success(self.request, msg)
             return http.HttpResponseRedirect(redirect)
 
+    def _handle_exception(self, original_e):
+        exc_info = sys.exc_info()
+        reason = ''
+        if hasattr(original_e, 'details'):
+            try:
+                error = json.loads(original_e.details).get('error')
+                if error:
+                    reason = error.get('message')
+            except ValueError:
+                # Let horizon operate with original exception
+                raise exc_info[0], exc_info[1], exc_info[2]
+        msg = _('Uploading package failed. {0}').format(reason)
+        LOG.exception(msg)
+        exceptions.handle(
+            self.request,
+            msg,
+            redirect=reverse('horizon:murano:packages:index'))
+
     def process_step(self, form):
         @catalog_views.update_latest_apps
         def _update_latest_apps(request, app_id):
@@ -403,6 +421,9 @@ class ImportPackageWizard(views.ModalFormMixin,
                     self.request,
                     msg,
                     redirect=reverse('horizon:murano:packages:index'))
+            except exc.HTTPInternalServerError as e:
+                self._handle_exception(e)
+
             except exc.HTTPException as e:
                 reason = muranodashboard_utils.parse_api_error(
                     getattr(e, 'details', ''))
@@ -415,23 +436,8 @@ class ImportPackageWizard(views.ModalFormMixin,
                     redirect=reverse('horizon:murano:packages:index'))
 
             except Exception as original_e:
-                exc_info = sys.exc_info()
-                reason = ''
-                if hasattr(original_e, 'details'):
-                    try:
-                        error = json.loads(original_e.details).get('error')
-                        if error:
-                            reason = error.get('message')
-                    except ValueError:
-                        # Let horizon operate with original exception
-                        raise exc_info[0], exc_info[1], exc_info[2]
+                self._handle_exception(original_e)
 
-                msg = _('Uploading package failed. {0}').format(reason)
-                LOG.exception(msg)
-                exceptions.handle(
-                    self.request,
-                    msg,
-                    redirect=reverse('horizon:murano:packages:index'))
         return step_data
 
     def get_form_kwargs(self, step=None):
