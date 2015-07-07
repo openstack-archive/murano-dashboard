@@ -115,6 +115,13 @@ class AbandonEnvironment(tables.DeleteAction):
     redirect_url = "horizon:project:murano:environments"
 
     def allowed(self, request, environment):
+        """'Abandon Environment' button is hidden in several cases:
+             * environment is new
+             * app added to env, but not deploy is not started
+        """
+        status = getattr(environment, 'status', None)
+        if status in [consts.STATUS_ID_NEW, consts.STATUS_ID_PENDING]:
+            return False
         return True
 
     def action(self, request, environment_id):
@@ -176,10 +183,18 @@ class DeployEnvironment(tables.BatchAction):
     classes = ('btn-launch',)
 
     def allowed(self, request, environment):
+        """'Deploy environment' is not shown in several cases:
+            * when deploy is already in progress
+            * delete is in progress
+            * no new services added to the environment (after env creation
+              or successful deploy or delete failure)
+        """
         status = getattr(environment, 'status', None)
-        if not environment.has_new_services:
-            return False
-        if status in consts.NO_ACTION_ALLOWED_STATUSES:
+        if (status != consts.STATUS_ID_DEPLOY_FAILURE
+           and not environment.has_new_services):
+                return False
+        if (status in consts.NO_ACTION_ALLOWED_STATUSES
+                or status == consts.STATUS_ID_READY):
             return False
         return True
 
@@ -199,6 +214,12 @@ class DeployThisEnvironment(tables.Action):
     classes = ('btn-launch',)
 
     def allowed(self, request, service):
+        """'Deploy environment' is not shown in several cases:
+            * when deploy is already in progress
+            * delete is in progress
+            * env was just created and no apps added
+            * previous deployment finished successfully
+        """
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
         if (status in consts.NO_ACTION_ALLOWED_STATUSES
