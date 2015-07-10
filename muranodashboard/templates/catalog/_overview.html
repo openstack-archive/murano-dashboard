@@ -5,7 +5,7 @@
 <div class="status row detail app_overview">
  <div class="app-meta">
      <div class="app-metadata">
-       <div class="app-description">{% if app.description %}{{ app.description|safe }}{% endif %}</div>
+       <div class="app-description">{% if app.description %}{{ app.description }}{% endif %}</div>
        <ul>
         {% if app.author %}<li><strong>Provided By:</strong> {{ app.author }}</li>{% endif %}
         {% if app.tags %}<li><strong>Tags:</strong> {{ app.tags|join:", " }}</li>{% endif %}
@@ -30,8 +30,8 @@
             <li><a href="{{ app.supplier.CompanyUrl.Link }}">{{ app.supplier.CompanyUrl.Link }}</a></li>
           {% endif %}
         {% endif %}
-        {% if app.supplier.Summary %}<li>{{ app.supplier.Summary|safe }}</li>{% endif %}
-        {% if app.supplier.Description %}<li>{{ app.supplier.Description|safe }}</li>{% endif %}
+        {% if app.supplier.Summary %}<li>{{ app.supplier.Summary }}</li>{% endif %}
+        {% if app.supplier.Description %}<li>{{ app.supplier.Description }}</li>{% endif %}
        </ul>
      </div>
    </div>
