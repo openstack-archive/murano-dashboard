@@ -101,7 +101,16 @@
                 </div>
             </div>
         {% else %}
-            <p class="col-xs-12 alert alert-info">{% trans "There are no applications in the catalog." %}</p>
+            <p class="col-xs-12 alert alert-info">
+                {% blocktrans %} There are no applications in the catalog.
+                    You can import apps from<a href="{{ repo_url }}"
+                                               target="_blank"> {{ repo_url }}</a>.
+                    <br><br>
+                    Go to
+                    <b><a href={{ pkg_def_url }}>Package Definitions</a></b>,
+                    click 'Import Package' and select <i>Repository</i> as a
+                    <i>Package Source</i>.  {% endblocktrans %}
+            </p>
         {% endif %}
     </div>
     <script>
