@@ -8,7 +8,6 @@ DISABLED = False
 
 ADD_INSTALLED_APPS = [
     'muranodashboard',
-    'floppyforms'
 ]
 
 ADD_EXCEPTIONS = {
