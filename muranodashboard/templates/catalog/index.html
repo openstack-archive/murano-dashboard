@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'murano_base.html' %}
 {% load i18n %}
 {% load static %}
 {% load url from future %}
@@ -12,10 +12,6 @@
           href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
     {% include "horizon/common/_page_header.html" with title=_("Applications") %}
 {% endblock page_header %}
-
-{% block js %}
-    {% include "horizon/_scripts.html" %}
-{% endblock %}
 
 {% block main %}
     <div class="table_wrapper">

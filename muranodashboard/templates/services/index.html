@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'murano_base.html' %}
 {% load i18n %}
 {% load static %}
 {% load horizon %}
@@ -26,8 +26,7 @@
 {% endblock %}
 
 {% block js %}
-    {% include 'horizon/_scripts.html' %}
-    <script src="{% static 'muranodashboard/js/load-modals.js' %}"></script>
+    {{ block.super }}
     <script type="text/template" id="app_tile_small">
         {% jstemplate %}
             {% url 'horizon:murano:catalog:images' '[[app_id]]' as image_url %}
@@ -46,8 +45,6 @@
             </div>
         {% endjstemplate %}
     </script>
-    <script src="{% static 'muranodashboard/js/draggable-components.js' %}"></script>
-    <script src="{% static 'muranodashboard/js/horizon.tables+reload.js' %}"></script>
     <script type="text/javascript">
         var TENANT_ID = "{{tenant_id}}";
     </script>

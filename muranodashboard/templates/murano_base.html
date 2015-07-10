@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block js %}
+  {{ block.super }}
+  {% compress js %}
+    <script src="{% static 'muranodashboard/js/add-select.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/draggable-components.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/environments-in-place.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/environments-in-place.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/external-ad.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/horizon.muranotopology.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/horizon.tables+reload.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/load-modals.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/mixed-mode.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/murano.service.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/passwordfield.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/submit-disabled.js' %}"></script>
+    <script src="{% static 'muranodashboard/js/support_placeholder.js' %}"></script>
+    {% endcompress %}
+{% endblock %}
