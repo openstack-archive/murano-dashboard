@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
-{% load i18n sizeformat %}
+{% load i18n sizeformat static %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/reports.css' %}">
+{% endblock %}
+
+{% block title %}{% trans "Deployment Details" %}{% endblock %}
 
 {% block page_header %}
   {% include "deployments/_reports_page_header.html" %}
