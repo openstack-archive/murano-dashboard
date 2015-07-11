@@ -25,3 +25,5 @@ doc/source/api
 
 # Tests
 muranodashboard/test/functional/config/config.conf
+node_modules
+npm-debug.log

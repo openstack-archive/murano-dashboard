@@ -1,0 +1,15 @@
+{
+  "version": "0.0.0",
+  "private": true,
+  "name": "muranodashboard",
+  "description": "Murano Dashboard",
+  "repository": "none",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "eslint": "^0.23.0"
+  },
+  "scripts": {
+    "lint": "eslint --no-color muranodashboard/static"
+  },
+  "dependencies": {}
+}
