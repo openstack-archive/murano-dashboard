@@ -418,13 +418,13 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.go_to_submenu('Applications')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
-        self.driver.find_element_by_link_text('Databases').click()
+        self.driver.find_element_by_partial_link_text('Databases').click()
 
         self.check_element_on_page(by.By.XPATH, c.App.format('PostgreSQL'))
 
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('Databases')).click()
-        self.driver.find_element_by_link_text('Web').click()
+        self.driver.find_element_by_partial_link_text('Web').click()
 
         self.check_element_on_page(by.By.XPATH, c.App.format('MockApp'))
 
