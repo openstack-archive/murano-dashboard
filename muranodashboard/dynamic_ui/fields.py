@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import ast
 import copy
 import json
 import logging
@@ -34,6 +35,7 @@ import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
+from muranodashboard.common import net
 from muranodashboard.environments import api as env_api
 
 from oslo_log import versionutils
@@ -357,6 +359,50 @@ class ImageChoiceField(ChoiceField):
             image_choices.insert(0, ("", _("No images available")))
 
         self.choices = image_choices
+
+
+class NetworkChoiceField(ChoiceField):
+    def __init__(self,
+                 include_subnets=True,
+                 filter=None,
+                 murano_networks=None,
+                 allow_auto=True,
+                 *args,
+                 **kwargs):
+        self.filter = filter
+        if murano_networks:
+            if murano_networks.lower() not in ["exclude", "translate"]:
+                raise ValueError(_("Invalid value of 'murano_nets' option"))
+        self.murano_networks = murano_networks
+        self.include_subnets = include_subnets
+        self.allow_auto = allow_auto
+        super(NetworkChoiceField, self).__init__(*args,
+                                                 **kwargs)
+
+    @with_request
+    def update(self, request, **kwargs):
+        """Populates available networks in the control
+
+        This method is called automatically when the form which contains it is
+        rendered
+        """
+        network_choices = net.get_available_networks(request,
+                                                     self.include_subnets,
+                                                     self.filter,
+                                                     self.murano_networks)
+        if self.allow_auto:
+            network_choices.insert(0, ((None, None), _('Auto')))
+        self.choices = network_choices or []
+
+    def to_python(self, value):
+        """Converts string representation of widget to tuple value
+
+        Is called implicitly during form cleanup phase
+        """
+        if value:
+            return ast.literal_eval(value)
+        else:  # may happen if no networks are available and "Auto" is disabled
+            return None, None
 
 
 class AZoneChoiceField(ChoiceField):
