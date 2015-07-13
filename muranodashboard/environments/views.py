@@ -79,6 +79,25 @@ class EnvironmentDetails(tabs.TabbedTableView):
         context['tenant_id'] = self.request.session['token'].tenant['id']
         return context
 
+    def get_tabs(self, request, *args, **kwargs):
+        environment_id = self.kwargs['environment_id']
+        ns_url = "horizon:murano:environments:index"
+        try:
+            deployments = api.deployments_list(self.request,
+                                               environment_id)
+        except exc.HTTPException:
+            msg = _('Unable to retrieve list of deployments')
+            exceptions.handle(self.request, msg, redirect=reverse(ns_url))
+
+        logs = []
+        if deployments:
+            last_deployment = deployments[0]
+            logs = api.deployment_reports(self.request,
+                                          environment_id,
+                                          last_deployment.id)
+        return self.tab_group_class(request, logs=logs,
+                                    **kwargs)
+
 
 class DetailServiceView(tabs.TabbedTableView):
     tab_group_class = env_tabs.ServicesTabs

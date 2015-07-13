@@ -155,6 +155,13 @@ class EnvLogsTab(tabs.Tab):
         return {"reports": reports}
 
 
+class LatestLogsTab(EnvLogsTab):
+    name = _("Latest Deployment Log")
+
+    def allowed(self, request):
+        return self.data.get('reports')
+
+
 class EnvConfigTab(tabs.TableTab):
     name = _("Configuration")
     slug = "env_config"
@@ -246,7 +253,8 @@ class DeploymentTab(tabs.TableTab):
 
 class EnvironmentDetailsTabs(tabs.TabGroup):
     slug = "environment_details"
-    tabs = (EnvironmentServicesTab, EnvironmentTopologyTab, DeploymentTab)
+    tabs = (EnvironmentServicesTab, EnvironmentTopologyTab,
+            DeploymentTab, LatestLogsTab)
 
 
 class ServicesTabs(tabs.TabGroup):
