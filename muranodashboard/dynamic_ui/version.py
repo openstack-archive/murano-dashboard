@@ -12,10 +12,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-VERSION = 2
+import semantic_version
+
+LATEST_FORMAT_VERSION = 2.0
 
 
 def check_version(version):
-    msg = 'Unsupported Dynamic UI version: required {0}, got {1}'
-    if version != VERSION:
-        raise ValueError(msg.format(VERSION, version))
+    latest = semantic_version.Version.coerce(str(LATEST_FORMAT_VERSION))
+    supported = semantic_version.Version(str(latest.major), partial=True)
+    requested = semantic_version.Version.coerce(str(version))
+    if supported != requested:
+        msg = 'Unsupported Dynamic UI format version: ' \
+              'requested format version {0} is not compatible with the ' \
+              'supported family {1}'
+        raise ValueError(msg.format(requested, supported))
+    if requested > latest:
+        msg = 'Unsupported Dynamic UI format version: ' \
+              'requested format version {0} is newer than ' \
+              'latest supported {1}'
+        raise ValueError(msg.format(requested, latest))
