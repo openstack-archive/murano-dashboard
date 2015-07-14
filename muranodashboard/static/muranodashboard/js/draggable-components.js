@@ -70,6 +70,9 @@ $(function() {
         }
       }
       if (apps.length) {
+        if ($carousel.css('display') === 'none') {
+          $carousel.show();
+        }
         apps.subdivide(6).forEach(function (chunk, index) {
           var $item = $('<div class="item"></div>'),
             $row = $('<div class="row"></div>');
