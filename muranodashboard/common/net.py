@@ -15,6 +15,7 @@
 
 import logging
 import re
+import uuid
 
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -22,8 +23,16 @@ from openstack_dashboard.api import neutron
 
 from muranodashboard.environments import api as env_api
 
-
 LOG = logging.getLogger(__name__)
+
+NEUTRON_NET_HELP = _("The VMs of the applications in this environment will "
+                     "join this net by default, unless configured "
+                     "individually. Choosing 'Create New' will generate a new "
+                     "Network with a Subnet having an IP range allocated "
+                     "among the ones available for the default Murano Router "
+                     "of this project")
+NN_HELP = _("OpenStack Networking (Neutron) is not available in current "
+            "environment. Custom Network Settings cannot be applied")
 
 
 def get_available_networks(request, include_subnets=True,
@@ -75,3 +84,20 @@ def get_available_networks(request, include_subnets=True,
             netname = netname or net.name
             network_choices.append(((net.id, None), netname))
     return network_choices
+
+
+def generate_join_existing_net(net_config):
+    res = {
+        "defaultNetworks": {
+            'environment': {
+                '?': {
+                    'id': uuid.uuid4().hex,
+                    'type': 'io.murano.resources.ExistingNeutronNetwork'
+                },
+                'internalNetworkName': net_config[0],
+                'internalSubnetworkName': net_config[1]
+            },
+            'flat': None
+        }
+    }
+    return res
