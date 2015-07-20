@@ -16,13 +16,23 @@ import re
 import types
 
 import yaql
-import yaql.exceptions
+from yaql.language import exceptions as yaql_exc
+
+
+def _set_up_yaql():
+    legacy_engine_options = {
+        'yaql.limitIterators': 100,
+        'yaql.memoryQuota': 20000
+    }
+    return yaql.YaqlFactory().create(options=legacy_engine_options)
+
+YAQL = _set_up_yaql()
 
 
 class YaqlExpression(object):
     def __init__(self, expression):
         self._expression = str(expression)
-        self._parsed_expression = yaql.parse(self._expression)
+        self._parsed_expression = YAQL(self._expression)
 
     def expression(self):
         return self._expression
@@ -40,12 +50,12 @@ class YaqlExpression(object):
         if re.match('^[\s\w\d.:]*$', expr):
             return False
         try:
-            yaql.parse(expr)
+            YAQL(expr)
             return True
-        except yaql.exceptions.YaqlGrammarException:
+        except yaql_exc.YaqlGrammarException:
             return False
-        except yaql.exceptions.YaqlLexicalException:
+        except yaql_exc.YaqlLexicalException:
             return False
 
-    def evaluate(self, data=None, context=None):
+    def evaluate(self, data=yaql.utils.NO_VALUE, context=None):
         return self._parsed_expression.evaluate(data=data, context=context)

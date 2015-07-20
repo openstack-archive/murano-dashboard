@@ -19,7 +19,7 @@ import types
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from oslo_log import log as logging
-import yaql
+from yaql import legacy
 
 import muranodashboard.dynamic_ui.fields as fields
 import muranodashboard.dynamic_ui.helpers as helpers
@@ -181,7 +181,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         super(ServiceConfigurationForm, self).__init__(*args, **kwargs)
 
         self.auto_id = '{0}_%s'.format(self.initial.get('app_id'))
-        self.context = yaql.create_context()
+        self.context = legacy.create_context()
         yaql_functions.register(self.context)
 
         self.finalize_fields()

@@ -12,15 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
 import functools
 import os
 
 from oslo_log import log as logging
 
+from muranodashboard.common import utils
 from muranodashboard.environments import consts
 
 
@@ -48,11 +45,11 @@ def _get_entry_path(app_id):
 
 
 def _load_from_file(file_name):
-    if os.path.isfile(file_name):
+    if os.path.isfile(file_name) and os.path.getsize(file_name) > 0:
         with open(file_name, 'rb') as f:
-            return pickle.load(f)
-    else:
-        return None
+            p = utils.CustomUnpickler(f)
+            return p.load()
+    return None
 
 
 def _save_to_file(file_name, content):
@@ -60,7 +57,8 @@ def _save_to_file(file_name, content):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     with open(file_name, 'wb') as f:
-        pickle.dump(content, f)
+        p = utils.CustomPickler(f)
+        p.dump(content)
 
 
 def with_cache(*dst_parts):

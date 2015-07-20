@@ -18,7 +18,6 @@ import types
 import uuid
 
 from django.core import validators
-from yaql import utils
 
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
 
@@ -84,7 +83,7 @@ def recursive_apply(predicate, transformer, value, *args):
         elif isinstance(val, types.TupleType):
             return tuple([rec(v) for v in val])
         elif isinstance(val, types.GeneratorType):
-            return rec(utils.limit(val))
+            return rec(val)
         else:
             return val
 

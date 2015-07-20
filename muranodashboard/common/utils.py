@@ -12,8 +12,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import bs4
 import string
+
+from muranodashboard.dynamic_ui import yaql_expression
+import yaql
 
 
 def parse_api_error(api_error_html):
@@ -68,3 +75,41 @@ class BlankFormatter(string.Formatter):
             return kwargs.get(key, self.default)
         else:
             return string.Formatter.get_value(self, key, args, kwargs)
+
+
+class CustomPickler(object):
+    """Custom pickle object to perform correct serializing.
+
+    YAQL Engine is not serializable and it's not necessary to store
+    it in cache. This class replace YAQL Engine instance to string.
+    """
+
+    def __init__(self, file, protocol=0):
+        pickler = pickle.Pickler(file, protocol)
+        pickler.persistent_id = self.persistent_id
+        self.dump = pickler.dump
+        self.clear_memo = pickler.clear_memo
+
+    def persistent_id(self, obj):
+        if isinstance(obj, yaql.factory.YaqlEngine):
+            return "filtered:YaqlEngine"
+        else:
+            return None
+
+
+class CustomUnpickler(object):
+    """Custom pickle object to perform correct deserializing.
+
+    This class replace filtered YAQL Engine to the real instance.
+    """
+    def __init__(self, file):
+        unpickler = pickle.Unpickler(file)
+        unpickler.persistent_load = self.persistent_load
+        self.load = unpickler.load
+        self.noload = unpickler.noload
+
+    def persistent_load(self, obj_id):
+        if obj_id == 'filtered:YaqlEngine':
+            return yaql_expression.YAQL
+        else:
+            raise pickle.UnpicklingError('Invalid persistent id')

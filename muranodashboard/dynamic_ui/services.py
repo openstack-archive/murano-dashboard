@@ -15,12 +15,12 @@
 import os
 import re
 import semantic_version
-import yaql
 
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from oslo_log import log as logging
 import six
+from yaql import legacy
 
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
@@ -69,7 +69,7 @@ class Service(object):
         else:
             self.application = application
 
-        self.context = yaql.create_context()
+        self.context = legacy.create_context()
         yaql_functions.register(self.context)
 
         self.forms = []
@@ -121,13 +121,13 @@ class Service(object):
                                                                  [])
 
     def extract_attributes(self):
-        self.context.set_data(self.cleaned_data)
+        self.context['$'] = self.cleaned_data
         for name, template in self.templates.iteritems():
-            self.context.set_data(template, name)
+            self.context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
                 >= semantic_version.Version.coerce('2.2'):
             management_form = catalog_forms.WorkflowManagementForm.name
-            name = self.context.get_data()[management_form]['application_name']
+            name = self.context['$'][management_form]['application_name']
             self.application['?']['name'] = name
         attributes = helpers.evaluate(self.application, self.context)
         return attributes

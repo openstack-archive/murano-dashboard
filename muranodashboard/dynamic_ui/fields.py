@@ -76,7 +76,7 @@ def make_yaql_validator(validator_property):
 
     def validator_func(value):
         context = yaql.create_context()
-        context.set_data(value)
+        context['$'] = value
         if not expr.evaluate(context=context):
             raise forms.ValidationError(message)
 
