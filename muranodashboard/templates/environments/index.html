@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block css %}
-  {% include "_stylesheets.html" %}
+  {{ block.super }}
   <link href='{{ STATIC_URL }}muranodashboard/css/catalog.css' type='text/css' media='screen' rel='stylesheet' />
 {% endblock %}
 

@@ -74,9 +74,10 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.go_to_submenu('Environments')
         self.create_environment('test_edit_env')
         self.go_to_submenu('Environments')
-        self.driver.find_element_by_link_text('test_edit_env')
 
         self.edit_environment(old_name='test_edit_env', new_name='edited_env')
+
+        self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.LINK_TEXT, 'edited_env')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'test_edit_env')
 
