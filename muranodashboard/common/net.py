@@ -13,13 +13,13 @@
 # under the License.
 
 
-import logging
 import re
 import uuid
 
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from openstack_dashboard.api import neutron
+from oslo_log import log as logging
 
 from muranodashboard.environments import api as env_api
 

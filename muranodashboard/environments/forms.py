@@ -12,7 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 import ast
-import logging
 
 from django.core import validators
 from django import forms
@@ -20,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages
+from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard.common import net

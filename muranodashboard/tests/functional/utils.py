@@ -3,9 +3,11 @@ import os
 import yaml
 import zipfile
 
+from oslo_log import log
+
 from muranodashboard.tests.functional import consts
 
-log = logging.getLogger(__name__)
+log = log.getLogger(__name__).logger
 log.setLevel(logging.DEBUG)
 log.addHandler(logging.StreamHandler())
 

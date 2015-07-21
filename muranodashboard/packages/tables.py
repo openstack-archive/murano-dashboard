@@ -13,7 +13,6 @@
 #    under the License.
 
 from collections import defaultdict
-import logging
 
 from django.core.urlresolvers import reverse
 from django import http
@@ -22,6 +21,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import tables
+from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api

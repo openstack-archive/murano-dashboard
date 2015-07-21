@@ -12,7 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
 import os
 import re
 import semantic_version
@@ -20,6 +19,7 @@ import yaql
 
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
+from oslo_log import log as logging
 import six
 
 from muranodashboard.api import packages as pkg_api

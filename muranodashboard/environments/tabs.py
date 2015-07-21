@@ -13,7 +13,6 @@
 #    under the License.
 
 import json
-import logging
 
 from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
@@ -22,6 +21,7 @@ from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard.api import heat as heat_api
 from openstack_dashboard.api import nova as nova_api
+from oslo_log import log as logging
 
 
 from muranoclient.common import exceptions as exc

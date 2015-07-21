@@ -21,6 +21,8 @@ import urlparse
 from glanceclient import client as gclient
 from keystoneclient.v2_0 import client as ksclient
 from muranoclient import client as mclient
+from oslo_log import handlers
+from oslo_log import log
 from selenium.common import exceptions as exc
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -32,9 +34,9 @@ import config.config as cfg
 from muranodashboard.tests.functional import consts
 from muranodashboard.tests.functional import utils
 
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-log.addHandler(logging.StreamHandler())
+logger = log.getLogger(__name__).logger
+logger.level = logging.DEBUG
+logger.addHandler(handlers.ColorHandler())
 
 if sys.version_info >= (2, 7):
     class BaseDeps(testtools.TestCase):
@@ -103,7 +105,7 @@ class UITestCase(BaseDeps):
 
         """
         name = self._testMethodName
-        log.exception('{0} failed'.format(name))
+        logger.error('{0} failed'.format(name))
         screenshot_dir = './screenshots'
         if not os.path.exists(screenshot_dir):
             os.makedirs(screenshot_dir)
@@ -229,7 +231,7 @@ class UITestCase(BaseDeps):
 
     def wait_for_alert_message(self):
         locator = (by.By.CSS_SELECTOR, 'div.alert-success')
-        log.debug("Waiting for a success message")
+        logger.debug("Waiting for a success message")
         ui.WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
 
@@ -292,7 +294,7 @@ class ImageTestCase(PackageBase):
                                              is_public=True,
                                              properties=property)
         except Exception as e:
-            log.exception("Unable to create or update image in Glance")
+            logger.error("Unable to create or update image in Glance")
             raise e
         return image
 
@@ -325,8 +327,8 @@ class FieldsTestCase(PackageBase):
             self.driver.find_element_by_xpath(
                 consts.ErrorMessage.format(error_message))
         except (exc.NoSuchElementException, exc.ElementNotVisibleException):
-            log.info("Message {0} is not"
-                     " present on the page".format(error_message))
+            logger.info("Message {0} is not"
+                        " present on the page".format(error_message))
 
         self.driver.implicitly_wait(30)
 

@@ -15,7 +15,6 @@
 import ast
 import copy
 import json
-import logging
 import netaddr
 import re
 
@@ -31,6 +30,7 @@ from horizon import forms as hz_forms
 from horizon import messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
+from oslo_log import log as logging
 import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc

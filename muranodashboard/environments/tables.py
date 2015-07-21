@@ -13,7 +13,6 @@
 #    under the License.
 
 import json
-import logging
 
 from django.core.urlresolvers import reverse
 from django import http as django_http
@@ -25,6 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from horizon import tables
+from oslo_log import log as logging
 
 from muranodashboard import api as api_utils
 from muranodashboard.api import packages as pkg_api

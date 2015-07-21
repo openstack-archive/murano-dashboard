@@ -17,8 +17,9 @@ try:
 except ImportError:
     import pickle
 import functools
-import logging
 import os
+
+from oslo_log import log as logging
 
 from muranodashboard.environments import consts
 

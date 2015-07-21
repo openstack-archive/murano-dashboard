@@ -13,7 +13,6 @@
 #    under the License.
 
 import json
-import logging
 import sys
 
 from django.core.urlresolvers import reverse
@@ -22,6 +21,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages
+from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api

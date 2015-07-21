@@ -16,7 +16,6 @@ import collections
 import copy
 import functools
 import json
-import logging
 import re
 
 from django.conf import settings
@@ -36,6 +35,7 @@ from horizon import exceptions
 from horizon.forms import views
 from horizon import messages
 from horizon import tabs
+from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api

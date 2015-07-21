@@ -13,9 +13,9 @@
 #    under the License.
 
 from horizon import tabs
-import logging
 
 from django.utils.translation import ugettext_lazy as _
+from oslo_log import log as logging
 
 from muranodashboard.dynamic_ui import services
 

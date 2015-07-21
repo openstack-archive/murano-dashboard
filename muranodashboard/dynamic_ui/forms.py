@@ -14,11 +14,11 @@
 
 from collections import defaultdict
 import copy
-import logging
 import types
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from oslo_log import log as logging
 import yaql
 
 import muranodashboard.dynamic_ui.fields as fields

@@ -13,7 +13,6 @@
 #    under the License.
 
 import json
-import logging
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -21,6 +20,7 @@ from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages
 from openstack_dashboard.api import glance
+from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
 

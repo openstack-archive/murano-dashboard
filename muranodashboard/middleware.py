@@ -12,11 +12,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
 import traceback
 
 from horizon import exceptions
 from horizon import middleware
+from oslo_log import log as logging
 
 
 logger = logging.getLogger(__name__)

@@ -12,12 +12,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
-
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tables
 from muranoclient.common import exceptions as exc
+from oslo_log import log as logging
 
 from muranodashboard import api
 

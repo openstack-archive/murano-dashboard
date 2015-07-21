@@ -13,7 +13,6 @@
 #    under the License.
 
 import contextlib
-import logging
 
 from django.conf import settings
 from django.contrib.messages import api as msg_api
@@ -21,6 +20,7 @@ from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from openstack_dashboard.api import base
+from oslo_log import log as logging
 
 import muranoclient.client as client
 from muranoclient.common import exceptions as exc

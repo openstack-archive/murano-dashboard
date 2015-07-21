@@ -13,7 +13,6 @@
 #    under the License.
 
 import json
-import logging
 import sys
 
 from django.contrib.formtools.wizard import views as wizard_views
@@ -30,6 +29,7 @@ from horizon.utils import functions as utils
 from muranoclient.common import exceptions as exc
 from muranoclient.common import utils as muranoclient_utils
 from openstack_dashboard.api import glance
+from oslo_log import log as logging
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
