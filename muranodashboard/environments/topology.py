@@ -23,9 +23,17 @@ from muranodashboard.api import packages as pkg_cli
 from muranodashboard.environments import consts
 
 
-def get_app_image(request, app_fqdn):
+def get_app_image(request, app_fqdn, status=None):
     package = pkg_cli.app_by_fqn(request, app_fqdn)
-    url = static('dashboard/img/stack-green.svg')
+    if status in [
+       consts.STATUS_ID_DEPLOY_FAILURE,
+       consts.STATUS_ID_DELETE_FAILURE,
+       ]:
+        url = static('dashboard/img/stack-red.svg')
+    elif status == consts.STATUS_ID_READY:
+        url = static('dashboard/img/stack-green.svg')
+    else:
+        url = static('dashboard/img/stack-gray.svg')
     if package:
         app_id = package.id
         url = reverse("horizon:murano:catalog:images", args=(app_id,))
@@ -256,7 +264,8 @@ def render_d3_data(request, environment):
                     required_by = ext_net_name
 
         service_node = _create_empty_node()
-        service_image = get_app_image(request, service['?']['type'])
+        service_image = get_app_image(request, service['?']['type'],
+                                      service['?']['status'])
         node_id = service['?']['id']
         node_refs[node_id] = service_node
         service_node.update({
