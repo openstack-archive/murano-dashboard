@@ -14,11 +14,11 @@
 
 import semantic_version
 
-LATEST_FORMAT_VERSION = 2.0
+LATEST_FORMAT_VERSION = '2.0'
 
 
 def check_version(version):
-    latest = semantic_version.Version.coerce(str(LATEST_FORMAT_VERSION))
+    latest = get_latest_version()
     supported = semantic_version.Version(str(latest.major), partial=True)
     requested = semantic_version.Version.coerce(str(version))
     if supported != requested:
@@ -31,3 +31,7 @@ def check_version(version):
               'requested format version {0} is newer than ' \
               'latest supported {1}'
         raise ValueError(msg.format(requested, latest))
+
+
+def get_latest_version():
+    return semantic_version.Version.coerce(LATEST_FORMAT_VERSION)

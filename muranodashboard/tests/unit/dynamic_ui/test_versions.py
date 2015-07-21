@@ -21,29 +21,32 @@ class TestVersions(testtools.TestCase):
     def setUp(self):
         super(TestVersions, self).setUp()
         self.original = version.LATEST_FORMAT_VERSION
-        version.LATEST_FORMAT_VERSION = 2.4
+        version.LATEST_FORMAT_VERSION = '2.4'
 
     def tearDown(self):
         version.LATEST_FORMAT_VERSION = self.original
         super(TestVersions, self).tearDown()
 
-    def test_exact_match(self):
-        version.check_version(2.4)
+    def test_get_latest_as_semver(self):
+        latest = version.get_latest_version()
+        self.assertEqual(2, latest.major)
+        self.assertEqual(4, latest.minor)
+        self.assertEqual(0, latest.patch)
 
-    def test_string_match(self):
+    def test_exact_match(self):
         version.check_version('2.4')
 
     def test_older_in_family(self):
-        version.check_version(2.1)
+        version.check_version('2.1')
 
     def test_oldest_in_family(self):
-        version.check_version(2)
+        version.check_version('2')
 
     def test_newer(self):
-        self.assertRaises(ValueError, version.check_version, 2.5)
+        self.assertRaises(ValueError, version.check_version, '2.5')
 
     def test_uncompatible_old(self):
-        self.assertRaises(ValueError, version.check_version, 1.6)
+        self.assertRaises(ValueError, version.check_version, '1.6')
 
     def test_uncompatible_new(self):
-        self.assertRaises(ValueError, version.check_version, 3.0)
+        self.assertRaises(ValueError, version.check_version, '3.0')
