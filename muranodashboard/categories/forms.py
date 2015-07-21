@@ -34,6 +34,6 @@ class AddCategoryForm(horizon_forms.SelfHandlingForm):
         if data:
             with api.handled_exceptions(self.request):
                 category = api.muranoclient(self.request).categories.add(data)
-            messages.success(request,
-                             _('Category {0} created.').format(data['name']))
-            return category
+                messages.success(request, _('Category {0} created.')
+                                 .format(data['name']))
+                return category
