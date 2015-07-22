@@ -158,6 +158,8 @@ def environments_list(request):
 def environment_create(request, parameters):
     #name is required param
     body = {'name': parameters['name']}
+    if 'defaultNetworks' in parameters:
+        body['defaultNetworks'] = parameters['defaultNetworks']
     env = api.muranoclient(request).environments.create(body)
     LOG.debug('Environment::Create {0}'.format(env))
     return env
