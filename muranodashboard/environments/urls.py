@@ -23,7 +23,7 @@ ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
 urlpatterns = urls.patterns(
     VIEW_MOD,
-    urls.url(r'^environments$', views.IndexView.as_view(), name='index'),
+    urls.url(r'^environments/$', views.IndexView.as_view(), name='index'),
 
     urls.url(r'^create_environment$', views.CreateEnvironmentView.as_view(),
              name='create_environment'),
