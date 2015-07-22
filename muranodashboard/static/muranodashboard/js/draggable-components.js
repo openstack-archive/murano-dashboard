@@ -70,6 +70,7 @@ $(function() {
         }
       }
       if (apps.length) {
+        $dropArea.show();
         if ($carousel.css('display') === 'none') {
           $carousel.show();
         }
@@ -98,6 +99,7 @@ $(function() {
         bindAppTileHandlers();
       } else {
         $carousel.hide();
+        $dropArea.hide();
       }
     }
 
