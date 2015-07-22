@@ -49,9 +49,7 @@
               </a>
             </div>
         {% else %}
-          <div class="well">
-             <h4>No Application Components match the current category and/or filter string</h4>
-          </div>
+             <p alert alert-info>No Application Components available for adding </p>
         {% endif %}
     {% endwith %}
   {% endif %}
@@ -65,15 +63,20 @@
 {% endblock table_caption %}
 
 {% block table_body %}
+    {% if table.actions_allowed %}
+        <div class="drop_component">
+            <h4 class="centering">
+                <i class="fa fa-bullseye"></i> {% trans 'Drop Components here' %}
+            </h4>
+        </div>
+    {% endif %}
   <tbody>
-  {% if table.actions_allowed %}
-    <tr class='empty'><td colspan="{{ table.get_columns|length }}">
-      <div class="drop_component">
-        <h4 class="centering"><i class="fa fa-bullseye"></i> {% trans 'Drop component here to add it' %}</h4></div>
-    </td></tr>
-  {% endif %}
   {% for row in rows %}
     {{ row.render }}
+    {% empty %}
+    <tr class="{% cycle 'odd' 'even' %} empty">
+      <td colspan="{{ table.get_columns|length }}">{{ table.get_empty_message }}</td>
+    </tr>
   {% endfor %}
   </tbody>
 {% endblock table_body %}
