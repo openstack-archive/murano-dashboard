@@ -6,7 +6,7 @@
     <div id="environment_switcher" class="header dropdown">
         {% with num_of_envs=available_environments|length %}
             {% if environment %}
-                <a href="#environment_switcher" class="btn btn-default btn-sm dropdown-toggle">{{ environment.name }} {% if num_of_envs > 1 %} <b class="caret"></b>{% endif %}</a>
+                <a href="#environment_switcher" class="btn btn-default btn-sm dropdown-toggle">{{ environment.name|truncatechars:30}} {% if num_of_envs > 1 %} <b class="caret"></b>{% endif %}</a>
             {% else %}
                 <a href="{% url 'horizon:murano:environments:create_environment' %}?next={{ view.current_page_url|urlencode }}" title="{% trans 'Click to create an environment' %}" class="btn btn-default ajax-modal">{% trans "Create Environment" %}</a>
             {% endif %}

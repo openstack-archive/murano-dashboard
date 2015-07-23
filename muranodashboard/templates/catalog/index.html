@@ -37,7 +37,7 @@
                         <div class="header dropdown">
                             <a href="#"
                                class="btn btn-sm btn-default dropdown-toggle">
-                                {{ current_category }} <b
+                                {{ current_category|truncatechars:30 }} <b
                                     class="caret"></b></a>
                             <ul class="dropdown-menu row_actions clearfix">
                                 {% for category in categories %}

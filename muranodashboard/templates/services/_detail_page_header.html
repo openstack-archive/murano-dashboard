@@ -7,9 +7,8 @@
               {% blocktrans %}Environments{% endblocktrans %}
           </a> >
           <a href=" {% url 'horizon:murano:environments:services' service.environment_id %}">
-              {% blocktrans %}Environment {{ environment_name }}{% endblocktrans %}
-          </a>
-          {% blocktrans %} > Component:  {{ service_name }}{% endblocktrans %}
+              {% blocktrans %}Environment{% endblocktrans %} {{ environment_name|truncatechars_html:30 }}
+          </a> > {% blocktrans%}Component{% endblocktrans %}  {{ service_name|truncatechars:30 }}
 
       </h2>
   </div>
