@@ -1,58 +1,62 @@
 /*    Copyright (c) 2015 Mirantis, Inc.
 
-    Licensed under the Apache License, Version 2.0 (the "License"); you may
-    not use this file except in compliance with the License. You may obtain
-    a copy of the License at
+      Licensed under the Apache License, Version 2.0 (the "License"); you may
+      not use this file except in compliance with the License. You may obtain
+      a copy of the License at
 
-         http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-    License for the specific language governing permissions and limitations
-    under the License.
-*/
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+      WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations
+      under the License.
+      */
+
 $(function() {
-    var upload_form = $('#upload_package');
-    var import_type = upload_form.find('[name=upload-import_type]');
+  "use strict";
 
-    upload_form.find('input[name=upload-url]').closest('.form-group').addClass('required');
-    upload_form.find('input[name=upload-repo_name]').closest('.form-group').addClass('required');
-    upload_form.find('input[name=upload-package]').closest('.form-group').addClass('required');
+  var uploadForm = $('#upload_package');
+  var importType = uploadForm.find('[name=upload-importType]');
 
-    import_type.change(function(){
-        var upload_type = $(this).val();
-        if (upload_type === 'upload') {
-            upload_form.find('input[name=upload-url]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-repo_name]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-repo_version]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-package]').closest('.form-group').show();
-            upload_form.find('.description-upload').show();
-            upload_form.find('.description-by_name').hide();
-            upload_form.find('.description-by_url').hide();
-        } else if (upload_type === 'by_name') {
-            upload_form.find('input[name=upload-url]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-repo_name]').closest('.form-group').show();
-            upload_form.find('input[name=upload-repo_version]').closest('.form-group').show();
-            upload_form.find('input[name=upload-package]').closest('.form-group').hide();
-            upload_form.find('.description-upload').hide();
-            upload_form.find('.description-by_name').show();
-            upload_form.find('.description-by_url').hide();
-        } else if (upload_type === 'by_url') {
-            upload_form.find('input[name=upload-url]').closest('.form-group').show();
-            upload_form.find('input[name=upload-repo_name]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-repo_version]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-package]').closest('.form-group').hide();
-            upload_form.find('.description-upload').hide();
-            upload_form.find('.description-by_name').hide();
-            upload_form.find('.description-by_url').show();
-        }
-    });
-    import_type.change();
+  uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
+  uploadForm.find('input[name=upload-repo_name]').closest('.form-group').addClass('required');
+  uploadForm.find('input[name=upload-package]').closest('.form-group').addClass('required');
+
+  importType.change(function(){
+    var uploadType = $(this).val();
+    if (uploadType === 'upload') {
+      uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-package]').closest('.form-group').show();
+      uploadForm.find('.description-upload').show();
+      uploadForm.find('.description-by_name').hide();
+      uploadForm.find('.description-by_url').hide();
+    } else if (uploadType === 'by_name') {
+      uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').show();
+      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').show();
+      uploadForm.find('input[name=upload-package]').closest('.form-group').hide();
+      uploadForm.find('.description-upload').hide();
+      uploadForm.find('.description-by_name').show();
+      uploadForm.find('.description-by_url').hide();
+    } else if (uploadType === 'by_url') {
+      uploadForm.find('input[name=upload-url]').closest('.form-group').show();
+      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-package]').closest('.form-group').hide();
+      uploadForm.find('.description-upload').hide();
+      uploadForm.find('.description-by_name').hide();
+      uploadForm.find('.description-by_url').show();
+    }
+  });
+  importType.change();
 });
 
 $(function() {
-    $('#upload_package_modal .close').on('click', function() {
-        location.reload();
-    });
+  "use strict";
+  $('#upload_package_modal .close').on('click', function() {
+    location.reload();
+  });
 });

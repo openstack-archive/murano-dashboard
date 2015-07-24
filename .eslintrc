@@ -19,6 +19,11 @@ rules:
    - 1
    - properties: "never"
 
+  # This option sets a specific tab width for your code
+  # http://eslint.org/docs/rules/indent
+  indent:
+    - 2 # Mark as errors.
+    - 2 # NOTE(kzaitsev): horizon also uses 2 space indentation.
 
 globals:
   # allow accessing horizon

@@ -13,7 +13,8 @@
     under the License.
 */
 $(function() {
-    $(':disabled').closest('form').submit(function() {
-        $(':disabled').attr('disabled', false);
-    });
+  "use strict";
+  $(':disabled').closest('form').submit(function() {
+    $(':disabled').attr('disabled', false);
+  });
 });
