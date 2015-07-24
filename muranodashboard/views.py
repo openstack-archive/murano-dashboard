@@ -11,10 +11,9 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import horizon
 
 
 def get_user_home(user):
-    #if user.is_superuser:
-    #    return horizon.get_dashboard('admin').get_absolute_url()
     return horizon.get_dashboard('murano').get_absolute_url()

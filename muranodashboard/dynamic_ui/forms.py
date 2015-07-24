@@ -73,7 +73,7 @@ def _collect_fields(field_specs, form_name, service):
             del kwargs['widget_media']
 
             class Widget(widget):
-                class Media:
+                class Media(object):
                     js = media.get('js', ())
                     css = media.get('css', {})
             widget = Widget
@@ -103,7 +103,7 @@ def _collect_fields(field_specs, form_name, service):
         elif isinstance(spec, types.ListType):
             return key, [parse_spec(_spec, keys)[1] for _spec in spec]
         elif isinstance(spec, basestring) and helpers.is_localizable(keys):
-            return key, _(spec)
+            return key, spec
         else:
             if key == 'hidden':
                 if spec:
@@ -141,7 +141,9 @@ class DynamicFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
 
 
 class UpdatableFieldsForm(forms.Form):
-    """This class is supposed to be a base for forms belonging to a FormWizard
+    """Dynamic updatable form
+
+    This class is supposed to be a base for forms belonging to a FormWizard
     descendant, or be used as a mixin for workflows.Action class.
 
     In first case the `request' used in `update' method is provided in
@@ -208,7 +210,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             for validator in self.validators:
                 expr = validator['expr']
                 if not expr.evaluate(data=all_data, context=self.context):
-                    error_messages.append(_(validator.get('message', '')))
+                    error_messages.append(validator.get('message',
+                                          _('Validation Error occurred')))
             if error_messages:
                 raise forms.ValidationError(error_messages)
 

@@ -24,7 +24,9 @@ class TestService(testtools.TestCase):
         self.application = {'?': {'type': 'test.App'}}
 
     def test_service_field_hidden_false(self):
-        """When Service class instantiated with some field having `hidden`
+        """Test that service field is hidden
+
+        When Service class instantiated with some field having `hidden`
         attribute set to `false` - the generated form field should have
         widget different from `HiddenInput`.
 
@@ -45,8 +47,9 @@ class TestService(testtools.TestCase):
         self.assertNotIsInstance(field.widget, forms.HiddenInput)
 
     def test_service_field_hidden_true(self):
-        """`hidden: true` in UI definition results to HiddenInput in Django
-        form.
+        """Test hidden widget
+
+        `hidden: true` in UI definition results to HiddenInput in Django form.
         """
         ui = [{
             'appConfiguration': {'fields': [{'hidden': True, 'type': 'string',

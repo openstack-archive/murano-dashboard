@@ -45,7 +45,9 @@ LOG = logging.getLogger(__name__)
 
 
 def with_request(func):
-    """The decorator is meant to be used together with `UpdatableFieldsForm':
+    """Injects request into func
+
+    The decorator is meant to be used together with `UpdatableFieldsForm':
     apply it to the `update' method of fields inside that form.
     """
     def update(self, initial, request=None, **kwargs):
@@ -70,7 +72,7 @@ def with_request(func):
 def make_yaql_validator(validator_property):
     """Field-level validator uses field's value as its '$' root object."""
     expr = validator_property['expr'].spec
-    message = _(validator_property.get('message', ''))
+    message = validator_property.get('message', '')
 
     def validator_func(value):
         context = yaql.create_context()
@@ -229,7 +231,7 @@ class PasswordField(CharField):
                     self.label, defaultfilters.pluralize(2)))
 
     class PasswordInput(forms.PasswordInput):
-        class Media:
+        class Media(object):
             js = ('muranodashboard/js/passwordfield.js',)
 
     def __init__(self, label, *args, **kwargs):
@@ -470,7 +472,7 @@ class ClusterIPField(CharField):
                 msg = "Could not found fixed ips for ip %s" % (ip,)
                 LOG.error(msg)
                 exceptions.handle(
-                    request, _(msg),
+                    request, msg,
                     ignore=True)
             else:
                 if ip_info.hostname:
@@ -530,9 +532,9 @@ class ClusterIPField(CharField):
 class DatabaseListField(CharField):
     validate_mssql_identifier = django_validator.RegexValidator(
         re.compile(r'^[a-zA-z_][a-zA-Z0-9_$#@]*$'),
-        _((u'First symbol should be latin letter or underscore. Subsequent ' +
-           u'symbols can be latin letter, numeric, underscore, at sign, ' +
-           u'number sign or dollar sign')))
+        _(u'First symbol should be latin letter or underscore. Subsequent '
+          u'symbols can be latin letter, numeric, underscore, at sign, '
+          u'number sign or dollar sign'))
 
     default_error_messages = {'invalid': validate_mssql_identifier.message}
 
@@ -562,7 +564,7 @@ def make_select_cls(fqns):
                 attrs['class'] += ' murano_add_select'
             super(Widget, self).__init__(attrs=attrs, **kwargs)
 
-        class Media:
+        class Media(object):
             js = ('muranodashboard/js/add-select.js',)
 
     class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
@@ -571,7 +573,7 @@ def make_select_cls(fqns):
         def __init__(self, empty_value_message=None, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
             if empty_value_message is not None:
-                self.empty_value_message = _(empty_value_message)
+                self.empty_value_message = empty_value_message
             else:
                 self.empty_value_message = _('Select Application')
 

@@ -34,7 +34,7 @@ class ManagePanels(horizon.PanelGroup):
 
 
 class Murano(horizon.Dashboard):
-    name = _(getattr(settings, 'MURANO_DASHBOARD_NAME', "Murano"))
+    name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("Murano"))
     slug = "murano"
     panels = (DeployPanels, ManagePanels)
     default_panel = "environments"

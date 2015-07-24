@@ -117,9 +117,11 @@ class AbandonEnvironment(tables.DeleteAction):
     redirect_url = "horizon:project:murano:environments"
 
     def allowed(self, request, environment):
-        """'Abandon Environment' button is hidden in several cases:
-             * environment is new
-             * app added to env, but not deploy is not started
+        """Limit when 'Abandon Environment' button is shown
+
+        'Abandon Environment' button is hidden in several cases:
+         * environment is new
+         * app added to env, but not deploy is not started
         """
         status = getattr(environment, 'status', None)
         if status in [consts.STATUS_ID_NEW, consts.STATUS_ID_PENDING]:
@@ -170,11 +172,13 @@ class DeployEnvironment(tables.BatchAction):
     classes = ('btn-launch',)
 
     def allowed(self, request, environment):
-        """'Deploy environment' is not shown in several cases:
-            * when deploy is already in progress
-            * delete is in progress
-            * no new services added to the environment (after env creation
-              or successful deploy or delete failure)
+        """Limit when 'Deploy Environment' button is shown
+
+        'Deploy environment' is not shown in several cases:
+        * when deploy is already in progress
+        * delete is in progress
+        * no new services added to the environment (after env creation
+          or successful deploy or delete failure)
         """
         status = getattr(environment, 'status', None)
         if (status != consts.STATUS_ID_DEPLOY_FAILURE
@@ -201,11 +205,13 @@ class DeployThisEnvironment(tables.Action):
     classes = ('btn-launch',)
 
     def allowed(self, request, service):
-        """'Deploy environment' is not shown in several cases:
-            * when deploy is already in progress
-            * delete is in progress
-            * env was just created and no apps added
-            * previous deployment finished successfully
+        """Limit when 'Deploy Environment' button is shown
+
+        'Deploy environment' is not shown in several cases:
+        * when deploy is already in progress
+        * delete is in progress
+        * env was just created and no apps added
+        * previous deployment finished successfully
         """
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
@@ -294,7 +300,7 @@ class EnvironmentsTable(tables.DataTable):
                            status_choices=consts.STATUS_CHOICES,
                            display_choices=consts.STATUS_DISPLAY_CHOICES)
 
-    class Meta:
+    class Meta(object):
         name = 'murano'
         verbose_name = _('Environments')
         template = 'environments/_data_table.html'
@@ -389,7 +395,7 @@ class ServicesTable(tables.DataTable):
             actions.extend(sorted(app_actions, key=lambda x: x.name))
         return actions
 
-    class Meta:
+    class Meta(object):
         name = 'services'
         verbose_name = _('Component List')
         template = 'services/_data_table.html'
@@ -427,7 +433,7 @@ class DeploymentsTable(tables.DataTable):
         status=True,
         display_choices=consts.DEPLOYMENT_STATUS_DISPLAY_CHOICES)
 
-    class Meta:
+    class Meta(object):
         name = 'deployments'
         verbose_name = _('Deployments')
         template = 'common/_data_table.html'
@@ -444,7 +450,7 @@ class EnvConfigTable(tables.DataTable):
     def get_object_id(self, datum):
         return datum['?']['id']
 
-    class Meta:
+    class Meta(object):
         name = 'environment_configuration'
         verbose_name = _('Deployed Components')
         template = 'common/_data_table.html'

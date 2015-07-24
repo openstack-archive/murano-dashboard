@@ -100,8 +100,8 @@ class OverviewTab(tabs.Tab):
         if hasattr(service_data, 'floatingip'):
             detail_info['Floating IP'] = service_data.floatingip
 
-        #TODO(efedorova): Need to determine Instance subclass
-        #                 after it would be possible
+        # TODO(efedorova): Need to determine Instance subclass
+        # after it would be possible
         if hasattr(service_data,
                    'instance') and service_data['instance'] is not None:
                 instance, stack = get_instance_and_stack(

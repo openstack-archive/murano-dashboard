@@ -41,7 +41,9 @@ def upload_app_package(client, app_name, data):
 
 def compose_package(app_name, manifest, package_dir,
                     require=None, archive_dir=None):
-    """Composes package `app_name` with `manifest` file as a template for the
+    """Composes a murano package
+
+    Composes package `app_name` with `manifest` file as a template for the
     manifest and files from `package_dir`.
     Includes `require` section if any in the manifest file.
     Puts the resulting .zip file into `acrhive_dir` if present or in the

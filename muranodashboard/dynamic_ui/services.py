@@ -19,6 +19,7 @@ import yaql
 
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
+import six
 
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
@@ -42,7 +43,9 @@ _apps = {}
 
 
 class Service(object):
-    """Class for keeping service persistent data, the most important are two:
+    """Murano Service representation object
+
+    Class for keeping service persistent data, the most important are two:
     ``self.forms`` list of service's steps (as Django form classes) and
     ``self.cleaned_data`` dictionary of data from service validated steps.
 
@@ -85,9 +88,8 @@ class Service(object):
     def _add_form(self, _name, _specs, _validators, _verbose_name=None):
         import muranodashboard.dynamic_ui.forms as forms
 
-        class Form(forms.ServiceConfigurationForm):
-            __metaclass__ = forms.DynamicFormMetaclass
-
+        class Form(six.with_metaclass(forms.DynamicFormMetaclass,
+                   forms.ServiceConfigurationForm)):
             service = self
             name = _name
             verbose_name = _verbose_name
@@ -111,9 +113,7 @@ class Service(object):
         return helpers.evaluate(self.application, self.context)
 
     def get_data(self, form_name, expr, data=None):
-        """First try to get value from cleaned data, if none
-        found, use raw data.
-        """
+        """Try to get value from cleaned data, if none found, use raw data."""
         if data:
             self.update_cleaned_data(data, form_name=form_name)
         data = self.cleaned_data

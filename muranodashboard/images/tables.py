@@ -54,7 +54,7 @@ class MarkedImagesTable(tables.DataTable):
     type = tables.Column('type', verbose_name=_('Type'))
     title = tables.Column('title', verbose_name=_('Title'))
 
-    class Meta:
+    class Meta(object):
         name = 'marked_images'
         verbose_name = _('Marked Images')
         template = 'common/_data_table.html'

@@ -186,7 +186,7 @@ class PackageDefinitionsTable(tables.DataTable):
             PackageDefinitionsTable, self).get_prev_pagination_string()
         return pagination_string + "&sort_dir=desc"
 
-    class Meta:
+    class Meta(object):
         name = 'packages'
         prev_pagination_param = 'marker'
         verbose_name = _('Package Definitions')

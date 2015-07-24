@@ -57,7 +57,7 @@ class CategoriesTable(tables.DataTable):
     package_count = tables.Column('package_count',
                                   verbose_name=_('Package Count'))
 
-    class Meta:
+    class Meta(object):
         name = 'categories'
         verbose_name = _('Application Categories')
         table_actions = (AddCategory,)

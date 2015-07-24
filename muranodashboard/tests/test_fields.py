@@ -21,7 +21,7 @@ class TestFlavorField(helpers.APITestCase):
         """Set up the Flavor Class and novaclient."""
         super(TestFlavorField, self).setUp()
 
-        class FlavorFlave:
+        class FlavorFlave(object):
             def __init__(self, name, vcpus, disk, ram):
                 self.name = name
                 self.vcpus = vcpus

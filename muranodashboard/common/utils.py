@@ -33,7 +33,9 @@ def ensure_python_obj(obj):
 
 
 class Bunch(object):
-    """Bunch is a container that provides both dictionary-like and
+    """Bunch dict/object-like container.
+
+    Bunch container provides both dictionary-like and
     object-like attribute access.
     """
     def __init__(self, **kwargs):

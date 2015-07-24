@@ -118,8 +118,7 @@ def insert_hidden_ids(application):
 
 
 def int2base(x, base):
-    """Converts decimal integers into another number base
-     from base-2 to base-36.
+    """Converts decimal integers to another number base from base-2 to base-36
 
     :param x: decimal integer
     :param base: number base, max value is 36

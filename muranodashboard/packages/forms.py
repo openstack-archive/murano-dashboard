@@ -178,11 +178,11 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
                     self.fields['categories'].initial = dict(
                         (key, True) for key in package.categories)
             except (exc.HTTPException, Exception):
-                msg = 'Unable to get list of categories'
+                msg = _('Unable to get list of categories')
                 LOG.exception(msg)
                 redirect = reverse('horizon:murano:packages:index')
                 exceptions.handle(request,
-                                  _(msg),
+                                  msg,
                                   redirect=redirect)
 
     def handle(self, request, data):
@@ -217,7 +217,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
             LOG.exception(msg)
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
-                              _(msg),
+                              msg,
                               redirect=redirect)
 
 
@@ -225,7 +225,7 @@ class SelectCategories(forms.Form):
 
     categories = forms.MultipleChoiceField(
         label=_('Application Category'),
-        choices=[('', 'No categories available')],
+        choices=[('', _('No categories available'))],
         required=False)
 
     def __init__(self, *args, **kwargs):
@@ -238,9 +238,9 @@ class SelectCategories(forms.Form):
                 self.fields['categories'].choices = [(c, c)
                                                      for c in categories]
         except (exc.HTTPException, Exception):
-            msg = 'Unable to get list of categories'
+            msg = _('Unable to get list of categories')
             LOG.exception(msg)
             redirect = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
-                              _(msg),
+                              msg,
                               redirect=redirect)

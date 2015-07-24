@@ -27,8 +27,7 @@ from muranodashboard.tests.functional import utils
 
 
 class TestSuiteSmoke(base.UITestCase):
-    """This class keeps smoke tests which check operability of all main panels
-    """
+    """This class keeps smoke tests which check operability of main panels"""
     def test_smoke_environments_panel(self):
         self.go_to_submenu('Environments')
         self.check_panel_is_present('Environments')
@@ -157,7 +156,9 @@ class TestSuiteImage(base.ImageTestCase):
 
 class TestSuiteFields(base.FieldsTestCase):
     def test_check_domain_name_field_validation(self):
-        """Test checks that validation of domain name field work
+        """Check domain name validation
+
+        Test checks that validation of domain name field work
         and appropriate error message is appeared after entering
         incorrect domain name
 
@@ -231,8 +232,7 @@ class TestSuiteFields(base.FieldsTestCase):
             'they are used to delimit the components of domain style names')
 
     def test_check_app_name_validation(self):
-        """Test checks validation of field that usually define
-        application name
+        """Test checks validation of field that usually define application name
 
         Scenario:
             1. Navigate to Application Catalog > Applications
@@ -257,7 +257,9 @@ class TestSuiteFields(base.FieldsTestCase):
         self.wait_element_is_clickable(by.By.XPATH, c.ButtonSubmit)
 
     def test_check_required_field(self):
-        """Test checks that fields with parameter 'required=True' in yaml form
+        """Test required fields
+
+        Test checks that fields with parameter 'required=True' in yaml form
         are truly required and can't be omitted
 
         Scenario:
@@ -333,7 +335,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(by.By.NAME, "0-name")
 
     def test_check_ability_create_two_dependent_apps(self):
-        """Test checks that using one creation form it is possible to
+        """Test using two dependent apps
+
+        Test checks that using one creation form it is possible to
         add to related apps in the one environment
 
         Scenario:
@@ -398,7 +402,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                        c.App.format('MockApp'))
 
     def test_filter_by_category(self):
-        """Test checks ability to filter applications by category
+        """Test filtering by category
+
+        Test checks ability to filter applications by category
         in Application Catalog page
 
         Scenario:
@@ -539,7 +545,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    "//*[contains(text(), 'Completed')]")
 
     def test_check_info_about_app(self):
-        """Test checks that information about app is available and tr
+        """Test checks that information about app is available
+
         Scenario:
             1. Navigate to 'Application Catalog > Applications' panel
             2. Choose some application and click on 'More info'
@@ -557,8 +564,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_class_name('app_license')
 
     def test_check_topology_page(self):
-        """Test checks that topology tab is available
-        and topology page displays correctly
+        """Test checks that topology tab is available displays correctly
 
         Scenario:
             1. Navigate Applications and click MockApp 'Quick Deploy'
@@ -578,8 +584,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(by.By.TAG_NAME, 'image')
 
     def test_check_deployment_history(self):
-        """Test checks that deployment history tab is available
-        and deployment logs are present and correctly
+        """Test checks that deployment history tab is available logs are ok
 
         Scenario:
             1. Navigate Applications and click MockApp 'Quick Deploy'
@@ -741,8 +746,8 @@ class TestSuitePackages(base.PackageTestCase):
 
     def test_upload_package(self):
         """Test package uploading via Package Definitions view.
-           Skip category selection step.
 
+           Skips category selection step.
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')

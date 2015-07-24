@@ -53,14 +53,16 @@ def create_session(request, environment_id):
 class Session(object):
     @staticmethod
     def get_or_create(request, environment_id):
-        """Gets id from already opened session for specified environment,
+        """Get an open session id
+
+        Gets id from already opened session for specified environment,
         otherwise opens new session and returns it's id
 
         :param request:
         :param environment_id:
         :return: Session Id
         """
-        #We store opened sessions for each environment in dictionary per user
+        # We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
 
         if environment_id in sessions:
@@ -71,7 +73,9 @@ class Session(object):
 
     @staticmethod
     def get_or_create_or_delete(request, environment_id):
-        """Gets id from session in open state for specified environment,
+        """Get an open session id
+
+        Gets id from session in open state for specified environment,
         if state is deployed - this session will be deleted and new
         would be created. If there are no any sessions new would be created.
         Returns if of chosen or created session.
@@ -111,14 +115,16 @@ class Session(object):
 
     @staticmethod
     def get(request, environment_id):
-        """Gets id from already opened session for specified environment,
+        """Get an open session id
+
+        Gets id from already opened session for specified environment,
         otherwise returns None
 
         :param request:
         :param environment_id:
         :return: Session Id
         """
-        #We store opened sessions for each environment in dictionary per user
+        # We store opened sessions for each environment in dictionary per user
         sessions = request.session.get('sessions', {})
         session_id = sessions.get(environment_id, '')
         if session_id:
@@ -156,7 +162,7 @@ def environments_list(request):
 
 
 def environment_create(request, parameters):
-    #name is required param
+    # name is required param
     body = {'name': parameters['name']}
     if 'defaultNetworks' in parameters:
         body['defaultNetworks'] = parameters['defaultNetworks']

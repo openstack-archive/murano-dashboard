@@ -76,7 +76,7 @@ def handled_exceptions(request):
 
 
 def _get_endpoint(request):
-    #prefer location specified in settings for dev purposes
+    # prefer location specified in settings for dev purposes
     endpoint = getattr(settings, 'MURANO_API_URL', None)
 
     if not endpoint:

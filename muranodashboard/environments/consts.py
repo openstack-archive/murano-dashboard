@@ -18,7 +18,7 @@ import tempfile
 from django.conf import settings
 
 
-#---- Metadata Consts ----#
+# ---- Metadata Consts ---- #
 CHUNK_SIZE = 1 << 20  # 1MB
 ARCHIVE_PKG_NAME = 'archive.tar.gz'
 CACHE_DIR = getattr(settings, 'METADATA_CACHE_DIR',
@@ -29,7 +29,7 @@ CACHE_REFRESH_SECONDS_INTERVAL = 5
 
 DASHBOARD_ATTRS_KEY = '_26411a1861294160833743e45d0eaad9'
 
-#---- Forms Consts ----#
+# ---- Forms Consts ---- #
 STATUS_ID_READY = 'ready'
 STATUS_ID_PENDING = 'pending'
 STATUS_ID_DEPLOYING = 'deploying'

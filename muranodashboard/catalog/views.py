@@ -133,7 +133,9 @@ def create_quick_environment(request):
 
 
 def update_latest_apps(func):
-    """Adds package id to a session queue with Applications which were
+    """Update 'app_id's in session
+
+    Adds package id to a session queue with Applications which were
     recently added to an environment or to the Catalog itself. Thus it is
     used as decorator for views adding application to an environment or
     uploading new package definition to a catalog.
@@ -170,7 +172,9 @@ def clean_latest_apps(request):
 
 
 def clear_forms_data(func):
-    """Clears user's session from a data for a specific application. It
+    """Removes form data from session
+
+    Clears user's session from a data for a specific application. It
     guarantees that previous additions of that application won't interfere
     with the next ones. Should be used as a decorator for entry points for
     adding an application in an environment.
@@ -239,7 +243,9 @@ def get_supplier_image(request, app_id):
 
 
 class LazyWizard(wizard_views.SessionWizardView):
-    """The class which defers evaluation of form_list and condition_dict
+    """Lazy version of SessionWizardView
+
+    The class which defers evaluation of form_list and condition_dict
     until view method is called. So, each time we load a page with a dynamic
     UI form, it will have markup/logic from the newest YAML-file definition.
     """
@@ -431,7 +437,9 @@ class IndexView(list_view.ListView):
         return datum.id
 
     def get_marker(self, index=-1):
-        """Returns the identifier for the object indexed by ``index`` in the
+        """Get the pagination marker
+
+        Returns the identifier for the object indexed by ``index`` in the
         current data set for APIs that use marker/limit-based paging.
         """
         data = self.object_list
