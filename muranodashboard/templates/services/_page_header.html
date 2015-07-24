@@ -3,10 +3,11 @@
 {% load static %}
 {% block page_header %}
   <div class='page-header'>
-    <h2>
+      <h2>
           <a href=" {% url 'horizon:murano:environments:index' %}">
               {% blocktrans %}Environments{% endblocktrans %}
-          </a> > Environment {{ environment_name }}
-    </h2>
+          </a> > {% blocktrans %}Environment{% endblocktrans %}
+          {{ environment_name|truncatechars:60 }}
+      </h2>
   </div>
 {% endblock %}
