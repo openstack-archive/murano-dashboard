@@ -380,7 +380,7 @@ class ServicesTable(tables.DataTable):
         name = 'services'
         verbose_name = _('Component List')
         template = 'services/_data_table.html'
-        no_data_message = _('NO COMPONENTS')
+        no_data_message = _('No components')
         status_columns = ['status']
         row_class = UpdateServiceRow
         table_actions = (AddApplication, DeployThisEnvironment)

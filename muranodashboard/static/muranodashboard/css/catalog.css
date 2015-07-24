@@ -213,14 +213,15 @@ h3.heading_switcher a.btn {
 
 div.drop_component {
   border: 2px #ccc dashed;
-  width: 85%;
+  background-color: #EBF3F9;
+  width: 94%;
   margin: 0 auto -2px;
   border-radius: 5px;
+  display: none;
 }
 
 div.drop_component.over {
-  background-color: #ffffc0;
-  border-color: #e8c502;
+  border-color: #3B88C3;
 }
 
 h3.link {
