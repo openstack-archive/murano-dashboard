@@ -69,6 +69,10 @@ def handled_exceptions(request):
         msg = _('Requested object is not found on murano server.')
         LOG.exception(msg)
         _handle_message(request, msg)
+    except exc.Conflict:
+        msg = _('Requested operation conflicts with an existing object.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
 
 
 def _get_endpoint(request):
