@@ -199,6 +199,10 @@ h3.heading_switcher a.btn {
 
 #envAppsCategory > button{
   margin-top: 16px;
+  max-width:60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #envAppsCategory > h4 {
