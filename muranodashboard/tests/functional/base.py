@@ -23,6 +23,7 @@ from keystoneclient.v2_0 import client as ksclient
 from muranoclient import client as mclient
 from selenium.common import exceptions as exc
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support import ui
@@ -195,10 +196,29 @@ class UITestCase(BaseDeps):
         self.wait_for_alert_message()
 
     def edit_environment(self, old_name, new_name):
-        self.select_action_for_environment(old_name, 'edit')
-        self.fill_field(by.By.ID, 'id_name', new_name)
-        self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.wait_for_alert_message()
+        el_td = self.driver.find_element_by_css_selector(
+            'tr[data-display="{0}"] td:first-of-type'.format(old_name))
+        el_pencil = el_td.find_element_by_css_selector(
+            'button.ajax-inline-edit')
+
+        # hover to make pencil visible
+        hover = ActionChains(self.driver).move_to_element(el_td)
+        hover.perform()
+        el_pencil.click()
+
+        # fill in inline input
+        el_inline_input = self.driver.find_element_by_css_selector(
+            'tr[data-display="{0}"] '.format(old_name) +
+            'td:first-of-type .inline-edit-form input')
+        el_inline_input.clear()
+        el_inline_input.send_keys(new_name)
+
+        # click submit
+        el_submit = self.driver.find_element_by_css_selector(
+            'tr[data-display="{0}"] '.format(old_name) +
+            'td:first-of-type .inline-edit-actions button[type="submit"]')
+        el_submit.click()
+        # there is no alert message
 
     def select_action_for_environment(self, env_name, action):
         element_id = self.get_element_id(env_name)

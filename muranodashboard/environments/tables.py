@@ -21,15 +21,17 @@ from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
+from horizon import forms
 from horizon import messages
 from horizon import tables
 
+from muranodashboard import api as api_utils
+from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 
-from muranodashboard import api as api_utils
-from muranodashboard.api import packages as pkg_api
+from muranoclient.common import exceptions as exc
 
 LOG = logging.getLogger(__name__)
 
@@ -133,21 +135,6 @@ class AbandonEnvironment(tables.DeleteAction):
             LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)
-
-
-class EditEnvironment(tables.LinkAction):
-    name = 'edit'
-    verbose_name = _('Edit Environment')
-    url = 'horizon:murano:environments:update_environment'
-    classes = ('ajax-modal', 'btn-edit')
-    icon = 'edit'
-
-    def allowed(self, request, environment):
-        """Allow edit environment only when status not deploying and deleting.
-        """
-        status = getattr(environment, 'status', None)
-        return status not in [consts.STATUS_ID_DEPLOYING,
-                              consts.STATUS_ID_DELETING]
 
 
 class DeleteService(tables.DeleteAction):
@@ -270,10 +257,36 @@ class UpdateServiceRow(tables.Row):
         return api.service_get(request, environment_id, service_id)
 
 
+class UpdateName(tables.UpdateAction):
+    def update_cell(self, request, datum, obj_id, cell_name, new_cell_value):
+        try:
+            mc = api_utils.muranoclient(request)
+            mc.environments.update(datum.id, name=new_cell_value)
+        except exc.HTTPConflict:
+            message = _("This name is already taken.")
+            messages.warning(request, message)
+            LOG.warning(_("Couldn't update environment. Reason: ") + message)
+
+            # FIXME(kzaitsev): There is a bug in horizon and inline error
+            # icons are missing. This means, that if we return 400 here, by
+            # raising django.core.exceptions.ValidationError(message) the UI
+            # will break a little. Until the bug is fixed this will raise 500
+            # bug link: https://bugs.launchpad.net/horizon/+bug/1359399
+            # Alternatively this could somehow raise 409, which would result
+            # in the same behaviour.
+            raise ValueError(message)
+        except Exception:
+            exceptions.handle(request, ignore=True)
+            return False
+        return True
+
+
 class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:murano:environments:services',
-                         verbose_name=_('Name'))
+                         verbose_name=_('Name'),
+                         form_field=forms.CharField(),
+                         update_action=UpdateName)
 
     status = tables.Column('status',
                            verbose_name=_('Status'),
@@ -290,7 +303,7 @@ class EnvironmentsTable(tables.DataTable):
         no_data_message = _('NO ENVIRONMENTS')
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       EditEnvironment, DeleteEnvironment, AbandonEnvironment)
+                       DeleteEnvironment, AbandonEnvironment)
         multi_select = False
 
 
