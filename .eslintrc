@@ -1,29 +1,12 @@
 # For a detailed list of all options please see here:
 # http://eslint.org/docs/configuring/
 
+extends: openstack
+
 env:
 # Use jquery global variables
   jquery: true
   browser: true
-
-rules:
-  # Specify whether backticks, double or single quotes should be used
-  # http://eslint.org/docs/rules/quotes
-  quotes:
-    - 0 # TODO(kzaitsev): Activate & Fix
-    - 'single'
-
-  # Require camel case names
-  # http://eslint.org/docs/rules/camelcase
-  camelcase:
-   - 1
-   - properties: "never"
-
-  # This option sets a specific tab width for your code
-  # http://eslint.org/docs/rules/indent
-  indent:
-    - 2 # Mark as errors.
-    - 2 # NOTE(kzaitsev): horizon also uses 2 space indentation.
 
 globals:
   # allow accessing horizon
