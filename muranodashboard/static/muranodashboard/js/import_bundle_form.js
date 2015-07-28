@@ -14,25 +14,26 @@
 */
 
 $(function() {
-    var upload_form = $('#import_bundle');
-    var import_type = upload_form.find('[name=upload-import_type]');
+  "use strict";
+  var uploadForm = $('#import_bundle');
+  var importType = uploadForm.find('[name=upload-import_type]');
 
-    upload_form.find('input[name=upload-url]').closest('.form-group').addClass('required');
-    upload_form.find('input[name=upload-name]').closest('.form-group').addClass('required');
+  uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
+  uploadForm.find('input[name=upload-name]').closest('.form-group').addClass('required');
 
-    import_type.change(function(){
-        var upload_type = $(this).val();
-        if (upload_type === 'by_name') {
-            upload_form.find('input[name=upload-url]').closest('.form-group').hide();
-            upload_form.find('input[name=upload-name]').closest('.form-group').show();
-            upload_form.find('.description-by_name').show();
-            upload_form.find('.description-by_url').hide();
-        } else if (upload_type === 'by_url') {
-            upload_form.find('input[name=upload-url]').closest('.form-group').show();
-            upload_form.find('input[name=upload-name]').closest('.form-group').hide();
-            upload_form.find('.description-by_name').hide();
-            upload_form.find('.description-by_url').show();
-        }
-    });
-    import_type.change();
+  importType.change(function(){
+    var uploadType = $(this).val();
+    if (uploadType === 'by_name') {
+      uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
+      uploadForm.find('input[name=upload-name]').closest('.form-group').show();
+      uploadForm.find('.description-by_name').show();
+      uploadForm.find('.description-by_url').hide();
+    } else if (uploadType === 'by_url') {
+      uploadForm.find('input[name=upload-url]').closest('.form-group').show();
+      uploadForm.find('input[name=upload-name]').closest('.form-group').hide();
+      uploadForm.find('.description-by_name').hide();
+      uploadForm.find('.description-by_url').show();
+    }
+  });
+  importType.change();
 });
