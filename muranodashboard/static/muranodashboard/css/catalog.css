@@ -220,7 +220,6 @@ h3.heading_switcher a.btn {
 .category-title {
   float: left;
   line-height: 26px;
-  margin-right: 8px;
   margin-top: 20px;
   font-family: anivers;
   font-weight: normal;
@@ -250,11 +249,6 @@ h3.heading_switcher a.btn {
   text-overflow: ellipsis;
 }
 
-#envAppsCategory > h4 {
-  position: absolute;
-  left: -110px;
-  top: 7px;
-}
 
 #envAppsFilter {
   margin-top: 15px;
