@@ -17,38 +17,39 @@
 http://www.hagenburger.net/BLOG/HTML5-Input-Placeholder-Fix-With-jQuery.html
  */
 $(function() {
-    var get_IE_version = function() {
-        if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
-            var IE_version = new Number(RegExp.$1) // capture x.x portion and store as a number
-            return IE_version
-        }
+  "use strict";
+  var getIeVersion = function() {
+    if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
+      var ieVersion = Number(RegExp.$1); // capture x.x portion and store as a number
+      return ieVersion;
     }
-    if (get_IE_version() < 10) {
-        // placeholder attribute for optional drop-down fields doesn't work
-        // very well together with this fix - so remove placeholder
-        // attribute for every drop-down list.
-        $('select').filter('[placeholder]').removeAttr('placeholder');
-        $('[placeholder]').focus(function() {
-            var input = $(this);
-            if (input.val() == input.attr('placeholder')) {
-                input.val('');
-                input.removeClass('placeholder');
-              }
-            }).blur(function() {
-              var input = $(this);
-              if (input.val() == '' || input.val() == input.attr('placeholder')) {
-                input.addClass('placeholder');
-                input.val(input.attr('placeholder'));
-              }
-            }).blur();
+  };
+  if (getIeVersion() < 10) {
+    // placeholder attribute for optional drop-down fields doesn't work
+    // very well together with this fix - so remove placeholder
+    // attribute for every drop-down list.
+    $('select').filter('[placeholder]').removeAttr('placeholder');
+    $('[placeholder]').focus(function() {
+      var input = $(this);
+      if (input.val() === input.attr('placeholder')) {
+        input.val('');
+        input.removeClass('placeholder');
+      }
+    }).blur(function() {
+      var input = $(this);
+      if (input.val() === '' || input.val() === input.attr('placeholder')) {
+        input.addClass('placeholder');
+        input.val(input.attr('placeholder'));
+      }
+    }).blur();
 
-        $('[placeholder]').parents('form').submit(function() {
-          $(this).find('[placeholder]').each(function() {
-            var input = $(this);
-            if (input.val() == input.attr('placeholder')) {
-              input.val('');
-            }
-          })
-        });
-    }
+    $('[placeholder]').parents('form').submit(function() {
+      $(this).find('[placeholder]').each(function() {
+        var input = $(this);
+        if (input.val() === input.attr('placeholder')) {
+          input.val('');
+        }
+      });
+    });
+  }
 });
