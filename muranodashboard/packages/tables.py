@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from collections import defaultdict
 import logging
 
 from django.core.urlresolvers import reverse
@@ -171,6 +172,61 @@ class ModifyPackage(tables.LinkAction):
         return True
 
 
+def get_package_categories(pkg, user_tenant_id):
+    categories = []
+    if pkg.is_public:
+        categories.append('public')
+    if pkg.owner_id == user_tenant_id:
+        categories.append('project')
+    else:
+        categories.append('other')
+    return categories
+
+
+class OwnerFilter(tables.FixedFilterAction):
+    def get_fixed_buttons(self):
+        def make_dict(text, tenant, icon):
+            return dict(text=text, value=tenant, icon=icon)
+
+        buttons = [make_dict(_('Project'), 'project', 'fa-home')]
+        buttons.append(make_dict(_('Public'), 'public', 'fa-group'))
+        buttons.append(make_dict(_('Other'), 'other', 'fa-cloud'))
+        return buttons
+
+    def categorize(self, table, packages):
+        user_tenant_id = table.request.user.tenant_id
+        tenants = defaultdict(list)
+        for pkg in packages:
+            categories = get_package_categories(pkg, user_tenant_id)
+            for category in categories:
+                tenants[category].append(pkg)
+        # Other category is available only for admins.
+        # So, hide it if it's empty.
+        if 'other' not in tenants:
+            for i, btn in enumerate(self.fixed_buttons):
+                if btn['value'] == 'other':
+                    del self.fixed_buttons[i]
+
+        return tenants
+
+
+class UpdateRow(tables.Row):
+    ajax = True
+
+    def get_data(self, request, package_id):
+        package = api.muranoclient(request).packages.get(package_id)
+        return package
+
+    def load_cells(self, package=None):
+        super(UpdateRow, self).load_cells(package)
+
+        package = self.datum
+        my_tenant_id = self.table.request.user.tenant_id
+        pkg_categories = get_package_categories(package, my_tenant_id)
+        for category in pkg_categories:
+            self.classes.append('category-' + category)
+
+
 class PackageDefinitionsTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Package Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))
@@ -191,7 +247,9 @@ class PackageDefinitionsTable(tables.DataTable):
         prev_pagination_param = 'marker'
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
-        table_actions = (ImportPackage,
+        row_class = UpdateRow
+        table_actions = (OwnerFilter,
+                         ImportPackage,
                          ImportBundle,
                          ToggleEnabled,
                          TogglePublicEnabled,
