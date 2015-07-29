@@ -21,12 +21,33 @@
  * under the License.
  */
 
-var murano_container = "#murano_application_topology";
+var muranoContainer = "#murano_application_topology";
 
-var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
+/**
+ * var diagonal = d3.svg.diagonal()
+ *   .projection(function(d) { return [d.y, d.x]; });
+ */
+
+/**
+ * If d3 is undefined, and give an assignment
+ * It solves no-def error: d3 is not defined
+ */
+var d3 = d3 || {};
+
+/**
+ * Declare global variables
+ */
+var ajaxUrl;
+var force;
+var node;
+var link;
+var needsUpdate;
+var nodes;
+var links;
+var inProgress;
 
 function update(){
+  "use strict";
   node = node.data(nodes, function(d) { return d.id; });
   link = link.data(links);
 
@@ -36,16 +57,14 @@ function update(){
     .attr("node_id", function(d) { return d.id; })
     .call(force.drag);
 
-
-
   nodeEnter.append("image")
     .attr("xlink:href", function(d) { return d.image; })
-    .attr("id", function(d){ return "image_"+ d.id; })
+    .attr("id", function(d){ return "image_" + d.id; })
     .attr("x", function(d) { return d.image_x; })
     .attr("y", function(d) { return d.image_y; })
     .attr("width", function(d) { return d.image_size; })
     .attr("height", function(d) { return d.image_size; })
-    .attr("clip-path","url(#clipCircle)");
+    .attr("clip-path", "url(#clipCircle)");
   node.exit().remove();
 
   link.enter().insert("path", "g.node")
@@ -55,51 +74,57 @@ function update(){
   //Setup click action for all nodes
   node.on("mouseover", function(d) {
     $("#info_box").html(d.info_box);
-    current_info = d.name;
+    //current_info = d.name;
   });
-  node.on("mouseout", function(d) {
+  node.on("mouseout", function() {
     $("#info_box").html('');
   });
 
   force.start();
 }
 
+function drawLink(d) {
+  "use strict";
+  return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
+}
+
 function tick() {
+  "use strict";
   link.attr('d', drawLink).style('stroke-width', 3).attr('marker-end', "url(#end)");
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function drawLink(d) {
-  return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
-}
-
-
-function set_in_progress(stack, nodes) {
-  if (stack.in_progress === true) { in_progress = true; }
-  for (var i = 0; i < nodes.length; i++) {
-    var d = nodes[i];
-    if (d.in_progress === true){ in_progress = true; return false; }
+function setInProgress(stack, innerNodes) {
+  "use strict";
+  if (stack.in_progress === true) { inProgress = true; }
+  for (var i = 0; i < innerNodes.length; i++) {
+    var d = innerNodes[i];
+    if (d.in_progress === true) { inProgress = true; return false; }
   }
 }
 
 function findNode(id) {
+  "use strict";
   for (var i = 0; i < nodes.length; i++) {
     if (nodes[i].id === id){ return nodes[i]; }
   }
 }
 
 function findNodeIndex(id) {
+  "use strict";
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].id=== id){ return i; }
+    if (nodes[i].id === id){ return i; }
   }
 }
 
-function addNode (node) {
-  nodes.push(node);
-  needs_update = true;
+function addNode(innerNode) {
+  "use strict";
+  nodes.push(innerNode);
+  needsUpdate = true;
 }
 
-function removeNode (id) {
+function removeNode(id) {
+  "use strict";
   var i = 0;
   var n = findNode(id);
   while (i < links.length) {
@@ -109,75 +134,73 @@ function removeNode (id) {
       i++;
     }
   }
-  nodes.splice(findNodeIndex(id),1);
-  needs_update = true;
+  nodes.splice(findNodeIndex(id), 1);
+  needsUpdate = true;
 }
 
-function remove_nodes(old_nodes, new_nodes){
+function removeNodes(oldNodes, newNodes) {
+  "use strict";
   //Check for removed nodes
-  for (var i=0;i<old_nodes.length;i++) {
-    var remove_node = true;
-    for (var j=0;j<new_nodes.length;j++) {
-      if (old_nodes[i].id === new_nodes[j].id){
-        remove_node = false;
+  for (var i = 0; i < oldNodes.length; i++) {
+    var isRemoveNode = true;
+    for (var j = 0; j < newNodes.length; j++) {
+      if (oldNodes[i].id === newNodes[j].id) {
+        isRemoveNode = false;
         break;
       }
     }
-    if (remove_node === true){
-      removeNode(old_nodes[i].id);
+    if (isRemoveNode === true) {
+      removeNode(oldNodes[i].id);
     }
   }
 }
 
-function build_links(){
-  for (var i=0;i<nodes.length;i++){
-    build_node_links(nodes[i]);
-    build_reverse_links(nodes[i]);
-  }
-}
-
-function build_node_links(node){
-  for (var j=0;j<node.required_by.length;j++){
-    var push_link = true;
-    var target_idx = '';
-    var source_idx = findNodeIndex(node.id);
+function buildNodeLinks(innerNode) {
+  "use strict";
+  for (var j = 0; j < innerNode.required_by.length; j++){
+    var pushLink = true;
+    var targetIdx = '';
+    var sourceIdx = findNodeIndex(innerNode.id);
     //make sure target node exists
     try {
-      target_idx = findNodeIndex(node.required_by[j]);
+      targetIdx = findNodeIndex(innerNode.required_by[j]);
     } catch(err) {
-      console.log(err);
-      push_link =false;
+      if (window.console) {
+        window.console.log(err);
+      }
+      pushLink = false;
     }
     //check for duplicates
-    for (var lidx=0;lidx<links.length;lidx++) {
-      if (links[lidx].source === source_idx && links[lidx].target === target_idx) {
-        push_link=false;
+    for (var lidx = 0; lidx < links.length; lidx++) {
+      if (links[lidx].source === sourceIdx && links[lidx].target === targetIdx) {
+        pushLink = false;
         break;
       }
     }
 
-    if (push_link === true && (source_idx && target_idx)){
+    if (pushLink === true && (sourceIdx && targetIdx)){
       links.push({
-        'target':source_idx,
-        'source':target_idx,
-        'value':1,
-        'link_type': node.link_type
+        'target': sourceIdx,
+        'source': targetIdx,
+        'value': 1,
+        'link_type': innerNode.link_type
       });
     }
   }
 }
 
-function build_reverse_links(node){
-  for (var i=0;i<nodes.length;i++){
+function buildReverseLinks(innerNode) {
+  "use strict";
+  for (var i = 0; i < nodes.length; i++){
     if(nodes[i].required_by){
-      for (var j=0;j<nodes[i].required_by.length;j++){
+      for (var j = 0; j < nodes[i].required_by.length; j++){
         var dependency = nodes[i].required_by[j];
         //if new node is required by existing node, push new link
-        if(node.id === dependency){
+        if(innerNode.id === dependency){
           links.push({
-            'target':findNodeIndex(nodes[i].id),
-            'source':findNodeIndex(node.id),
-            'value':1,
+            'target': findNodeIndex(nodes[i].id),
+            'source': findNodeIndex(innerNode.id),
+            'value': 1,
             'link_type': nodes[i].link_type
           });
         }
@@ -186,105 +209,115 @@ function build_reverse_links(node){
   }
 }
 
-function ajax_poll(poll_time){
+function buildLinks() {
+  "use strict";
+  for (var i = 0; i < nodes.length; i++) {
+    buildNodeLinks(nodes[i]);
+    buildReverseLinks(nodes[i]);
+  }
+}
+
+function ajaxPoll(pollTime) {
+  "use strict";
   setTimeout(function() {
-    $.getJSON(ajax_url, function(json) {
+    $.getJSON(ajaxUrl, function(json) {
       //update d3 data element
       $("#d3_data").attr("data-d3_data", JSON.stringify(json));
 
       //update stack
       $("#stack_box").html(json.environment.info_box);
-      set_in_progress(json.environment, json.nodes);
-      needs_update = false;
+      setInProgress(json.environment, json.nodes);
+      needsUpdate = false;
 
       //Check Remove nodes
-      remove_nodes(nodes, json.nodes);
+      removeNodes(nodes, json.nodes);
 
       //Check for updates and new nodes
       json.nodes.forEach(function(d){
-        current_node = findNode(d.id);
+        var currentNode = findNode(d.id);
         //Check if node already exists
-        if (current_node) {
+        if (currentNode) {
           //Node already exists, just update it
-          current_node.status = d.status;
+          currentNode.status = d.status;
 
           //Status has changed, image should be updated
-          if (current_node.image !== d.image){
-            current_node.image = d.image;
-            var this_image = d3.select("#image_"+current_node.id);
-            this_image
+          if (currentNode.image !== d.image){
+            currentNode.image = d.image;
+            var thisImage = d3.select("#image_" + currentNode.id);
+            thisImage
               .transition()
-              .attr("x", function(d) { return d.image_x + 5; })
+              .attr("x", function(dImage) { return dImage.image_x + 5; })
               .duration(100)
               .transition()
-              .attr("x", function(d) { return d.image_x - 5; })
+              .attr("x", function(dImage) { return dImage.image_x - 5; })
               .duration(100)
               .transition()
-              .attr("x", function(d) { return d.image_x + 5; })
+              .attr("x", function(dImage) { return dImage.image_x + 5; })
               .duration(100)
               .transition()
-              .attr("x", function(d) { return d.image_x - 5; })
+              .attr("x", function(dImage) { return dImage.image_x - 5; })
               .duration(100)
               .transition()
               .attr("xlink:href", d.image)
               .transition()
-              .attr("x", function(d) { return d.image_x; })
+              .attr("x", function(dImage) { return dImage.image_x; })
               .duration(100)
               .ease("bounce");
           }
 
           //Status has changed, update info_box
-          current_node.info_box = d.info_box;
+          currentNode.info_box = d.info_box;
 
         } else {
           addNode(d);
-          build_links();
+          buildLinks();
         }
       });
 
       //if any updates needed, do update now
-      if (needs_update === true){
+      if (needsUpdate === true){
         update();
       }
     });
     //if no nodes still in progress, slow AJAX polling
-    if (in_progress === false) { poll_time = 30000; }
-    else { poll_time = 3000; }
-    ajax_poll(poll_time);
-  }, poll_time);
+    if (inProgress === false) { pollTime = 30000; }
+    else { pollTime = 3000; }
+    ajaxPoll(pollTime);
+  }, pollTime);
 }
 
-if ($(murano_container).length){
-  var width = $(murano_container).width(),
-    height = 1040,
-    environment_id = $("#environment_id").data("environment_id"),
-    ajax_url = '/murano/'+environment_id+'/services/get_d3_data',
-    graph = $("#d3_data").data("d3_data"),
-    force = d3.layout.force()
-      .nodes(graph.nodes)
-      .links([])
-      .gravity(0.25)
-      .charge(-3000)
-      .linkDistance(100)
-      .size([width, height])
-      .on("tick", tick),
-    svg = d3.select(murano_container).append("svg")
-      .attr("width", width)
-      .attr("height", height),
-    node = svg.selectAll(".node"),
-    link = svg.selectAll(".link"),
-    needs_update = false,
-    nodes = force.nodes(),
-    links = force.links();
-    svg.append("svg:clipPath")
-             .attr("id","clipCircle")
-             .append("svg:circle")
-             .attr("cursor","pointer")
-              .attr("r", "38px");
+if ($(muranoContainer).length){
+  var width = $(muranoContainer).width();
+  var height = 1040;
+  var environmentId = $("#environment_id").data("environment_id");
+  var graph = $("#d3_data").data("d3_data");
+  var svg = d3.select(muranoContainer).append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  ajaxUrl = '/murano/' + environmentId + '/services/get_d3_data';
+  force = d3.layout.force()
+    .nodes(graph.nodes)
+    .links([])
+    .gravity(0.25)
+    .charge(-3000)
+    .linkDistance(100)
+    .size([width, height])
+    .on("tick", tick);
+  node = svg.selectAll(".node");
+  link = svg.selectAll(".link");
+  needsUpdate = false;
+  nodes = force.nodes();
+  links = force.links();
+  svg.append("svg:clipPath")
+    .attr("id", "clipCircle")
+    .append("svg:circle")
+    .attr("cursor", "pointer")
+    .attr("r", "38px");
 
   svg.append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here
-  .enter().append("svg:marker")    // This section adds in the arrows
+    .enter().append("svg:marker")    // This section adds in the arrows
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 25)
@@ -293,21 +326,21 @@ if ($(murano_container).length){
     .attr("markerWidth", 6)
     .attr("markerHeight", 6)
     .attr("orient", "auto")
-  .append("svg:path")
+    .append("svg:path")
     .attr("d", "M0,-3L10,0L0,3");
 
-  build_links();
+  buildLinks();
   update();
 
   //Load initial Stack box
   $("#stack_box").html(graph.environment.info_box);
   //On Page load, set Action In Progress
-  var in_progress = false;
-  set_in_progress(graph.environment, node);
+  inProgress = false;
+  setInProgress(graph.environment, node);
 
   //If status is In Progress, start AJAX polling
-  var poll_time = 0;
-  if (in_progress === true) { poll_time = 3000; }
-  else { poll_time = 30000; }
-  ajax_poll(poll_time);
+  var pollTime = 0;
+  if (inProgress === true) { pollTime = 3000; }
+  else { pollTime = 30000; }
+  ajaxPoll(pollTime);
 }
