@@ -17,13 +17,13 @@ $(function() {
   "use strict";
 
   var uploadForm = $('#upload_package');
-  var importType = uploadForm.find('[name=upload-importType]');
+  var importType = uploadForm.find('[name=upload-import_type]');
 
   uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
   uploadForm.find('input[name=upload-repo_name]').closest('.form-group').addClass('required');
   uploadForm.find('input[name=upload-package]').closest('.form-group').addClass('required');
 
-  importType.change(function() {
+  importType.on('change', function() {
     var uploadType = $(this).val();
     if (uploadType === 'upload') {
       uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
