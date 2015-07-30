@@ -1,25 +1,39 @@
-$(function() {
+/*    Copyright (c) 2015 Mirantis, Inc.
 
+    Licensed under the Apache License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License. You may obtain
+    a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+*/
+$(function() {
+  "use strict";
   horizon.modals.loadModal = function (url, updateFieldId) {
     // If there's an existing modal request open, cancel it out.
-    if (horizon.modals._request && typeof(horizon.modals._request.abort) !== undefined) {
-      horizon.modals._request.abort();
+    if (horizon.modals.request && typeof (horizon.modals.request.abort) !== undefined) {
+      horizon.modals.request.abort();
     }
 
-    horizon.modals._request = $.ajax(url, {
+    horizon.modals.request = $.ajax(url, {
       beforeSend: function () {
         horizon.modals.modal_spinner(gettext("Loading"));
       },
       complete: function () {
         // Clear the global storage;
-        horizon.modals._request = null;
+        horizon.modals.request = null;
         horizon.modals.spinner.modal('hide');
       },
-      error: function(jqXHR, status, errorThrown) {
+      error: function(jqXHR) {
         if (jqXHR.status === 401){
-          var redir_url = jqXHR.getResponseHeader("X-Horizon-Location");
-          if (redir_url){
-            location.href = redir_url;
+          var redirUrl = jqXHR.getResponseHeader("X-Horizon-Location");
+          if (redirUrl){
+            location.href = redirUrl;
           } else {
             location.reload(true);
           }
@@ -32,14 +46,14 @@ $(function() {
         }
       },
       success: function (data, textStatus, jqXHR) {
-        var update_field_id = updateFieldId,
+        var formUpdateFieldId = updateFieldId,
           modal,
           form;
         modal = horizon.modals.success(data, textStatus, jqXHR);
-        if (update_field_id) {
+        if (formUpdateFieldId) {
           form = modal.find("form");
           if (form.length) {
-            form.attr("data-add-to-field", update_field_id);
+            form.attr("data-add-to-field", formUpdateFieldId);
           }
         }
       }
