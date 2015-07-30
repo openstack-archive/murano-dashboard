@@ -260,6 +260,10 @@ div.drop_component.over {
   border-color: #3B88C3;
 }
 
+#no_apps_found_message {
+  display: none;
+}
+
 h3.link {
   color: yellow;
   opacity: 0.5;
