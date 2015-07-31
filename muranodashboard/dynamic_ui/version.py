@@ -14,7 +14,7 @@
 
 import semantic_version
 
-LATEST_FORMAT_VERSION = '2.1'
+LATEST_FORMAT_VERSION = '2.2'
 
 
 def check_version(version):

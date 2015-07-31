@@ -15,20 +15,26 @@
 
 class WorkflowManagementForm(object):
     name = 'workflowManagement'
-    field_specs = [{
-        'widgetMedia':
-        {'css':
-            {'all': ('muranodashboard/css/checkbox.css',
-                     'muranodashboard/css/hide_app_name.css')
-             }
-         },
-        'name': 'StayAtCatalog',
-        'initial': False,
-        'description': 'If checked, you will be returned to the '
-                       'Application Catalog page. If not - to the '
-                       'Environment page, where you can deploy'
-                       ' the application.',
-        'required': False,
-        'type': 'boolean',
-        'label': 'Add more applications to the environment'}]
+    field_specs = [
+        {'name': 'stay_at_the_catalog',
+         'initial': False,
+         'description': 'If checked, you will be returned to the '
+                        'Application Catalog page. If not - to the '
+                        'Environment page, where you can deploy'
+                        ' the application.',
+         'required': False,
+         'type': 'boolean',
+         'label': 'Continue application adding'}]
     validators = []
+
+    @classmethod
+    def name_field(cls, name):
+        return {'name': 'application_name',
+                'type': 'string',
+                'description': 'Enter a desired name for the application. '
+                               'Just A-Z, a-z, 0-9, dash and underline'
+                               ' are allowed',
+                'label': 'Application Name',
+                'regexpValidator': '^[-\w]+$',
+                'initial': name
+                }

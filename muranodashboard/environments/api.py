@@ -210,6 +210,12 @@ def action_allowed(request, environment_id):
 
 
 def services_list(request, environment_id):
+    """Get environment applications.
+
+       This function collects data from Murano API and modifies it only for
+       dashboard purposes. Those changes don't impact application
+       deployment parameters.
+    """
     def strip(msg, to=100):
         return u'%s...' % msg[:to] if len(msg) > to else msg
 
@@ -246,6 +252,9 @@ def services_list(request, environment_id):
         service_data['environment_version'] = environment.version
         service_data['operation'] = last_operation
         service_data['operation_updated'] = time
+        if service_data['?'].get('name'):
+            service_data['name'] = service_data['?']['name']
+
         services.append(service_data)
 
     LOG.debug('Service::List')

@@ -19,6 +19,7 @@ import types
 
 import yaql.context
 
+from muranodashboard.catalog import forms as catalog_forms
 from muranodashboard.dynamic_ui import helpers
 
 
@@ -65,6 +66,14 @@ def _generate_hostname(pattern, number):
     return prefix + timestamp + suffix
 
 
+@yaql.context.ContextAware()
+def _name(context):
+    name = context.get_data()[
+        catalog_forms.WorkflowManagementForm.name]['application_name']
+    return name
+
+
 def register(context):
     context.register_function(_repeat, 'repeat')
     context.register_function(_generate_hostname, 'generateHostname')
+    context.register_function(_name, 'name')

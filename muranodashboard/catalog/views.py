@@ -309,8 +309,7 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             return str(index0)
 
     def done(self, form_list, **kwargs):
-        app_id = kwargs['app_id']
-        app_name = pkg_api.get_service_name(self.request, app_id)
+        app_name = self.storage.extra_data['app'].name
 
         service = form_list[0].service
         attributes = service.extract_attributes()
@@ -320,11 +319,11 @@ class Wizard(views.ModalFormMixin, LazyWizard):
             consts.DASHBOARD_ATTRS_KEY, {})
         storage['name'] = app_name
 
+        do_redirect = self.get_wizard_flag('do_redirect')
         wm_form_data = service.cleaned_data.get('workflowManagement')
         if wm_form_data:
-            do_redirect = not wm_form_data['StayAtCatalog']
-        else:
-            do_redirect = self.get_wizard_flag('do_redirect')
+            do_redirect = do_redirect or not wm_form_data.get(
+                'stay_at_the_catalog', True)
 
         fail_url = reverse("horizon:murano:environments:index")
         environment_id = utils.ensure_python_obj(kwargs.get('environment_id'))
@@ -366,7 +365,9 @@ class Wizard(views.ModalFormMixin, LazyWizard):
                 return http.HttpResponseRedirect(env_url)
             else:
                 srv_id = getattr(srv, '?')['id']
-                return self.create_hacked_response(srv_id, attributes['name'])
+                return self.create_hacked_response(
+                    srv_id,
+                    attributes['?'].get('name') or attributes.get('name'))
 
     def create_hacked_response(self, obj_id, obj_name):
         # copy-paste from horizon.forms.views.ModalFormView; should be done
@@ -403,7 +404,13 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         mc = api.muranoclient(self.request)
         app_id = self.kwargs.get('app_id')
-        app = mc.packages.get(app_id)
+        app = self.storage.extra_data.get('app')
+
+        # Save extra data to prevent extra API calls
+        if not app:
+            app = mc.packages.get(app_id)
+            self.storage.extra_data['app'] = app
+
         environment_id = self.kwargs.get('environment_id')
         environment_id = utils.ensure_python_obj(environment_id)
         if environment_id is not None:
