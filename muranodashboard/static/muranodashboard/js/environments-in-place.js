@@ -24,8 +24,8 @@ $(function() {
       horizon.modals.spinner.modal('hide');
     }
 
-    var $tbody = $('table tbody'),
-        CREATE_URL = $(this).attr('href');
+    var $tbody = $('table tbody');
+    var CREATE_URL = $(this).attr('href');
 
     $.ajax({
       type: 'GET',
@@ -37,8 +37,8 @@ $(function() {
     });
 
     function drawWorkflowInline(data, validationFailed) {
-      var $form = $(data).find('form'),
-          $name = $form.find('div.form-group');
+      var $form = $(data).find('form');
+      var $name = $form.find('div.form-group');
       $name.addClass("col-md-6");
       if ( validationFailed ) {
         $tbody.find('tr.new_env').remove();
@@ -58,7 +58,7 @@ $(function() {
       $emptyRow.hide();
       $newEnvTr.prependTo($tbody);
 
-      $name.find('input#id_name').focus()
+      $name.find('input#id_name').focus();
 
       $('button#cancel_create_env').on('click', function(ev) {
         $newEnvTr.remove();
@@ -78,7 +78,7 @@ $(function() {
             $newEnvTr.remove();
             hideSpinner();
             horizon.alert('error',
-                'There was an error submitting the form. Please try again.')
+                'There was an error submitting the form. Please try again.');
           },
           success: function(data, status, xhr) {
             if ( data === '' ) {
