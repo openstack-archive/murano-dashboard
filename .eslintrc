@@ -12,6 +12,9 @@ globals:
   # allow accessing horizon
   horizon: false
 
+  # allow passing TENANT_ID from django templates
+  TENANT_ID: false
+
 # Only support ECMA5, disable everything else.
 # NOTE(kzaitsev): blatantly copied from horizon
 ecmaFeatures:
