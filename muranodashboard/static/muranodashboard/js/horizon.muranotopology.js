@@ -37,16 +37,16 @@ var d3 = d3 || {};
 /**
  * Declare global variables
  */
-var ajaxUrl;
-var force;
-var node;
-var link;
-var needsUpdate;
-var nodes;
-var links;
-var inProgress;
+var ajaxUrl,
+  force,
+  node,
+  link,
+  needsUpdate,
+  nodes,
+  links,
+  inProgress;
 
-function update(){
+function update() {
   "use strict";
   node = node.data(nodes, function(d) { return d.id; });
   link = link.data(links);
@@ -59,7 +59,7 @@ function update(){
 
   nodeEnter.append("image")
     .attr("xlink:href", function(d) { return d.image; })
-    .attr("id", function(d){ return "image_" + d.id; })
+    .attr("id", function(d) { return "image_" + d.id; })
     .attr("x", function(d) { return d.image_x; })
     .attr("y", function(d) { return d.image_y; })
     .attr("width", function(d) { return d.image_size; })
@@ -106,14 +106,14 @@ function setInProgress(stack, innerNodes) {
 function findNode(id) {
   "use strict";
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].id === id){ return nodes[i]; }
+    if (nodes[i].id === id) { return nodes[i]; }
   }
 }
 
 function findNodeIndex(id) {
   "use strict";
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].id === id){ return i; }
+    if (nodes[i].id === id) { return i; }
   }
 }
 
@@ -157,7 +157,7 @@ function removeNodes(oldNodes, newNodes) {
 
 function buildNodeLinks(innerNode) {
   "use strict";
-  for (var j = 0; j < innerNode.required_by.length; j++){
+  for (var j = 0; j < innerNode.required_by.length; j++) {
     var pushLink = true;
     var targetIdx = '';
     var sourceIdx = findNodeIndex(innerNode.id);
@@ -178,7 +178,7 @@ function buildNodeLinks(innerNode) {
       }
     }
 
-    if (pushLink === true && (sourceIdx && targetIdx)){
+    if (pushLink === true && (sourceIdx && targetIdx)) {
       links.push({
         'target': sourceIdx,
         'source': targetIdx,
@@ -191,12 +191,12 @@ function buildNodeLinks(innerNode) {
 
 function buildReverseLinks(innerNode) {
   "use strict";
-  for (var i = 0; i < nodes.length; i++){
-    if(nodes[i].required_by){
-      for (var j = 0; j < nodes[i].required_by.length; j++){
+  for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i].required_by) {
+      for (var j = 0; j < nodes[i].required_by.length; j++) {
         var dependency = nodes[i].required_by[j];
         //if new node is required by existing node, push new link
-        if(innerNode.id === dependency){
+        if (innerNode.id === dependency) {
           links.push({
             'target': findNodeIndex(nodes[i].id),
             'source': findNodeIndex(innerNode.id),
@@ -233,7 +233,7 @@ function ajaxPoll(pollTime) {
       removeNodes(nodes, json.nodes);
 
       //Check for updates and new nodes
-      json.nodes.forEach(function(d){
+      json.nodes.forEach(function(d) {
         var currentNode = findNode(d.id);
         //Check if node already exists
         if (currentNode) {
@@ -241,7 +241,7 @@ function ajaxPoll(pollTime) {
           currentNode.status = d.status;
 
           //Status has changed, image should be updated
-          if (currentNode.image !== d.image){
+          if (currentNode.image !== d.image) {
             currentNode.image = d.image;
             var thisImage = d3.select("#image_" + currentNode.id);
             thisImage
@@ -275,7 +275,7 @@ function ajaxPoll(pollTime) {
       });
 
       //if any updates needed, do update now
-      if (needsUpdate === true){
+      if (needsUpdate === true) {
         update();
       }
     });
@@ -286,7 +286,7 @@ function ajaxPoll(pollTime) {
   }, pollTime);
 }
 
-if ($(muranoContainer).length){
+if ($(muranoContainer).length) {
   var width = $(muranoContainer).width();
   var height = 1040;
   var environmentId = $("#environment_id").data("environment_id");

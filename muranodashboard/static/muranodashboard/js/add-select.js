@@ -31,7 +31,7 @@ $(function() {
         try {
           urls = $.parseJSON($this.attr("data-add-item-url"));
         } catch(err) {
-          if(window.console) {
+          if (window.console) {
             window.console.log(err);
           }
         }
