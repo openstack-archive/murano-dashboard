@@ -1,3 +1,8 @@
+eggs/
+.eggs/
+develop-eggs/
+*.egg-info/
+*.egg
 *~
 *.orig
 *.pyc
