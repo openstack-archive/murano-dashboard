@@ -10,17 +10,4 @@
 {% endblock page_header %}
 {% block main %}
     {{ table.render }}
-    <script>
-        var tenant_id = "{{tenant_id}}";
-        $('tbody tr').each(function (i) {
-            pkg_owner = $.trim($(this).find('td').eq(6).text());
-            if (pkg_owner != tenant_id) {
-                $(this).find('td').eq(1).append(
-                                '<i class="fa fa-user-plus"' +
-                                ' data-toggle="tooltip"' +
-                                ' title="{% trans "This package belongs to another tenant" %}"></i>');
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip();
-    </script>
 {% endblock %}
