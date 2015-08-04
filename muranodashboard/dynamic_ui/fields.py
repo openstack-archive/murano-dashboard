@@ -329,7 +329,32 @@ class KeyPairChoiceField(DynamicChoiceField):
             self.choices.append((keypair.name, keypair.name))
 
 
+# NOTE(kzaitsev): for transform to work correctly on horizon SelectWidget
+# Choice has to be non-string
+class Choice(object):
+    """A choice that allows disabling specific choices in a SelectWidget."""
+    def __init__(self, title, enabled):
+        self.title = title
+        self.enabled = enabled
+
+
+def _get_title(data):
+    if isinstance(data, Choice):
+        return data.title
+    return data
+
+
+def _disable_non_ready(data):
+    if getattr(data, 'enabled', True):
+        return {}
+    else:
+        return {'disabled': 'disabled'}
+
+
 class ImageChoiceField(ChoiceField):
+    widget = hz_forms.SelectWidget(transform=_get_title,
+                                   transform_html_attrs=_disable_non_ready)
+
     def __init__(self, *args, **kwargs):
         self.image_type = kwargs.pop('image_type', None)
         super(ImageChoiceField, self).__init__(*args, **kwargs)
@@ -341,6 +366,12 @@ class ImageChoiceField(ChoiceField):
         for image in murano_images:
             murano_data = image.murano_property
             title = murano_data.get('title', image.name)
+
+            if image.status == 'active':
+                title = Choice(title, enabled=True)
+            else:
+                title = Choice("{} ({})".format(title, image.status),
+                               enabled=False)
             if self.image_type is not None:
                 itype = murano_data.get('type')
 
