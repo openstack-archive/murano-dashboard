@@ -21,7 +21,7 @@ $(function() {
   uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
   uploadForm.find('input[name=upload-name]').closest('.form-group').addClass('required');
 
-  importType.change(function(){
+  importType.change(function() {
     var uploadType = $(this).val();
     if (uploadType === 'by_name') {
       uploadForm.find('input[name=upload-url]').closest('.form-group').hide();

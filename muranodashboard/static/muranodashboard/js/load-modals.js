@@ -30,9 +30,9 @@ $(function() {
         horizon.modals.spinner.modal('hide');
       },
       error: function(jqXHR) {
-        if (jqXHR.status === 401){
+        if (jqXHR.status === 401) {
           var redirUrl = jqXHR.getResponseHeader("X-Horizon-Location");
-          if (redirUrl){
+          if (redirUrl) {
             location.href = redirUrl;
           } else {
             location.reload(true);

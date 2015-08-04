@@ -14,7 +14,7 @@
 */
 $(function() {
   "use strict";
-  function checkMixedMode(){
+  function checkMixedMode() {
     var checked = $("input[id*='mixedModeAuth']").prop('checked');
     if ( checked === true) {
       $("label[for*='saPassword']").parent().css({'display': 'inline-block'});

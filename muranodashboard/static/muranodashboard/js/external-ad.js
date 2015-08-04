@@ -14,7 +14,7 @@
 */
 $(function() {
   "use strict";
-  function checkPreconfiguredAd(){
+  function checkPreconfiguredAd() {
     var checked = $("input[id*='externalAD']").prop('checked');
     if (checked === true) {
       $("select[id*='-domain']").attr("disabled", "disabled");
