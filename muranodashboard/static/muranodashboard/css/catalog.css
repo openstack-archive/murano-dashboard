@@ -43,6 +43,19 @@ table#murano div.table_cell_wrapper div.inline-edit-form input:focus {
   width: 100%;
 }
 
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  max-width: 250px;
+  overflow-x: hidden;
+}
+
+.scrollable-menu a {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+}
 .murano-dropdown-menu {
   margin-top: -15px;
   margin-left: 20px;
