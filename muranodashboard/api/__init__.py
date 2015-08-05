@@ -57,19 +57,19 @@ def handled_exceptions(request):
         msg = _('Unable to communicate to murano-api server.')
         LOG.exception(msg)
         _handle_message(request, msg)
-    except exc.Unauthorized:
+    except exc.HTTPUnauthorized:
         msg = _('Check Keystone configuration of murano-api server.')
         LOG.exception(msg)
         _handle_message(request, msg)
-    except exc.Forbidden:
+    except exc.HTTPForbidden:
         msg = _('Operation is forbidden by murano-api server.')
         LOG.exception(msg)
         _handle_message(request, msg)
-    except exc.NotFound:
+    except exc.HTTPNotFound:
         msg = _('Requested object is not found on murano server.')
         LOG.exception(msg)
         _handle_message(request, msg)
-    except exc.Conflict:
+    except exc.HTTPConflict:
         msg = _('Requested operation conflicts with an existing object.')
         LOG.exception(msg)
         _handle_message(request, msg)

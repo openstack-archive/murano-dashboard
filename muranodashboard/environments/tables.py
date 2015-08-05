@@ -16,6 +16,7 @@ import json
 import logging
 
 from django.core.urlresolvers import reverse
+from django import http as django_http
 from django import shortcuts
 from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
@@ -252,7 +253,16 @@ class UpdateEnvironmentRow(tables.Row):
     ajax = True
 
     def get_data(self, request, environment_id):
-        return api.environment_get(request, environment_id)
+        try:
+            return api.environment_get(request, environment_id)
+        except exc.HTTPNotFound:
+            # returning 404 to the ajax call removes the
+            # row from the table on the ui
+            raise django_http.Http404
+        except Exception:
+            # let our unified handler take care of errors here
+            with api_utils.handled_exceptions(request):
+                raise
 
 
 class UpdateServiceRow(tables.Row):
