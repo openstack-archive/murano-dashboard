@@ -13,6 +13,7 @@ develop-eggs/
 .noseids
 .venv
 .idea
+.tox
 coverage.xml
 pep8.txt
 pylint.txt
