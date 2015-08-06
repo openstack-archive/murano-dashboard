@@ -209,11 +209,6 @@ class UITestCase(BaseDeps):
         log.debug("Waiting for a success message")
         ui.WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
-        is_open = self.driver.find_elements(by.By.CSS_SELECTOR,
-                                            'a.close')
-        if is_open:
-            log.debug("Hide success message")
-            is_open[0].click()
 
     def wait_element_is_clickable(self, method, element):
         return ui.WebDriverWait(self.driver, 10).until(
