@@ -1,4 +1,3 @@
-
 /*    Copyright (c) 2014 Mirantis, Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,55 +23,61 @@ $(function() {
 
   if ( !window.murano.bind_add_item_handlers ) {
     window.murano.bind_add_item_handlers = true;
-    horizon.modals.addModalInitFunction(function (el) {
-      var $selects = $(el).find('select[data-add-item-url]');
-      $selects.each(function () {
-        var $this = $(this), urls, link, $choices;
-        try {
-          urls = $.parseJSON($this.attr("data-add-item-url"));
-        } catch(err) {
-          if (window.console) {
-            window.console.log(err);
-          }
+    horizon.modals.addModalInitFunction(initPlusButton);
+
+    // in case this script is executed on static page and not on a modal
+    // we have to call the init function manually
+    initPlusButton($('div.static_page form'));
+  }
+
+  function initPlusButton(el) {
+    var $selects = $(el).find('select[data-add-item-url]');
+    $selects.each(function () {
+      var $this = $(this), urls, link, $choices;
+      try {
+        urls = $.parseJSON($this.attr("data-add-item-url"));
+      } catch(err) {
+        if (window.console) {
+          window.console.log(err);
         }
-        if ( urls && urls[0].length ) {
-          if ( urls.length === 1 ) {
-            link = $this.next().find('a');
-            link.html(plus);
-            link.attr('href', urls[0][1]);
-          } else {
-            link = $this.next().find('a').toggleClass('dropdown-toggle');
-            link.html(plus);
-            link.attr('href', '#');
-            link.attr('data-toggle', 'dropdown');
-            link.removeClass('ajax-add ajax-modal');
-            $choices = $("<ul class='dropdown-menu murano-dropdown-menu' role='menu'></ul>");
-            $(urls).each(function(i, url) {
-              $choices.append($("<li><a href='" + url[1] + "' data-add-to-field='" +
-                $this.attr("id") + "' class='ajax-add ajax-modal'>" + url[0] +
-              "</a></li>"));
-            });
-            $this.next('span').append($choices);
-          }
-        }
-        if ( $this.hasClass('murano_add_select') ) {
-          // NOTE(tsufiev): hide selectbox in case it contains no elements
-          if ( this.options.length === 1 ) {
-            $this.hide();
-            $this.next('span').removeClass('input-group-btn').find('i').text(
-              ' Add Application');
-          }
-          // NOTE(tsufiev): show hidden select once the new option was added to it
-          // programmatically (on return from the finished modal dialog)
-          $this.change(function() {
-            if ( !$this.is(':visible') && this.options.length > 1 ) {
-              $this.show();
-              $this.next('span').addClass('input-group-btn').find('i').text('');
-              $this.val($(this.options[1]).val());
-            }
+      }
+      if ( urls && urls[0].length ) {
+        if ( urls.length === 1 ) {
+          link = $this.next().find('a');
+          link.html(plus);
+          link.attr('href', urls[0][1]);
+        } else {
+          link = $this.next().find('a').toggleClass('dropdown-toggle');
+          link.html(plus);
+          link.attr('href', '#');
+          link.attr('data-toggle', 'dropdown');
+          link.removeClass('ajax-add ajax-modal');
+          $choices = $("<ul class='dropdown-menu murano-dropdown-menu' role='menu'></ul>");
+          $(urls).each(function(i, url) {
+            $choices.append($("<li><a href='" + url[1] + "' data-add-to-field='" +
+                  $this.attr("id") + "' class='ajax-add ajax-modal'>" + url[0] +
+                  "</a></li>"));
           });
+          $this.next('span').append($choices);
         }
-      });
+      }
+      if ( $this.hasClass('murano_add_select') ) {
+        // NOTE(tsufiev): hide selectbox in case it contains no elements
+        if ( this.options.length === 1 ) {
+          $this.hide();
+          $this.next('span').removeClass('input-group-btn').find('i').text(
+              ' Add Application');
+        }
+        // NOTE(tsufiev): show hidden select once the new option was added to it
+        // programmatically (on return from the finished modal dialog)
+        $this.change(function() {
+          if ( !$this.is(':visible') && this.options.length > 1 ) {
+            $this.show();
+            $this.next('span').addClass('input-group-btn').find('i').text('');
+            $this.val($(this.options[1]).val());
+          }
+        });
+      }
     });
   }
 });
