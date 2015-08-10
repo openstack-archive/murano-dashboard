@@ -26,26 +26,14 @@ $(function() {
   importType.on('change', function() {
     var uploadType = $(this).val();
     if (uploadType === 'upload') {
-      uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-package]').closest('.form-group').show();
       uploadForm.find('.description-upload').show();
       uploadForm.find('.description-by_name').hide();
       uploadForm.find('.description-by_url').hide();
     } else if (uploadType === 'by_name') {
-      uploadForm.find('input[name=upload-url]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').show();
-      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').show();
-      uploadForm.find('input[name=upload-package]').closest('.form-group').hide();
       uploadForm.find('.description-upload').hide();
       uploadForm.find('.description-by_name').show();
       uploadForm.find('.description-by_url').hide();
     } else if (uploadType === 'by_url') {
-      uploadForm.find('input[name=upload-url]').closest('.form-group').show();
-      uploadForm.find('input[name=upload-repo_name]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-repo_version]').closest('.form-group').hide();
-      uploadForm.find('input[name=upload-package]').closest('.form-group').hide();
       uploadForm.find('.description-upload').hide();
       uploadForm.find('.description-by_name').hide();
       uploadForm.find('.description-by_url').show();
