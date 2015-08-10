@@ -53,6 +53,10 @@ def get_available_networks(request, include_subnets=True,
     except exceptions.ServiceCatalogException:
         LOG.warn("Neutron not found. Assuming Nova Network usage")
         return None
+
+    # Remove external networks
+    networks = [network for network in networks
+                if network.router__external is False]
     if filter:
         networks = [network for network in networks
                     if re.match(filter, network.name) is not None]
