@@ -111,11 +111,11 @@ class EditEnvironment(tables.LinkAction):
     icon = 'edit'
 
     def allowed(self, request, environment):
+        """Allow edit environment only when status not deploying and deleting.
+        """
         status = getattr(environment, 'status', None)
-        if status not in [consts.STATUS_ID_DEPLOYING]:
-            return True
-        else:
-            return False
+        return status not in [consts.STATUS_ID_DEPLOYING,
+                              consts.STATUS_ID_DELETING]
 
 
 class DeleteService(tables.DeleteAction):
