@@ -156,7 +156,7 @@ def _is_atomic(elt):
 
 
 def render_d3_data(request, environment):
-    if not environment:
+    if not (environment and environment.services):
         return None
 
     ext_net_name = None
