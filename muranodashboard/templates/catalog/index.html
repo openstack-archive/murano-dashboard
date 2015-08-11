@@ -40,13 +40,16 @@
                                 {{ current_category|truncatechars:30 }} <b
                                     class="caret"></b></a>
                             <ul class="dropdown-menu row_actions clearfix scrollable-menu">
-                                {% for category in categories %}
-                                    <li class="clearfix"><a tabindex="-1"
-                                                            href="
-                                    {% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}"
-                                                            class="btn btn-small">
-                                        {{ category }}</a></li>
-                                {% endfor %}
+                                <li class="clearfix">
+                                    <a tabindex="-1" href="{% url 'horizon:murano:catalog:index' %}?category={{ ALL_CATEGORY_NAME|urlencode }}" class="btn btn-small">
+                                        {{ ALL_CATEGORY_NAME }}</a>
+                                </li>
+                            {% for category in categories %}
+                                <li class="clearfix">
+                                    <a tabindex="-1" href="{% url 'horizon:murano:catalog:index' %}?category={{ category.name|urlencode }}" class="btn btn-small">
+                                        {{ category.name }} ({{category.package_count}})</a>
+                                </li>
+                            {% endfor %}
                             </ul>
                         </div>
                     </h3>

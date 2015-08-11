@@ -87,12 +87,26 @@ def get_environments_context(request):
 
 
 def get_categories_list(request):
+    """Returns a list of categories, sorted.
+
+    Categories with packages come first, categories without
+    packages come second. both groups alphabetically sorted.
+    """
+
     categories = []
     with api.handled_exceptions(request):
         client = api.muranoclient(request)
-        categories = client.packages.categories()
-    if ALL_CATEGORY_NAME not in categories:
-        categories.insert(0, ALL_CATEGORY_NAME)
+        categories = client.categories.list()
+
+    # NOTE(kzaitsev) We rely here on tuple comparison and ascending order of
+    # sorted(). i.e. (False, 'a') < (False, 'b') < (True, 'a') < (True, 'b')
+    # So to make order more human-friendly we sort based on
+    # package_count == 0, pushing categories without packages in front and
+    # and then sorting them alphabetically
+    categories = [cat for cat in sorted(
+        categories, key=lambda c: (c.package_count == 0, c.name))]
+    # TODO(kzaitsev): add sorting options to category API
+
     return categories
 
 
@@ -550,6 +564,7 @@ class IndexView(list_view.ListView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         context.update({
+            'ALL_CATEGORY_NAME': ALL_CATEGORY_NAME,
             'categories': get_categories_list(self.request),
             'current_category': self.get_current_category(),
             'latest_list': clean_latest_apps(self.request)
