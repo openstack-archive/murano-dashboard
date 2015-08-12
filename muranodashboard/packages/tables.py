@@ -20,6 +20,7 @@ from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 from horizon import exceptions
+from horizon import messages
 from horizon import tables
 from oslo_log import log as logging
 
@@ -107,7 +108,16 @@ class ToggleEnabled(tables.BatchAction):
         )
 
     def action(self, request, obj_id):
-        api.muranoclient(request).packages.toggle_active(obj_id)
+        try:
+            api.muranoclient(request).packages.toggle_active(obj_id)
+        except exc.HTTPForbidden:
+            msg = _("You are not allowed to perform this operation")
+            LOG.exception(msg)
+            messages.error(request, msg)
+            exceptions.handle(
+                request,
+                msg,
+                redirect=reverse('horizon:murano:packages:index'))
 
 
 class TogglePublicEnabled(tables.BatchAction):
@@ -131,7 +141,16 @@ class TogglePublicEnabled(tables.BatchAction):
         )
 
     def action(self, request, obj_id):
-        api.muranoclient(request).packages.toggle_public(obj_id)
+        try:
+            api.muranoclient(request).packages.toggle_public(obj_id)
+        except exc.HTTPForbidden:
+            msg = _("You are not allowed to perform this operation")
+            LOG.exception(msg)
+            messages.error(request, msg)
+            exceptions.handle(
+                request,
+                msg,
+                redirect=reverse('horizon:murano:packages:index'))
 
 
 class DeletePackage(tables.DeleteAction):
