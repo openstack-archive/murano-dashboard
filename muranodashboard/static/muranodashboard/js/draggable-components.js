@@ -165,8 +165,9 @@ $(function() {
 
     // dynamic carousel refilling on category change
     $('#envAppsCategory').on('click', 'a', function (env) {
-      category = $(this).text();
-      $('#envAppsCategoryName').text(category);
+      var $category = $(this);
+      category = $category.attr('data-category-name');
+      $('#envAppsCategoryName').text($category.text());
       refillCarousel();
       env.preventDefault();
     });

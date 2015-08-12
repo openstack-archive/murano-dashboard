@@ -26,16 +26,22 @@
                             {% with categories=table.get_categories_list %}
                                 <button class="btn btn-default dropdown-toggle"
                                         type="button" aria-expanded="true">
-                                    <span id="envAppsCategoryName">{{ categories.0 }}</span>
+                                        <span id="envAppsCategoryName">All</span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu scrollable-menu"
                                     role="menu"
                                     aria-labelledby="envAppsCategory">
+                                        <li role="presentation"><a
+                                                role="menuitem" tabindex="-1"
+                                                data-category-name="All"
+                                                href="#">All</a>
+                                        </li>
                                     {% for category in categories %}
                                         <li role="presentation"><a
                                                 role="menuitem" tabindex="-1"
-                                                href="#">{{ category }}</a>
+                                                data-category-name="{{ category.name }}"
+                                                href="#">{{ category.name }} ({{category.package_count}})</a>
                                         </li>
                                     {% endfor %}
                                 </ul>
