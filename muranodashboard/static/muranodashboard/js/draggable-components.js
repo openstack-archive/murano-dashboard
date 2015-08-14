@@ -56,6 +56,7 @@ $(function() {
     var $carouselInner = $tab.find('.carousel-inner'),
       $carousel = $('#apps_carousel'),
       $filter = $('#envAppsFilter').find('input'),
+      $noAppMsg = $('#no_apps_found_message'),
       category = ALL_CATEGORY = 'All',
       filterValue = '',
       ENTER_KEYCODE = 13;
@@ -71,6 +72,7 @@ $(function() {
       }
       if (apps.length) {
         $dropArea.show();
+        $noAppMsg.hide();
         if ($carousel.css('display') === 'none') {
           $carousel.show();
         }
@@ -98,8 +100,12 @@ $(function() {
         $('div.carousel-control').removeClass('item')
         bindAppTileHandlers();
       } else {
+        if ($('#no_apps_in_catalog_message').length == 0) {
+          $noAppMsg.show();
+        }
         $carousel.hide();
         $dropArea.hide();
+
       }
     }
 
