@@ -621,7 +621,7 @@ class TestSuitePackages(base.PackageTestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('PostgreSQL',
+        self.select_action_for_package(self.postgre_id,
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -631,7 +631,7 @@ class TestSuitePackages(base.PackageTestCase):
                                    c.AppPackageDefinitions.format(
                                        'PostgreSQL-modified'))
 
-        self.select_action_for_package('PostgreSQL-modified',
+        self.select_action_for_package(self.postgre_id,
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -651,7 +651,7 @@ class TestSuitePackages(base.PackageTestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('PostgreSQL',
+        self.select_action_for_package(self.postgre_id,
                                        'modify_package')
 
         self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
@@ -674,8 +674,8 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'download_package')
+        self.select_action_for_package(self.postgre_id, 'more')
+        self.select_action_for_package(self.postgre_id, 'download_package')
 
     def test_check_toggle_enabled_package(self):
         """Test check ability to make package active or inactive
@@ -690,15 +690,15 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
+        self.select_action_for_package(self.postgre_id, 'more')
+        self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Active', 'False')
+        self.check_package_parameter(self.postgre_id, 'Active', 'False')
 
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_enabled')
+        self.select_action_for_package(self.postgre_id, 'more')
+        self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Active', 'True')
+        self.check_package_parameter(self.postgre_id, 'Active', 'True')
 
     def test_check_toggle_public_package(self):
         """Test check ability to make package active or inactive
@@ -713,15 +713,17 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
 
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+        self.select_action_for_package(self.postgre_id, 'more')
+        self.select_action_for_package(self.postgre_id,
+                                       'toggle_public_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Public', 'True')
+        self.check_package_parameter(self.postgre_id, 'Public', 'True')
 
-        self.select_action_for_package('PostgreSQL', 'more')
-        self.select_action_for_package('PostgreSQL', 'toggle_public_enabled')
+        self.select_action_for_package(self.postgre_id, 'more')
+        self.select_action_for_package(self.postgre_id,
+                                       'toggle_public_enabled')
 
-        self.check_package_parameter('PostgreSQL', 'Public', 'False')
+        self.check_package_parameter(self.postgre_id, 'Public', 'False')
 
     def test_modify_description(self):
         """Test check ability to change description of the package
@@ -733,7 +735,7 @@ class TestSuitePackages(base.PackageTestCase):
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Package Definitions')
-        self.select_action_for_package('MockApp',
+        self.select_action_for_package(self.mockapp_id,
                                        'modify_package')
 
         self.modify_package('description', 'New Description')

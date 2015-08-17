@@ -32,6 +32,6 @@ DeleteCategory = "//tr[td[contains(text(), '{0}')]]//button[contains(@id, 'actio
 
 # Panel's
 
-Murano = "//*[@id='main_content']/div[2]//dt[contains(text(), 'Murano')]"
-Application_Catalog = Murano + "/following::h4[1]"
-Manage = Murano + "/following::h4[2]"
+Murano = "//*[@id='main_content']/div[2]//a[contains(text(), 'Murano')]"
+Application_Catalog = Murano + "/following::a[span[contains(text(), 'Application Catalog')]]"  # noqa
+Manage = Murano + "/following::a[span[contains(text(), 'Manage')]]"

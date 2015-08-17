@@ -117,7 +117,7 @@ class UITestCase(BaseDeps):
         self.fill_field(by.By.ID, 'id_password', cfg.common.password)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         murano = self.driver.find_element_by_xpath(consts.Murano)
-        if 'active' not in murano.get_attribute('class'):
+        if 'collapsed' in murano.get_attribute('class'):
             murano.click()
 
     def fill_field(self, by_find, field, value):
@@ -151,7 +151,7 @@ class UITestCase(BaseDeps):
         el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (by.By.XPATH, getattr(consts, menu))))
-        if 'active' not in el.get_attribute('class'):
+        if 'collapsed' in el.get_attribute('class'):
             el.click()
         self.wait_for_sidebar_is_loaded()
 
@@ -242,7 +242,7 @@ class UITestCase(BaseDeps):
     def wait_for_sidebar_is_loaded(self):
         ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
-                (by.By.CSS_SELECTOR, "div.sidebar dt.active")))
+                (by.By.CSS_SELECTOR, "div#sidebar li.active")))
         time.sleep(0.5)
 
 
@@ -343,8 +343,7 @@ class ApplicationTestCase(ImageTestCase):
         el.click()
         self.wait_for_alert_message()
 
-    def select_action_for_package(self, package, action):
-        package_id = self.get_element_id(package)
+    def select_action_for_package(self, package_id, action):
         if action == 'more':
             el = self.wait_element_is_clickable(
                 by.By.XPATH, "//tr[@data-object-id='{0}']"
@@ -359,10 +358,9 @@ class ApplicationTestCase(ImageTestCase):
                 ".//*[@id='packages__row_{0}__action_{1}']".
                 format(package_id, action)).click()
 
-    def check_package_parameter(self, package, column, value):
+    def check_package_parameter(self, package_id, column, value):
         columns = {'Active': 3, 'Public': 4}
 
-        package_id = self.get_element_id(package)
         column_num = str(columns[column])
 
         column_element = self.driver.find_element_by_xpath(
