@@ -14,6 +14,7 @@
 
 import json
 
+from django.core.urlresolvers import reverse
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -90,7 +91,7 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
             return img
         except Exception:
             exceptions.handle(request, _('Unable to mark image'),
-                              redirect='horizon:murano:images:index')
+                              redirect=reverse('horizon:murano:images:index'))
 
     def clean_title(self):
         cleaned_data = super(MarkImageForm, self).clean()

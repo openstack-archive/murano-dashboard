@@ -175,9 +175,10 @@ class DeletePackage(tables.DeleteAction):
                 redirect=reverse('horizon:murano:packages:index'))
         except Exception:
             LOG.exception(_('Unable to delete package in murano-api server'))
+            url = reverse('horizon:murano:packages:index')
             exceptions.handle(request,
                               _('Unable to remove package.'),
-                              redirect='horizon:murano:packages:index')
+                              redirect=url)
 
 
 class ModifyPackage(tables.LinkAction):

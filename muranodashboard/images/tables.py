@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tables
@@ -39,7 +40,7 @@ class RemoveImageMetadata(tables.DeleteAction):
                                 purge_props='murano_image_info')
         except Exception:
             exceptions.handle(request, _('Unable to remove metadata'),
-                              redirect='horizon:murano:images:index')
+                              redirect=reverse('horizon:murano:images:index'))
 
     def allowed(self, request, image):
         return request.user.has_perm('openstack.roles.admin')
