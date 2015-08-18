@@ -16,11 +16,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from horizon import forms as horizon_forms
 from horizon import messages
-from oslo_log import log as logging
 
 from muranodashboard import api
-
-LOG = logging.getLogger(__name__)
 
 
 class AddCategoryForm(horizon_forms.SelfHandlingForm):
