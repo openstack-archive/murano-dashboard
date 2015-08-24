@@ -31,7 +31,7 @@ class CategoriesView(horizon_tables.DataTableView):
         categories = []
         with api.handled_exceptions(self.request):
             categories = api.muranoclient(self.request).categories.list()
-        return sorted(categories, key=lambda category: category.name)
+        return sorted(categories, key=lambda category: category.name.lower())
 
 
 class AddCategoryView(views.ModalFormView):
