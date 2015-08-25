@@ -271,6 +271,7 @@ class ImportPackageWizard(views.ModalFormMixin,
         for dep_pkg in dep_pkgs:
             try:
                 murano_client.packages.update(dep_pkg.id, dep_data)
+                LOG.debug('Success update for package {0}.'.format(dep_pkg.id))
             except Exception as e:
                 msg = _("Couldn't update package {0} parameters. Error: {1}")\
                     .format(dep_pkg.fully_qualified_name, e)
