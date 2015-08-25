@@ -15,12 +15,17 @@
 import json
 import sys
 
-from django.contrib.formtools.wizard import views as wizard_views
 from django.core.files import storage
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django import http
 from django.utils.translation import ugettext_lazy as _
+# django.contrib.formtools migration to django 1.8
+# https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/
+try:
+    from django.contrib.formtools.wizard import views as wizard_views
+except ImportError:
+    from formtools.wizard import views as wizard_views
 from horizon import exceptions
 from horizon.forms import views
 from horizon import messages

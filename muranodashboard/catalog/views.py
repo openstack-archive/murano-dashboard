@@ -21,9 +21,14 @@ import re
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
-from django.contrib.formtools.wizard import views as wizard_views
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
+# django.contrib.formtools migration to django 1.8
+# https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/
+try:
+    from django.contrib.formtools.wizard import views as wizard_views
+except ImportError:
+    from formtools.wizard import views as wizard_views
 from django import http
 from django import shortcuts
 from django.utils import decorators as django_dec
