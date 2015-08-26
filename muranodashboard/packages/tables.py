@@ -219,14 +219,11 @@ class OwnerFilter(tables.FixedFilterAction):
             categories = get_package_categories(pkg, user_tenant_id)
             for category in categories:
                 tenants[category].append(pkg)
-        # Other category is available only for admins.
-        # So, hide it if it's empty.
-        if 'other' not in tenants:
-            for i, btn in enumerate(self.fixed_buttons):
-                if btn['value'] == 'other':
-                    del self.fixed_buttons[i]
 
         return tenants
+
+    def allowed(self, request, package):
+        return request.user.is_superuser
 
 
 class UpdateRow(tables.Row):
