@@ -110,6 +110,7 @@ class ToggleEnabled(tables.BatchAction):
     def action(self, request, obj_id):
         try:
             api.muranoclient(request).packages.toggle_active(obj_id)
+            LOG.debug('Toggle Active for package {0}.'.format(obj_id))
         except exc.HTTPForbidden:
             msg = _("You are not allowed to perform this operation")
             LOG.exception(msg)
@@ -143,6 +144,7 @@ class TogglePublicEnabled(tables.BatchAction):
     def action(self, request, obj_id):
         try:
             api.muranoclient(request).packages.toggle_public(obj_id)
+            LOG.debug('Toggle Public for package {0}.'.format(obj_id))
         except exc.HTTPForbidden:
             msg = _("You are not allowed to perform this operation")
             LOG.exception(msg)
