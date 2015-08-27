@@ -19,12 +19,12 @@ from django.contrib.messages import api as msg_api
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
+import muranoclient.client as client
+from muranoclient.common import exceptions as exc
 from openstack_dashboard.api import base
 from oslo_log import log as logging
 
-import muranoclient.client as client
-from muranoclient.common import exceptions as exc
-
+from muranodashboard.common import utils as muranodashboard_utils
 
 LOG = logging.getLogger(__name__)
 
@@ -73,6 +73,14 @@ def handled_exceptions(request):
         msg = _('Requested operation conflicts with an existing object.')
         LOG.exception(msg)
         _handle_message(request, msg)
+    except exc.BadRequest as e:
+        msg = _('The request data is not acceptable by the server')
+        LOG.exception(msg)
+        reason = muranodashboard_utils.parse_api_error(
+            getattr(e, 'details', ''))
+        if not reason:
+            reason = msg
+        _handle_message(request, reason)
 
 
 def _get_endpoint(request):
