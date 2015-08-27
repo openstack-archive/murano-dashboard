@@ -136,6 +136,14 @@ class ImportBundleWizard(views.ModalFormMixin,
         context['murano_repo_url'] = packages_consts.MURANO_REPO_URL
         return context
 
+    def get_form_initial(self, step):
+        initial_dict = self.initial_dict.get(step, {})
+        if step == 'upload':
+            for name in ['url', 'name', 'import_type']:
+                if name in self.request.GET:
+                    initial_dict[name] = self.request.GET[name]
+        return initial_dict
+
     def process_step(self, form):
         @catalog_views.update_latest_apps
         def _update_latest_apps(request, app_id):
@@ -252,6 +260,14 @@ class ImportPackageWizard(views.ModalFormMixin,
     file_storage = storage.FileSystemStorage(location=consts.CACHE_DIR)
     template_name = 'packages/upload.html'
     condition_dict = {'add_category': is_app}
+
+    def get_form_initial(self, step):
+        initial_dict = self.initial_dict.get(step, {})
+        if step == 'upload':
+            for name in ['url', 'repo_name', 'repo_version', 'import_type']:
+                if name in self.request.GET:
+                    initial_dict[name] = self.request.GET[name]
+        return initial_dict
 
     def get_context_data(self, **kwargs):
         context = super(ImportPackageWizard, self).get_context_data(**kwargs)
