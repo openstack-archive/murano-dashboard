@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tables
@@ -46,9 +47,10 @@ class DeleteCategory(tables.DeleteAction):
             api.muranoclient(request).categories.delete(obj_id)
         except exc.HTTPException:
             LOG.exception(_('Unable to delete category'))
+            url = reverse('horizon:murano:categories:index')
             exceptions.handle(request,
                               _('Unable to remove package.'),
-                              redirect='horizon:murano:categories:index')
+                              redirect=url)
 
 
 class CategoriesTable(tables.DataTable):
