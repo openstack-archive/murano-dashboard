@@ -16,6 +16,8 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import horizon
 
+# Load the api rest services into Horizon
+import muranodashboard.api.rest  # noqa
 from muranodashboard import exceptions
 # prevent pyflakes from fail
 assert exceptions
