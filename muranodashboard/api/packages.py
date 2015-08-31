@@ -38,8 +38,8 @@ def package_list(request, marker=None, filters=None, paginate=False,
         filters['sort_dir'] = sort_dir
 
     client = api.muranoclient(request)
-    packages_iter = client.packages.filter(page_size=request_size,
-                                           limit=limit,
+
+    packages_iter = client.packages.filter(limit=request_size,
                                            **filters)
 
     has_more_data = False
