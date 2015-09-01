@@ -4,6 +4,7 @@
 pbr<2.0,>=1.6
 
 beautifulsoup4
+django-formtools
 iso8601>=0.1.9
 six>=1.9.0
 python-muranoclient>=0.5.6
