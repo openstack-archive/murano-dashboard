@@ -9,6 +9,13 @@ TEMPLATE_DEBUG = DEBUG
 DEBUG_PROPAGATE_EXCEPTIONS = True
 MURANO_API_URL = "http://localhost:8082"
 
+# Set to True to use Glance Artifact Repository to store murano packages
+MURANO_USE_GLARE = False
+
+# Sets the Glance API endpoint to interact with Artifact Repo.
+# If left commented the one from keystone will be used
+# GLANCE_API_URL = 'http://ubuntu1:9292'
+
 # Required for Django 1.5.
 # If horizon is running in production (DEBUG is False), set this
 # with the list of host/domain names that the application can serve.

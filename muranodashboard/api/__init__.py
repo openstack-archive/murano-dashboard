@@ -21,8 +21,10 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 import muranoclient.client as client
 from muranoclient.common import exceptions as exc
+from muranoclient.glance import client as art_client
 from openstack_dashboard.api import base
 from oslo_log import log as logging
+
 
 from muranodashboard.common import utils as muranodashboard_utils
 
@@ -97,13 +99,41 @@ def _get_endpoint(request):
     return endpoint
 
 
+def _get_glance_endpoint(request):
+    endpoint = getattr(settings, 'GLANCE_API_URL', None)
+    if not endpoint:
+        try:
+            endpoint = base.url_for(request, "image")
+        except exceptions.ServiceCatalogException:
+            endpoint = 'http://localhost:9292'
+            LOG.warning('Glance API location could not be found in Service '
+                        'Catalog, using default: {0}'.format(endpoint))
+    return endpoint
+
+
+def artifactclient(request):
+    endpoint = _get_glance_endpoint(request)
+    insecure = getattr(settings, 'GLANCE_API_INSECURE', False)
+    token_id = request.user.token.id
+    return art_client.Client(endpoint=endpoint, token=token_id,
+                             insecure=insecure, type_name='murano',
+                             type_version=1)
+
+
 def muranoclient(request):
     endpoint = _get_endpoint(request)
     insecure = getattr(settings, 'MURANO_API_INSECURE', False)
+
+    use_artifacts = getattr(settings, 'MURANO_USE_GLARE', False)
+    if use_artifacts:
+        artifacts = artifactclient(request)
+    else:
+        artifacts = None
 
     token_id = request.user.token.id
     LOG.debug('Murano::Client <Url: {0}, '
               'TokenId: {1}>'.format(endpoint, token_id))
 
     return client.Client(1, endpoint=endpoint, token=token_id,
-                         insecure=insecure)
+                         insecure=insecure, artifacts_client=artifacts,
+                         tenant=request.user.tenant_id)
