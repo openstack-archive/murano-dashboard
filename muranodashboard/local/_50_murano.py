@@ -15,3 +15,9 @@ ADD_EXCEPTIONS = {
     'not_found': exceptions.NOT_FOUND,
     'unauthorized': exceptions.UNAUTHORIZED,
 }
+
+ADD_JS_FILES = [
+  'muranodashboard/js/murano.service.js'
+]
+
+
