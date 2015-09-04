@@ -24,13 +24,17 @@
                         <div class="dropdown" id="envAppsCategory">
                             {% with categories=table.get_categories_list %}
                                 <button class="btn btn-default dropdown-toggle"
-                                        type="button" aria-expanded="true">
+                                        type="button"
+                                        data-toggle="dropdown"
+                                        data-disabled="true"
+                                        aria-expanded="false"
+                                        id="envAppsCategoryBtn">
                                         <span id="envAppsCategoryName">All</span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu scrollable-menu"
                                     role="menu"
-                                    aria-labelledby="envAppsCategory">
+                                    aria-labelledby="envAppsCategoryBtn">
                                         <li role="presentation"><a
                                                 role="menuitem" tabindex="-1"
                                                 data-category-name="All"
@@ -47,6 +51,7 @@
                             {% endwith %}
                         </div>
                     </div>
+
                     <div class="col-xs-3 filter-bar">
                         <div class="has-feedback" id="envAppsFilter">
                             <input class="form-control" value="{{ search }}"
