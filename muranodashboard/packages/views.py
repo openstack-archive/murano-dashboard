@@ -88,6 +88,8 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
         marker = self.request.GET.get(
             tables.PackageDefinitionsTable._meta.pagination_param, None)
 
+        opts = self.get_filters(opts)
+
         packages = []
         page_size = utils.get_page_size(self.request)
         with api.handled_exceptions(self.request):
@@ -125,6 +127,16 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
                         self).get_context_data(**kwargs)
         context['tenant_id'] = self.request.session['token'].tenant['id']
         return context
+
+    def get_filters(self, filters):
+        filter_action = self.table._meta._filter_action
+        if filter_action:
+            filter_field = self.table.get_filter_field()
+            if filter_action.is_api_filter(filter_field):
+                filter_string = self.table.get_filter_string()
+                if filter_field and filter_string:
+                    filters[filter_field] = filter_string
+        return filters
 
 
 class ImportBundleWizard(views.ModalFormMixin,
