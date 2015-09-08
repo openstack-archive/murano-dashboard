@@ -58,7 +58,7 @@ class Service(object):
     because Service instance is re-created on each request from UI definition
     stored at local file-system cache .
     """
-    def __init__(self, cleaned_data, version, forms=None, templates=None,
+    def __init__(self, cleaned_data, version, fqn, forms=None, templates=None,
                  application=None, **kwargs):
         self.cleaned_data = cleaned_data
         self.templates = templates or {}
@@ -82,10 +82,10 @@ class Service(object):
                 self._add_form(name, field_specs, validators)
 
         # Add ManageWorkflowForm
-        workflow_form = catalog_forms.WorkflowManagementForm
+        workflow_form = catalog_forms.WorkflowManagementForm()
         if semantic_version.Version.coerce(self.spec_version) >= \
                 semantic_version.Version.coerce('2.2'):
-            app_name_field = workflow_form.name_field(self._get_app_name())
+            app_name_field = workflow_form.name_field(fqn)
             workflow_form.field_specs.insert(0, app_name_field)
 
         self._add_form(workflow_form.name,
@@ -105,15 +105,6 @@ class Service(object):
 
         self.forms.append(Form)
 
-    def _get_app_name(self):
-        try:
-            return self.application['?']['type'].split('.')[-1]
-        except KeyError:
-            LOG.info(_("Service key '?' or 'type' parameter is"
-                       " missing in application object model"))
-            self.application.setdefault('?', {})
-            return ''
-
     @staticmethod
     def extract_form_data(data):
         for form_name, form_data in data.iteritems():
@@ -126,7 +117,7 @@ class Service(object):
             self.context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
                 >= semantic_version.Version.coerce('2.2'):
-            management_form = catalog_forms.WorkflowManagementForm.name
+            management_form = catalog_forms.WF_MANAGEMENT_NAME
             name = self.context['$'][management_form]['application_name']
             self.application['?']['name'] = name
         attributes = helpers.evaluate(self.application, self.context)
@@ -172,7 +163,7 @@ def import_app(request, app_id):
         app.set_data(app_data)
     else:
         LOG.debug('Creating new forms for app {0}'.format(fqn))
-        app = _apps[app_id] = Service(app_data, app_version, **service)
+        app = _apps[app_id] = Service(app_data, app_version, fqn, **service)
     return app
 
 

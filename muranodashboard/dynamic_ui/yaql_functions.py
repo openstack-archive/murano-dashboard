@@ -68,7 +68,7 @@ def _generate_hostname(pattern, number):
 
 def _name(context):
     name = context.get_data[
-        catalog_forms.WorkflowManagementForm.name]['application_name']
+        catalog_forms.WF_MANAGEMENT_NAME]['application_name']
     return name
 
 
