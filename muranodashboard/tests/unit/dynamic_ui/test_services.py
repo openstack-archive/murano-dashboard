@@ -39,6 +39,7 @@ class TestService(testtools.TestCase):
 
         service = services.Service(cleaned_data={},
                                    version=2,
+                                   fqn='io.murano.Test',
                                    application=self.application,
                                    forms=ui)
         form = next(e for e in service.forms
@@ -59,6 +60,7 @@ class TestService(testtools.TestCase):
 
         service = services.Service(cleaned_data={},
                                    version=2,
+                                   fqn='io.murano.Test',
                                    application=self.application,
                                    forms=ui)
         form = next(e for e in service.forms

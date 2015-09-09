@@ -12,23 +12,25 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+WF_MANAGEMENT_NAME = 'workflowManagement'
+
 
 class WorkflowManagementForm(object):
-    name = 'workflowManagement'
-    field_specs = [
-        {'name': 'stay_at_the_catalog',
-         'initial': False,
-         'description': 'If checked, you will be returned to the '
-                        'Application Catalog page. If not - to the '
-                        'Environment page, where you can deploy'
-                        ' the application.',
-         'required': False,
-         'type': 'boolean',
-         'label': 'Continue application adding'}]
-    validators = []
+    def __init__(self):
+        self.name = WF_MANAGEMENT_NAME
+        self.field_specs = [
+            {'name': 'stay_at_the_catalog',
+             'initial': False,
+             'description': 'If checked, you will be returned to the '
+                            'Application Catalog page. If not - to the '
+                            'Environment page, where you can deploy'
+                            ' the application.',
+             'required': False,
+             'type': 'boolean',
+             'label': 'Continue application adding'}]
+        self.validators = []
 
-    @classmethod
-    def name_field(cls, name):
+    def name_field(self, fqn):
         return {'name': 'application_name',
                 'type': 'string',
                 'description': 'Enter a desired name for the application. '
@@ -36,5 +38,5 @@ class WorkflowManagementForm(object):
                                ' are allowed',
                 'label': 'Application Name',
                 'regexpValidator': '^[-\w]+$',
-                'initial': name
+                'initial': fqn.split('.')[-1]
                 }
