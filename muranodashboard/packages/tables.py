@@ -201,14 +201,12 @@ class ModifyPackage(tables.LinkAction):
 
 class PackageDefinitionsTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Package Name'))
+    tenant_name = tables.Column('tenant_name', verbose_name=_('Tenant Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))
     is_public = tables.Column('is_public', verbose_name=_('Public'))
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
     version = tables.Column('version', verbose_name=_('Version'))
-    owner = tables.Column('owner_id',
-                          verbose_name=_('Owner'),
-                          hidden=True)
 
     def get_prev_pagination_string(self):
         pagination_string = super(
@@ -232,3 +230,15 @@ class PackageDefinitionsTable(tables.DataTable):
                        ToggleEnabled,
                        TogglePublicEnabled,
                        DeletePackage)
+
+    def get_columns(self):
+        """Hides tenant name column for a regular user.
+
+           Since there are no enough rights to get this information.
+        """
+        columns = super(PackageDefinitionsTable, self).get_columns()
+        if not self.request.user.is_superuser:
+            for i, column in enumerate(columns):
+                if column.name == 'tenant_name':
+                    columns[i].classes.append('hide')
+        return columns

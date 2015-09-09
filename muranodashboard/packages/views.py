@@ -34,6 +34,7 @@ from horizon.utils import functions as utils
 from muranoclient.common import exceptions as exc
 from muranoclient.common import utils as muranoclient_utils
 from openstack_dashboard.api import glance
+from openstack_dashboard.api import keystone
 from oslo_log import log as logging
 
 from muranodashboard import api
@@ -120,6 +121,16 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
                 else:
                     self._more = extra
 
+        # Add information about project tenant for admin user
+        if self.request.user.is_superuser:
+            try:
+                tenants, _more = keystone.tenant_list(self.request)
+            except Exception:
+                exceptions.handle(self.request,
+                                  _("Unable to retrieve project list."))
+            tenent_name_by_id = {tenant.id: tenant.name for tenant in tenants}
+            for i, p in enumerate(packages):
+                packages[i].tenant_name = tenent_name_by_id.get(p.owner_id)
         return packages
 
     def get_context_data(self, **kwargs):
