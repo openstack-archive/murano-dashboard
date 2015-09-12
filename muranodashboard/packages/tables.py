@@ -43,7 +43,7 @@ class ImportPackage(tables.LinkAction):
     classes = ('ajax-modal',)
     icon = "plus"
 
-    def allowed(self, request, image):
+    def allowed(self, request, package):
         _allowed = False
         with api.handled_exceptions(request):
             client = api.muranoclient(request)
@@ -55,7 +55,7 @@ class DownloadPackage(tables.Action):
     name = 'download_package'
     verbose_name = _('Download Package')
 
-    def allowed(self, request, image):
+    def allowed(self, request, package):
         return True
 
     @staticmethod
@@ -188,7 +188,7 @@ class ModifyPackage(tables.LinkAction):
     classes = ('ajax-modal',)
     icon = "edit"
 
-    def allowed(self, request, environment):
+    def allowed(self, request, package):
         return True
 
 
