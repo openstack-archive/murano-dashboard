@@ -70,10 +70,10 @@ class ImportBundleForm(forms.Form):
         cleaned_data = super(ImportBundleForm, self).clean()
         import_type = cleaned_data.get('import_type')
         if import_type == 'by_name' and not cleaned_data.get('name'):
-            msg = _('Please supply a package name')
+            msg = _('Please supply a bundle name')
             raise forms.ValidationError(msg)
         elif import_type == 'by_url' and not cleaned_data.get('url'):
-            msg = _('Please supply a package url')
+            msg = _('Please supply a bundle url')
             raise forms.ValidationError(msg)
         return cleaned_data
 
