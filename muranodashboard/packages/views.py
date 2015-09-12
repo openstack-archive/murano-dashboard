@@ -170,8 +170,12 @@ class ImportBundleWizard(views.ModalFormMixin,
             try:
                 bundle = muranoclient_utils.Bundle.from_file(f)
             except Exception as e:
-                msg = _("Bundle creation failed"
-                        "Reason: {0}").format(e)
+                if '(404)' in e.message:
+                    msg = _("Bundle creation failed."
+                            "Reason: Can't find Bundle name from repository.")
+                else:
+                    msg = _("Bundle creation failed."
+                            "Reason: {0}").format(e)
                 LOG.exception(msg)
                 messages.error(self.request, msg)
                 raise exceptions.Http302(
@@ -370,8 +374,12 @@ class ImportPackageWizard(views.ModalFormMixin,
                 package = muranoclient_utils.Package.from_file(f)
                 name = package.manifest['FullName']
             except Exception as e:
-                msg = _("Package creation failed"
-                        "Reason: {0}").format(e)
+                if '(404)' in e.message:
+                    msg = _("Package creation failed."
+                            "Reason: Can't find Package name from repository.")
+                else:
+                    msg = _("Package creation failed."
+                            "Reason: {0}").format(e)
                 LOG.exception(msg)
                 messages.error(self.request, msg)
                 raise exceptions.Http302(
