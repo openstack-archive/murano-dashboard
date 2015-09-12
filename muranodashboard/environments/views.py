@@ -25,7 +25,6 @@ from horizon.forms import views
 from horizon import tables
 from horizon import tabs
 from horizon.utils import memoized
-from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api as api_utils
@@ -33,9 +32,6 @@ from muranodashboard.environments import api
 from muranodashboard.environments import forms as env_forms
 from muranodashboard.environments import tables as env_tables
 from muranodashboard.environments import tabs as env_tabs
-
-
-LOG = logging.getLogger(__name__)
 
 
 class IndexView(tables.DataTableView):

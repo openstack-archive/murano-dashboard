@@ -21,15 +21,11 @@ from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard.api import heat as heat_api
 from openstack_dashboard.api import nova as nova_api
-from oslo_log import log as logging
-
 
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.environments import tables
-
-LOG = logging.getLogger(__name__)
 
 
 class OverviewTab(tabs.Tab):
