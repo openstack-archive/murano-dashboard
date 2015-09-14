@@ -51,6 +51,13 @@ class ImportPackage(tables.LinkAction):
         return _allowed
 
 
+class PackagesFilterAction(tables.FilterAction):
+    name = "filter_packages"
+    filter_type = "server"
+    filter_choices = (('search', _("Name"), True),
+                      ('type', _("Type"), True))
+
+
 class DownloadPackage(tables.Action):
     name = 'download_package'
     verbose_name = _('Download Package')
@@ -213,7 +220,8 @@ class PackageDefinitionsTable(tables.DataTable):
         prev_pagination_param = 'marker'
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
-        table_actions = (ImportPackage,
+        table_actions = (PackagesFilterAction,
+                         ImportPackage,
                          ImportBundle,
                          ToggleEnabled,
                          TogglePublicEnabled,
