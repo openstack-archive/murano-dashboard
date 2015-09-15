@@ -22,6 +22,7 @@ from selenium.webdriver.common import by
 from selenium.webdriver.support import ui
 
 from muranodashboard.tests.functional import base
+from muranodashboard.tests.functional.config import config as cfg
 from muranodashboard.tests.functional import consts as c
 from muranodashboard.tests.functional import utils
 
@@ -693,12 +694,12 @@ class TestSuitePackages(base.PackageTestCase):
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
-        self.check_package_parameter(self.postgre_id, 'Active', 'False')
+        self.check_package_parameter_by_id(self.postgre_id, 'Active', 'False')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
-        self.check_package_parameter(self.postgre_id, 'Active', 'True')
+        self.check_package_parameter_by_id(self.postgre_id, 'Active', 'True')
 
     def test_check_toggle_public_package(self):
         """Test check ability to make package active or inactive
@@ -717,13 +718,13 @@ class TestSuitePackages(base.PackageTestCase):
         self.select_action_for_package(self.postgre_id,
                                        'toggle_public_enabled')
 
-        self.check_package_parameter(self.postgre_id, 'Public', 'True')
+        self.check_package_parameter_by_id(self.postgre_id, 'Public', 'True')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id,
                                        'toggle_public_enabled')
 
-        self.check_package_parameter(self.postgre_id, 'Public', 'False')
+        self.check_package_parameter_by_id(self.postgre_id, 'Public', 'False')
 
     def test_modify_description(self):
         """Test check ability to change description of the package
@@ -765,17 +766,16 @@ class TestSuitePackages(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.wait_for_alert_message()
-        self.check_element_on_page(
-            by.By.XPATH, c.AppPackageDefinitions.format(self.archive_name))
 
-        # public
-        el = self.driver.find_element_by_xpath(
-            c.AppPackageDefinitions.format(self.archive_name) + '/td[3]')
-        self.assertEqual(el.text.strip().lower(), 'true')
-        # enabled
-        el = self.driver.find_element_by_xpath(
-            c.AppPackageDefinitions.format(self.archive_name) + '/td[4]')
-        self.assertEqual(el.text.strip().lower(), 'false')
+        self.check_package_parameter_by_name(self.archive_name,
+                                             'Active',
+                                             'True')
+        self.check_package_parameter_by_name(self.archive_name,
+                                             'Public',
+                                             'False')
+        self.check_package_parameter_by_name(self.archive_name,
+                                             'Tenant Name',
+                                             cfg.common.tenant)
 
     def test_upload_package_modify(self):
         """Test package modifying a package after uploading it."""
@@ -805,14 +805,9 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_on_page(
             by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
-        # public
-        el = self.driver.find_element_by_xpath(
-            c.AppPackageDefinitions.format(pkg_name) + '/td[3]')
-        self.assertEqual(el.text.strip().lower(), 'false')
-        # enabled
-        el = self.driver.find_element_by_xpath(
-            c.AppPackageDefinitions.format(pkg_name) + '/td[4]')
-        self.assertEqual(el.text.strip().lower(), 'true')
+
+        self.check_package_parameter_by_name(pkg_name, 'Public', 'True')
+        self.check_package_parameter_by_name(pkg_name, 'Active', 'False')
 
     def test_category_management(self):
         """Test application category adds and deletes succesfully
