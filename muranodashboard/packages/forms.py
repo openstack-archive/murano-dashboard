@@ -16,6 +16,7 @@ import json
 import sys
 
 from django.core.urlresolvers import reverse
+from django.core import validators
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -56,6 +57,8 @@ class ImportBundleForm(forms.Form):
             'class': 'switched',
             'data-switch-on': 'source',
             'data-source-by_url': _('Bundle URL')}),
+        validators=[validators.URLValidator(
+            schemes=["http", "https"])],
         help_text=_('An external http/https URL to load the bundle from.'))
     name = forms.CharField(
         label=_("Bundle Name"),
@@ -92,6 +95,8 @@ class ImportPackageForm(forms.Form):
             'class': 'switched',
             'data-switch-on': 'source',
             'data-source-by_url': _('Package URL')}),
+        validators=[validators.URLValidator(
+            schemes=["http", "https"])],
         help_text=_('An external http/https URL to load the package from.'))
     repo_name = horizon_forms.CharField(
         label=_("Package Name"),
