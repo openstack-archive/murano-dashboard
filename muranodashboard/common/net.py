@@ -76,16 +76,17 @@ def get_available_networks(request, include_subnets=True,
         if include_subnets:
             for subnet in net.subnets:
                 if not netname:
-                    full_name = "%(net)s: %(cidr)s" % dict(net=net.name,
-                                                           cidr=subnet.cidr)
-                    if subnet.name:
-                        full_name += " (%s)" % subnet.name
+                    full_name = (
+                        "%(net)s: %(cidr)s %(subnet)s" %
+                        dict(net=net.name_or_id,
+                             cidr=subnet.cidr,
+                             subnet=subnet.name_or_id))
 
                 network_choices.append(((net.id, subnet.id), netname
                                         or full_name))
 
         else:
-            netname = netname or net.name
+            netname = netname or net.name_or_id
             network_choices.append(((net.id, None), netname))
     return network_choices
 
