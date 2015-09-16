@@ -131,6 +131,13 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
             tenent_name_by_id = {tenant.id: tenant.name for tenant in tenants}
             for i, p in enumerate(packages):
                 packages[i].tenant_name = tenent_name_by_id.get(p.owner_id)
+        else:
+            current_tenant = self.request.session['token'].tenant
+            for i, package in enumerate(packages):
+                if package.owner_id == current_tenant['id']:
+                    packages[i].tenant_name = current_tenant['name']
+                else:
+                    packages[i].tenant_name = 'other'
         return packages
 
     def get_context_data(self, **kwargs):
