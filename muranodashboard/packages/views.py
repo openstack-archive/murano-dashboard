@@ -59,7 +59,7 @@ def is_app(wizard):
     """Check if we're uploading an application
 
     Return true if uploading package is an application.
-    In that case, category selection from need to be shown.
+    In that case, category selection form need to be shown.
     """
     step_data = wizard.storage.get_step_data('upload')
     if step_data:

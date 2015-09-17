@@ -49,7 +49,7 @@ class DeleteCategory(tables.DeleteAction):
             LOG.exception(_('Unable to delete category'))
             url = reverse('horizon:murano:categories:index')
             exceptions.handle(request,
-                              _('Unable to remove package.'),
+                              _('Unable to delete category.'),
                               redirect=url)
 
 
