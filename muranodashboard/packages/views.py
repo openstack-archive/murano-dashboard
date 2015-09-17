@@ -123,6 +123,7 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
 
         # Add information about project tenant for admin user
         if self.request.user.is_superuser:
+            tenants = []
             try:
                 tenants, _more = keystone.tenant_list(self.request)
             except Exception:
