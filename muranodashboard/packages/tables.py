@@ -230,15 +230,3 @@ class PackageDefinitionsTable(tables.DataTable):
                        ToggleEnabled,
                        TogglePublicEnabled,
                        DeletePackage)
-
-    def get_columns(self):
-        """Hides tenant name column for a regular user.
-
-           Since there are no enough rights to get this information.
-        """
-        columns = super(PackageDefinitionsTable, self).get_columns()
-        if not self.request.user.is_superuser:
-            for i, column in enumerate(columns):
-                if column.name == 'tenant_name':
-                    columns[i].classes.append('hide')
-        return columns
