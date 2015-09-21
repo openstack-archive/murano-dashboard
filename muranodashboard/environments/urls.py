@@ -28,10 +28,6 @@ urlpatterns = urls.patterns(
     urls.url(r'^create_environment$', views.CreateEnvironmentView.as_view(),
              name='create_environment'),
 
-    urls.url(ENVIRONMENT_ID + r'/update_environment$',
-             views.EditEnvironmentView.as_view(),
-             name='update_environment'),
-
     urls.url(ENVIRONMENT_ID + r'/services$',
              views.EnvironmentDetails.as_view(),
              name='services'),

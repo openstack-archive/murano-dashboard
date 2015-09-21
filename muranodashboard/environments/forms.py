@@ -79,30 +79,3 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
             exceptions.handle(request)
             messages.error(request, msg)
             return False
-
-
-class EditEnvironmentForm(horizon_forms.SelfHandlingForm):
-    name = forms.CharField(label="Environment Name",
-                           validators=NAME_VALIDATORS,
-                           error_messages={'invalid': ENV_NAME_HELP_TEXT},
-                           max_length=255)
-
-    def handle(self, request, data):
-        try:
-            env_id = self.initial['environment_id']
-            env = api.environment_update(request, env_id, data['name'])
-
-            messages.success(request,
-                             "Edited environment '{0}'".format(data['name']))
-            return env
-        except exc.HTTPConflict:
-            msg = _('Environment with specified name already exists')
-            LOG.exception(msg)
-            exceptions.handle(request, ignore=True)
-            messages.error(request, msg)
-        except Exception:
-            name = data.get('name', '')
-            msg = _("Unable to edit environment {0}").format(name)
-            LOG.exception(msg)
-            exceptions.handle(request)
-            messages.error(request, msg)
