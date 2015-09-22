@@ -21,8 +21,8 @@ reports
 muranodashboard/local/local_settings.py
 muranodashboard/settings.py
 /static/
-docs/build/
-docs/source/sourcecode
+doc/build/
+doc/source/sourcecode
 build
 dist
 
@@ -30,6 +30,6 @@ dist
 doc/source/api
 
 # Tests
-muranodashboard/test/functional/config/config.conf
+muranodashboard/tests/functional/config/config.conf
 node_modules
 npm-debug.log
