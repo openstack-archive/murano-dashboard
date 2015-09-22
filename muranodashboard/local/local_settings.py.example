@@ -528,7 +528,7 @@ SECURITY_GROUP_RULES = {
     },
 }
 
-MURANO_REPO_URL = 'http://storage.apps.openstack.org'
+MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 
 # Deprecation Notice:
 #

@@ -14,6 +14,7 @@
 
 import json
 import sys
+import urlparse
 
 from django.core.files import storage
 from django.core.urlresolvers import reverse
@@ -164,7 +165,9 @@ class ImportBundleWizard(views.ModalFormMixin,
 
     def get_context_data(self, **kwargs):
         context = super(ImportBundleWizard, self).get_context_data(**kwargs)
-        context['murano_repo_url'] = packages_consts.MURANO_REPO_URL
+        repo_url = urlparse.urlparse(packages_consts.MURANO_REPO_URL)
+        context['murano_repo_url'] = "{}://{}".format(
+            repo_url.scheme, repo_url.netloc)
         return context
 
     def get_form_initial(self, step):
@@ -306,7 +309,9 @@ class ImportPackageWizard(views.ModalFormMixin,
 
     def get_context_data(self, **kwargs):
         context = super(ImportPackageWizard, self).get_context_data(**kwargs)
-        context['murano_repo_url'] = packages_consts.MURANO_REPO_URL
+        repo_url = urlparse.urlparse(packages_consts.MURANO_REPO_URL)
+        context['murano_repo_url'] = "{}://{}".format(
+            repo_url.scheme, repo_url.netloc)
         return context
 
     def done(self, form_list, **kwargs):

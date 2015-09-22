@@ -18,8 +18,9 @@ from oslo_log import log as logging
 LOG = logging.getLogger(__name__)
 
 
-MURANO_REPO_URL = getattr(settings, 'MURANO_REPO_URL',
-                          'http://storage.apps.openstack.org')
+MURANO_REPO_URL = getattr(
+    settings, 'MURANO_REPO_URL',
+    "http://apps.openstack.org/api/v1/murano_repo/liberty/")
 
 try:
     MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
