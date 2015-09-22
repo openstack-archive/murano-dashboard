@@ -315,7 +315,7 @@ class EnvironmentsTable(tables.DataTable):
                            display_choices=consts.STATUS_DISPLAY_CHOICES)
 
     class Meta(object):
-        name = 'murano'
+        name = 'environments'
         verbose_name = _('Environments')
         template = 'environments/_data_table.html'
         row_class = UpdateEnvironmentRow
