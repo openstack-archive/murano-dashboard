@@ -204,11 +204,15 @@ class ImportBundleWizard(views.ModalFormMixin,
                             image_specs=dep_package.images(),
                             base_url=base_url)
                         for img in imgs:
-                            msg = _("Added {0}, {1} image to glance").format(
-                                img['name'], img['id'],
-                            )
-                            messages.success(self.request, msg)
-                            LOG.info(msg)
+                            msg = _("Trying to add {0} image to glance. "
+                                    "Image will be ready for deployment after"
+                                    " successful upload").format(img['name'],)
+                            messages.warning(self.request, msg)
+                            log_msg = _("Trying to add {0}, {1} image to "
+                                        "glance. Image will be ready for "
+                                        "deployment after successful upload")\
+                                .format(img['name'], img['id'],)
+                            LOG.info(log_msg)
                     except Exception as e:
                         msg = _("Error {0} occurred while installing "
                                 "images for {1}").format(e, dep_name)
@@ -384,11 +388,15 @@ class ImportPackageWizard(views.ModalFormMixin,
                         image_specs=package.images(),
                         base_url=base_url)
                     for img in imgs:
-                        msg = _("Added {0}, {1} image to glance").format(
-                            img['name'], img['id'],
-                        )
-                        messages.success(self.request, msg)
-                        LOG.info(msg)
+                        msg = _("Trying to add {0} image to glance. "
+                                "Image will be ready for deployment after "
+                                "successful upload").format(img['name'],)
+                        messages.warning(self.request, msg)
+                        log_msg = _("Trying to add {0}, {1} image to "
+                                    "glance. Image will be ready for "
+                                    "deployment after successful upload")\
+                            .format(img['name'], img['id'],)
+                        LOG.info(log_msg)
                 except Exception as e:
                     msg = _("Error {0} occurred while installing "
                             "images for {1}").format(e, name)
