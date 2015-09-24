@@ -15,21 +15,26 @@
 
 $(function() {
   "use strict";
-  var uploadForm = $('#import_bundle');
-  var importType = uploadForm.find('[name=upload-import_type]');
 
-  uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
-  uploadForm.find('input[name=upload-name]').closest('.form-group').addClass('required');
+  horizon.modals._init_functions.push(muranoUploadBundle);
 
-  importType.change(function() {
-    var uploadType = $(this).val();
-    if (uploadType === 'by_name') {
-      uploadForm.find('.description-by_name').show();
-      uploadForm.find('.description-by_url').hide();
-    } else if (uploadType === 'by_url') {
-      uploadForm.find('.description-by_name').hide();
-      uploadForm.find('.description-by_url').show();
-    }
-  });
-  importType.change();
+  function muranoUploadBundle() {
+    var uploadForm = $('#import_bundle');
+    var importType = uploadForm.find('[name=upload-import_type]');
+
+    uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
+    uploadForm.find('input[name=upload-name]').closest('.form-group').addClass('required');
+
+    importType.change(function() {
+      var uploadType = $(this).val();
+      if (uploadType === 'by_name') {
+        uploadForm.find('.description-by_name').show();
+        uploadForm.find('.description-by_url').hide();
+      } else if (uploadType === 'by_url') {
+        uploadForm.find('.description-by_name').hide();
+        uploadForm.find('.description-by_url').show();
+      }
+    });
+    importType.change();
+  }
 });

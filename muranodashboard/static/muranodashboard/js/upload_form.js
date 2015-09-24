@@ -16,35 +16,36 @@
 $(function() {
   "use strict";
 
-  var uploadForm = $('#upload_package');
-  var importType = uploadForm.find('[name=upload-import_type]');
+  horizon.modals._init_functions.push(muranoUploadPackage);
 
-  uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
-  uploadForm.find('input[name=upload-repo_name]').closest('.form-group').addClass('required');
-  uploadForm.find('input[name=upload-package]').closest('.form-group').addClass('required');
+  function muranoUploadPackage() {
+    var uploadForm = $('#upload_package');
+    var importType = uploadForm.find('[name=upload-import_type]');
 
-  importType.on('change', function() {
-    var uploadType = $(this).val();
-    if (uploadType === 'upload') {
-      uploadForm.find('.description-upload').show();
-      uploadForm.find('.description-by_name').hide();
-      uploadForm.find('.description-by_url').hide();
-    } else if (uploadType === 'by_name') {
-      uploadForm.find('.description-upload').hide();
-      uploadForm.find('.description-by_name').show();
-      uploadForm.find('.description-by_url').hide();
-    } else if (uploadType === 'by_url') {
-      uploadForm.find('.description-upload').hide();
-      uploadForm.find('.description-by_name').hide();
-      uploadForm.find('.description-by_url').show();
-    }
-  });
-  importType.change();
-});
+    uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
+    uploadForm.find('input[name=upload-repo_name]').closest('.form-group').addClass('required');
+    uploadForm.find('input[name=upload-package]').closest('.form-group').addClass('required');
 
-$(function() {
-  "use strict";
-  $('#upload_package_modal .close').on('click', function() {
-    location.reload();
-  });
+    importType.on('change', function() {
+      var uploadType = $(this).val();
+      if (uploadType === 'upload') {
+        uploadForm.find('.description-upload').show();
+        uploadForm.find('.description-by_name').hide();
+        uploadForm.find('.description-by_url').hide();
+      } else if (uploadType === 'by_name') {
+        uploadForm.find('.description-upload').hide();
+        uploadForm.find('.description-by_name').show();
+        uploadForm.find('.description-by_url').hide();
+      } else if (uploadType === 'by_url') {
+        uploadForm.find('.description-upload').hide();
+        uploadForm.find('.description-by_name').hide();
+        uploadForm.find('.description-by_url').show();
+      }
+    });
+    importType.change();
+
+    $('#upload_package_modal .close').on('click', function() {
+      location.reload();
+    });
+  }
 });

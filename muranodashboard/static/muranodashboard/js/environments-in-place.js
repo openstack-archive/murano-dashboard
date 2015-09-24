@@ -14,8 +14,8 @@
 */
 
 $(function() {
-  $('.add_env').on('click', 'a', createEnv);
-  $('.table_actions').on('click', 'a', createEnv);
+  $('table#environments .add_env a').on('click', createEnv);
+  $('table#environments .table_actions a.add_env').on('click', createEnv);
   function createEnv(ev) {
     function showSpinner() {
       horizon.modals.modal_spinner(gettext("Working"));
