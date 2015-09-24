@@ -1,12 +1,19 @@
 {% extends 'murano_base.html' %}
 {% load i18n sizeformat %}
 {% load static %}
+{% load compress %}
 {% load url from future %}
 {% block title %}{% trans "Application Details" %}: {{ app.name }}{% endblock %}
 
+{% block css %}
+  {{ block.super }}
+  {% compress css %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
+    <link rel="stylesheet" href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
+  {% endcompress %}
+{% endblock %}
+
 {% block page_header %}
-<link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
-<link rel="stylesheet" href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
     {% include "catalog/_details_page_header.html" with name=app.name %}
 {% endblock page_header %}
 
