@@ -1,6 +1,7 @@
 {% extends 'murano_base.html' %}
 {% load i18n %}
 {% load static %}
+{% load compress %}
 {% load horizon %}
 {% load custom_filters %}
 {% block title %}{% trans "Components" %}{% endblock %}
@@ -18,11 +19,12 @@
 {% endblock %}
 
 {% block css %}
-    {% include "_stylesheets.html" %}
-    <link rel="stylesheet"
-          href="{% static 'muranodashboard/css/catalog.css' %}"/>
-    <link rel="stylesheet"
-          href="{% static 'muranodashboard/css/components.css' %}">
+  {{ block.super }}
+  {% compress css %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}"/>
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/reports.css' %}">
+  {% endcompress %}
 {% endblock %}
 
 {% block js %}
