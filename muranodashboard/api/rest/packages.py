@@ -63,5 +63,3 @@ class Packages(generic.View):
             'packages': [p.to_dict() for p in packages],
             'has_more_data': has_more_data,
         }
-
-
