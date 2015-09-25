@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 
 {% if environment %}
     <a href="{% url 'horizon:murano:catalog:deploy' app.id environment.id %}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {% trans "Add to Env" %}</a>

@@ -12,10 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from collections import OrderedDict
 import json
 
 from django.core.urlresolvers import reverse
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
@@ -75,7 +75,7 @@ class OverviewTab(tabs.Tab):
             if id == service_data['?']['status']:
                 status_name = name
 
-        detail_info = SortedDict([
+        detail_info = OrderedDict([
             ('Name', getattr(service_data, 'name', '')),
             ('ID', service_data['?']['id']),
             ('Type', service_data['?'][consts.DASHBOARD_ATTRS_KEY]['name']),

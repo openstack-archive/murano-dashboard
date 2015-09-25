@@ -1,6 +1,5 @@
 {% extends "horizon/common/_modal_form.html" %}
 {% load i18n humanize %}
-{% load url from future %}
 {% block form_action %}
     {% url 'horizon:murano:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}
