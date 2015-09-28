@@ -35,6 +35,7 @@ UploadPackage = 'packages__action_upload_package'
 ImportBundle = 'packages__action_import_bundle'
 CreateEnvironment = ".add_env .btn"
 DeployEnvironment = "services__action_deploy_env"
+DeleteEnvironment = "//button[contains(@id, 'action_delete')]"
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"

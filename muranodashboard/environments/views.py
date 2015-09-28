@@ -75,6 +75,19 @@ class EnvironmentDetails(tabs.TabbedTableView):
             exceptions.handle(self.request, msg, redirect=redirect)
         context['tenant_id'] = self.request.session['token'].tenant['id']
         context["url"] = self.get_redirect_url()
+        table = env_tables.EnvironmentsTable(self.request)
+        # record the origin row_action for EnvironmentsTable Meta
+        ori_row_actions = table._meta.row_actions
+        # remove the duplicate 'Manage Components' and 'DeployEnvironment'
+        # actions that have already in Environment Details page
+        # from table.render_row_actions, so the action render to the detail
+        # page will exclude those two actions.
+        table._meta.row_actions = filter(
+            lambda x: x.name not in ('show', 'deploy'),
+            table._meta.row_actions)
+        context["actions"] = table.render_row_actions(env)
+        # recover the origin row_action for EnvironmentsTable Meta
+        table._meta.row_actions = ori_row_actions
         return context
 
     def get_tabs(self, request, *args, **kwargs):
