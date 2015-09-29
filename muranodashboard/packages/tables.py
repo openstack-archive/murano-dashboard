@@ -95,6 +95,7 @@ class DownloadPackage(tables.Action):
 class ToggleEnabled(tables.BatchAction):
     name = 'toggle_enabled'
     verbose_name = _("Toggle Enabled")
+    icon = "toggle-on"
 
     @staticmethod
     def action_present(count):
@@ -129,6 +130,7 @@ class ToggleEnabled(tables.BatchAction):
 class TogglePublicEnabled(tables.BatchAction):
     name = 'toggle_public_enabled'
     verbose_name = _("Toggle Public")
+    icon = "share-alt"
 
     @staticmethod
     def action_present(count):
