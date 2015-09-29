@@ -306,7 +306,8 @@ class EnvironmentsTable(tables.DataTable):
                              validators=env_forms.NAME_VALIDATORS,
                              error_messages={'invalid':
                                              env_forms.ENV_NAME_HELP_TEXT},),
-                         update_action=UpdateName)
+                         update_action=UpdateName,
+                         truncate=40)
 
     status = tables.Column('status',
                            verbose_name=_('Status'),
