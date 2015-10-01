@@ -20,6 +20,7 @@ from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import messages
 from horizon import tables
+from horizon.utils import filters
 from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
@@ -209,6 +210,12 @@ class PackageDefinitionsTable(tables.DataTable):
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
     version = tables.Column('version', verbose_name=_('Version'))
+    created_time = tables.Column('created',
+                                 verbose_name=_('Created'),
+                                 filters=(filters.parse_isotime,))
+    updated_time = tables.Column('updated',
+                                 verbose_name=_('Updated'),
+                                 filters=(filters.parse_isotime,))
 
     def get_prev_pagination_string(self):
         pagination_string = super(
