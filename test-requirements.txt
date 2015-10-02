@@ -1,24 +1,24 @@
 # The order of packages is significant, because pip processes them in the order
 # of appearance. Changing the order has an impact on the overall integration
 # process, which may cause wedges in the gate later.
-hacking>=0.10.0,<0.11
+hacking<0.11,>=0.10.0
 
 coverage>=3.6
 django-nose
 nose
-oslo.config>=1.9.3,<1.10.0  # Apache-2.0
-openstack.nose_plugin>=0.7
+oslo.config<1.10.0,>=1.9.3 # Apache-2.0
+openstack.nose-plugin>=0.7
 nosehtmloutput>=0.0.3
 selenium
 
-testtools>=0.9.36,!=1.2.0
-mock>=1.0
+testtools!=1.2.0,>=0.9.36
+mock<1.1.0,>=1.0
 mox>=0.5.3
 
 # Docs Requirements
-sphinx>=1.1.2,!=1.2.0,!=1.3b1,<1.3
+sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2
 
 # Horizon requirements
-Django>=1.4.2,<1.8
-django_compressor>=1.4
-django_openstack_auth>=1.1.7,!=1.1.8,<1.3.0
+Django<1.8,>=1.4.2
+django-compressor>=1.4
+django-openstack-auth<1.3.0,>=1.2.0
