@@ -810,7 +810,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.check_package_parameter_by_name(pkg_name, 'Active', 'False')
 
     def test_category_management(self):
-        """Test application category adds and deletes succesfully
+        """Test application category adds and deletes successfully
 
         Scenario:
             1. Navigate to 'Categories' page
