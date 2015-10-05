@@ -78,7 +78,7 @@ class OverviewTab(tabs.Tab):
         detail_info = OrderedDict([
             ('Name', getattr(service_data, 'name', '')),
             ('ID', service_data['?']['id']),
-            ('Type', service_data['?'][consts.DASHBOARD_ATTRS_KEY]['name']),
+            ('Type', tables.get_service_type(service_data) or 'Unknown'),
             ('Status', status_name), ])
 
         if hasattr(service_data, 'domain'):
