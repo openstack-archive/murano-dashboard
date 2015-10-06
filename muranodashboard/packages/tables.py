@@ -209,7 +209,8 @@ class PackageDefinitionsTable(tables.DataTable):
     is_public = tables.Column('is_public', verbose_name=_('Public'))
     type = tables.Column('type', verbose_name=_('Type'))
     author = tables.Column('author', verbose_name=_('Author'))
-    version = tables.Column('version', verbose_name=_('Version'))
+    version = tables.Column(lambda obj: getattr(obj, 'version', None),
+                            verbose_name=_('Version'))
     created_time = tables.Column('created',
                                  verbose_name=_('Created'),
                                  filters=(filters.parse_isotime,))
