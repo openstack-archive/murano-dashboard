@@ -137,6 +137,21 @@ class Session(object):
                 environment_id))
         return session_id
 
+    @staticmethod
+    def set(request, environment_id, session_id):
+        """Set an open session id
+
+        sets id from already opened session for specified environment.
+
+        :param request:
+        :param environment_id:
+        :param session_id
+        """
+        # We store opened sessions for each environment in dictionary per user
+        sessions = request.session.get('sessions', {})
+        sessions[environment_id] = session_id
+        request.session['sessions'] = sessions
+
 
 def _update_env(env):
     env.has_new_services = False
@@ -186,6 +201,11 @@ def environment_get(request, environment_id):
               format(environment_id, session_id))
     client = api.muranoclient(request)
     env = client.environments.get(environment_id, session_id)
+    acquired = getattr(env, 'acquired_by', None)
+    if acquired and acquired != session_id:
+        env = client.environments.get(environment_id, acquired)
+        Session.set(request, environment_id, acquired)
+
     env = _update_env(env)
 
     LOG.debug('Environment::Get {0}'.format(env))
