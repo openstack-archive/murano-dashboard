@@ -24,6 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from horizon import tables
+from muranoclient.common import exceptions as exc
 from oslo_log import log as logging
 
 from muranodashboard import api as api_utils
@@ -32,8 +33,8 @@ from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.environments import forms as env_forms
+from muranodashboard.packages import consts as pkg_consts
 
-from muranoclient.common import exceptions as exc
 
 LOG = logging.getLogger(__name__)
 
@@ -409,6 +410,12 @@ class ServicesTable(tables.DataTable):
             # then add sorted application actions
             actions.extend(sorted(app_actions, key=lambda x: x.name))
         return actions
+
+    def get_repo_url(self):
+        return pkg_consts.MURANO_REPO_URL
+
+    def get_pkg_def_url(self):
+        return reverse('horizon:murano:packages:index')
 
     class Meta(object):
         name = 'services'
