@@ -24,6 +24,7 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 from horizon import tables
+from horizon.utils import filters
 from muranoclient.common import exceptions as exc
 from oslo_log import log as logging
 
@@ -355,7 +356,8 @@ class ServicesTable(tables.DataTable):
                               verbose_name=_('Last operation'),
                               filters=(defaultfilters.urlize, ))
     operation_updated = tables.Column('operation_updated',
-                                      verbose_name=_('Time updated'))
+                                      verbose_name=_('Time updated'),
+                                      filters=(filters.parse_isotime,))
 
     def get_object_id(self, datum):
         return datum['?']['id']
@@ -445,9 +447,11 @@ class ShowDeploymentDetails(tables.LinkAction):
 
 class DeploymentsTable(tables.DataTable):
     started = tables.Column('started',
-                            verbose_name=_('Time Started'))
+                            verbose_name=_('Time Started'),
+                            filters=(filters.parse_isotime,))
     finished = tables.Column('finished',
-                             verbose_name=_('Time Finished'))
+                             verbose_name=_('Time Finished'),
+                             filters=(filters.parse_isotime,))
 
     status = tables.Column(
         'state',
