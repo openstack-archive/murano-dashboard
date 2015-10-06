@@ -131,8 +131,7 @@ def muranoclient(request):
         artifacts = None
 
     token_id = request.user.token.id
-    LOG.debug('Murano::Client <Url: {0}, '
-              'TokenId: {1}>'.format(endpoint, token_id))
+    LOG.debug('Murano::Client <Url: {0}>'.format(endpoint))
 
     return client.Client(1, endpoint=endpoint, token=token_id,
                          insecure=insecure, artifacts_client=artifacts,
