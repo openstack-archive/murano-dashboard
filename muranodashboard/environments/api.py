@@ -261,12 +261,12 @@ def services_list(request, environment_id):
 
         if service_id in reports and reports[service_id]:
             last_operation = strip(reports[service_id].text)
-            time = reports[service_id].updated.replace('T', ' ')
+            time = reports[service_id].updated
         else:
             last_operation = 'Component draft created' \
                 if environment.version == 0 else ''
             try:
-                time = service_data['updated'].replace('T', ' ')[:-7]
+                time = service_data['updated'][:-7]
             except KeyError:
                 time = None
 
@@ -336,11 +336,6 @@ def run_action(request, environment_id, action_id):
 def deployments_list(request, environment_id):
     LOG.debug('Deployments::List')
     deployments = api.muranoclient(request).deployments.list(environment_id)
-    for deployment in deployments:
-        if deployment.started:
-            deployment.started = deployment.started.replace('T', ' ')
-        if deployment.finished:
-            deployment.finished = deployment.finished.replace('T', ' ')
 
     LOG.debug('Environment::List {0}'.format(deployments))
     return deployments
