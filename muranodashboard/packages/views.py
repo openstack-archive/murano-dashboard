@@ -41,6 +41,7 @@ from oslo_log import log as logging
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
+from muranodashboard import client_overrides
 from muranodashboard.common import utils as muranodashboard_utils
 from muranodashboard.environments import consts
 from muranodashboard.packages import consts as packages_consts
@@ -54,6 +55,8 @@ FORMS = [('upload', forms.ImportPackageForm),
          ('add_category', forms.SelectCategories)]
 
 BUNDLE_FORMS = [('upload', forms.ImportBundleForm), ]
+
+client_overrides.override()
 
 
 def is_app(wizard):
@@ -196,7 +199,7 @@ class ImportBundleWizard(views.ModalFormMixin,
             elif import_type == 'by_name':
                 f = muranoclient_utils.to_url(
                     form.cleaned_data['name'],
-                    path='/bundles/',
+                    path='bundles/',
                     base_url=base_url,
                     extension='.bundle',
                 )
@@ -401,7 +404,7 @@ class ImportPackageWizard(views.ModalFormMixin,
                 version = form.cleaned_data['repo_version']
                 f = muranoclient_utils.to_url(
                     name, version=version,
-                    path='/apps/',
+                    path='apps/',
                     extension='.zip',
                     base_url=base_url,
                 )
