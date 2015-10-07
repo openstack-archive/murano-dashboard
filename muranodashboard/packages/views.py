@@ -196,7 +196,7 @@ class ImportBundleWizard(views.ModalFormMixin,
             elif import_type == 'by_name':
                 f = muranoclient_utils.to_url(
                     form.cleaned_data['name'],
-                    path='/bundles/',
+                    path='bundles/',
                     base_url=base_url,
                     extension='.bundle',
                 )
@@ -405,7 +405,7 @@ class ImportPackageWizard(views.ModalFormMixin,
                 version = form.cleaned_data['repo_version']
                 f = muranoclient_utils.to_url(
                     name, version=version,
-                    path='/apps/',
+                    path='apps/',
                     extension='.zip',
                     base_url=base_url,
                 )
