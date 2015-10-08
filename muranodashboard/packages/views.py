@@ -139,7 +139,7 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
                 if package.owner_id == current_tenant['id']:
                     packages[i].tenant_name = current_tenant['name']
                 else:
-                    packages[i].tenant_name = 'other'
+                    packages[i].tenant_name = _('UNKNOWN')
         return packages
 
     def get_context_data(self, **kwargs):
