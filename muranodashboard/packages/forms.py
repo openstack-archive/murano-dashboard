@@ -233,6 +233,15 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
                 request,
                 msg,
                 redirect=reverse('horizon:murano:packages:index'))
+        except exc.HTTPConflict:
+            msg = _('Package or Class with the same name is already made '
+                    'public')
+            LOG.exception(msg)
+            messages.error(request, msg)
+            exceptions.handle(
+                request,
+                msg,
+                redirect=reverse('horizon:murano:packages:index'))
         except Exception as original_e:
             reason = ''
 

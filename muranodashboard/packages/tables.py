@@ -161,6 +161,15 @@ class TogglePublicEnabled(tables.BatchAction):
                 request,
                 msg,
                 redirect=reverse('horizon:murano:packages:index'))
+        except exc.HTTPConflict:
+            msg = _('Package or Class with the same name is already made '
+                    'public')
+            LOG.exception(msg)
+            messages.error(request, msg)
+            exceptions.handle(
+                request,
+                msg,
+                redirect=reverse('horizon:murano:packages:index'))
 
 
 class DeletePackage(tables.DeleteAction):
