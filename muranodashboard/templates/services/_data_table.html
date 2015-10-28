@@ -8,7 +8,7 @@
         {% if table.actions_allowed %}
             {% comment %}
               Note(efedorova): We are comparing to the string, since get_apps_list
-              functions returns json.dumps, witch is used in js later.
+              functions returns json.dumps, which is used in js later.
               So to prevent extra transformations comparing to the string is used
               to check for app absence.
             {% endcomment %}
