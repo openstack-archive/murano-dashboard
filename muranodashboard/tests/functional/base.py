@@ -68,6 +68,7 @@ class UITestCase(BaseDeps):
         super(UITestCase, self).setUp()
 
         self.driver = webdriver.Firefox()
+        self.addCleanup(self.driver.quit)
         self.driver.maximize_window()
         self.driver.get(cfg.common.horizon_url + '/murano/environments')
         self.driver.implicitly_wait(30)
@@ -76,7 +77,6 @@ class UITestCase(BaseDeps):
 
     def tearDown(self):
         super(UITestCase, self).tearDown()
-        self.driver.quit()
 
         for env in self.murano_client.environments.list():
             self.remove_environment(env.id)
