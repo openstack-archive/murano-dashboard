@@ -46,6 +46,6 @@ Project Hosting Details
     * https://git.openstack.org/cgit/openstack/murano-apps
 
 * Code Review
-    * https://review.openstack.org/#/q/murano+AND+status:+open,n,z
+    * https://review.openstack.org/#/q/murano-dashboard+AND+status:+open,n,z
 
     * http://docs.openstack.org/infra/manual/developers.html#development-workflow
