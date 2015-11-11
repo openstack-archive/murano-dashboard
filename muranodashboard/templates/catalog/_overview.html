@@ -5,7 +5,7 @@
      <div class="app-metadata">
        <div class="app-description">{% if app.description %}{{ app.description }}{% endif %}</div>
        <ul>
-        {% if app.author %}<li><strong>{% trans "Author" %}:</strong>{{ app.author }}</li>{% endif %}
+        {% if app.author %}<li><strong>{% trans "Author" %}:</strong> {{ app.author }}</li>{% endif %}
         {% if app.tags %}<li><strong>{% trans "Tags" %}:</strong> {{ app.tags|join:", " }}</li>{% endif %}
         {% if app.categories %}<li><strong>{% trans "Categories" %}:</strong> {{ app.categories|join:", " }}</li>{% endif %}
        </ul>
