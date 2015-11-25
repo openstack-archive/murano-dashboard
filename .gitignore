@@ -33,3 +33,6 @@ doc/source/api
 muranodashboard/tests/functional/config/config.conf
 node_modules
 npm-debug.log
+
+# RElease NOtes
+releasenotes/build
