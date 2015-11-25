@@ -14,5 +14,5 @@
 
 
 from pbr import version
-__version_info = version.VersionInfo('muranodashboard')
-__version__ = __version_info.cached_version_string()
+version_info = version.VersionInfo('muranodashboard')
+__version__ = version_info.cached_version_string()
