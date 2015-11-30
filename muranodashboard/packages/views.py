@@ -37,6 +37,7 @@ from muranoclient.common import utils as muranoclient_utils
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import keystone
 from oslo_log import log as logging
+import six
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
@@ -235,7 +236,7 @@ class ImportBundleWizard(views.ModalFormMixin,
                     continue
 
                 reqs = package.requirements(base_url=base_url)
-                for dep_name, dep_package in reqs.iteritems():
+                for dep_name, dep_package in six.iteritems(reqs):
                     try:
                         imgs = muranoclient_utils.ensure_images(
                             glance_client=glance_client,
@@ -470,7 +471,7 @@ class ImportPackageWizard(views.ModalFormMixin,
             original_package = reqs.pop(name)
             step_data['dependencies'] = []
             step_data['images'] = []
-            for dep_name, dep_package in reqs.iteritems():
+            for dep_name, dep_package in six.iteritems(reqs):
                 _ensure_images(dep_name, dep_package)
                 try:
                     files = {dep_name: dep_package.file()}

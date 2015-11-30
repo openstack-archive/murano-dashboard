@@ -13,11 +13,12 @@
 #    under the License.
 
 import json
-import types
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
 from django.template import loader
+
+import six
 
 from muranodashboard.api import packages as pkg_cli
 from muranodashboard.environments import consts
@@ -152,7 +153,7 @@ def _split_seq_by_predicate(seq, predicate):
 
 def _is_atomic(elt):
     key, value = elt
-    return not isinstance(value, (types.DictType, types.ListType))
+    return not isinstance(value, (dict, list))
 
 
 def render_d3_data(request, environment):
@@ -195,7 +196,7 @@ def render_d3_data(request, environment):
         node_type = node_data.get('?', {}).get('type')
         node_id = node_data.get('?', {}).get('id')
         atomics, containers = _split_seq_by_predicate(
-            node_data.iteritems(), _is_atomic)
+            six.iteritems(node_data), _is_atomic)
         if node_type and node_data is not parent_node:
             node = _create_empty_node()
             node_refs[node_id] = node
@@ -230,7 +231,7 @@ def render_d3_data(request, environment):
         node = node_refs[node_id]
 
         atomics, containers = _split_seq_by_predicate(
-            node_data.iteritems(), _is_atomic)
+            six.iteritems(node_data), _is_atomic)
 
         # the actual second pass of node linking
         if parent_node is not None:

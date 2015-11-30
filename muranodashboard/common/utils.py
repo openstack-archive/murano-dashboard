@@ -20,6 +20,7 @@ import bs4
 import string
 
 from muranodashboard.dynamic_ui import yaql_expression
+import six
 import yaql
 
 
@@ -46,7 +47,7 @@ class Bunch(object):
     object-like attribute access.
     """
     def __init__(self, **kwargs):
-        for key, value in kwargs.iteritems():
+        for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
     def __getitem__(self, item):
@@ -62,7 +63,7 @@ class Bunch(object):
         return hasattr(self, item)
 
     def __iter__(self):
-        return iter(self.__dict__.itervalues())
+        return iter(six.itervalues(self.__dict__))
 
 
 class BlankFormatter(string.Formatter):

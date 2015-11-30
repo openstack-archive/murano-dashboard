@@ -16,7 +16,7 @@ import contextlib
 
 from django.conf import settings
 from django.contrib.messages import api as msg_api
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 import muranoclient.client as client
@@ -33,7 +33,7 @@ LOG = logging.getLogger(__name__)
 
 def _handle_message(request, message):
     def horizon_message_already_queued(_message):
-        _message = force_unicode(_message)
+        _message = force_text(_message)
         if request.is_ajax():
             for tag, msg, extra in request.horizon['async_messages']:
                 if _message == msg:

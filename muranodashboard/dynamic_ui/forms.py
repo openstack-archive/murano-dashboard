@@ -14,11 +14,11 @@
 
 from collections import defaultdict
 import copy
-import types
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from oslo_log import log as logging
+import six
 from yaql import legacy
 
 import muranodashboard.dynamic_ui.fields as fields
@@ -63,7 +63,7 @@ TYPES_KWARGS = {
 
 def _collect_fields(field_specs, form_name, service):
     def process_widget(cls, kwargs):
-        if isinstance(cls, types.TupleType):
+        if isinstance(cls, tuple):
             cls, _w = cls
             kwargs['widget'] = _w
 
@@ -85,24 +85,25 @@ def _collect_fields(field_specs, form_name, service):
     def parse_spec(spec, keys=None):
         if keys is None:
             keys = []
-        if not isinstance(keys, types.ListType):
+        if not isinstance(keys, list):
             keys = [keys]
         key = keys and keys[-1] or None
 
         if isinstance(spec, yaql_expression.YaqlExpression):
             return key, fields.RawProperty(key, spec)
-        elif isinstance(spec, types.DictType):
+        elif isinstance(spec, dict):
             items = []
-            for k, v in spec.iteritems():
+            for k, v in six.iteritems(spec):
                 k = helpers.decamelize(k)
                 new_key, v = parse_spec(v, keys + [k])
                 if new_key:
                     k = new_key
                 items.append((k, v))
             return key, dict(items)
-        elif isinstance(spec, types.ListType):
+        elif isinstance(spec, list):
             return key, [parse_spec(_spec, keys)[1] for _spec in spec]
-        elif isinstance(spec, basestring) and helpers.is_localizable(keys):
+        elif isinstance(spec,
+                        six.string_types) and helpers.is_localizable(keys):
             return key, spec
         else:
             if key == 'hidden':
@@ -159,7 +160,7 @@ class UpdatableFieldsForm(forms.Form):
         # collections.OrderedDict for Django >= 1.7
         updated_fields = self.fields.__class__()
 
-        for name, field in self.fields.iteritems():
+        for name, field in six.iteritems(self.fields):
             updated_fields[name] = field
             if (isinstance(field, fields.PasswordField) and
                     not field.has_clone and field.original):
@@ -168,7 +169,7 @@ class UpdatableFieldsForm(forms.Form):
 
         self.fields = updated_fields
 
-        for name, field in self.fields.iteritems():
+        for name, field in six.iteritems(self.fields):
             if hasattr(field, 'update'):
                 field.update(self.initial, form=self, request=request)
             if not field.required:
@@ -188,12 +189,12 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         self.update_fields()
 
     def finalize_fields(self):
-        for field_name, field in self.fields.iteritems():
+        for field_name, field in six.iteritems(self.fields):
             field.form = self
 
             validators = []
             for v in field.validators:
-                expr = isinstance(v, types.DictType) and v.get('expr')
+                expr = isinstance(v, dict) and v.get('expr')
                 if expr and isinstance(expr, fields.RawProperty):
                     v = fields.make_yaql_validator(v)
                 validators.append(v)
@@ -215,7 +216,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             if error_messages:
                 raise forms.ValidationError(error_messages)
 
-            for name, field in self.fields.iteritems():
+            for name, field in six.iteritems(self.fields):
                 if (isinstance(field, fields.PasswordField) and
                         getattr(field, 'enabled', True)):
                     field.compare(name, cleaned_data)

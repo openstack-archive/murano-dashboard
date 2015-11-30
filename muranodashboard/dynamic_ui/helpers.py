@@ -17,6 +17,8 @@ import string
 import types
 import uuid
 
+import six
+
 from django.core import validators
 
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
@@ -47,7 +49,7 @@ def decamelize(name):
 
 def explode(_string):
     """Explodes a string into a list of one-character strings."""
-    if not _string or not isinstance(_string, basestring):
+    if not _string or not isinstance(_string, six.string_types):
         return _string
     else:
         return list(_string)
@@ -76,11 +78,11 @@ def recursive_apply(predicate, transformer, value, *args):
     def rec(val):
         if predicate(val, *args):
             return rec(transformer(val, *args))
-        elif isinstance(val, types.DictType):
-            return dict((rec(k), rec(v)) for (k, v) in val.iteritems())
-        elif isinstance(val, types.ListType):
+        elif isinstance(val, dict):
+            return dict((rec(k), rec(v)) for (k, v) in six.iteritems(val))
+        elif isinstance(val, list):
             return [rec(v) for v in val]
-        elif isinstance(val, types.TupleType):
+        elif isinstance(val, tuple):
             return tuple([rec(v) for v in val])
         elif isinstance(val, types.GeneratorType):
             return rec(val)
@@ -106,9 +108,9 @@ def insert_hidden_ids(application):
             return rec(k), rec(v)
 
     def rec(val):
-        if isinstance(val, types.DictType):
-            return dict(wrap(k, v) for k, v in val.iteritems())
-        elif isinstance(val, types.ListType):
+        if isinstance(val, dict):
+            return dict(wrap(k, v) for k, v in six.iteritems(val))
+        elif isinstance(val, list):
             return [rec(v) for v in val]
         else:
             return val

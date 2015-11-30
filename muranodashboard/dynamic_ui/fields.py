@@ -23,6 +23,7 @@ from django.core import validators as django_validator
 from django import forms
 from django.http import Http404
 from django.template import defaultfilters
+from django.utils.encoding import force_text
 from django.utils import html
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -31,6 +32,7 @@ from horizon import messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
 from oslo_log import log as logging
+import six
 import yaql
 
 from muranoclient.common import exceptions as muranoclient_exc
@@ -52,7 +54,7 @@ def with_request(func):
     """
     def update(self, initial, request=None, **kwargs):
         initial_request = initial.get('request')
-        for key, value in initial.iteritems():
+        for key, value in six.iteritems(initial):
             if key != 'request' and key not in kwargs:
                 kwargs[key] = value
 
@@ -157,11 +159,11 @@ class CustomPropertiesField(forms.Field):
                  *args, **kwargs):
         self.description = description
         self.description_title = (description_title or
-                                  unicode(kwargs.get('label', '')))
+                                  force_text(kwargs.get('label', '')))
 
         for arg in FIELD_ARGS_TO_ESCAPE:
             if kwargs.get(arg):
-                kwargs[arg] = html.escape(unicode(kwargs[arg]))
+                kwargs[arg] = html.escape(force_text(kwargs[arg]))
 
         validators = []
         for validator in kwargs.get('validators', []):
@@ -384,7 +386,7 @@ class ImageChoiceField(ChoiceField):
                     continue
             image_map[image.id] = title
 
-        for id_, title in sorted(image_map.iteritems(), key=lambda e: e[1]):
+        for id_, title in sorted(six.iteritems(image_map), key=lambda e: e[1]):
             image_choices.append((id_, title))
         if image_choices:
             image_choices.insert(0, ("", _("Select Image")))
