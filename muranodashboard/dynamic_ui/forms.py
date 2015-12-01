@@ -65,7 +65,7 @@ def _collect_fields(field_specs, form_name, service):
     def process_widget(cls, kwargs):
         if isinstance(cls, types.TupleType):
             cls, _w = cls
-            cls.widget = _w
+            kwargs['widget'] = _w
 
         widget = kwargs.get('widget') or cls.widget
         if 'widget_media' in kwargs:
