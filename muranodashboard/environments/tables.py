@@ -185,11 +185,11 @@ class DeployEnvironment(tables.BatchAction):
           or successful deploy or delete failure)
         """
         status = getattr(environment, 'status', None)
-        if (status != consts.STATUS_ID_DEPLOY_FAILURE
-           and not environment.has_new_services):
-                return False
-        if (status in consts.NO_ACTION_ALLOWED_STATUSES
-                or status == consts.STATUS_ID_READY):
+        if (status != consts.STATUS_ID_DEPLOY_FAILURE and
+                not environment.has_new_services):
+            return False
+        if (status in consts.NO_ACTION_ALLOWED_STATUSES or
+                status == consts.STATUS_ID_READY):
             return False
         return True
 
@@ -219,8 +219,8 @@ class DeployThisEnvironment(tables.Action):
         """
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
-        if (status in consts.NO_ACTION_ALLOWED_STATUSES
-                or status == consts.STATUS_ID_READY):
+        if (status in consts.NO_ACTION_ALLOWED_STATUSES or
+                status == consts.STATUS_ID_READY):
             return False
 
         apps = self.table.data

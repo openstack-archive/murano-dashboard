@@ -82,8 +82,8 @@ def get_available_networks(request, include_subnets=True,
                              cidr=subnet.cidr,
                              subnet=subnet.name_or_id))
 
-                network_choices.append(((net.id, subnet.id), netname
-                                        or full_name))
+                network_choices.append(
+                    ((net.id, subnet.id), netname or full_name))
 
         else:
             netname = netname or net.name_or_id
