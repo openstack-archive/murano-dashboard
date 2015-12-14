@@ -67,7 +67,7 @@ class AppRequirementsTab(tabs.Tab):
                         for req in reqs:
                             if req == 'min_disk':
                                 requirements.append(
-                                    'Minimum disk size: {0}GB'.format(
+                                    'Minimum disk size: {0} GB'.format(
                                         str(reqs[req])))
                             elif req == 'min_vcpus':
                                 requirements.append(
@@ -75,7 +75,19 @@ class AppRequirementsTab(tabs.Tab):
                                         str(reqs[req])))
                             elif req == 'min_memory_mb':
                                 requirements.append(
-                                    'Minimum RAM size: {0}MB'.format(
+                                    'Minimum RAM size: {0} MB'.format(
+                                        str(reqs[req])))
+                            elif req == 'max_disk':
+                                requirements.append(
+                                    'Maximum disk size: {0} GB'.format(
+                                        str(reqs[req])))
+                            elif req == 'max_vcpus':
+                                requirements.append(
+                                    'Maximum vCPUs: {0}'.format(
+                                        str(reqs[req])))
+                            elif req == 'max_memory_mb':
+                                requirements.append(
+                                    'Maximum RAM size: {0} MB'.format(
                                         str(reqs[req])))
                         self.app.requirements.append(requirements)
 

@@ -312,6 +312,15 @@ class FlavorChoiceField(ChoiceField):
                     continue
                 if flavor.ram < self.requirements.get('min_memory_mb', 0):
                     continue
+                if 'max_vcpus' in self.requirements:
+                    if flavor.vcpus > self.requirements['max_vcpus']:
+                        continue
+                if 'max_disk' in self.requirements:
+                    if flavor.disk > self.requirements['max_disk']:
+                        continue
+                if 'max_memory_mb' in self.requirements:
+                    if flavor.ram > self.requirements['max_memory_mb']:
+                        continue
                 self.choices.append((flavor.name, flavor.name))
         # Search through selected flavors
         for flavor_name, flavor_name in self.choices:

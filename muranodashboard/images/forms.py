@@ -50,7 +50,8 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
     _metadata = {
         'windows.2012': ' Windows Server 2012',
         'linux': 'Generic Linux',
-        'cirros.demo': 'Murano Demo'
+        'cirros.demo': 'Murano Demo',
+        'rhel6': 'Test new type'
     }
 
     image = forms.ChoiceField(label='Image')

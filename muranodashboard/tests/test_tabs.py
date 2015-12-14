@@ -12,10 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import mock
+
 from muranodashboard.catalog import tabs
 from openstack_dashboard.test import helpers
-
-import mock
 
 
 class TestLicenseTab(helpers.APITestCase):
@@ -84,7 +84,10 @@ class TestRequirementsTab(helpers.APITestCase):
             'flavor': mock.MagicMock(requirements={
                 'min_disk': 10,
                 'min_vcpus': 2,
-                'min_memory_mb': 2048
+                'min_memory_mb': 2048,
+                'max_disk': 25,
+                'max_vcpus': 5,
+                'max_memory_mb': 16000,
             })
         }
         mock_services.get_app_forms.return_value = [('', m)]
@@ -101,11 +104,17 @@ class TestRequirementsTab(helpers.APITestCase):
         self.assertIn('Instance flavor:', r.app.requirements)
         flavor_req = r.app.requirements[1]
 
-        self.assertIn('Minimum disk size: 10GB',
+        self.assertIn('Minimum disk size: 10 GB',
                       flavor_req)
         self.assertIn('Minimum vCPUs: 2',
                       flavor_req)
-        self.assertIn('Minimum RAM size: 2048MB',
+        self.assertIn('Minimum RAM size: 2048 MB',
+                      flavor_req)
+        self.assertIn('Maximum disk size: 25 GB',
+                      flavor_req)
+        self.assertIn('Maximum vCPUs: 5',
+                      flavor_req)
+        self.assertIn('Maximum RAM size: 16000 MB',
                       flavor_req)
 
     @mock.patch('muranodashboard.catalog.tabs.services')
