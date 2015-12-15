@@ -17,7 +17,6 @@ import SimpleHTTPServer
 import SocketServer
 import tempfile
 import time
-import unittest
 
 from selenium.webdriver.common import by
 from selenium.webdriver.support import ui
@@ -403,7 +402,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_not_on_page(by.By.XPATH,
                                        c.App.format('MockApp'))
 
-    @unittest.skip("bug #1522886")
     def test_filter_by_category(self):
         """Test filtering by category
 
@@ -431,7 +429,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.check_element_on_page(by.By.XPATH, c.App.format('MockApp'))
 
-    @unittest.skip("bug #1522886")
     def test_check_option_switch_env(self):
         """Test checks ability to switch environment and add app in other env
 
