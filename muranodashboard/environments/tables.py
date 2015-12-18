@@ -33,7 +33,6 @@ from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
-from muranodashboard.environments import forms as env_forms
 from muranodashboard.packages import consts as pkg_consts
 
 
@@ -304,10 +303,7 @@ class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:murano:environments:services',
                          verbose_name=_('Name'),
-                         form_field=forms.CharField(
-                             validators=env_forms.NAME_VALIDATORS,
-                             error_messages={'invalid':
-                                             env_forms.ENV_NAME_HELP_TEXT},),
+                         form_field=forms.CharField(),
                          update_action=UpdateName,
                          truncate=40)
 
