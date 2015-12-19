@@ -43,6 +43,10 @@ IMPORT_BUNDLE_TYPE_CHOICES = [
 ]
 
 
+class PackageURLField(forms.URLField):
+    default_validators = [validators.URLValidator(schemes=["http", "https"])]
+
+
 class ImportBundleForm(forms.Form):
     import_type = forms.ChoiceField(
         label=_("Package Bundle Source"),
@@ -50,15 +54,13 @@ class ImportBundleForm(forms.Form):
         widget=forms.Select(attrs={
             'class': 'switchable',
             'data-slug': 'source'}))
-    url = forms.URLField(
+    url = PackageURLField(
         label=_("Bundle URL"),
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'switched',
             'data-switch-on': 'source',
             'data-source-by_url': _('Bundle URL')}),
-        validators=[validators.URLValidator(
-            schemes=["http", "https"])],
         help_text=_('An external http/https URL to load the bundle from.'))
     name = forms.CharField(
         label=_("Bundle Name"),
@@ -88,15 +90,13 @@ class ImportPackageForm(forms.Form):
         widget=forms.Select(attrs={
             'class': 'switchable',
             'data-slug': 'source'}))
-    url = horizon_forms.URLField(
+    url = PackageURLField(
         label=_("Package URL"),
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'switched',
             'data-switch-on': 'source',
             'data-source-by_url': _('Package URL')}),
-        validators=[validators.URLValidator(
-            schemes=["http", "https"])],
         help_text=_('An external http/https URL to load the package from.'))
     repo_name = horizon_forms.CharField(
         label=_("Package Name"),
