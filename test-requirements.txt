@@ -22,7 +22,7 @@ reno>=0.1.1 # Apache2
 
 # Horizon requirements
 django-compressor>=1.4
-django-openstack-auth>=2.0.0
+django-openstack-auth!=2.1.0,>=2.0.0
 
 # js lint tests
 nodeenv>=0.9.4 # BSD License
