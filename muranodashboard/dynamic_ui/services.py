@@ -73,7 +73,7 @@ class Service(object):
         yaql_functions.register(self.context)
 
         self.forms = []
-        for key, value in kwargs.iteritems():
+        for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
         if forms:
@@ -107,13 +107,13 @@ class Service(object):
 
     @staticmethod
     def extract_form_data(data):
-        for form_name, form_data in data.iteritems():
+        for form_name, form_data in six.iteritems(data):
             return form_name, form_data['fields'], form_data.get('validators',
                                                                  [])
 
     def extract_attributes(self):
         self.context['$'] = self.cleaned_data
-        for name, template in self.templates.iteritems():
+        for name, template in six.iteritems(self.templates):
             self.context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
                 >= semantic_version.Version.coerce('2.2'):
@@ -154,7 +154,7 @@ def import_app(request, app_id):
     app_version = ui_desc.pop('Version', version.LATEST_FORMAT_VERSION)
     version.check_version(app_version)
     service = dict(
-        (helpers.decamelize(k), v) for (k, v) in ui_desc.iteritems())
+        (helpers.decamelize(k), v) for (k, v) in six.iteritems(ui_desc))
 
     global _apps  # In-memory caching of dynamic UI forms
     if app_id in _apps:
@@ -240,7 +240,7 @@ def get_app_field_descriptions(request, app_id, index):
 
     form_cls = app.forms[index]
     descriptions = []
-    for name, field in form_cls.base_fields.iteritems():
+    for name, field in six.iteritems(form_cls.base_fields):
         title = field.description_title
         description = field.description
         if description:

@@ -41,6 +41,7 @@ from horizon.forms import views
 from horizon import messages
 from horizon import tabs
 from oslo_log import log as logging
+import six
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
@@ -60,7 +61,7 @@ LATEST_APPS_QUEUE_LIMIT = 3
 
 class DictToObj(object):
     def __init__(self, **kwargs):
-        for key, value in kwargs.iteritems():
+        for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
 

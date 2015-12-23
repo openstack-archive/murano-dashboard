@@ -15,7 +15,6 @@
 import random
 import string
 import time
-import types
 
 from yaql.language import specs
 from yaql.language import yaqltypes
@@ -48,10 +47,10 @@ def _generate_hostname(pattern, number):
     """
     global _random_string_counter
 
-    if pattern and isinstance(pattern, types.UnicodeType):
-        return pattern.replace(u'#', unicode(number))
-    elif pattern:
-        return pattern.replace('#', str(number))
+    if pattern:
+        # NOTE(kzaitsev) works both for unicode and simple strings in py2
+        # and works as expected in py3
+        pattern.replace('#', str(number))
 
     counter = _random_string_counter or 1
     # generate first 5 random chars
