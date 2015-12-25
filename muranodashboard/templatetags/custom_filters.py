@@ -1,7 +1,7 @@
 from django import forms
 from django import template
 from django.template import defaultfilters
-import urllib
+from six.moves.urllib import parse as urlparse
 
 register = template.Library()
 
@@ -26,4 +26,4 @@ def last_half(seq):
 @register.filter(name='unquote')
 @defaultfilters.stringfilter
 def unquote_raw(value):
-    return urllib.unquote(value)
+    return urlparse.unquote(value)
