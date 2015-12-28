@@ -1,0 +1,43 @@
+# Translations template for PROJECT.
+# Copyright (C) 2015 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2015-12-28 22:59+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.1.1\n"
+
+#: muranodashboard/static/muranodashboard/js/draggable-components.js:200
+msgid "Unable to run action."
+msgstr ""
+
+#: muranodashboard/static/muranodashboard/js/draggable-components.js:234
+msgid "Waiting for a result"
+msgstr ""
+
+#: muranodashboard/static/muranodashboard/js/environments-in-place.js:21
+msgid "Working"
+msgstr ""
+
+#: muranodashboard/static/muranodashboard/js/load-modals.js:25
+msgid "Loading"
+msgstr ""
+
+#: muranodashboard/static/muranodashboard/js/load-modals.js:44
+msgid "An error occurred. Please try again later."
+msgstr ""
+
+#: muranodashboard/static/muranodashboard/js/murano.service.js:68
+msgid "Unable to retrieve the packages."
+msgstr ""
+
