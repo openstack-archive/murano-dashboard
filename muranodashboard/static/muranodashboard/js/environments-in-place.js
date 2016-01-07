@@ -14,6 +14,7 @@
 */
 
 $(function() {
+  "use strict";
   $('table#environments .add_env a').on('click', createEnv);
   $('table#environments .table_actions a.add_env').on('click', createEnv);
   function createEnv(ev) {

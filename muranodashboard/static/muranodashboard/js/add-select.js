@@ -17,7 +17,7 @@ $(function() {
   "use strict";
   var plus = "<i class='fa fa-plus-circle'></i>";
 
-  if ( window.murano === undefined ) {
+  if ( typeof window.murano === "undefined" ) {
     window.murano = {};
   }
 
@@ -33,7 +33,8 @@ $(function() {
   function initPlusButton(el) {
     var $selects = $(el).find('select[data-add-item-url]');
     $selects.each(function () {
-      var $this = $(this), urls, link, $choices;
+      var $this = $(this);
+      var urls, link, $choices;
       try {
         urls = $.parseJSON($this.attr("data-add-item-url"));
       } catch(err) {

@@ -125,7 +125,7 @@ $(function() {
         $('div.carousel-control').removeClass('item');
         bindAppTileHandlers();
       } else {
-        if ($('#no_apps_in_catalog_message').length == 0) {
+        if ($('#no_apps_in_catalog_message').length === 0) {
           $noAppMsg.show();
         }
         $carousel.hide();
@@ -267,12 +267,10 @@ $(function() {
                   if (data.isException) {
                     handleError();
                     document.location = resultUrl;
-                  }
-                  else if (data.result !== undefined && data.result === null) {
+                  } else if (typeof data.result !== "undefined" && data.result === null) {
                     hideSpinner();
                     document.location = $form.attr('action');
-                  }
-                  else {
+                  } else {
                     hideSpinner();
                     document.location = resultUrl;
                   }

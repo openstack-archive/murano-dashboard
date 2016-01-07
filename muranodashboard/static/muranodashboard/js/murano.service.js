@@ -28,6 +28,7 @@
    * @name horizon.app.core.openstack-service-api.murano
    * @description Provides direct pass through to Murano with NO abstraction.
    */
+
   function muranoAPI(apiService, toastService) {
     var service = {
       getPackages: getPackages
@@ -61,13 +62,13 @@
      * @param {string} params.sort_dir
      * The sort direction ('asc' or 'desc').
      */
+
     function getPackages(params) {
-      var config = (params) ? { 'params' : params} : {};
+      var config = params ? { 'params' : params} : {};
       return apiService.get('/api/murano/packages/', config)
         .error(function () {
           toastService.add('error', gettext('Unable to retrieve the packages.'));
         });
     }
-
   }
-}());
+})();

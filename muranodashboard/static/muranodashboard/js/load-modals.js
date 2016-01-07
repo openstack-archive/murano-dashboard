@@ -16,7 +16,7 @@ $(function() {
   "use strict";
   horizon.modals.loadModal = function (url, updateFieldId) {
     // If there's an existing modal request open, cancel it out.
-    if (horizon.modals.request && typeof (horizon.modals.request.abort) !== undefined) {
+    if (horizon.modals.request && typeof horizon.modals.request.abort !== "undefined") {
       horizon.modals.request.abort();
     }
 
@@ -37,8 +37,7 @@ $(function() {
           } else {
             location.reload(true);
           }
-        }
-        else {
+        } else {
           if (!horizon.ajax.get_messages(jqXHR)) {
             // Generic error handler. Really generic.
             horizon.alert("danger", gettext("An error occurred. Please try again later."));
@@ -46,9 +45,8 @@ $(function() {
         }
       },
       success: function (data, textStatus, jqXHR) {
-        var formUpdateFieldId = updateFieldId,
-          modal,
-          form;
+        var formUpdateFieldId = updateFieldId;
+        var modal, form;
         modal = horizon.modals.success(data, textStatus, jqXHR);
         if (formUpdateFieldId) {
           form = modal.find("form");
