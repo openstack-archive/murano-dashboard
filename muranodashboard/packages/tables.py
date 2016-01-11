@@ -55,8 +55,9 @@ class ImportPackage(tables.LinkAction):
 class PackagesFilterAction(tables.FilterAction):
     name = "filter_packages"
     filter_type = "server"
-    filter_choices = (('search', _("Name"), True),
-                      ('type', _("Type"), True))
+    filter_choices = (('search', _("KeyWord"), True),
+                      ('type', _("Type"), True),
+                      ('name', _("Name"), True))
 
 
 class DownloadPackage(tables.Action):

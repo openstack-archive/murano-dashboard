@@ -1,0 +1,6 @@
+---
+fixes:
+  - Filter by 'Name' in package definition only matches package name.
+features:
+  - Added :filter by 'KeyWord' in package definition can matches
+    all the package parameters like name, tags ..etc.
