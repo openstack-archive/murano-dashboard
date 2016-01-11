@@ -237,6 +237,7 @@ class PasswordField(CharField):
             js = ('muranodashboard/js/passwordfield.js',)
 
     def __init__(self, label, *args, **kwargs):
+        self.confirm_input = kwargs.pop('confirm_input', True)
         help_text = kwargs.get('help_text')
         if not help_text:
             help_text = _('Enter a complex password with at least one letter, \
