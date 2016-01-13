@@ -33,7 +33,7 @@ from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
 from oslo_log import log as logging
 import six
-import yaql
+from yaql import legacy
 
 from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
@@ -77,7 +77,7 @@ def make_yaql_validator(validator_property):
     message = validator_property.get('message', '')
 
     def validator_func(value):
-        context = yaql.create_context()
+        context = legacy.create_context()
         context['$'] = value
         if not expr.evaluate(context=context):
             raise forms.ValidationError(message)

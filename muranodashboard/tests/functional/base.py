@@ -258,12 +258,17 @@ class PackageBase(UITestCase):
             cls.murano_client,
             "PostgreSQL",
             {"categories": ["Databases"], "tags": ["tag"]})
+        cls.hot_app_id = utils.upload_app_package(
+            cls.murano_client,
+            "HotExample",
+            {"tags": ["hot"]}, hot=True)
 
     @classmethod
     def tearDownClass(cls):
         super(PackageBase, cls).tearDownClass()
         cls.murano_client.packages.delete(cls.mockapp_id)
         cls.murano_client.packages.delete(cls.postgre_id)
+        cls.murano_client.packages.delete(cls.hot_app_id)
 
 
 class ImageTestCase(PackageBase):
@@ -399,8 +404,8 @@ class PackageTestCase(ApplicationTestCase):
         super(ApplicationTestCase, cls).setUpClass()
         cls.archive_name = "ToUpload"
         cls.alt_archive_name = "ModifiedAfterUpload"
-        cls.archive = utils.compose_package(cls.archive_name,
-                                            consts.Manifest,
+        cls.manifest = os.path.join(consts.PackageDir, 'manifest.yaml')
+        cls.archive = utils.compose_package(cls.archive_name, cls.manifest,
                                             consts.PackageDir)
 
     def tearDown(self):
@@ -413,7 +418,7 @@ class PackageTestCase(ApplicationTestCase):
     @classmethod
     def tearDownClass(cls):
         super(ApplicationTestCase, cls).tearDownClass()
-        if os.path.exists(consts.Manifest):
-            os.remove(consts.Manifest)
+        if os.path.exists(cls.manifest):
+            os.remove(cls.manifest)
         if os.path.exists(cls.archive):
             os.remove(cls.archive)

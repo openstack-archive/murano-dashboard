@@ -2,7 +2,8 @@ import os
 
 PackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                           'MockApp')
-Manifest = os.path.join(PackageDir, 'manifest.yaml')
+HotPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             'HotApp')
 
 CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-toggle')]"  # noqa
 App = "//div[contains(@class, 'app-list')]//h4[contains(text(), '{0}')]"
@@ -18,6 +19,7 @@ CellStatus = "//td[contains(@class, 'status_{0}')]"
 ErrorMessage = '//span[contains(@class, "help-block") and contains(text(), "{0}")]'  # noqa
 DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
 Action = '//a[contains(@class, "murano_action") and contains(text(), "testAction")]'  # noqa
+HotFlavorField = '//div[contains(@class, "has-error")]//input'
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"

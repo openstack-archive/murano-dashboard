@@ -610,6 +610,30 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.assertIn('Follow the white rabbit',
                       self.driver.find_element_by_class_name('logs').text)
 
+    def test_hot_application(self):
+        """Checks that UI got the hot app is rendered correctly
+
+        Scenario:
+            1. Navigate Applications and click Hot app 'Quick Deploy'
+            2. Check for YAQL validator
+            3. Check that app is added to the environment
+        """
+        self.go_to_submenu('Applications')
+        self.select_and_click_action_for_app('quick-add', self.hot_app_id)
+        field_id = "{0}_0-name".format(self.hot_app_id)
+        self.fill_field(by.By.ID, field_id, value='TestHotApp')
+        self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+        self.fill_field(by.By.CSS_SELECTOR,
+                        'input[id$="flavor"]',
+                        value='testFlavor')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.check_element_on_page(by.By.XPATH, c.HotFlavorField)
+        self.fill_field(by.By.CSS_SELECTOR,
+                        'input[id$="flavor"]',
+                        value='m1.small')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.check_element_on_page(by.By.LINK_TEXT, 'TestHotApp')
+
 
 class TestSuitePackages(base.PackageTestCase):
     def test_modify_package_name(self):
