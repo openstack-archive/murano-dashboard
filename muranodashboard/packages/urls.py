@@ -25,4 +25,6 @@ urlpatterns = [
              views.BUNDLE_FORMS), name='import_bundle'),
     urls.url(r'^modify/(?P<app_id>[^/]+)?$',
              views.ModifyPackageView.as_view(), name='modify'),
+    urls.url(r'^(?P<app_id>[^/]+)?$',
+             views.DetailView.as_view(), name='detail'),
 ]

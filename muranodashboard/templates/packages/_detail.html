@@ -1,0 +1,31 @@
+{% load i18n  %}
+
+<div class="detail">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ app.name }}</dd>
+    <dt>{% trans "FQN" %}</dt>
+    <dd>{{ app.fully_qualified_name }}</dd>
+    <dt>{% trans "Type" %}</dt>
+    <dd>{{ app.type }}</dd>
+    <dt>{% trans "ID" %}</dt>
+    <dd>{{ app.id }}</dd>
+    <dt>{% trans "Package Tags" %}</dt>
+    <dd>{{ app.tags|join:", " }}</dd>
+    <dt>{% trans "Enabled" %}</dt>
+    <dd>{{ app.enabled|yesno|capfirst }}</dd>
+    <dt>{% trans "Public" %}</dt>
+    <dd>{{ app.is_public|yesno|capfirst }}</dd>
+    <dt>{% trans "Categories" %}</dt>
+    <dd>{{ app.categories|join:", "|default:_("None") }}</dd>
+    <dt>{% trans "Version" %}</dt>
+    <dd>{{ app.version|default:_("-") }}</dd>
+    <dt>{% trans "Author" %}</dt>
+    <dd>{{ app.author }}</dd>
+    <dt>{% trans "Created" %}</dt>
+    <dd>{{ app.created|parse_isotime }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ app.description|default:_("None") }}</dd>
+  </dl>
+</div>
+

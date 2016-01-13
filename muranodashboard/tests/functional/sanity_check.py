@@ -1014,6 +1014,30 @@ class TestSuitePackages(base.PackageTestCase):
         self.check_package_parameter_by_name(pkg_name, 'Public', 'True')
         self.check_package_parameter_by_name(pkg_name, 'Active', 'False')
 
+    def test_upload_package_detail(self):
+        """Test check ability to view package details after uploading it."""
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-package']")
+        el.send_keys(self.archive)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        # No application data modification is needed
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        pkg_name = self.archive_name
+        self.driver.find_element_by_xpath(
+            "//a[contains(text(), '{0}')]".format(pkg_name)).click()
+        self.assertIn(pkg_name,
+                      self.driver.find_element(by.By.XPATH, c.AppDetail).text)
+
     def test_category_management(self):
         """Test application category adds and deletes successfully
 

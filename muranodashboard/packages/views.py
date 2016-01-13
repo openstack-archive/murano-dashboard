@@ -32,6 +32,7 @@ from horizon.forms import views
 from horizon import messages
 from horizon import tables as horizon_tables
 from horizon.utils import functions as utils
+from horizon import views as horizon_views
 from muranoclient.common import exceptions as exc
 from muranoclient.common import utils as muranoclient_utils
 from openstack_dashboard.api import glance
@@ -564,3 +565,25 @@ class ModifyPackageView(views.ModalFormView):
         context = super(ModifyPackageView, self).get_context_data(**kwargs)
         context['app_id'] = self.kwargs['app_id']
         return context
+
+
+class DetailView(horizon_views.HorizonTemplateView):
+    template_name = 'packages/detail.html'
+    page_title = "{{ app.name }}"
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        app = self.get_data()
+        context["app"] = app
+        return context
+
+    def get_data(self):
+        try:
+            app_id = self.kwargs['app_id']
+            app = api.muranoclient(self.request).packages.get(app_id)
+        except Exception:
+            INDEX_URL = 'horizon:murano:packages:index'
+            exceptions.handle(self.request,
+                              _('Unable to retrieve package details.'),
+                              redirect=reverse(INDEX_URL))
+        return app

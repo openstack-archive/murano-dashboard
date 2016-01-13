@@ -9,6 +9,7 @@ CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-togg
 App = "//div[contains(@class, 'app-list')]//h4[contains(text(), '{0}')]"
 MockAppDescr = "//div[h4[contains(text(), 'MockApp')]]/p"
 AppPackages = u"//tr[@data-display='{0}']"
+AppDetail = "//dl[dt[contains(text(), 'Name')]]/dd"
 TagInDetails = "//div[contains(@class, 'app-meta')]//ul//li[strong[contains(text(), 'Tags')]]"  # noqa
 TestImage = "//tr[td[contains(text(), '{0}')]]"
 DeleteImageMeta = TestImage + "//td//button[contains(text(), 'Delete Metadata')]"  # noqa
