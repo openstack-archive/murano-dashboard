@@ -30,19 +30,24 @@ class ImageException(Exception):
         return self._error_string
 
 
-def upload_app_package(client, app_name, data):
+def upload_app_package(client, app_name, data, hot=False):
     try:
-        archive = compose_package(app_name, consts.Manifest,
-                                  consts.PackageDir)
+        if not hot:
+            manifest = os.path.join(consts.PackageDir, 'manifest.yaml')
+            archive = compose_package(app_name, manifest, consts.PackageDir)
+        else:
+            manifest = os.path.join(consts.HotPackageDir, 'manifest.yaml')
+            archive = compose_package(app_name, manifest,
+                                      consts.HotPackageDir, hot=True)
         package = client.packages.create(data, {app_name: open(archive, 'rb')})
         return package.id
     finally:
         os.remove(archive)
-        os.remove(consts.Manifest)
+        os.remove(manifest)
 
 
 def compose_package(app_name, manifest, package_dir,
-                    require=None, archive_dir=None):
+                    require=None, archive_dir=None, hot=False):
     """Composes a murano package
 
     Composes package `app_name` with `manifest` file as a template for the
@@ -56,7 +61,11 @@ def compose_package(app_name, manifest, package_dir,
         mfest_copy = MANIFEST.copy()
         mfest_copy['FullName'] = fqn
         mfest_copy['Name'] = app_name
-        mfest_copy['Classes'] = {fqn: 'mock_muranopl.yaml'}
+        if hot:
+            mfest_copy['Format'] = 'Heat.HOT/1.0'
+        else:
+            mfest_copy['Format'] = '1.0'
+            mfest_copy['Classes'] = {fqn: 'mock_muranopl.yaml'}
         if require:
             mfest_copy['Require'] = require
         f.write(yaml.dump(mfest_copy, default_flow_style=False))

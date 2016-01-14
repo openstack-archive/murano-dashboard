@@ -1,0 +1,21 @@
+heat_template_version: 2013-05-23
+
+description: >
+  Hello world HOT template that just defines a single server.
+  Contains just base features to verify base HOT support.
+
+parameters:
+  flavor:
+    type: string
+    description: Flavor for the server to be created
+    default: m1.small
+    constraints:
+      - allowed_values: [ m1.small, m1.medium, m1.large ]
+
+resources:
+  server:
+    type: OS::Nova::Server
+    properties:
+      image: cirros-0.3.4-x86_64-uec
+      flavor: { get_param: flavor }
+
