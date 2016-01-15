@@ -238,27 +238,42 @@ class PasswordField(CharField):
 
     def __init__(self, label, *args, **kwargs):
         self.confirm_input = kwargs.pop('confirm_input', True)
+
+        kwargs.update({'label': label,
+                       'error_messages': kwargs.get('error_messages', {}),
+                       'widget': forms.PasswordInput(render_value=True)})
+
+        validators = kwargs.get('validators')
         help_text = kwargs.get('help_text')
         if not help_text:
             help_text = _('Enter a complex password with at least one letter, \
                 one number and one special character')
 
-        error_messages = {
-            'invalid': self.validate_password.message}
-        err_msg = kwargs.get('error_messages')
-        if err_msg:
-            if err_msg.get('required'):
-                error_messages['required'] = err_msg.get('required')
+        if not validators:
+            # Apply default validator if it is not provided
+            validators = [self.validate_password]
+            if not help_text:
+                help_text = _('Enter a complex password with at least one \
+                               letter, one number and one special character')
 
-        kwargs.update({
-            'min_length': 7,
-            'max_length': 255,
-            'validators': [self.validate_password],
-            'label': label,
-            'error_messages': error_messages,
-            'help_text': help_text,
-            'widget': self.PasswordInput(render_value=True),
-        })
+            kwargs['error_messages'].setdefault(
+                'invalid', self.validate_password.message)
+            kwargs['min_length'] = kwargs.get('min_length', 7)
+            kwargs['max_length'] = kwargs.get('max_length', 255)
+            kwargs['widget'] = self.PasswordInput(render_value=True)
+        else:
+            if not help_text:
+                help_text = _('Enter a password for the application')
+                requirements = []
+                for v in validators:
+                    if not isinstance(v, django_validator.RegexValidator):
+                        requirements.append(v['message'])
+                if requirements:
+                    help_text = (help_text +
+                                 _(' with the following requirements:\n*') +
+                                 '\n*'.join(requirements))
+        kwargs.update({'validators': validators,
+                       'help_text': help_text})
 
         super(PasswordField, self).__init__(*args, **kwargs)
 
