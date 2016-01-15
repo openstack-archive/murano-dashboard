@@ -175,10 +175,10 @@ class UpdatableFieldsForm(forms.Form):
 
         for name, field in six.iteritems(self.fields):
             updated_fields[name] = field
-            if (isinstance(field, fields.PasswordField) and
-                    not field.has_clone and field.original):
-                updated_fields[
-                    field.get_clone_name(name)] = field.clone_field()
+            if isinstance(field, fields.PasswordField) and field.confirm_input:
+                if not field.has_clone and field.original:
+                    updated_fields[
+                        field.get_clone_name(name)] = field.clone_field()
 
         self.fields = updated_fields
 
