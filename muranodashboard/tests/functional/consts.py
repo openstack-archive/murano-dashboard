@@ -8,7 +8,7 @@ HotPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-toggle')]"  # noqa
 App = "//div[contains(@class, 'app-list')]//h4[contains(text(), '{0}')]"
 MockAppDescr = "//div[h4[contains(text(), 'MockApp')]]/p"
-AppPackageDefinitions = "//tr[@data-display='{0}']"
+AppPackages = "//tr[@data-display='{0}']"
 TagInDetails = "//div[contains(@class, 'app-meta')]//ul//li[strong[contains(text(), 'Tags')]]"  # noqa
 TestImage = "//tr[td[contains(text(), '{0}')]]"
 DeleteImageMeta = TestImage + "//td//button[contains(text(), 'Delete Metadata')]"  # noqa

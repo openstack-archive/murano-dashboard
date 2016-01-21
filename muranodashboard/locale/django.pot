@@ -736,7 +736,7 @@ msgstr ""
 
 #: muranodashboard/packages/panel.py:22 muranodashboard/packages/tables.py:238
 #: muranodashboard/templates/packages/index.html:5
-msgid "Package Definitions"
+msgid "Packages"
 msgstr ""
 
 #: muranodashboard/packages/tables.py:34
@@ -1249,7 +1249,7 @@ msgid "'Import Bundle'"
 msgstr ""
 
 #: muranodashboard/templates/packages/index.html:15
-msgid "\"Package Definitions\""
+msgid "\"Packages\""
 msgstr ""
 
 #: muranodashboard/templates/packages/modify_package.html:6

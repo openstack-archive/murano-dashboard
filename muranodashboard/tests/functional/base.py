@@ -127,7 +127,7 @@ class UITestCase(BaseDeps):
     def get_element_id(self, el_name):
         el = ui.WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
-                (by.By.XPATH, consts.AppPackageDefinitions.format(el_name))))
+                (by.By.XPATH, consts.AppPackages.format(el_name))))
         path = el.get_attribute("id")
         return path.split('__')[-1]
 

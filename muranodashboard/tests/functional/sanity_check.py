@@ -44,8 +44,8 @@ class TestSuiteSmoke(base.UITestCase):
 
     def test_smoke_package_definitions_panel(self):
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
-        self.check_panel_is_present('Package Definitions')
+        self.go_to_submenu('Packages')
+        self.check_panel_is_present('Packages')
 
 
 class TestSuiteEnvironment(base.ApplicationTestCase):
@@ -640,12 +640,12 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to change name of the package
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Select package and click on 'Modify Package'
             3. Rename package
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
         self.select_action_for_package(self.postgre_id,
                                        'modify_package')
         self.fill_field(by.By.ID, 'id_name', 'PostgreSQL-modified')
@@ -653,7 +653,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
 
         self.check_element_on_page(by.By.XPATH,
-                                   c.AppPackageDefinitions.format(
+                                   c.AppPackages.format(
                                        'PostgreSQL-modified'))
 
         self.select_action_for_package(self.postgre_id,
@@ -662,20 +662,20 @@ class TestSuitePackages(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.check_element_on_page(by.By.XPATH,
-                                   c.AppPackageDefinitions.format(
+                                   c.AppPackages.format(
                                        'PostgreSQL'))
 
     def test_modify_package_add_tag(self):
         """Test that new tag is shown in description
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Click on "Modify Package" and add new tag
             3. Got to the Application Catalog page
             4. Check, that new tag is browsed in application description
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
         self.select_action_for_package(self.postgre_id,
                                        'modify_package')
 
@@ -693,11 +693,11 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to download package from repository
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Select PostgreSQL package and click on "More>Download Package"
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'download_package')
@@ -706,14 +706,14 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to make package active or inactive
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Select some package and make it inactive ("More>Toggle Active")
             3. Check that package is inactive
             4. Select some package and make it active ("More>Toggle Active ")
             5. Check that package is active
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'toggle_enabled')
@@ -729,14 +729,14 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to make package active or inactive
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Select some package and make it inactive ("More>Toggle Public")
             3. Check that package is unpublic
             4. Select some package and make it active ("More>Toggle Public ")
             5. Check that package is public
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id,
@@ -754,12 +754,12 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to change description of the package
 
         Scenario:
-            1. Navigate to 'Package Definitions' page
+            1. Navigate to 'Packages' page
             2. Select package and click on 'Modify Package'
             3. Change description
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
         self.select_action_for_package(self.mockapp_id,
                                        'modify_package')
 
@@ -772,12 +772,12 @@ class TestSuitePackages(base.PackageTestCase):
                              c.MockAppDescr).text)
 
     def test_upload_package(self):
-        """Test package uploading via Package Definitions view.
+        """Test package uploading via Packages view.
 
            Skips category selection step.
         """
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
 
         self.driver.find_element_by_id(c.UploadPackage).click()
         el = self.driver.find_element_by_css_selector(
@@ -805,7 +805,7 @@ class TestSuitePackages(base.PackageTestCase):
         """Test package modifying a package after uploading it."""
 
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
 
         self.driver.find_element_by_id(c.UploadPackage).click()
         el = self.driver.find_element_by_css_selector(
@@ -828,7 +828,7 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.wait_for_alert_message()
         self.check_element_on_page(
-            by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
+            by.By.XPATH, c.AppPackages.format(pkg_name))
 
         self.check_package_parameter_by_name(pkg_name, 'Public', 'True')
         self.check_package_parameter_by_name(pkg_name, 'Active', 'False')
@@ -907,7 +907,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self._compose_app(pkg_name)
 
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
         sel = self.driver.find_element_by_css_selector(
             "select[name='upload-import_type']")
@@ -925,7 +925,7 @@ class TestSuiteRepository(base.PackageTestCase):
 
         self.wait_for_alert_message()
         self.check_element_on_page(
-            by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
+            by.By.XPATH, c.AppPackages.format(pkg_name))
 
     def test_import_package_from_repo(self):
         """Test package importing via fqn from repo with dependant apps."""
@@ -941,7 +941,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self._compose_app(pkg_name_grand_child)
 
         self.navigate_to('Manage')
-        self.go_to_submenu('Package Definitions')
+        self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
         sel = self.driver.find_element_by_css_selector(
             "select[name='upload-import_type']")
@@ -961,4 +961,4 @@ class TestSuiteRepository(base.PackageTestCase):
         pkg_names = [pkg_name_parent, pkg_name_child, pkg_name_grand_child]
         for pkg_name in pkg_names:
             self.check_element_on_page(
-                by.By.XPATH, c.AppPackageDefinitions.format(pkg_name))
+                by.By.XPATH, c.AppPackages.format(pkg_name))
