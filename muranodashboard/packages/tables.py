@@ -238,11 +238,11 @@ class PackageDefinitionsTable(tables.DataTable):
         prev_pagination_param = 'marker'
         verbose_name = _('Package Definitions')
         template = 'common/_data_table.html'
+        table_actions_menu = (ToggleEnabled,
+                              TogglePublicEnabled)
         table_actions = (PackagesFilterAction,
                          ImportPackage,
                          ImportBundle,
-                         ToggleEnabled,
-                         TogglePublicEnabled,
                          DeletePackage)
 
         row_actions = (ModifyPackage,
