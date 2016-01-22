@@ -19,7 +19,7 @@ from muranodashboard import dashboard
 
 
 class PackageDefinitions(horizon.Panel):
-    name = _("Package Definitions")
+    name = _("Packages")
     slug = 'packages'
 
 

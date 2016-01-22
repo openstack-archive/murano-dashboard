@@ -236,7 +236,7 @@ class PackageDefinitionsTable(tables.DataTable):
     class Meta(object):
         name = 'packages'
         prev_pagination_param = 'marker'
-        verbose_name = _('Package Definitions')
+        verbose_name = _('Packages')
         template = 'common/_data_table.html'
         table_actions = (PackagesFilterAction,
                          ImportPackage,
