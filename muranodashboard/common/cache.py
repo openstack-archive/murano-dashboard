@@ -66,6 +66,9 @@ def with_cache(*dst_parts):
         @functools.wraps(func)
         def __inner(request, app_id):
             path = os.path.join(_get_entry_path(app_id), *dst_parts)
+            # Remove file extensions since file content is pickled and
+            # could not be open as usual files
+            path = os.path.splitext(path)[0] + '-pickled'
             content = _load_from_file(path)
             if content is None:
                 content = func(request, app_id)
