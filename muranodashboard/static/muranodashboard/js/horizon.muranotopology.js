@@ -22,6 +22,7 @@
  */
 
 $(function() {
+  "use strict";
   horizon.tabs._init_load_functions.push(loadMuranoTopology);
 
   function loadMuranoTopology() {
@@ -54,28 +55,47 @@ $(function() {
       inProgress;
 
     function update() {
-      "use strict";
-      node = node.data(nodes, function(d) { return d.id; });
+      node = node.data(nodes, function(d) {
+            return d.id;
+          });
       link = link.data(links);
 
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
-        .attr("node_name", function(d) { return d.name; })
-        .attr("node_id", function(d) { return d.id; })
+        .attr("node_name", function(d) {
+              return d.name;
+            })
+        .attr("node_id", function(d) {
+              return d.id;
+            })
         .call(force.drag);
 
       nodeEnter.append("image")
-        .attr("xlink:href", function(d) { return d.image; })
-        .attr("id", function(d) { return "image_" + d.id; })
-        .attr("x", function(d) { return d.image_x; })
-        .attr("y", function(d) { return d.image_y; })
-        .attr("width", function(d) { return d.image_size; })
-        .attr("height", function(d) { return d.image_size; })
+        .attr("xlink:href", function(d) {
+              return d.image;
+            })
+        .attr("id", function(d) {
+              return "image_" + d.id;
+            })
+        .attr("x", function(d) {
+              return d.image_x;
+            })
+        .attr("y", function(d) {
+              return d.image_y;
+            })
+        .attr("width", function(d) {
+              return d.image_size;
+            })
+        .attr("height", function(d) {
+              return d.image_size;
+            })
         .attr("clip-path", "url(#clipCircle)");
       node.exit().remove();
 
       link.enter().insert("path", "g.node")
-        .attr("class", function(d) { return "link " + d.link_type; });
+        .attr("class", function(d) {
+              return "link " + d.link_type;
+            });
 
       link.exit().remove();
       //Setup click action for all nodes
@@ -91,47 +111,50 @@ $(function() {
     }
 
     function drawLink(d) {
-      "use strict";
       return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
     }
 
     function tick() {
-      "use strict";
       link.attr('d', drawLink).style('stroke-width', 3).attr('marker-end', "url(#end)");
-      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+      node.attr("transform", function(d) {
+              return "translate(" + d.x + "," + d.y + ")";
+            });
     }
 
     function setInProgress(stack, innerNodes) {
-      "use strict";
-      if (stack.in_progress === true) { inProgress = true; }
+      if (stack.in_progress === true) {
+        inProgress = true;
+      }
       for (var i = 0; i < innerNodes.length; i++) {
         var d = innerNodes[i];
-        if (d.in_progress === true) { inProgress = true; return false; }
+        if (d.in_progress === true) {
+          inProgress = true; return false;
+        }
       }
     }
 
     function findNode(id) {
-      "use strict";
       for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].id === id) { return nodes[i]; }
+        if (nodes[i].id === id) {
+          return nodes[i];
+        }
       }
     }
 
     function findNodeIndex(id) {
-      "use strict";
       for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].id === id) { return i; }
+        if (nodes[i].id === id) {
+          return i;
+        }
       }
     }
 
     function addNode(innerNode) {
-      "use strict";
       nodes.push(innerNode);
       needsUpdate = true;
     }
 
     function removeNode(id) {
-      "use strict";
       var i = 0;
       var n = findNode(id);
       while (i < links.length) {
@@ -146,7 +169,6 @@ $(function() {
     }
 
     function removeNodes(oldNodes, newNodes) {
-      "use strict";
       //Check for removed nodes
       for (var i = 0; i < oldNodes.length; i++) {
         var isRemoveNode = true;
@@ -163,7 +185,6 @@ $(function() {
     }
 
     function buildNodeLinks(innerNode) {
-      "use strict";
       for (var j = 0; j < innerNode.required_by.length; j++) {
         var pushLink = true;
         var targetIdx = '';
@@ -197,7 +218,6 @@ $(function() {
     }
 
     function buildReverseLinks(innerNode) {
-      "use strict";
       for (var i = 0; i < nodes.length; i++) {
         if (nodes[i].required_by) {
           for (var j = 0; j < nodes[i].required_by.length; j++) {
@@ -217,7 +237,6 @@ $(function() {
     }
 
     function buildLinks() {
-      "use strict";
       for (var i = 0; i < nodes.length; i++) {
         buildNodeLinks(nodes[i]);
         buildReverseLinks(nodes[i]);
@@ -225,7 +244,6 @@ $(function() {
     }
 
     function ajaxPoll(pollTime) {
-      "use strict";
       setTimeout(function() {
         $.getJSON(ajaxUrl, function(json) {
           //update d3 data element
@@ -253,21 +271,31 @@ $(function() {
                 var thisImage = d3.select("#image_" + currentNode.id);
                 thisImage
                   .transition()
-                  .attr("x", function(dImage) { return dImage.image_x + 5; })
+                  .attr("x", function(dImage) {
+                    return dImage.image_x + 5;
+                  })
                   .duration(100)
                   .transition()
-                  .attr("x", function(dImage) { return dImage.image_x - 5; })
+                  .attr("x", function(dImage) {
+                    return dImage.image_x - 5;
+                  })
                   .duration(100)
                   .transition()
-                  .attr("x", function(dImage) { return dImage.image_x + 5; })
+                  .attr("x", function(dImage) {
+                    return dImage.image_x + 5;
+                  })
                   .duration(100)
                   .transition()
-                  .attr("x", function(dImage) { return dImage.image_x - 5; })
+                  .attr("x", function(dImage) {
+                    return dImage.image_x - 5;
+                  })
                   .duration(100)
                   .transition()
                   .attr("xlink:href", d.image)
                   .transition()
-                  .attr("x", function(dImage) { return dImage.image_x; })
+                  .attr("x", function(dImage) {
+                    return dImage.image_x;
+                  })
                   .duration(100)
                   .ease("bounce");
               }
@@ -287,8 +315,11 @@ $(function() {
           }
         });
         //if no nodes still in progress, slow AJAX polling
-        if (inProgress === false) { pollTime = 30000; }
-        else { pollTime = 3000; }
+        if (inProgress === false) {
+          pollTime = 30000;
+        } else {
+          pollTime = 3000;
+        }
         ajaxPoll(pollTime);
       }, pollTime);
     }
@@ -347,8 +378,11 @@ $(function() {
 
       //If status is In Progress, start AJAX polling
       var pollTime = 0;
-      if (inProgress === true) { pollTime = 3000; }
-      else { pollTime = 30000; }
+      if (inProgress === true) {
+        pollTime = 3000;
+      } else {
+        pollTime = 30000;
+      }
       ajaxPoll(pollTime);
     }
   }
