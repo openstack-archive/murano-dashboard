@@ -1,7 +1,9 @@
 {% extends 'murano_base.html' %}
 {% load i18n sizeformat %}
+{% load breadcrumb_nav %}
 {% load static %}
 {% load compress %}
+
 {% block title %}{% trans "Component Details" %}{% endblock %}
 
 {% block css %}
@@ -12,7 +14,9 @@
 {% endblock %}
 
 {% block page_header %}
-    {% include "services/_detail_page_header.html" %}
+  <div class='page-header'>
+    {% breadcrumb_nav %}
+  </div>
 {% endblock page_header %}
 
 {% block main %}
