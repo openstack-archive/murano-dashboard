@@ -1,0 +1,33 @@
+# KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-01-27 12:11+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-01-28 01:05+0000\n"
+"Last-Translator: KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+msgid "An error occurred. Please try again later."
+msgstr "エラーが発生しました。後からもう一度お試しください。"
+
+msgid "Loading"
+msgstr "読み込み中"
+
+msgid "Unable to retrieve the packages."
+msgstr "パッケージ情報を取得できません。"
+
+msgid "Unable to run action."
+msgstr "アクションを実行できません。"
+
+msgid "Waiting for a result"
+msgstr "実行結果の待機中"
+
+msgid "Working"
+msgstr "反映中"
