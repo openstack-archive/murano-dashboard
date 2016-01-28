@@ -99,6 +99,45 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             by.By.XPATH,
             "//div[@id='environment_switcher']/a[contains(text(), 'TestEnv')]")
 
+    def test_create_and_delete_environment_with_unicode_name(self):
+        """Test check ability to create and delete environment with unicode name
+
+        Scenario:
+            1. Create environment with unicode name
+            2. Navigate to this environment
+            3. Go back to environment list and delete created environment
+        """
+        unicode_name = u'$yaql \u2665 unicode'
+        self.go_to_submenu('Environments')
+        self.create_environment(unicode_name)
+        self.go_to_submenu('Environments')
+        self.delete_environment(unicode_name)
+        self.check_element_not_on_page(by.By.LINK_TEXT, unicode_name)
+
+    def test_check_env_name_validation(self):
+        """Test checks validation of field that usually define environment name
+
+        Scenario:
+            1. Navigate to Application Catalog > Environmentss
+            2. Press 'Create environment'
+            3. Check a set of names, if current name isn't valid
+            appropriate error message should appears
+        """
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_css_selector(c.CreateEnvironment).click()
+
+        self.driver.find_element_by_id(c.ConfirmCreateEnvironment).click()
+        error_message = 'This field is required.'
+        self.driver.find_element_by_xpath(
+            c.ErrorMessage.format(error_message))
+
+        self.fill_field(by.By.ID, 'id_name', '  ')
+        self.driver.find_element_by_id(c.ConfirmCreateEnvironment).click()
+        error_message = ('Environment name must contain at least one '
+                         'non-white space symbol.')
+        self.driver.find_element_by_xpath(
+            c.ErrorMessage.format(error_message))
+
 
 class TestSuiteImage(base.ImageTestCase):
     def test_rename_image(self):

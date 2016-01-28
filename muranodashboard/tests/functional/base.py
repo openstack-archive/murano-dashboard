@@ -177,7 +177,7 @@ class UITestCase(BaseDeps):
             self.driver.find_element(method, value)
         except (exc.NoSuchElementException, exc.ElementNotVisibleException):
             present = False
-        self.assertFalse(present, "Element {0} is preset on the page"
+        self.assertFalse(present, u"Element {0} is preset on the page"
                                   " while it should't".format(value))
         self.driver.implicitly_wait(30)
 
