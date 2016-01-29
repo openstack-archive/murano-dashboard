@@ -1,10 +1,13 @@
 {% extends 'murano_base.html' %}
 {% load i18n sizeformat %}
+{% load breadcrumb_nav %}
 
 {% block title %}{% trans "Deployment Details" %}{% endblock %}
 
 {% block page_header %}
-  {% include "deployments/_reports_page_header.html" %}
+  <div class='page-header'>
+    {% breadcrumb_nav %}
+  </div>
 {% endblock page_header %}
 
 {% block main %}

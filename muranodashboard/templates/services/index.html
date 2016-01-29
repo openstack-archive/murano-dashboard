@@ -1,5 +1,6 @@
 {% extends 'murano_base.html' %}
 {% load i18n %}
+{% load breadcrumb_nav %}
 {% load static %}
 {% load compress %}
 {% load horizon %}
@@ -7,7 +8,9 @@
 {% block title %}{% trans "Components" %}{% endblock %}
 
 {% block page_header %}
-    {% include "services/_page_header.html" %}
+  <div class='page-header'>
+    {% breadcrumb_nav %}
+  </div>
 {% endblock page_header %}
 {% block main %}
     <input type="hidden" id="environmentId" value="{{ environment_id }}">
