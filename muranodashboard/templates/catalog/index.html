@@ -107,17 +107,16 @@
         {% else %}
             <p class="col-xs-12 alert alert-info">
             {% if no_apps %}
-                {% blocktrans %} There are no applications in the catalog.
-                    You can import apps from<a href="{{ repo_url }}"
-                                               target="_blank"> {{ repo_url }}</a>.
-                    <br><br>
-                    Go to
-                    <b><a href={{ pkg_def_url }}>Packages</a></b>,
-                    click 'Import Package' and select <i>Repository</i> as a
-                    <i>Package Source</i>.  {% endblocktrans %}
-            {% else %}
-                {% blocktrans %} No applications matching your criteria.
+            {% trans "There are no applications in the catalog. You can import apps from" %}
+                <a href="{{ repo_url }}" target="_blank"> {{ repo_url }}</a>.
+                <br><br>
+                {% blocktrans trimmed %}Go to
+                <b>
+                    <a href={{ pkg_def_url }}>Packages</a>
+                </b>, click 'Import Package' and select <i>Repository</i> as <i>Package Source</i>.
                 {% endblocktrans %}
+            {% else %}
+                {% trans "There are no applications matching your criteria." %}
             {% endif %}
             </p>
         {% endif %}

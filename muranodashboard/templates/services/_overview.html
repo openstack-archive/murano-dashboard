@@ -2,35 +2,35 @@
 
 <h3>{% trans "Component Details" %}</h3>
 <div class="status_detail">
-  <h4>{% blocktrans %}Info {% endblocktrans %}</h4>
+  <h4>{% trans "Info" %}</h4>
   <dl>
       {% for key, value in service.items %}
-        {% if  key == 'Instance' %}
-            <dt>Instance name</dt>
+        {% if key == 'Instance' %}
+        <dt>{% trans "Instance name" %}</dt>
             <dd>
                 <a href=" {% url 'horizon:project:instances:detail' value.id %}">
                     {{ value.name }}
                 </a>
             </dd><br>
-        {% elif  key == 'Instances' %}
+        {% elif key == 'Instances' %}
             {% for instance in value %}
-                <dt>Instance{{forloop.counter}} name</dt>
+                <dt>{% blocktrans %}Instance{{forloop.counter}} name{% endblocktrans %}</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:instances:detail' instance.id %}">
                         {{ instance.name }}
                     </a>
                 </dd><br>
             {% endfor %}
-        {% elif  key == 'Stack'%}
-            <dt>Heat Orchestration stack name</dt>
+        {% elif key == 'Stack'%}
+        <dt>{% trans "Heat Orchestration stack name" %}</dt>
             <dd>
                 <a href=" {% url 'horizon:project:stacks:detail' value.id %}">
                     {{ value.name }}
                 </a>
             </dd><br>
-        {% elif  key == 'Stacks'%}
+        {% elif key == 'Stacks'%}
             {% for stack in value %}
-                <dt>Heat Orchestration stack{{forloop.counter}} name</dt>
+            <dt>{% blocktrans %}Heat Orchestration stack{{forloop.counter}} name{% endblocktrans %}</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:stacks:detail' stack.id %}">
                         {{ stack.name }}
@@ -38,8 +38,8 @@
                 </dd><br>
             {% endfor %}
         {% else %}
-            <dt>{% blocktrans %} {{ key }} {% endblocktrans %}</dt>
-            <dd>{% blocktrans %} {{ value }}  {% endblocktrans %}</dd>
+            <dt>{{ key }}</dt>
+            <dd>{{ value }}</dd>
             <br>
         {% endif %}
       {% endfor %}

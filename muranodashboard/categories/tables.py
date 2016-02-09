@@ -46,11 +46,10 @@ class DeleteCategory(tables.DeleteAction):
         try:
             api.muranoclient(request).categories.delete(obj_id)
         except exc.HTTPException:
-            LOG.exception(_('Unable to delete category'))
+            msg = _('Unable to delete category')
+            LOG.exception(msg)
             url = reverse('horizon:murano:categories:index')
-            exceptions.handle(request,
-                              _('Unable to delete category.'),
-                              redirect=url)
+            exceptions.handle(request, msg, redirect=url)
 
 
 class CategoriesTable(tables.DataTable):

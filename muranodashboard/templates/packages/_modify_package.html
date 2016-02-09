@@ -4,15 +4,15 @@
 {% block form_id %}{% endblock %}
 {% block form_action %}{% url 'horizon:murano:packages:modify' app_id %}{% endblock %}
 
-{% block modal-header %}{% trans 'Modify Package' %}{% endblock %}
+{% block modal-header %}{% trans "Modify Package" %}{% endblock %}
 {% block modal_id %}modify_package_modal{% endblock %}
 
 {% block modal-body-right %}
     {% include 'packages/_package_params.html' %}
-    <p>{% blocktrans %}<strong>Categories</strong> Select one or more categories for a package.{% endblocktrans %}</p>
+    <p><strong>{% trans "Categories" %}. </strong>{% trans "Select one or more categories for a package." %}</p>
 {% endblock %}
 
 {% block modal-footer %}
-    <input type='submit' class='btn btn-primary pull-right' value='{% trans 'Update' %}' />
+    <input type='submit' class='btn btn-primary pull-right' value='{% trans "Update" %}' />
     <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}

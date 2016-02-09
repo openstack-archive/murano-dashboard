@@ -2,21 +2,19 @@
 {% load i18n %}
 
 {% block modal-body-right %}
-    <h3>{% trans 'Description:' %}</h3>
-    <p>{% trans 'Mark an image with Murano specific metadata to be added to the selected image.' %}</p>
+    <h3>{% trans "Description" %}:</h3>
+    <p>{% trans "Mark an image with Murano specific metadata to be added to the selected image." %}</p>
     <p>
-        <strong>{% trans 'Image' %}:</strong>
-        {% blocktrans %}Select an image registered in Glance Image
-            Services.{% endblocktrans %}
+        <strong>{% trans "Image" %}:</strong>
+        {% trans "Select an image registered in Glance Image Services." %}
     </p>
     <p>
-        <strong>{% trans 'Image Title' %}:</strong>
-        {% blocktrans %}Create a title for an image.{% endblocktrans %}
+        <strong>{% trans "Image Title" %}:</strong>
+        {% trans "Create a title for an image." %}
     </p>
     <p>
-        <strong>{% trans 'Image Type' %}:</strong>
-        {% blocktrans %}Select an image type supported by
-            Murano.{% endblocktrans %}
+        <strong>{% trans "Image Type" %}:</strong>
+        {% trans "Select an image type supported by Murano." %}
     </p>
 
 {% endblock %}

@@ -8,7 +8,7 @@
 {% block modal-header %}
   <span class="wizard_title">
     <img src="{% url 'horizon:murano:catalog:images' app_id %}" height="25" width="25"/>
-    {% trans "Configure Application: " %}{{ service_name }}
+    {% trans "Configure Application" %}: {{ service_name }}
   </span>
 {% endblock %}
 {% block steps-list %}
@@ -42,18 +42,18 @@
     {% endwith %}
     </fieldset>
 {% endif %}
-<p>{% blocktrans %} {{ extended_description }} {% endblocktrans %}</p>
+<p>{{ extended_description }}</p>
 </div>
 <div class="right">
-    <h3> {% blocktrans %} {{ service_name }} {% endblocktrans %} </h3>
+    <h3>{{ service_name }}</h3>
     {% for name, title, description in field_descriptions %}
         <p>
         {% if title %}
             <strong data-field-name="{{ wizard.steps.step0 }}-{{ name }}">
-              {% blocktrans %}{{ title }}:{% endblocktrans %}
+              {{ title }}:
             </strong>
         {% endif %}
-        {% blocktrans with description|linebreaksbr as desc %}{{ desc }}{% endblocktrans %}
+        {{ description|linebreaksbr }}
         </p>
     {% endfor %}
 </div>
