@@ -13,18 +13,12 @@
 #    under the License.
 
 from django.conf import urls
+
 from muranodashboard.categories import views
 
 
-urlpatterns = urls.patterns(
-    '',
-    urls.url(r'^$', views.CategoriesView.as_view(),
-             name='index'),
-
-    urls.url(r'^add$', views.AddCategoryView.as_view(),
-             name='add'),
-
-    urls.url(r'^delete$', views.CategoriesView.as_view(),
-             name='delete'),
-
-)
+urlpatterns = [
+    urls.url(r'^$', views.CategoriesView.as_view(), name='index'),
+    urls.url(r'^add$', views.AddCategoryView.as_view(), name='add'),
+    urls.url(r'^delete$', views.CategoriesView.as_view(), name='delete'),
+]

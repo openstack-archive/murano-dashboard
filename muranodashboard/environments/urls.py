@@ -13,46 +13,30 @@
 #    under the License.
 
 from django.conf import urls
+
 from openstack_dashboard.dashboards.project.instances import views as inst_view
 
 from muranodashboard.environments import views
 
-VIEW_MOD = 'muranodashboard.environments.views'
 ENVIRONMENT_ID = r'^(?P<environment_id>[^/]+)'
 
-
-urlpatterns = urls.patterns(
-    VIEW_MOD,
+urlpatterns = [
     urls.url(r'^environments/$', views.IndexView.as_view(), name='index'),
-
     urls.url(r'^create_environment$', views.CreateEnvironmentView.as_view(),
              name='create_environment'),
-
     urls.url(ENVIRONMENT_ID + r'/services$',
-             views.EnvironmentDetails.as_view(),
-             name='services'),
-
+             views.EnvironmentDetails.as_view(), name='services'),
     urls.url(ENVIRONMENT_ID + r'/services/get_d3_data$',
              views.JSONView.as_view(), name='d3_data'),
-
     urls.url(ENVIRONMENT_ID + r'/(?P<service_id>[^/]+)/$',
-             views.DetailServiceView.as_view(),
-             name='service_details'),
-
+             views.DetailServiceView.as_view(), name='service_details'),
     urls.url(ENVIRONMENT_ID + r'/start_action/(?P<action_id>[^/]+)/$',
-             views.StartActionView.as_view(),
-             name='start_action'),
-
+             views.StartActionView.as_view(), name='start_action'),
     urls.url(ENVIRONMENT_ID +
              r'/actions/(?P<task_id>[^/]+)(?:/(?P<optional>[^/]+))?/$',
-             views.ActionResultView.as_view(),
-             name='action_result'),
-
+             views.ActionResultView.as_view(), name='action_result'),
     urls.url(r'^(?P<instance_id>[^/]+)/$',
-             inst_view.DetailView.as_view(),
-             name='detail'),
-
+             inst_view.DetailView.as_view(), name='detail'),
     urls.url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
-             views.DeploymentDetailsView.as_view(),
-             name='deployment_details'),
-)
+             views.DeploymentDetailsView.as_view(), name='deployment_details'),
+]

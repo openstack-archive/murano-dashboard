@@ -17,30 +17,24 @@ from django.conf import urls
 from muranodashboard.catalog import views
 from muranodashboard.dynamic_ui import services
 
-VIEW_MOD = 'muranodashboard.catalog.views'
-
 wizard_view = views.Wizard.as_view(
     services.get_app_forms, condition_dict=services.condition_getter)
 
-urlpatterns = urls.patterns(
-    VIEW_MOD,
+urlpatterns = [
     urls.url(r'^$', views.IndexView.as_view(), name='index'),
     urls.url(r'^switch_environment/(?P<environment_id>[^/]+)$',
-             'switch',
-             name='switch_env'),
+             views.switch, name='switch_env'),
     urls.url(r'^add/(?P<app_id>[^/]+)/(?P<environment_id>[^/]+)/'
              r'(?P<do_redirect>[^/]+)/(?P<drop_wm_form>[^/]+)$',
-             wizard_view,
-             name='add'),
+             wizard_view, name='add'),
     urls.url(r'^add/(?P<app_id>[^/]+)/(?P<environment_id>[^/]+)$',
-             'deploy',
-             name='deploy'),
+             views.deploy, name='deploy'),
     urls.url(r'^quick-add/(?P<app_id>[^/]+)$',
-             'quick_deploy',
-             name='quick_deploy'),
+             views.quick_deploy, name='quick_deploy'),
     urls.url(r'^details/(?P<application_id>[^/]+)$',
              views.AppDetailsView.as_view(), name='application_details'),
-    urls.url(r'^images/(?P<app_id>[^/]*)', 'get_image', name="images"),
-    urls.url(r'^supplier-images/(?P<app_id>[^/]*)', 'get_supplier_image',
-             name="supplier_images")
-)
+    urls.url(r'^images/(?P<app_id>[^/]*)',
+             views.get_image, name="images"),
+    urls.url(r'^supplier-images/(?P<app_id>[^/]*)',
+             views.get_supplier_image, name="supplier_images")
+]
