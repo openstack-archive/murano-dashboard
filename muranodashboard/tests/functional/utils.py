@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import yaml
@@ -85,3 +86,12 @@ def compose_package(app_name, manifest, package_dir,
                 )
 
     return archive_path
+
+
+def compose_bundle(bundle_path, app_names):
+    """Composes a murano bundle. """
+    bundle = {'Packages': []}
+    for app_name in app_names:
+        bundle['Packages'].append({'Name': app_name})
+    with open(bundle_path, 'w') as f:
+        f.write(json.dumps(bundle))

@@ -26,6 +26,7 @@ ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"
 InputSubmit = "//input[@type='submit']"
 ConfirmDeletion = "//div[@class='modal-footer']//a[contains(text(), 'Delete')]"  # noqa
 UploadPackage = 'packages__action_upload_package'
+ImportBundle = 'packages__action_import_bundle'
 CreateEnvironment = ".add_env .btn"
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"

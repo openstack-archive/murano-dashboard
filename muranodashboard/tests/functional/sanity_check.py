@@ -911,6 +911,12 @@ class TestSuiteRepository(base.PackageTestCase):
         self._apps_to_delete.add(name)
         return app_name
 
+    def _compose_bundle(self, name, app_names):
+        bundles_dir = os.path.join(self.serve_dir, 'bundles/')
+        shutil.os.mkdir(bundles_dir)
+        utils.compose_bundle(os.path.join(bundles_dir, name + '.bundle'),
+                             app_names)
+
     def setUp(self):
         super(TestSuiteRepository, self).setUp()
         self.serve_dir = tempfile.mkdtemp(suffix="repo")
@@ -998,6 +1004,83 @@ class TestSuiteRepository(base.PackageTestCase):
         self.wait_for_alert_message()
 
         pkg_names = [pkg_name_parent, pkg_name_child, pkg_name_grand_child]
+        for pkg_name in pkg_names:
+            self.check_element_on_page(
+                by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_bundle_by_url(self):
+        """Test bundle importing via url."""
+        pkg_name_one = "PackageOne"
+        pkg_name_two = "PackageTwo"
+        pkg_name_parent = "PackageParent"
+        pkg_name_child = "PackageChild"
+
+        self._compose_app(pkg_name_one)
+        self._compose_app(pkg_name_two)
+        self._compose_app(pkg_name_parent, require={pkg_name_child: ''})
+        self._compose_app(pkg_name_child)
+
+        bundle_name = 'PackageWithPackages'
+        self._compose_bundle(bundle_name, [pkg_name_parent,
+                                           pkg_name_one,
+                                           pkg_name_two])
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.ImportBundle).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-url']")
+        el.send_keys(
+            "http://127.0.0.1:8099/bundles/{0}.bundle".format(bundle_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        pkg_names = [pkg_name_parent, pkg_name_child,
+                     pkg_name_one, pkg_name_two]
+        for pkg_name in pkg_names:
+            self.check_element_on_page(
+                by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_bundle_from_repo(self):
+        """Test bundle importing via fqn from repo."""
+        pkg_name_parent = "PackageParent"
+        pkg_name_child = "PackageChild"
+        pkg_name_grand_child = "PackageGrandChild"
+        pkg_name_single = "PackageSingle"
+
+        self._compose_app(pkg_name_single)
+        self._compose_app(pkg_name_parent, require={pkg_name_child: ''})
+        self._compose_app(pkg_name_child,
+                          require={pkg_name_grand_child: '0.1'})
+        pkg_name_grand_child += '.0.1'
+        self._compose_app(pkg_name_grand_child)
+
+        bundle_name = 'PackageWithPackages'
+        self._compose_bundle(bundle_name, [pkg_name_parent, pkg_name_single])
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.ImportBundle).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-name']")
+        el.send_keys("{0}".format(bundle_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        pkg_names = [pkg_name_parent, pkg_name_child,
+                     pkg_name_grand_child, pkg_name_single]
         for pkg_name in pkg_names:
             self.check_element_on_page(
                 by.By.XPATH, c.AppPackages.format(pkg_name))
