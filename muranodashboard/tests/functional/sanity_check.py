@@ -17,6 +17,7 @@ import SimpleHTTPServer
 import SocketServer
 import tempfile
 import time
+import uuid
 
 from selenium.webdriver.common import by
 from selenium.webdriver.support import ui
@@ -672,6 +673,147 @@ class TestSuiteApplications(base.ApplicationTestCase):
                         value='m1.small')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.check_element_on_page(by.By.LINK_TEXT, 'TestHotApp')
+
+    def test_deploy_mockapp_remove_it_and_deploy_another_mockapp(self):
+        """Checks that app is not available after remove and new app deployment
+
+        Scenario:
+            1. Navigate to Environments
+            2. Create new environment
+            3. Navigate to Applications and click MockApp 'Add to Env'
+            4. Fill the form use environment from step 2 and click submit
+            5. Click deploy environment
+            6. Wait 'Ready' status
+            7. Click Delete Application in row actions.
+            8. Navigate to Applications and click MockApp 'Add to Env'
+            9. Fill the form use environment from step 2 and new app name
+               and click submit
+            10. Click deploy environment
+            11. Check that the first application created in step 5
+                is not in the list
+            12. Click Delete Application in row actions.
+        """
+        # uuid.uuid4() generates random uuid
+        env_name = str(uuid.uuid4())
+        # range specifies total amount of applications used in the test
+        app_names = []
+        for x in range(4):
+            # In case of application some short name is needed to fit on page
+            app_names.append(str(uuid.uuid4())[::4])
+
+        self.go_to_submenu('Environments')
+        self.create_environment(env_name)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, env_name)
+        env_id = self.get_element_id(env_name)
+
+        for idx, app_name in enumerate(app_names):
+            # Add application to the environment
+            self.go_to_submenu('Applications')
+            self.select_and_click_action_for_app(
+                'add', '{0}/{1}'.format(self.mockapp_id, env_id))
+            self.fill_field(by.By.NAME,
+                            '0-name'.format(self.mockapp_id), app_name)
+            self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.select_from_list('osImage', self.image.id)
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.wait_element_is_clickable(by.By.ID, c.AddComponent)
+            self.check_element_on_page(by.By.LINK_TEXT, app_name)
+
+            # Deploy the environment with all current applications
+            self.driver.find_element_by_id(c.DeployEnvironment).click()
+            # Wait until the end of deploy
+            self.check_element_on_page(by.By.XPATH,
+                                       c.Status.format('Ready'),
+                                       sec=90)
+            # Starting form the second application will check
+            # that previous application is not in the list on the page
+            if idx:
+                self.check_element_not_on_page(by.By.LINK_TEXT,
+                                               app_names[idx - 1])
+            self.delete_component(app_name)
+
+        # To ensure that the very last application is deleted as well
+        for app_name in app_names[-1::]:
+            self.check_element_not_on_page(by.By.LINK_TEXT, app_name)
+
+    def test_deploy_several_mock_apps_in_a_row(self):
+        """Checks that app works after another app is deployed
+
+        Scenario:
+            1. Navigate to Environments
+            2. Create new environment
+            3. Navigate to Applications and click MockApp 'Add to Env'
+            4. Fill the form and use environment from step 2 and click submit
+            5. Click deploy environment
+            6. Wait 'Ready' status
+            7. Click testAction in row actions.
+            8. Wait 'Completed' status
+            9. Repeat steps 3-6 to add one more application.
+            10 Execute steps 7-8 for each application in the environment
+        """
+        # uuid.uuid4() generates random uuid
+        env_name = str(uuid.uuid4())
+        # range specifies total amount of applications used in the test
+        app_names = []
+        for x in range(4):
+            # In case of application some short name is needed to fit on page
+            app_names.append(str(uuid.uuid4())[::4])
+
+        self.go_to_submenu('Environments')
+        self.create_environment(env_name)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, env_name)
+        env_id = self.get_element_id(env_name)
+
+        for idx, app_name in enumerate(app_names, 1):
+            # Add application to the environment
+            self.go_to_submenu('Applications')
+            self.select_and_click_action_for_app(
+                'add', '{0}/{1}'.format(self.mockapp_id, env_id))
+            self.fill_field(by.By.NAME,
+                            '0-name'.format(self.mockapp_id), app_name)
+            self.driver.find_element_by_xpath(c.ButtonSubmit).click()
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.select_from_list('osImage', self.image.id)
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.driver.find_element_by_xpath(c.InputSubmit).click()
+            self.wait_element_is_clickable(by.By.ID, c.AddComponent)
+            self.check_element_on_page(by.By.LINK_TEXT, app_name)
+
+            # Deploy the environment with all current applications
+            self.driver.find_element_by_id(c.DeployEnvironment).click()
+            # Wait until the end of deploy
+            self.wait_element_is_clickable(by.By.ID, c.AddComponent)
+
+            # For each current application in the deployed environment
+            for app_name in app_names[:idx]:
+                # Check that application with exact name is in the list
+                # and has status Ready
+                row_id = self.get_element_id(app_name)
+                row_xpath = c.Row.format(row_id)
+                status_xpath = '{0}{1}'.format(row_xpath,
+                                               c.Status.format('Ready'))
+                self.check_element_on_page(by.By.XPATH, status_xpath, sec=90)
+
+                # Click on the testAction button for the application
+                buttons_xpath = c.More.format('services', row_id)
+                el = self.wait_element_is_clickable(by.By.XPATH, buttons_xpath)
+                el.click()
+                action_xpath = '{0}{1}'.format(row_xpath, c.Action)
+                self.driver.find_element_by_xpath(action_xpath).click()
+
+                # And check that status of the application is 'Completed'
+                status_xpath = '{0}{1}'.format(row_xpath,
+                                               c.Status.format('Completed'))
+                self.check_element_on_page(by.By.XPATH, status_xpath, sec=90)
+
+        # Delete applications one by one
+        for app_name in app_names:
+            self.delete_component(app_name)
+            self.check_element_not_on_page(by.By.LINK_TEXT, app_name)
 
 
 class TestSuitePackages(base.PackageTestCase):
