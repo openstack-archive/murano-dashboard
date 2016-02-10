@@ -17,6 +17,7 @@ import SimpleHTTPServer
 import SocketServer
 import tempfile
 import time
+import uuid
 
 from selenium.webdriver.common import by
 from selenium.webdriver.support import ui
@@ -1084,3 +1085,99 @@ class TestSuiteRepository(base.PackageTestCase):
         for pkg_name in pkg_names:
             self.check_element_on_page(
                 by.By.XPATH, c.AppPackages.format(pkg_name))
+
+
+class TestSuitePackageCategory(base.PackageTestCase):
+    def _import_package_with_category(self, package_archive, category):
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-package']")
+        el.send_keys(package_archive)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        # choose the required category
+        self.driver.find_element_by_xpath(
+            c.PackageCategory.format(category)).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+    def setUp(self):
+        super(TestSuitePackageCategory, self).setUp()
+
+        # add new category
+        self.category = str(uuid.uuid4())
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+        self.driver.find_element_by_id(c.AddCategory).click()
+        self.fill_field(
+            by.By.XPATH, "//input[@id='id_name']", self.category)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
+
+    def tearDown(self):
+        super(TestSuitePackageCategory, self).tearDown()
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+        delete_new_category_btn = c.DeleteCategory.format(self.category)
+        self.driver.find_element_by_xpath(delete_new_category_btn).click()
+        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
+
+    def test_add_delete_category_for_package(self):
+        """Test package importing with new category and changing the category.
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            2. Click on 'Add Category' button
+            3. Create new category and check it's browsed in the table
+            4. Navigate to 'Packages' page
+            5. Click on 'Import Package' button
+            6. Import package and select created 'test' category for it
+            7. Navigate to "Categories" page
+            8. Check that package count = 1 for created category
+            9. Navigate to 'Packages' page
+            10. Modify imported earlier package, by changing its category
+            11. Navigate to 'Packages' page
+            12. Check that package count = 0 for created category
+        """
+        # add new package to the created category
+        self._import_package_with_category(self.archive, self.category)
+
+        # Check that package count = 1 for created category
+        self.go_to_submenu('Categories')
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(self.category, 1))
+
+        # Modify imported earlier package by changing its category
+        self.go_to_submenu('Packages')
+
+        package = self.driver.find_element_by_xpath(
+            c.AppPackages.format(self.archive_name))
+        pkg_id = package.get_attribute("data-object-id")
+
+        self.select_action_for_package(pkg_id, 'modify_package')
+        sel = self.driver.find_element_by_xpath(
+            "//select[contains(@name, 'categories')]")
+        sel = ui.Select(sel)
+        sel.deselect_all()
+        sel.select_by_value('Web')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        # Check that package count = 0 for created category
+        self.go_to_submenu('Categories')
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
