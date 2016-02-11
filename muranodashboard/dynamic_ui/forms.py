@@ -231,7 +231,8 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
 
             for name, field in six.iteritems(self.fields):
                 if (isinstance(field, fields.PasswordField) and
-                        getattr(field, 'enabled', True)):
+                        getattr(field, 'enabled', True) and
+                        field.confirm_input):
                     field.compare(name, cleaned_data)
 
                 if hasattr(field, 'postclean'):
