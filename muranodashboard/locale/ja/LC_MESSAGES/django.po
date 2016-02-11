@@ -1,0 +1,759 @@
+# KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-02-11 02:16+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-02-08 02:47+0000\n"
+"Last-Translator: KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#, python-format
+msgid " %(extended_description)s "
+msgstr " %(extended_description)s "
+
+#, python-format
+msgid " %(key)s "
+msgstr " %(key)s "
+
+#, python-format
+msgid " %(service_name)s "
+msgstr " %(service_name)s "
+
+#, python-format
+msgid " %(value)s  "
+msgstr " %(value)s  "
+
+msgid ""
+" No applications matching your criteria.\n"
+"                "
+msgstr ""
+"基準に一致するアプリケーションがありません。\n"
+"                "
+
+msgid "\"Add Application\""
+msgstr "\"アプリケーションの追加\""
+
+msgid "\"Application Categories\""
+msgstr "\"アプリケーションカテゴリー\""
+
+msgid "\"Applications\""
+msgstr "\"アプリケーション\""
+
+msgid "\"Environments\""
+msgstr "\"環境\""
+
+msgid "\"Packages\""
+msgstr "\"パッケージ\""
+
+#, python-format
+msgid "%(desc)s"
+msgstr "%(desc)s"
+
+#, python-format
+msgid "%(title)s:"
+msgstr "%(title)s:"
+
+msgid "'Import Bundle'"
+msgstr "'インポートバンドル'"
+
+msgid "'Import Package'"
+msgstr "'パッケージのインポート'"
+
+msgid "'Modify Package'"
+msgstr "'パッケージの変更'"
+
+msgid "<strong>Bundle Name: </strong>Bundle's full name."
+msgstr "<strong>バンドル名: </strong>バンドルの完全名。"
+
+msgid "<strong>Bundle URL:</strong> HTTP/HTTPS URL of the bundle file."
+msgstr "<strong>バンドル URL:</strong> バンドルファイルの HTTP/HTTPS URL。"
+
+msgid "<strong>Categories</strong> Select one or more categories for a package"
+msgstr ""
+"<strong>カテゴリー</strong> パッケージのカテゴリーを1 つ以上選択してくださ"
+"い。"
+
+msgid ""
+"<strong>Categories</strong> Select one or more categories for a package."
+msgstr ""
+"<strong>カテゴリー</strong> パッケージのカテゴリーを1 つ以上選択してくださ"
+"い。"
+
+msgid "<strong>Name:</strong> Set up for identifying a package."
+msgstr "<strong>名前:</strong> パッケージを識別するために設定します。"
+
+msgid "<strong>Package Name:</strong> Fully qualified package name."
+msgstr "<strong>パッケージ名:</strong> パッケージの完全修飾名。"
+
+msgid "<strong>Package URL:</strong> HTTP/HTTPS URL of the package file."
+msgstr "<strong>パッケージ URL:</strong> パッケージファイルの HTTP/HTTPS URL。"
+
+msgid "<strong>Package Version:</strong> Version of the package (optional)."
+msgstr ""
+"<strong>パッケージバージョン:</strong> パッケージのバージョン (オプション)。"
+
+msgid "<strong>Tags:</strong> Used for identifying and filtering packages."
+msgstr ""
+"<strong>タグ:</strong> パッケージを識別して、フィルターするために使用されま"
+"す。"
+
+msgid "A local zip file to upload"
+msgstr "アップロードするローカルの zip ファイル"
+
+msgid "Abandon"
+msgstr "中断"
+
+msgid "Abandoned"
+msgstr "中断済み"
+
+msgid "Active"
+msgstr "稼働中"
+
+msgid "Add"
+msgstr "追加"
+
+msgid "Add Application"
+msgstr "アプリケーションの追加"
+
+msgid "Add Application Category"
+msgstr "アプリケーションカテゴリーの追加"
+
+msgid "Add Category"
+msgstr "カテゴリーの追加"
+
+msgid "Add Component"
+msgstr "コンポーネントの追加"
+
+msgid "Add Murano Metadata"
+msgstr "Murano メタデータの追加"
+
+msgid "Add New"
+msgstr "新規追加"
+
+msgid "Add new category to the application catalog. "
+msgstr "新しいカテゴリーをアプリケーションカタログに追加します。"
+
+msgid "Add to Env"
+msgstr "環境への追加"
+
+msgid "Adding application to an environment failed."
+msgstr "アプリケーションを環境に追加できませんでした。"
+
+msgid "All"
+msgstr "すべて"
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "バンドルを読み込む外部 http/https URL。"
+
+msgid "An external http/https URL to load the package from."
+msgstr "パッケージを読み込む外部 http/https URL。"
+
+msgid "App Category:"
+msgstr "アプリケーションカテゴリー:"
+
+msgid "App category"
+msgstr "アプリケーションカテゴリー"
+
+msgid "Application Catalog"
+msgstr "アプリケーションカタログ"
+
+msgid "Application Categories"
+msgstr "アプリケーションカテゴリー"
+
+msgid "Application Category"
+msgstr "アプリケーションカテゴリー"
+
+msgid "Application Details"
+msgstr "アプリケーション詳細"
+
+msgid "Application Package"
+msgstr "アプリケーションパッケージ"
+
+#, python-format
+msgid "Application details: %(name)s"
+msgstr "アプリケーション詳細: %(name)s"
+
+msgid "Application&nbsp;Components"
+msgstr "アプリケーション&nbsp;コンポーネント"
+
+msgid "Applications"
+msgstr "アプリケーション"
+
+msgid "Author"
+msgstr "作成者"
+
+msgid "Auto"
+msgstr "自動"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Bundle Name"
+msgstr "バンドル名"
+
+msgid "Bundle URL"
+msgstr "バンドル URL"
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "バンドル作成に失敗しました。理由: {0}"
+
+msgid "Bundle successfully imported."
+msgstr "バンドルが正常にインポートされました。"
+
+msgid "Cancel"
+msgstr "取り消し"
+
+msgid "Categories"
+msgstr "カテゴリー"
+
+msgid "Category"
+msgstr "カテゴリー"
+
+msgid "Category Name"
+msgstr "カテゴリー名"
+
+msgid "Category {0} created."
+msgstr "カテゴリー {0} が作成されました。"
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "murano-api サーバーの Keystone 設定を確認します。"
+
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "カタログにアップロードする Zip アーカイブを選択してください。"
+
+msgid "Click to create an environment"
+msgstr "クリックして、環境を作成します。"
+
+msgid "Component"
+msgstr "コンポーネント"
+
+msgid "Component Details"
+msgstr "コンポーネント詳細"
+
+msgid "Component List"
+msgstr "コンポーネント一覧"
+
+msgid "Component Logs"
+msgstr "コンポーネントログ"
+
+msgid "Components"
+msgstr "コンポーネント"
+
+msgid "Configuration"
+msgstr "設定"
+
+msgid "Configure Application: "
+msgstr "アプリケーションの設定: "
+
+msgid "Confirm password"
+msgstr "パスワードの確認"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "{0} 環境の最新情報を取得できませんでした。"
+
+msgid "Couldn't update environment. Reason: "
+msgstr "環境を更新できませんでした。理由:"
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "パッケージ {0} のパラメーターを更新できませんでした。エラー: {1}"
+
+msgid "Create"
+msgstr "作成"
+
+msgid "Create Env"
+msgstr "環境の作成"
+
+msgid "Create Environment"
+msgstr "環境の作成"
+
+msgid "Create New"
+msgstr "新規作成"
+
+msgid "Create a name for the environment"
+msgstr "環境の名前を作成します"
+
+msgid "Create a title for an image."
+msgstr "イメージのタイトルを作成します。"
+
+msgid "Created"
+msgstr "作成時刻"
+
+msgid "Deploy"
+msgstr "デプロイ"
+
+msgid "Deploy This Environment"
+msgstr "この環境のデプロイ"
+
+msgid "Deploy started"
+msgstr "デプロイを開始しました"
+
+msgid "Deployed"
+msgstr "デプロイ済み"
+
+msgid "Deployed Components"
+msgstr "デプロイ済みコンポーネント"
+
+msgid "Deployment History"
+msgstr "デプロイ履歴"
+
+msgid "Deployment Logs"
+msgstr "デプロイログ"
+
+msgid "Deployments"
+msgstr "デプロイ"
+
+msgid "Description"
+msgstr "説明"
+
+msgid "Description:"
+msgstr "説明:"
+
+msgid "Details"
+msgstr "詳細"
+
+msgid "Download Package"
+msgstr "ダウンロードパッケージ"
+
+msgid "Drop Components here"
+msgstr "コンポーネントをここにドロップしてください。"
+
+msgid "Enter a password for the application"
+msgstr "アプリケーションのパスワードを入力してください。"
+
+msgid "Environment"
+msgstr "環境"
+
+msgid "Environment Default Network"
+msgstr "環境のデフォルトネットワーク"
+
+msgid "Environment Name"
+msgstr "環境名"
+
+msgid "Environment with specified name already exists"
+msgstr "指定された名前を持つ環境が既に存在します。"
+
+msgid "Environment:"
+msgstr "環境:"
+
+msgid "Environments"
+msgstr "環境"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "パッケージ {1} のインストール中にエラー {0} が発生しました。"
+
+msgid "Error {0} occurred while parsing package {1}"
+msgstr "パッケージ {1} の解析中にエラー {0} が発生しました。"
+
+msgid "Failed to create environment"
+msgstr "環境の作成に失敗しました"
+
+msgid "Failed to modify the package. {0}"
+msgstr "パッケージの変更に失敗しました。 {0}"
+
+msgid "File"
+msgstr "ファイル"
+
+msgid "Filter"
+msgstr "フィルター"
+
+msgid "Image"
+msgstr "イメージ"
+
+msgid "Image Title"
+msgstr "イメージタイトル"
+
+msgid "Image Type"
+msgstr "イメージ種別"
+
+msgid "Images"
+msgstr "イメージ"
+
+msgid "Import Bundle"
+msgstr "バンドルのインポート"
+
+msgid "Import Package"
+msgstr "インポートパッケージ"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "パッケージ {0} のインポートに失敗しました。理由: {1}"
+
+msgid "Info "
+msgstr "情報"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "無効なイメージのメタデータ: {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "無効な murano イメージメタデータ"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "'murano_nets' オプションの無効な値"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "{0} MB より大きいファイルのアップロードは許可されていません。"
+
+msgid "KeyWord"
+msgstr "キーワード"
+
+msgid "Last operation"
+msgstr "最終操作"
+
+msgid "Latest Deployment Log"
+msgstr "最新のデプロイログ"
+
+msgid "License"
+msgstr "ライセンス"
+
+msgid "Logs"
+msgstr "ログ"
+
+msgid "Manage"
+msgstr "管理"
+
+msgid "Manage Components"
+msgstr "コンポーネントの管理"
+
+msgid "Metadata"
+msgstr "メタデータ"
+
+msgid "Modify Package"
+msgstr "パッケージの変更"
+
+msgid "Modifying package failed"
+msgstr "パッケージの変更に失敗しました。"
+
+msgid "Murano"
+msgstr "Murano"
+
+msgid "NO ENVIRONMENTS"
+msgstr "環境なし"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Name of the bundle."
+msgstr "バンドルの名前。"
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "'%s' のネットワーク"
+
+msgid "Next"
+msgstr "次へ"
+
+msgid "Next Page"
+msgstr "次のページ"
+
+msgid "No availability zones available"
+msgstr "利用可能なアベイラビリティーゾーンがありません"
+
+msgid "No categories available"
+msgstr "利用可能なカテゴリーがありません"
+
+msgid "No components"
+msgstr "コンポーネントなし"
+
+msgid "No images available"
+msgstr "利用可能なイメージがありません。"
+
+msgid "No keypair"
+msgstr "キーペアなし"
+
+msgid "No license"
+msgstr "ライセンスなし"
+
+msgid "No recent activity to report at this time."
+msgstr "現在、表示する最近の活動状況がありません。"
+
+msgid "No requirements"
+msgstr "要件なし"
+
+msgid "Not in domain"
+msgstr "ドメインにありません"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"OpenStack Networking (Neutron) が現在の環境で利用できません。カスタムネット"
+"ワーク設定を適用できません。"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "操作が murano-api サーバーにより禁止されています。"
+
+msgid "Optional"
+msgstr "オプション"
+
+msgid "Overview"
+msgstr "概要"
+
+msgid "Package"
+msgstr "パッケージ"
+
+msgid "Package Bundle Source"
+msgstr "パッケージバンドルソース"
+
+msgid "Package Count"
+msgstr "パッケージ数"
+
+msgid "Package Name"
+msgstr "パッケージ名"
+
+msgid "Package Source"
+msgstr "パッケージソース"
+
+msgid "Package URL"
+msgstr "パッケージ URL"
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "パッケージ作成に失敗しました。理由: {0}"
+
+msgid "Package modified."
+msgstr "パッケージ更新時刻"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "同じ名前を持つパッケージかクラスが既にパブリックに作成されています。"
+
+msgid "Package parameters successfully updated."
+msgstr "パッケージのパラメーターが正常に更新されました。"
+
+msgid "Package version"
+msgstr "パッケージバージョン"
+
+msgid "Package with id {0} is not found"
+msgstr "ID {0} のパッケージが見つかりません"
+
+msgid "Package with specified name already exists"
+msgstr "指定された名前を持つパッケージが既に存在します。"
+
+msgid "Package {0} already registered."
+msgstr "パッケージ {0} が既に登録されています。"
+
+msgid "Package {0} upload failed. {1}"
+msgstr "パッケージ {0} のアップロードに失敗しました。 {1}"
+
+msgid "Package {0} uploaded"
+msgstr "パッケージ {0} をアップロードしました"
+
+msgid "Packages"
+msgstr "パッケージ"
+
+msgid "Please confirm your password"
+msgstr "パスワードを確認してください"
+
+msgid "Please supply a bundle name"
+msgstr "バンドルの名前を指定してください。"
+
+msgid "Please supply a bundle url"
+msgstr "バンドルの URL を指定してください。"
+
+msgid "Please supply a package file"
+msgstr "パッケージファイルを指定してください。"
+
+msgid "Please supply a package name"
+msgstr "パッケージの名前を指定してください。"
+
+msgid "Please supply a package url"
+msgstr "パッケージの URL を指定してください。"
+
+msgid "Previous Page"
+msgstr "前のページ"
+
+msgid "Public"
+msgstr "パブリック"
+
+msgid "Quick Deploy"
+msgstr "クイックデプロイ"
+
+msgid "Recent Activity"
+msgstr "最近の活動状況"
+
+msgid "Repository"
+msgstr "リポジトリー"
+
+msgid "Requested object is not found on murano server."
+msgstr "要求されたオブジェクトが murano サーバーに見つかりません。"
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "要求された操作が既存のオブジェクトと競合しています。"
+
+msgid "Requirements"
+msgstr "要件"
+
+msgid "Retype your password"
+msgstr "パスワードの再入力"
+
+msgid "Router is not found. You should create one explicitly."
+msgstr "ルーターが見つかりません。明示的に作成する必要があります。"
+
+msgid "Select Application"
+msgstr "アプリケーションの選択"
+
+msgid "Select IP from available range: {0} "
+msgstr "利用可能な範囲から IP を選択してください: {0} "
+
+msgid "Select Image"
+msgstr "イメージを選択してください"
+
+msgid ""
+"Select an image registered in Glance Image\n"
+"            Services."
+msgstr ""
+"Image サービスに登録されているイメージを\n"
+"            選択してください。"
+
+msgid ""
+"Select an image type supported by\n"
+"            Murano."
+msgstr "Murano によりイメージ種別を選択してください。"
+
+msgid "Show Details"
+msgstr "詳細表示"
+
+msgid "Something went wrong during package downloading"
+msgstr "パッケージのダウンロード中に、どこかがおかしくなりました！"
+
+msgid "Specified Cluster Static IP is already in use"
+msgstr "指定されたクラスター静的 IP は使用中です。"
+
+msgid "Specify valid fixed IP"
+msgstr "有効な Fixed IP を指定してください"
+
+msgid "Start Deleting"
+msgstr "削除の開始"
+
+msgid "Status"
+msgstr "状態"
+
+msgid "Step {0}"
+msgstr "手順 {0}"
+
+msgid "Tags"
+msgstr "タグ"
+
+msgid "Tenant Name"
+msgstr "テナント名"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "アプリケーション '{0}' が正常に環境に追加されました。"
+
+msgid "The request data is not acceptable by the server"
+msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
+
+msgid "This name is already taken."
+msgstr "この名前はすでに使用されています。"
+
+msgid "Time Finished"
+msgstr "終了時刻"
+
+msgid "Time Started"
+msgstr "開始時刻"
+
+msgid "Time updated"
+msgstr "更新時刻"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Topology"
+msgstr "トポロジー"
+
+msgid "Type"
+msgstr "種別"
+
+msgid "UNKNOWN"
+msgstr "不明"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "環境 {0} を中断できませんでした。理由: {1}"
+
+msgid "Unable to communicate to murano-api server."
+msgstr "murano-api サーバーと通信できません。"
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "環境 {0} を作成できませんでした。理由: {1}"
+
+msgid "Unable to delete category"
+msgstr "カテゴリーを削除できません。"
+
+msgid "Unable to delete category."
+msgstr "カテゴリーを削除できません。"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "murano-api サーバーにおいてパッケージを削除できません。"
+
+msgid "Unable to deploy. Try again later"
+msgstr "デプロイできません。後からもう一度お試しください。"
+
+msgid "Unable to download package."
+msgstr "パッケージをダウンロードできません。"
+
+msgid "Unable to get list of categories"
+msgstr "カテゴリーの一覧を取得できません"
+
+msgid "Unable to modify package"
+msgstr "パッケージを変更できません。"
+
+msgid "Unable to remove metadata"
+msgstr "メタデータを削除できません"
+
+msgid "Unable to remove package."
+msgstr "パッケージを削除できません"
+
+msgid "Unable to retrieve  availability zones."
+msgstr "アベイラビリティーゾーンを取得できません。"
+
+msgid "Unable to retrieve details for service"
+msgstr "サービスの詳細を取得できません。"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "デプロイの一覧を取得できません。"
+
+msgid "Unable to retrieve list of images"
+msgstr "イメージの一覧を取得できません。"
+
+msgid "Unable to retrieve project list."
+msgstr "プロジェクト一覧を取得できません。"
+
+msgid "Unable to retrieve public images."
+msgstr "公開イメージの一覧を取得できません。"
+
+msgid "Unavailable"
+msgstr "利用不可"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Update Image"
+msgstr "イメージの更新"
+
+msgid "Updated"
+msgstr "更新時刻"
+
+msgid "Uploading package failed. {0}"
+msgstr "パッケージのアップロードに失敗しました。 {0}"
+
+msgid "Validation Error occurred"
+msgstr "検証エラーが発生しました"
+
+msgid "Version"
+msgstr "バージョン"
+
+msgid "You are not allowed to delete this package"
+msgstr "このパッケージの削除は許可されていません。"
+
+msgid "You are not allowed to perform this operation"
+msgstr "この操作は許可されていません。"
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} が一致しません"

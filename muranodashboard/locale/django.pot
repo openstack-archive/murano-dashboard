@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-28 06:29+0000\n"
+"POT-Creation-Date: 2016-02-11 07:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,7 @@ msgid "The request data is not acceptable by the server"
 msgstr ""
 
 #: muranodashboard/catalog/panel.py:22
+#: muranodashboard/environments/views.py:121
 #: muranodashboard/templates/catalog/_details_page_header.html:11
 #: muranodashboard/templates/catalog/index.html:6
 msgid "Applications"
@@ -170,96 +171,113 @@ msgstr ""
 msgid "{0}{1} don't match"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:243
+#: muranodashboard/dynamic_ui/fields.py:249
 msgid ""
 "Enter a complex password with at least one letter,                 one "
 "number and one special character"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:275
+#: muranodashboard/dynamic_ui/fields.py:256
+msgid ""
+"Enter a complex password with at least one"
+"                                letter, one number and one special "
+"character"
+msgstr ""
+
+#: muranodashboard/dynamic_ui/fields.py:266
+msgid "Enter a password for the application"
+msgstr ""
+
+#: muranodashboard/dynamic_ui/fields.py:273
+msgid ""
+" with the following requirements:\n"
+"*"
+msgstr ""
+
+#: muranodashboard/dynamic_ui/fields.py:290
 msgid "Confirm password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:276
+#: muranodashboard/dynamic_ui/fields.py:291
 msgid "Please confirm your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:277
+#: muranodashboard/dynamic_ui/fields.py:292
 msgid "Retype your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:339
+#: muranodashboard/dynamic_ui/fields.py:354
 msgid "No keypair"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:402
+#: muranodashboard/dynamic_ui/fields.py:417
 msgid "Select Image"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:404
+#: muranodashboard/dynamic_ui/fields.py:419
 msgid "No images available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:420
+#: muranodashboard/dynamic_ui/fields.py:435
 msgid "Invalid value of 'murano_nets' option"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:439
+#: muranodashboard/dynamic_ui/fields.py:454
 msgid "Auto"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:462
+#: muranodashboard/dynamic_ui/fields.py:477
 msgid "Unable to retrieve  availability zones."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:467
+#: muranodashboard/dynamic_ui/fields.py:482
 msgid "No availability zones available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:503
+#: muranodashboard/dynamic_ui/fields.py:518
 msgid "Specified Cluster Static IP is not in valid IP range"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:511
+#: muranodashboard/dynamic_ui/fields.py:526
 msgid "Unable to retrieve information about fixed IP or IP is not valid."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:523
+#: muranodashboard/dynamic_ui/fields.py:538
 msgid "Specified Cluster Static IP is already in use"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:536
+#: muranodashboard/dynamic_ui/fields.py:551
 msgid "Cannot get allowed subnet for the environment, consult your admin"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:541
+#: muranodashboard/dynamic_ui/fields.py:556
 msgid "Specified IP address should belong to {0} subnet"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:558
+#: muranodashboard/dynamic_ui/fields.py:573
 msgid "Select IP from available range: {0} "
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:561
+#: muranodashboard/dynamic_ui/fields.py:576
 msgid "Specify valid fixed IP"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:565
+#: muranodashboard/dynamic_ui/fields.py:580
 msgid "Router is not found. You should create one explicitly."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:578
+#: muranodashboard/dynamic_ui/fields.py:593
 msgid ""
 "First symbol should be latin letter or underscore. Subsequent symbols can"
 " be latin letter, numeric, underscore, at sign, number sign or dollar "
 "sign"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:621
+#: muranodashboard/dynamic_ui/fields.py:636
 msgid "Select Application"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:664
+#: muranodashboard/dynamic_ui/fields.py:679
 msgid "Not in domain"
 msgstr ""
 
@@ -275,205 +293,199 @@ msgstr ""
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr ""
 
-#: muranodashboard/environments/forms.py:30
-msgid ""
-"Environment names must contain only alphanumeric or '_-.' characters and "
-"must start with alpha"
+#: muranodashboard/environments/forms.py:28
+msgid "Environment name must contain at least one non-white space symbol."
 msgstr ""
 
-#: muranodashboard/environments/forms.py:43
+#: muranodashboard/environments/forms.py:39
 msgid "Environment Default Network"
 msgstr ""
 
-#: muranodashboard/environments/forms.py:52
+#: muranodashboard/environments/forms.py:48
 msgid "Unavailable"
 msgstr ""
 
-#: muranodashboard/environments/forms.py:55
+#: muranodashboard/environments/forms.py:51
 msgid "Create New"
 msgstr ""
 
-#: muranodashboard/environments/forms.py:71
+#: muranodashboard/environments/forms.py:74
 msgid "Environment with specified name already exists"
 msgstr ""
 
-#: muranodashboard/environments/forms.py:77
+#: muranodashboard/environments/forms.py:80
 msgid "Failed to create environment"
 msgstr ""
 
 #: muranodashboard/environments/panel.py:22
-#: muranodashboard/environments/tables.py:92
-#: muranodashboard/environments/tables.py:120
-#: muranodashboard/environments/tables.py:322
-#: muranodashboard/templates/deployments/_reports_page_header.html:6
+#: muranodashboard/environments/tables.py:91
+#: muranodashboard/environments/tables.py:119
+#: muranodashboard/environments/tables.py:318
+#: muranodashboard/environments/views.py:117
+#: muranodashboard/environments/views.py:192
 #: muranodashboard/templates/environments/_data_table.html:3
 #: muranodashboard/templates/environments/index.html:5
-#: muranodashboard/templates/services/_detail_page_header.html:6
-#: muranodashboard/templates/services/_page_header.html:7
 msgid "Environments"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:53
+#: muranodashboard/environments/tables.py:52
 msgid "Add Component"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:70
-#: muranodashboard/environments/views.py:137
-#: muranodashboard/environments/views.py:139
+#: muranodashboard/environments/tables.py:69
+#: muranodashboard/environments/views.py:153
+#: muranodashboard/environments/views.py:155
 #: muranodashboard/templates/catalog/env_switcher.html:10
 #: muranodashboard/templates/environments/create.html:3
 msgid "Create Environment"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:83
+#: muranodashboard/environments/tables.py:82
 msgid "Unable to create environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:91
-#: muranodashboard/environments/tables.py:119
+#: muranodashboard/environments/tables.py:90
+#: muranodashboard/environments/tables.py:118
+#: muranodashboard/environments/tables.py:173
 #: muranodashboard/environments/tables.py:174
-#: muranodashboard/environments/tables.py:175
-#: muranodashboard/templates/deployments/_reports_page_header.html:9
-#: muranodashboard/templates/services/_detail_page_header.html:9
-#: muranodashboard/templates/services/_page_header.html:8
 msgid "Environment"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:93
-#: muranodashboard/environments/tables.py:149
+#: muranodashboard/environments/tables.py:92
+#: muranodashboard/environments/tables.py:148
 msgid "Start Deleting"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:106
+#: muranodashboard/environments/tables.py:105
 msgid "Unable to delete environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:114
+#: muranodashboard/environments/tables.py:113
 msgid ""
 "This action cannot be undone. Any resources created by this environment "
 "will have to be released manually."
 msgstr ""
 
-#: muranodashboard/environments/tables.py:117
+#: muranodashboard/environments/tables.py:116
 msgid "Abandon"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:118
+#: muranodashboard/environments/tables.py:117
 msgid "Abandoned"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:139
+#: muranodashboard/environments/tables.py:138
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:147
+#: muranodashboard/environments/tables.py:146
 #: muranodashboard/environments/tabs.py:32
-#: muranodashboard/templates/services/_detail_page_header.html:10
 msgid "Component"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:148
+#: muranodashboard/environments/tables.py:147
 #: muranodashboard/environments/tabs.py:195
 #: muranodashboard/templates/services/_data_table.html:4
-#: muranodashboard/templates/services/index.html:7
+#: muranodashboard/templates/services/index.html:8
 msgid "Components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:165
+#: muranodashboard/environments/tables.py:164
 msgid "Sorry, you can't delete service right now"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:172
+#: muranodashboard/environments/tables.py:171
 msgid "Deploy"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:173
+#: muranodashboard/environments/tables.py:172
 msgid "Deployed"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:200
-#: muranodashboard/environments/tables.py:237
+#: muranodashboard/environments/tables.py:199
+#: muranodashboard/environments/tables.py:236
 msgid "Unable to deploy. Try again later"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:207
+#: muranodashboard/environments/tables.py:206
 msgid "Deploy This Environment"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:235
+#: muranodashboard/environments/tables.py:234
 msgid "Deploy started"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:248
+#: muranodashboard/environments/tables.py:247
 msgid "Manage Components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:285
+#: muranodashboard/environments/tables.py:284
 msgid "This name is already taken."
 msgstr ""
 
-#: muranodashboard/environments/tables.py:287
+#: muranodashboard/environments/tables.py:286
 msgid "Couldn't update environment. Reason: "
 msgstr ""
 
-#: muranodashboard/environments/tables.py:306
-#: muranodashboard/environments/tables.py:344
-#: muranodashboard/environments/tables.py:471
+#: muranodashboard/environments/tables.py:305
+#: muranodashboard/environments/tables.py:340
+#: muranodashboard/environments/tables.py:467
 #: muranodashboard/packages/forms.py:162 muranodashboard/packages/tables.py:60
 #: muranodashboard/templates/categories/_add.html:8
 msgid "Name"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:315
-#: muranodashboard/environments/tables.py:351
-#: muranodashboard/environments/tables.py:458
+#: muranodashboard/environments/tables.py:311
+#: muranodashboard/environments/tables.py:347
+#: muranodashboard/environments/tables.py:454
 msgid "Status"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:326
+#: muranodashboard/environments/tables.py:322
 msgid "NO ENVIRONMENTS"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:348
-#: muranodashboard/environments/tables.py:474
+#: muranodashboard/environments/tables.py:344
+#: muranodashboard/environments/tables.py:470
 #: muranodashboard/images/tables.py:58 muranodashboard/packages/tables.py:59
 #: muranodashboard/packages/tables.py:220
 msgid "Type"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:356
+#: muranodashboard/environments/tables.py:352
 msgid "Last operation"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:359
+#: muranodashboard/environments/tables.py:355
 msgid "Time updated"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:424
+#: muranodashboard/environments/tables.py:420
 msgid "Component List"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:426
+#: muranodashboard/environments/tables.py:422
 msgid "No components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:436
+#: muranodashboard/environments/tables.py:432
 msgid "Show Details"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:450
+#: muranodashboard/environments/tables.py:446
 msgid "Time Started"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:453
+#: muranodashboard/environments/tables.py:449
 msgid "Time Finished"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:464
+#: muranodashboard/environments/tables.py:460
+#: muranodashboard/environments/views.py:196
 msgid "Deployments"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:481
+#: muranodashboard/environments/tables.py:477
 msgid "Deployed Components"
 msgstr ""
 
@@ -511,27 +523,27 @@ msgid "Deployment History"
 msgstr ""
 
 #: muranodashboard/environments/tabs.py:239
-#: muranodashboard/environments/views.py:84
+#: muranodashboard/environments/views.py:85
 msgid "Unable to retrieve list of deployments"
 msgstr ""
 
-#: muranodashboard/environments/views.py:71
+#: muranodashboard/environments/views.py:72
 msgid "Sorry, this environment doesn't exist anymore"
 msgstr ""
 
-#: muranodashboard/environments/views.py:122
+#: muranodashboard/environments/views.py:138
 msgid "Unable to retrieve details for service"
 msgstr ""
 
-#: muranodashboard/environments/views.py:141
+#: muranodashboard/environments/views.py:157
 #: muranodashboard/templates/packages/_import_bundle.html:49
 #: muranodashboard/templates/packages/_upload.html:66
 #: muranodashboard/templates/services/_wizard_create.html:119
 msgid "Create"
 msgstr ""
 
-#: muranodashboard/environments/views.py:183
-#: muranodashboard/environments/views.py:197
+#: muranodashboard/environments/views.py:207
+#: muranodashboard/environments/views.py:221
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr ""
@@ -540,23 +552,23 @@ msgstr ""
 msgid "Invalid metadata for image: {0}"
 msgstr ""
 
-#: muranodashboard/images/forms.py:58 muranodashboard/images/tables.py:60
+#: muranodashboard/images/forms.py:57 muranodashboard/images/tables.py:60
 msgid "Title"
 msgstr ""
 
-#: muranodashboard/images/forms.py:73 muranodashboard/images/views.py:86
+#: muranodashboard/images/forms.py:72 muranodashboard/images/views.py:86
 msgid "Unable to retrieve list of images"
 msgstr ""
 
-#: muranodashboard/images/forms.py:91
+#: muranodashboard/images/forms.py:90
 msgid "Image successfully marked"
 msgstr ""
 
-#: muranodashboard/images/forms.py:94
+#: muranodashboard/images/forms.py:93
 msgid "Unable to mark image"
 msgstr ""
 
-#: muranodashboard/images/forms.py:102
+#: muranodashboard/images/forms.py:101
 msgid "Specified title already in use. Please choose another one."
 msgstr ""
 
@@ -1065,15 +1077,11 @@ msgstr ""
 msgid "Deployment Logs"
 msgstr ""
 
-#: muranodashboard/templates/deployments/_reports_page_header.html:11
-msgid "Deployment at"
-msgstr ""
-
 #: muranodashboard/templates/deployments/index.html:3
 msgid "Environment Deployments"
 msgstr ""
 
-#: muranodashboard/templates/deployments/reports.html:4
+#: muranodashboard/templates/deployments/reports.html:5
 msgid "Deployment Details"
 msgstr ""
 
@@ -1310,7 +1318,7 @@ msgid "Component Logs"
 msgstr ""
 
 #: muranodashboard/templates/services/_overview.html:3
-#: muranodashboard/templates/services/details.html:5
+#: muranodashboard/templates/services/details.html:7
 msgid "Component Details"
 msgstr ""
 
