@@ -16,6 +16,7 @@ ImageMeta = "//dl[dt[contains(text(), 'murano_image_info')]]/dd"
 More = "//tr[contains(@id, '{0}__row__{1}')]//a[contains(@class, dropdown-toggle) and @href='#']"  # noqa
 Status = "//td[contains(text(), '{0}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
+Row = "//tr[contains(@id, 'services__row__{0}')]"
 ErrorMessage = '//span[contains(@class, "help-block") and contains(text(), "{0}")]'  # noqa
 DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
 Action = '//a[contains(@class, "murano_action") and contains(text(), "testAction")]'  # noqa
@@ -28,6 +29,7 @@ ConfirmDeletion = "//div[@class='modal-footer']//a[contains(text(), 'Delete')]" 
 UploadPackage = 'packages__action_upload_package'
 ImportBundle = 'packages__action_import_bundle'
 CreateEnvironment = ".add_env .btn"
+DeployEnvironment = "services__action_deploy_env"
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"
