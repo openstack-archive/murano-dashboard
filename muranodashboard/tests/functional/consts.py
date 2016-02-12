@@ -18,7 +18,9 @@ Status = "//td[contains(text(), '{0}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
 Row = "//tr[contains(@id, 'services__row__{0}')]"
 ErrorMessage = '//span[contains(@class, "help-block") and contains(text(), "{0}")]'  # noqa
+PackageCategory = "//select[@name='add_category-categories']/option[text()='{0}']"  # noqa
 DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
+CategoryPackageCount = "//tr[contains(@data-display, '{0}')]/td[contains(text(), '{1}')]"  # noqa
 Action = '//a[contains(@class, "murano_action") and contains(text(), "testAction")]'  # noqa
 HotFlavorField = '//div[contains(@class, "has-error")]//input'
 
