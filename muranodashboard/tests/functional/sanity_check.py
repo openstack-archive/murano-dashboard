@@ -1326,3 +1326,27 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.go_to_submenu('Categories')
         self.check_element_on_page(
             by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
+
+    def test_filter_by_new_category(self):
+        """Filter by new category from Applications page
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            2. Click on 'Add Category' button
+            3. Create new category and check it's browsed in the table
+            4. Navigate to 'Packages' page
+            5. Click on 'Import Package' button
+            6. Import package and select created 'test' category for it
+            7. Navigate to "Applications" page
+            8. Select new category in "App category" dropdown list
+        """
+        self._import_package_with_category(self.archive, self.category)
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        self.driver.find_element_by_xpath(
+            c.CategorySelector.format('All')).click()
+        self.driver.find_element_by_partial_link_text(self.category).click()
+
+        self.check_element_on_page(
+            by.By.XPATH, c.App.format(self.archive_name))
