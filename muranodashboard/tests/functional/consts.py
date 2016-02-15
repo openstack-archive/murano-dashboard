@@ -6,6 +6,7 @@ HotPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              'HotApp')
 
 CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-toggle')]"  # noqa
+EnvAppsCategorySelector = "//*[contains(@id, 'envAppsCategoryBtn')]"
 App = "//div[contains(@class, 'app-list')]//h4[contains(text(), '{0}')]"
 MockAppDescr = "//div[h4[contains(text(), 'MockApp')]]/p"
 AppPackages = u"//tr[@data-display='{0}']"
@@ -18,6 +19,7 @@ Status = "//td[contains(text(), '{0}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
 Row = "//tr[contains(@id, 'services__row__{0}')]"
 ErrorMessage = '//span[contains(@class, "help-block") and contains(text(), "{0}")]'  # noqa
+EnvAppsCategory = "//div[contains(@class, 'draggable_app')]//div[contains(text(), '{0}')]"  # noqa
 PackageCategory = "//select[@name='add_category-categories']/option[text()='{0}']"  # noqa
 DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
 CategoryPackageCount = "//tr[contains(@data-display, '{0}')]/td[contains(text(), '{1}')]"  # noqa

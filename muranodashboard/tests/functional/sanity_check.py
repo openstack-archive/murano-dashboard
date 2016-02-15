@@ -1350,3 +1350,49 @@ class TestSuitePackageCategory(base.PackageTestCase):
 
         self.check_element_on_page(
             by.By.XPATH, c.App.format(self.archive_name))
+
+    def test_filter_by_category_from_env_components(self):
+        """Filter by new category from Environment Components page
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            2. Click on 'Add Category' button
+            3. Create new category and check it's browsed in the table
+            4. Navigate to 'Packages' page
+            5. Click on 'Import Package' button
+            6. Import package and select created 'test' category for it
+            7. Navigate to 'Environments' page
+            8. Create environment
+            9. Select new category in 'App category' dropdown list
+            10. Check that imported package is displayed
+            11. Select 'Web' category in 'App category' dropdown list
+            12. Check that imported package is not displayed
+        """
+        self._import_package_with_category(self.archive, self.category)
+
+        # create environment
+        env_name = str(uuid.uuid4())
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Environments')
+        self.create_environment(env_name)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, env_name)
+
+        # filter by new category
+        self.select_action_for_environment(env_name, 'show')
+        self.driver.find_element_by_xpath(c.EnvAppsCategorySelector).click()
+        self.driver.find_element_by_partial_link_text(self.category).click()
+
+        # check that imported package is displayed
+        self.check_element_on_page(
+            by.By.XPATH, c.EnvAppsCategory.format(self.archive_name))
+
+        # filter by 'Web' category
+        self.driver.find_element_by_xpath(c.EnvAppsCategorySelector).click()
+        self.driver.find_element_by_partial_link_text('Web').click()
+
+        # check that imported package is not displayed
+        self.check_element_not_on_page(
+            by.By.XPATH, c.EnvAppsCategory.format(self.archive_name))
