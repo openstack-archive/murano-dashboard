@@ -1246,6 +1246,10 @@ class TestSuitePackageCategory(base.PackageTestCase):
 
         self.wait_for_alert_message()
 
+        # To wait till the focus is swithced
+        # from modal dialog back to the window.
+        self.wait_for_sidebar_is_loaded()
+
     def setUp(self):
         super(TestSuitePackageCategory, self).setUp()
 
