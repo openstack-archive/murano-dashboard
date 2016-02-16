@@ -96,6 +96,32 @@ class UITestCase(BaseDeps):
             'Environment {0} was not deleted in {1} seconds'.format(
                 environment_id, timeout))
 
+    def create_project(self, name):
+        project = self.keystone_client.tenants.create(
+            tenant_name=name, description="For Test Purposes", enabled=True)
+        return project.id
+
+    def add_user_to_project(self, project_id, user_name, user_role=None):
+        if user_role is None:
+            roles = self.keystone_client.roles.list()
+            user_role = [role for role in roles if role.name == 'Member'][0]
+        tenant = self.keystone_client.tenants.get(project_id)
+        tenant.add_user(user_name, user_role)
+
+    def switch_to_project(self, name):
+        projects_xpath = ("//ul[contains(@class, navbar-nav)]"
+                          "//li[contains(@class, dropdown)]")
+        name_xpath = ("//a//span[contains(@class, dropdown-title)"
+                      "and normalize-space(text())='{0}']".format(name))
+        btn_xpath = "//a[contains(@class, dropdown-toggle) and @href='#']"
+        projects_list = self.driver.find_element_by_xpath(projects_xpath)
+        if projects_list.text != name:
+            if 'open' not in projects_list.get_attribute('class'):
+                projects_list.find_element_by_xpath(btn_xpath).click()
+            projects_list.find_element_by_xpath(name_xpath).click()
+            self.wait_for_alert_message()
+        # else the project is already set
+
     def take_screenshot(self, exception):
         """Taking screenshot on error
 
