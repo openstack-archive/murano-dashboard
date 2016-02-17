@@ -120,7 +120,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         """Test checks validation of field that usually define environment name
 
         Scenario:
-            1. Navigate to Application Catalog > Environmentss
+            1. Navigate to Application Catalog > Environments
             2. Press 'Create environment'
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
@@ -818,6 +818,23 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
 
 class TestSuitePackages(base.PackageTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSuitePackages, cls).setUpClass()
+        suffix = str(uuid.uuid4())[:6]
+        cls.testuser_name = 'test_{}'.format(suffix)
+        cls.testuser_password = 'test'
+        email = '{}@example.com'.format(cls.testuser_name)
+        cls.create_user(name=cls.testuser_name,
+                        password=cls.testuser_password,
+                        email=email)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.delete_user(cls.testuser_name)
+        super(TestSuitePackages, cls).tearDownClass()
+
     def test_modify_package_name(self):
         """Test check ability to change name of the package
 
@@ -1073,6 +1090,34 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.check_package_parameter_by_name(pkg_name, 'Public', 'True')
         self.check_package_parameter_by_name(pkg_name, 'Active', 'False')
+
+    def test_package_share(self):
+        """Test that admin is able to share Murano Apps
+
+        Scenario:
+            1. Hit 'Modify Package' on any exists package
+            2. Mark 'Public' checkbox
+            3. Hit 'Update' button
+            4. Verify, that package is available for other users
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        self.select_action_for_package(self.mockapp_id, 'modify_package')
+
+        self.driver.find_element_by_css_selector(
+            "label[for=id_is_public]"
+        ).click()
+
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+        self.log_out()
+        self.log_in(self.testuser_name, self.testuser_password)
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackages.format('MockApp'))
 
     def test_upload_package_detail(self):
         """Test check ability to view package details after uploading it."""
