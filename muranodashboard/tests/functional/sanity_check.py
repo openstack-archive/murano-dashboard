@@ -1418,3 +1418,27 @@ class TestSuitePackageCategory(base.PackageTestCase):
         error_message = ("Error: Requested operation conflicts "
                          "with an existing object.")
         self.check_alert_message(error_message)
+
+    def test_delete_category_with_package(self):
+        """Deletion of category with package in it
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            3. Add new category
+            4. Navigate to 'Packages' page
+            5. Import package and select created category for it
+            6. Navigate to "Categories" page
+            7. Check that package count = 1 for created category
+            8. Check that there is no 'Delete Category' button for the category
+        """
+        # add new package to the created category
+        self._import_package_with_category(self.archive, self.category)
+
+        # Check that package count = 1 for created category
+        self.go_to_submenu('Categories')
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(self.category, 1))
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.DeleteCategory.format(self.category))
