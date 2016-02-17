@@ -1267,17 +1267,14 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.check_element_on_page(
             by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
 
+        # save category id
+        self.category_id = self.get_element_id(self.category)
+
     def tearDown(self):
         super(TestSuitePackageCategory, self).tearDown()
 
-        self.navigate_to('Manage')
-        self.go_to_submenu('Categories')
-        delete_new_category_btn = c.DeleteCategory.format(self.category)
-        self.driver.find_element_by_xpath(delete_new_category_btn).click()
-        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-
-        self.wait_for_alert_message()
-        self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
+        # delete created category
+        self.murano_client.categories.delete(self.category_id)
 
     def test_add_delete_category_for_package(self):
         """Test package importing with new category and changing the category.
@@ -1294,7 +1291,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
             8. Check that package count = 1 for created category
             9. Navigate to 'Packages' page
             10. Modify imported earlier package, by changing its category
-            11. Navigate to 'Packages' page
+            11. Navigate to 'Categories' page
             12. Check that package count = 0 for created category
         """
         # add new package to the created category
@@ -1396,3 +1393,28 @@ class TestSuitePackageCategory(base.PackageTestCase):
         # check that imported package is not displayed
         self.check_element_not_on_page(
             by.By.XPATH, c.EnvAppsCategory.format(self.archive_name))
+
+    def test_add_existing_category(self):
+        """Add category with name of already existing category
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            3. Add new category
+            4. Navigate to 'Packages' page
+            5. Import package and select created category for it
+            6. Navigate to 'Categories' page
+            7. Check that package count = 1 for created category
+            8. Check that there is no 'Delete Category' button for the category
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+
+        self.driver.find_element_by_id(c.AddCategory).click()
+        self.fill_field(
+            by.By.XPATH, "//input[@id='id_name']", self.category)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        error_message = ("Error: Requested operation conflicts "
+                         "with an existing object.")
+        self.check_alert_message(error_message)

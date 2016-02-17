@@ -181,6 +181,16 @@ class UITestCase(BaseDeps):
                                   " while it should't".format(value))
         self.driver.implicitly_wait(30)
 
+    def check_alert_message(self, message, sec=10):
+        locator = (by.By.CSS_SELECTOR, 'div.alert-dismissable')
+        try:
+            ui.WebDriverWait(self.driver, sec).until(
+                EC.presence_of_element_located(locator))
+        except exc.TimeoutException:
+            self.fail("Alert is not preset on the page")
+
+        self.assertIn(message, self.driver.find_element(*locator).text)
+
     def create_environment(self, env_name, by_id=False):
         if by_id:
             self.driver.find_element_by_id(
