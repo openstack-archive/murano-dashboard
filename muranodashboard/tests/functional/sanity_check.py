@@ -888,10 +888,15 @@ class TestSuitePackages(base.PackageTestCase):
 
         Scenario:
             1. Navigate to 'Packages' page
-            2. Select some package and make it inactive ("More>Toggle Active")
+            2. Select some package and make it inactive "More>Toggle Active"
             3. Check that package is inactive
-            4. Select some package and make it active ("More>Toggle Active ")
-            5. Check that package is active
+            4. Switch to 'Applications' page
+            5. Check that application is not available on the page
+            6. Navigate to 'Packages' page
+            7. Select the same package and make it active "More>Toggle Active"
+            8. Check that package is active
+            9. Switch to 'Applications' page
+            10. Check that application now is available on the page
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
@@ -899,23 +904,54 @@ class TestSuitePackages(base.PackageTestCase):
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
+        self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'False')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        # 'Quick Deploy' button contains id of the application.
+        # So it is possible to definitely determinate is it in catalog or not.
+        btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
+                     "".format(self.url_prefix, self.postgre_id))
+        self.check_element_not_on_page(by.By.XPATH, btn_xpath)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'toggle_enabled')
 
+        self.wait_for_alert_message()
+
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'True')
+
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        self.check_element_on_page(by.By.XPATH, btn_xpath)
 
     def test_check_toggle_public_package(self):
         """Test check ability to make package active or inactive
 
         Scenario:
-            1. Navigate to 'Packages' page
-            2. Select some package and make it inactive ("More>Toggle Public")
-            3. Check that package is unpublic
-            4. Select some package and make it active ("More>Toggle Public ")
-            5. Check that package is public
+            1. Create new project but keep default project active
+            2. Navigate to 'Packages' page
+            3. Select some package and make it active "More>Toggle Public"
+            4. Check that package is public
+            5. Switch to the new project and check that the application is
+               available in the catalog
+            6. Switch back to default project
+            7. Select the same package and inactivate it "More>Toggle Public"
+            8. Check that package is unpublic
+            9. Switch to the new project and check that the application
+               is not available in the catalog
         """
+        default_project = self.keystone_client.project_name
+        new_project = str(uuid.uuid4())[::4]
+        project_id = self.create_project(new_project)
+        self.add_user_to_project(project_id, self.keystone_client.user_id)
+        # Generally the new project will appear in the dropdown menu only after
+        # page refresh. But in this case refresh is not neccesary.
+
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
 
@@ -923,13 +959,36 @@ class TestSuitePackages(base.PackageTestCase):
         self.select_action_for_package(self.postgre_id,
                                        'toggle_public_enabled')
 
+        self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Public', 'True')
+
+        # Check that application is available in other project.
+        self.switch_to_project(new_project)
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        # 'Quick Deploy' button contains id of the application.
+        # So it is possible to definitely determinate is it in catalog or not.
+        btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
+                     "".format(self.url_prefix, self.postgre_id))
+
+        self.check_element_on_page(by.By.XPATH, btn_xpath)
+
+        self.switch_to_project(default_project)
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id,
                                        'toggle_public_enabled')
 
+        self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Public', 'False')
+
+        # Check that application now is not available in other porject.
+        self.switch_to_project(new_project)
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        self.check_element_not_on_page(by.By.XPATH, btn_xpath)
 
     def test_modify_description(self):
         """Test check ability to change description of the package
