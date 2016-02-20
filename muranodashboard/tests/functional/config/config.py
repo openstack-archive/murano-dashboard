@@ -21,7 +21,10 @@ MuranoGroup = [
                help='keystone url'),
     cfg.StrOpt('murano_url',
                default='http://127.0.0.1:8082',
-               help='murano url')
+               help='murano url'),
+    cfg.IntOpt('items_per_page',
+               default=20,
+               help='items per page displayed'),
 ]
 
 
