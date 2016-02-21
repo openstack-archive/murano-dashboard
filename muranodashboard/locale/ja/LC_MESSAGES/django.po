@@ -3,11 +3,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-02-11 02:16+0000\n"
+"POT-Creation-Date: 2016-02-20 13:20+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-02-08 02:47+0000\n"
+"PO-Revision-Date: 2016-02-20 06:31+0000\n"
 "Last-Translator: KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -48,6 +48,9 @@ msgstr "\"アプリケーション\""
 
 msgid "\"Environments\""
 msgstr "\"環境\""
+
+msgid "\"Marked Images\""
+msgstr "「マーク済みイメージ」"
 
 msgid "\"Packages\""
 msgstr "\"パッケージ\""
@@ -201,6 +204,10 @@ msgstr "バンドル名"
 msgid "Bundle URL"
 msgstr "バンドル URL"
 
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr ""
+"バンドル作成に失敗しました。リポジトリーからバンドル名を見つけられないため。"
+
 msgid "Bundle creation failed.Reason: {0}"
 msgstr "バンドル作成に失敗しました。理由: {0}"
 
@@ -209,6 +216,11 @@ msgstr "バンドルが正常にインポートされました。"
 
 msgid "Cancel"
 msgstr "取り消し"
+
+msgid "Cannot get allowed subnet for the environment, consult your admin"
+msgstr ""
+"この環境のために許可されたサブネットを取得できません。あなたの管理者に相談し"
+"てください。"
 
 msgid "Categories"
 msgstr "カテゴリー"
@@ -306,6 +318,10 @@ msgstr "デプロイ履歴"
 msgid "Deployment Logs"
 msgstr "デプロイログ"
 
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "ID %s のデプロイはすでに存在しません"
+
 msgid "Deployments"
 msgstr "デプロイ"
 
@@ -324,6 +340,20 @@ msgstr "ダウンロードパッケージ"
 msgid "Drop Components here"
 msgstr "コンポーネントをここにドロップしてください。"
 
+msgid ""
+"Enter a complex password with at least one                                "
+"letter, one number and one special character"
+msgstr ""
+"少なくとも 1 文字、1 つの数字、1 つの特殊文字を持つ複雑なパスワードを入力して"
+"ください。"
+
+msgid ""
+"Enter a complex password with at least one letter,                 one "
+"number and one special character"
+msgstr ""
+"少なくとも 1 文字、1 つの数字、1 つの特殊文字を持つ複雑なパスワードを入力して"
+"ください。"
+
 msgid "Enter a password for the application"
 msgstr "アプリケーションのパスワードを入力してください。"
 
@@ -335,6 +365,10 @@ msgstr "環境のデフォルトネットワーク"
 
 msgid "Environment Name"
 msgstr "環境名"
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "ID %s の環境はすでに存在しません"
 
 msgid "Environment with specified name already exists"
 msgstr "指定された名前を持つ環境が既に存在します。"
@@ -363,6 +397,9 @@ msgstr "ファイル"
 msgid "Filter"
 msgstr "フィルター"
 
+msgid "Find in a selected category"
+msgstr "選択したカテゴリーにおける検索"
+
 msgid "Image"
 msgstr "イメージ"
 
@@ -371,6 +408,9 @@ msgstr "イメージタイトル"
 
 msgid "Image Type"
 msgstr "イメージ種別"
+
+msgid "Image successfully marked"
+msgstr "イメージが正常にマークされました"
 
 msgid "Images"
 msgstr "イメージ"
@@ -419,6 +459,19 @@ msgstr "管理"
 
 msgid "Manage Components"
 msgstr "コンポーネントの管理"
+
+msgid "Mark Image"
+msgstr "イメージのマーク"
+
+msgid ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+msgstr ""
+"イメージを Murano 固有のメタデータでマークして、選択したイメージに追加されま"
+"す。"
+
+msgid "Marked Images"
+msgstr "マーク済みイメージ"
 
 msgid "Metadata"
 msgstr "メタデータ"
@@ -517,6 +570,9 @@ msgstr "パッケージ作成に失敗しました。理由: {0}"
 
 msgid "Package modified."
 msgstr "パッケージ更新時刻"
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "リポジトリーのパッケージ名、一般的に完全修飾名"
 
 msgid "Package or Class with the same name is already made public"
 msgstr "同じ名前を持つパッケージかクラスが既にパブリックに作成されています。"
@@ -620,8 +676,28 @@ msgstr "詳細表示"
 msgid "Something went wrong during package downloading"
 msgstr "パッケージのダウンロード中に、どこかがおかしくなりました！"
 
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "ごめんなさい、この環境はすでに存在しません"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr ""
+"ごめんなさい。アプリケーションをすぐに追加できません。環境がデプロイ中です。"
+
+msgid "Sorry, you can't delete service right now"
+msgstr "ごめんなさい。サービスをすぐに削除できません。"
+
 msgid "Specified Cluster Static IP is already in use"
 msgstr "指定されたクラスター静的 IP は使用中です。"
+
+msgid "Specified Cluster Static IP is not in valid IP range"
+msgstr "指定したクラスターの静的 IP が、有効な IP 範囲にありません。"
+
+msgid "Specified IP address should belong to {0} subnet"
+msgstr "指定された IP アドレスが {0} サブネットに含まれません。"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "すでに使用中のタイトルを指定しました。別のものを選択してください。"
 
 msgid "Specify valid fixed IP"
 msgstr "有効な Fixed IP を指定してください"
@@ -644,6 +720,29 @@ msgstr "テナント名"
 msgid "The '{0}' application successfully added to environment."
 msgstr "アプリケーション '{0}' が正常に環境に追加されました。"
 
+#, python-format
+msgid ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"バンドルは <a href=\"%(murano_repo_url)s\" target=\"_blank\">"
+"%(murano_repo_url)s</a> リポジトリーからインストールされます。"
+
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"パッケージが <a href=\"%(murano_repo_url)s\" target=\"_blank\">"
+"%(murano_repo_url)s</a> リポジトリーからインポートされます。"
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr ""
+"パスワードは、少なくとも 1 文字、1 つの数字、1 つの特殊文字を含める必要があり"
+"ます。"
+
 msgid "The request data is not acceptable by the server"
 msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
 
@@ -661,6 +760,25 @@ msgstr "更新時刻"
 
 msgid "Title"
 msgstr "タイトル"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "アクティブの切り替え"
+
+msgid "Toggle Enabled"
+msgstr "有効化の切り替え"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "パブリックの切り替え"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "アクティブの切り替え済み"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "パブリックの切り替え済み"
 
 msgid "Topology"
 msgstr "トポロジー"
@@ -701,6 +819,9 @@ msgstr "パッケージをダウンロードできません。"
 msgid "Unable to get list of categories"
 msgstr "カテゴリーの一覧を取得できません"
 
+msgid "Unable to mark image"
+msgstr "イメージをマークできません"
+
 msgid "Unable to modify package"
 msgstr "パッケージを変更できません。"
 
@@ -716,11 +837,21 @@ msgstr "アベイラビリティーゾーンを取得できません。"
 msgid "Unable to retrieve details for service"
 msgstr "サービスの詳細を取得できません。"
 
+msgid "Unable to retrieve information about fixed IP or IP is not valid."
+msgstr "Fixed IP の情報を取得できません、または IP が無効です"
+
 msgid "Unable to retrieve list of deployments"
 msgstr "デプロイの一覧を取得できません。"
 
 msgid "Unable to retrieve list of images"
 msgstr "イメージの一覧を取得できません。"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr ""
+"サービスの一覧を取得できません。この環境は、デプロイ中か、他のユーザーにより"
+"デプロイされています。"
 
 msgid "Unable to retrieve project list."
 msgstr "プロジェクト一覧を取得できません。"
