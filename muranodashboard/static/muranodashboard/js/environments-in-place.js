@@ -70,7 +70,7 @@ $(function() {
         // putting name group back to detached form to serialize it
         $name.appendTo($form);
         $.ajax({
-          method: 'POST',
+          type: 'POST',
           url: CREATE_URL,
           async: false,
           data: $form.serialize(),
