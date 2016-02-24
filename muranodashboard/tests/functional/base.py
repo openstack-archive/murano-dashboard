@@ -110,6 +110,22 @@ class UITestCase(BaseDeps):
             'Environment {0} was not deleted in {1} seconds'.format(
                 environment_id, timeout))
 
+    def create_user(self, name, password=None, email=None, tenant_id=None):
+        if tenant_id is None:
+            tenant_id = self.keystone_client.tenant_id
+        self.keystone_client.users.create(name, password=password, email=email,
+                                          tenant_id=tenant_id, enabled=True)
+
+    def delete_user(self, name):
+        self.keystone_client.users.find(name=name).delete()
+
+    def get_tenantid_by_name(self, name):
+        """Returns TenantID of the project by project's name"""
+        tenant_id = [tenant.id for tenant
+                     in self.keystone_client.tenants.list()
+                     if tenant.name == name]
+        return tenant_id[-1]
+
     def create_project(self, name):
         project = self.keystone_client.tenants.create(
             tenant_name=name, description="For Test Purposes", enabled=True)
@@ -153,13 +169,22 @@ class UITestCase(BaseDeps):
         filename = os.path.join(screenshot_dir, name + '.png')
         self.driver.get_screenshot_as_file(filename)
 
-    def log_in(self):
-        self.fill_field(by.By.ID, 'id_username', cfg.common.user)
-        self.fill_field(by.By.ID, 'id_password', cfg.common.password)
+    def log_in(self, username=None, password=None):
+        username = username or cfg.common.user
+        password = password or cfg.common.password
+        self.fill_field(by.By.ID, 'id_username', username)
+        self.fill_field(by.By.ID, 'id_password', password)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
         murano = self.driver.find_element_by_xpath(consts.Murano)
         if 'collapsed' in murano.get_attribute('class'):
             murano.click()
+
+    def log_out(self):
+        user_menu = self.driver.find_element(
+            by.By.XPATH, "//ul[contains(@class, 'navbar-right')]")
+        user_menu.find_element(
+            by.By.XPATH, ".//span[@class='user-name']").click()
+        user_menu.find_element(by.By.LINK_TEXT, 'Sign Out').click()
 
     def fill_field(self, by_find, field, value):
         self.driver.find_element(by=by_find, value=field).clear()
