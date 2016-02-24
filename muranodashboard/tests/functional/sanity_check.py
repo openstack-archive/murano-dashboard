@@ -1231,6 +1231,20 @@ class TestSuiteRepository(base.PackageTestCase):
         with zipfile.ZipFile(zip_name, 'w') as archive:
             archive.write(file_name)
 
+    def _make_big_zip_pkg(self, name, size):
+        file_name = os.path.join(self.serve_dir, 'apps', 'images.lst')
+        self._compose_app(name)
+
+        # create file with size 10 mb
+        with open(file_name, 'wb') as f:
+            f.seek(size - 1)
+            f.write('\0')
+
+        # add created file to archive
+        zip_name = os.path.join(self.serve_dir, 'apps', name + '.zip')
+        with zipfile.ZipFile(zip_name, 'a') as archive:
+            archive.write(file_name)
+
     def setUp(self):
         super(TestSuiteRepository, self).setUp()
         self.serve_dir = tempfile.mkdtemp(suffix="repo")
@@ -1518,6 +1532,44 @@ class TestSuiteRepository(base.PackageTestCase):
 
         err_msg = self.wait_for_error_message()
         self.assertIn("There is no item named 'manifest.yaml'", err_msg)
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_big_zip_file(self):
+        """Import very big zip archive.
+
+        Scenario:
+            1. Log in Horizon with admin credentials
+            2. Navigate to 'Packages' page
+            3. Click 'Import Package' and select 'File' as a package source
+            4. Choose very big zip file
+            5. Click on 'Next' button
+            6. Check that error message that user can't upload file more than
+                5 MB is displayed
+        """
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._make_big_zip_pkg(name=pkg_name,
+                               size=10 * 1024 * 1024)
+
+        # import package and choose big zip file for it
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        # check that error message appeared
+        error_message = ("Error: 400 Bad Request: Uploading file is too "
+                         "large. The limit is 5 Mb")
+        self.check_alert_message(error_message)
 
         self.check_element_not_on_page(
             by.By.XPATH, c.AppPackages.format(pkg_name))
