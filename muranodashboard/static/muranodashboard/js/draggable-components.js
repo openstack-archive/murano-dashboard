@@ -217,7 +217,7 @@ $(function() {
         function doRequest(url) {
           var requestData;
           $.ajax({
-            method: 'GET',
+            type: 'GET',
             url: url,
             async: false,
             error: function () {
@@ -246,7 +246,7 @@ $(function() {
           });
         if (startUrl) {
           $.ajax({
-            method: 'POST',
+            type: 'POST',
             url: startUrl,
             data: $form.serialize(),
             async: false,
