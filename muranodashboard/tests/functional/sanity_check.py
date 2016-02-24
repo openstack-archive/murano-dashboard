@@ -1501,3 +1501,19 @@ class TestSuitePackageCategory(base.PackageTestCase):
 
         self.check_element_not_on_page(
             by.By.XPATH, c.DeleteCategory.format(self.category))
+
+    def test_list_of_existing_categories(self):
+        """Checks that list of categories avaliable
+
+        Scenario:
+            1. Navigate to 'Categories' page
+            2. Check that list of categories available and basic categories
+                ("Web", "Databases") are present in the list
+        """
+        self.go_to_submenu("Categories")
+        categories_table_locator = (by.By.CSS_SELECTOR, "table#categories")
+        self.check_element_on_page(*categories_table_locator)
+        for category in ("Databases", "Web"):
+            category_locator = (by.By.XPATH,
+                                "//tr[@data-display='{}']".format(category))
+            self.check_element_on_page(*category_locator)
