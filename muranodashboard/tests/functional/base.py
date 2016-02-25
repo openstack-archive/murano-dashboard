@@ -17,6 +17,7 @@ import sys
 import testtools
 import time
 import urlparse
+import uuid
 
 from glanceclient import client as gclient
 from keystoneclient.v2_0 import client as ksclient
@@ -87,6 +88,12 @@ class UITestCase(BaseDeps):
 
         for env in self.murano_client.environments.list():
             self.remove_environment(env.id)
+
+    def gen_random_resource_name(self, prefix=None, reduce_by=None):
+        random_name = str(uuid.uuid4()).replace('-', '')[::reduce_by]
+        if prefix:
+            random_name = prefix + '_' + random_name
+        return random_name
 
     def remove_environment(self, environment_id, timeout=180):
         self.murano_client.environments.delete(environment_id)
@@ -278,6 +285,13 @@ class UITestCase(BaseDeps):
         logger.debug("Waiting for a success message")
         ui.WebDriverWait(self.driver, 2).until(
             EC.presence_of_element_located(locator))
+
+    def wait_for_error_message(self, sec=20):
+        locator = (by.By.CSS_SELECTOR, 'div.alert-danger > p')
+        logger.debug("Waiting for an error message")
+        ui.WebDriverWait(self.driver, sec, 1).until(
+            EC.presence_of_element_located(locator))
+        return self.driver.find_element(*locator).text
 
     def wait_element_is_clickable(self, method, element):
         return ui.WebDriverWait(self.driver, 10).until(

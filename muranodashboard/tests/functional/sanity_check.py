@@ -18,6 +18,7 @@ import SocketServer
 import tempfile
 import time
 import uuid
+import zipfile
 
 from selenium.webdriver.common import by
 from selenium.webdriver.support import ui
@@ -1118,6 +1119,19 @@ class TestSuiteRepository(base.PackageTestCase):
         utils.compose_bundle(os.path.join(bundles_dir, name + '.bundle'),
                              app_names)
 
+    def _make_pkg_zip_regular_file(self, name):
+        file_name = os.path.join(self.serve_dir, 'apps', name + '.zip')
+        with open(file_name, 'w') as f:
+            f.write("I'm not an application. I'm not a zip file at all")
+
+    def _make_non_murano_zip_in_pkg(self, name):
+        file_name = os.path.join(self.serve_dir, 'apps', 'manifest.yaml')
+        with open(file_name, 'w') as f:
+            f.write("Description: I'm not a murano package at all")
+        zip_name = os.path.join(self.serve_dir, 'apps', name + '.zip')
+        with zipfile.ZipFile(zip_name, 'w') as archive:
+            archive.write(file_name)
+
     def setUp(self):
         super(TestSuiteRepository, self).setUp()
         self.serve_dir = tempfile.mkdtemp(suffix="repo")
@@ -1285,6 +1299,129 @@ class TestSuiteRepository(base.PackageTestCase):
         for pkg_name in pkg_names:
             self.check_element_on_page(
                 by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_package_by_invalid_url(self):
+        """Negative test when package is imported by invalid url."""
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._compose_app(pkg_name)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        # Invalid folder
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-url']")
+        el.send_keys("http://127.0.0.1:8099/None/{0}.zip".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_error_message()
+
+        # HTTP connect error
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-url']")
+        el.send_keys("http://127.0.0.2:12345/apps/{0}.zip".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_error_message(sec=90)
+
+        # Invalid app name
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-url']")
+        el.send_keys(
+            "http://127.0.0.1:8099/apps/invalid_{0}.zip".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_error_message()
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_package_by_invalid_name(self):
+        """Negative test when package is imported by invalid name from repo."""
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._compose_app(pkg_name)
+        pkg_to_import = "invalid_" + pkg_name
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_to_import))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_error_message()
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_to_import))
+
+    def test_import_non_zip_file(self):
+        """"Negative test import regualr file instead of zip package."""
+        # Create dummy package with zip file replaced by text one
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._compose_app(pkg_name)
+        self._make_pkg_zip_regular_file(pkg_name)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        err_msg = self.wait_for_error_message()
+        self.assertIn('File is not a zip file', err_msg)
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    def test_import_invalid_zip_file(self):
+        """"Negative test import zip file which is not a murano package."""
+        # At first create dummy package with zip file replaced by text one
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._compose_app(pkg_name)
+        self._make_non_murano_zip_in_pkg(pkg_name)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        err_msg = self.wait_for_error_message()
+        self.assertIn("There is no item named 'manifest.yaml'", err_msg)
+
+        self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
 
 
 class TestSuitePackageCategory(base.PackageTestCase):
