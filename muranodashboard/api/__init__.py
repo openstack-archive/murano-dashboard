@@ -99,21 +99,21 @@ def _get_endpoint(request):
     return endpoint
 
 
-def _get_glance_endpoint(request):
-    endpoint = getattr(settings, 'GLANCE_API_URL', None)
+def _get_glare_endpoint(request):
+    endpoint = getattr(settings, 'GLARE_API_URL', None)
     if not endpoint:
         try:
-            endpoint = base.url_for(request, "image")
+            endpoint = base.url_for(request, "artifact")
         except exceptions.ServiceCatalogException:
-            endpoint = 'http://localhost:9292'
+            endpoint = 'http://localhost:9494'
             LOG.warning('Glance API location could not be found in Service '
                         'Catalog, using default: {0}'.format(endpoint))
     return endpoint
 
 
 def artifactclient(request):
-    endpoint = _get_glance_endpoint(request)
-    insecure = getattr(settings, 'GLANCE_API_INSECURE', False)
+    endpoint = _get_glare_endpoint(request)
+    insecure = getattr(settings, 'GLARE_API_INSECURE', False)
     token_id = request.user.token.id
     return art_client.Client(endpoint=endpoint, token=token_id,
                              insecure=insecure, type_name='murano',
