@@ -1119,6 +1119,77 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
 
+    def test_sharing_app_without_permission(self):
+        """Tests sharing Murano App without permission
+
+        Scenario:
+            1) Login as admin;
+            2) Identity -> Users: Create User:
+                User Name: Test_service_user
+                Primary Project: service
+                Enabled: Yes
+            3) Login to Horizon as an 'Test_service_user';
+            4) Murano -> Manage -> Packages: Import Package
+                Set public Off, Active On
+            5) Try to modify created package and set Public = On.
+                Error: You are not allowed to perform this operation
+            6) Delete new package
+        """
+        service_prj_name = 'service'
+        new_user = {'name': 'Test_service_user',
+                    'password': 'somepassword',
+                    'email': 'test_serv_user@email.com'}
+        try:
+            self.delete_user(new_user['name'])
+        except Exception:
+            pass
+        # Create new user in 'service' prj
+        service_prj_id = self.get_tenantid_by_name(service_prj_name)
+        self.create_user(tenant_id=service_prj_id, **new_user)
+
+        # login as 'Test_service_user'
+        self.log_out()
+        self.log_in(new_user['name'], new_user['password'])
+
+        # Import package
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-package']")
+        el.send_keys(self.archive)
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        # Public = OFF; Active = ON.
+        public_checkbox = self.driver.find_element_by_id('id_modify-is_public')
+        active_checkbox = self.driver.find_element_by_id('id_modify-enabled')
+        if public_checkbox.is_selected() is True:
+            public_checkbox.click()
+        elif active_checkbox.is_selected() is False:
+            active_checkbox.click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackages.format(self.archive_name))
+
+        # Modify Package to set Public = ON
+        package = self.driver.find_element_by_xpath(
+            c.AppPackages.format(self.archive_name))
+        pkg_id = package.get_attribute("data-object-id")
+        self.select_action_for_package(pkg_id, 'modify_package')
+        self.driver.find_element_by_id('id_is_public').click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        # Expecting Error
+        self.wait_for_error_message()
+
+        # Clean up
+        self.select_action_for_package(pkg_id, 'more')
+        self.select_action_for_package(pkg_id, 'delete_package')
+        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.log_out()
+        self.log_in()
+        self.delete_user(new_user['name'])
+
 
 class TestSuiteRepository(base.PackageTestCase):
     _apps_to_delete = set()
