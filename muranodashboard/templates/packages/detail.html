@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load breadcrumb_nav %}
+
+{% block title %}{% trans "Package Details" %}{% endblock %}
+
+{% block page_header %}
+  <div class='page-header'>
+    {% breadcrumb_nav %}
+  </div>
+{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-sm-12">
+      {% include "packages/_detail.html" %}
+    </div>
+  </div>
+{% endblock %}
+
