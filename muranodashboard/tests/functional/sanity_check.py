@@ -1478,17 +1478,17 @@ class TestSuitePackageCategory(base.PackageTestCase):
         Scenario:
             1. Log into OpenStack Horizon dashboard as admin user
             2. Navigate to 'Categories' page
-            2. Click on 'Add Category' button
-            3. Create new category and check it's browsed in the table
-            4. Navigate to 'Packages' page
-            5. Click on 'Import Package' button
-            6. Import package and select created 'test' category for it
-            7. Navigate to "Categories" page
-            8. Check that package count = 1 for created category
-            9. Navigate to 'Packages' page
-            10. Modify imported earlier package, by changing its category
-            11. Navigate to 'Categories' page
-            12. Check that package count = 0 for created category
+            3. Click on 'Add Category' button
+            4. Create new category and check it's browsed in the table
+            5. Navigate to 'Packages' page
+            6. Click on 'Import Package' button
+            7. Import package and select created 'test' category for it
+            8. Navigate to "Categories" page
+            9. Check that package count = 1 for created category
+            10. Navigate to 'Packages' page
+            11. Modify imported earlier package, by changing its category
+            12. Navigate to 'Categories' page
+            13. Check that package count = 0 for created category
         """
         # add new package to the created category
         self._import_package_with_category(self.archive, self.category)
@@ -1526,13 +1526,13 @@ class TestSuitePackageCategory(base.PackageTestCase):
         Scenario:
             1. Log into OpenStack Horizon dashboard as admin user
             2. Navigate to 'Categories' page
-            2. Click on 'Add Category' button
-            3. Create new category and check it's browsed in the table
-            4. Navigate to 'Packages' page
-            5. Click on 'Import Package' button
-            6. Import package and select created 'test' category for it
-            7. Navigate to "Applications" page
-            8. Select new category in "App category" dropdown list
+            3. Click on 'Add Category' button
+            4. Create new category and check it's browsed in the table
+            5. Navigate to 'Packages' page
+            6. Click on 'Import Package' button
+            7. Import package and select created 'test' category for it
+            8. Navigate to "Applications" page
+            9. Select new category in "App category" dropdown list
         """
         self._import_package_with_category(self.archive, self.category)
         self.navigate_to('Application_Catalog')
@@ -1550,17 +1550,17 @@ class TestSuitePackageCategory(base.PackageTestCase):
         Scenario:
             1. Log into OpenStack Horizon dashboard as admin user
             2. Navigate to 'Categories' page
-            2. Click on 'Add Category' button
-            3. Create new category and check it's browsed in the table
-            4. Navigate to 'Packages' page
-            5. Click on 'Import Package' button
-            6. Import package and select created 'test' category for it
-            7. Navigate to 'Environments' page
-            8. Create environment
-            9. Select new category in 'App category' dropdown list
-            10. Check that imported package is displayed
-            11. Select 'Web' category in 'App category' dropdown list
-            12. Check that imported package is not displayed
+            3. Click on 'Add Category' button
+            4. Create new category and check it's browsed in the table
+            5. Navigate to 'Packages' page
+            6. Click on 'Import Package' button
+            7. Import package and select created 'test' category for it
+            8. Navigate to 'Environments' page
+            9. Create environment
+            10. Select new category in 'App category' dropdown list
+            11. Check that imported package is displayed
+            12. Select 'Web' category in 'App category' dropdown list
+            13. Check that imported package is not displayed
         """
         self._import_package_with_category(self.archive, self.category)
 
@@ -1597,11 +1597,10 @@ class TestSuitePackageCategory(base.PackageTestCase):
             1. Log into OpenStack Horizon dashboard as admin user
             2. Navigate to 'Categories' page
             3. Add new category
-            4. Navigate to 'Packages' page
-            5. Import package and select created category for it
-            6. Navigate to 'Categories' page
-            7. Check that package count = 1 for created category
-            8. Check that there is no 'Delete Category' button for the category
+            4. Check that new category has appeared in category list
+            5. Try to add category with the same name
+            6. Check that appropriate and user friendly error message has
+                appeared.
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Categories')
