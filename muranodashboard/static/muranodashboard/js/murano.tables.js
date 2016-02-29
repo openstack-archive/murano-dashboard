@@ -31,3 +31,18 @@ $(function() {
     }
   });
 });
+
+var reloadEnvironmentCalled = false;
+
+$(function() {
+  "use strict";
+  $("table#environments").on("update", function () {
+    var $environmentsRows = $(this).find('tbody tr:visible').not('.empty');
+    if ($environmentsRows.length === 0) {
+      if (reloadEnvironmentCalled === false) {
+        reloadEnvironmentCalled = true;
+        location.reload(true);
+      }
+    }
+  });
+});
