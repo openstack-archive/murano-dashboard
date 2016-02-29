@@ -1143,6 +1143,60 @@ class TestSuitePackages(base.PackageTestCase):
         self.assertIn(pkg_name,
                       self.driver.find_element(by.By.XPATH, c.AppDetail).text)
 
+    def test_add_pkg_to_category_non_admin(self):
+        """Test package addition to category as non admin user
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as non-admin user
+            2. Navigate to 'Packages' page
+            3. Modify any package by changing its category from
+                'category 1' to 'category 2'
+            4. Log out
+            5. Log into OpenStack Horizon dashboard as admin user
+            6. Navigate to 'Categories' page
+            7. Check that 'category 2' has one more package
+        """
+        # save initial package count
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+
+        web_pkg_count = int(self.driver.find_element_by_xpath(
+            "//tr[contains(@data-display, 'Web')]/td[2]").text)
+
+        database_pkg_count = int(self.driver.find_element_by_xpath(
+            "//tr[contains(@data-display, 'Database')]/td[2]").text)
+
+        # relogin as test user
+        self.log_out()
+        self.log_in(self.testuser_name, self.testuser_password)
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        self.select_action_for_package(self.postgre_id, 'modify_package')
+        sel = self.driver.find_element_by_xpath(
+            "//select[contains(@name, 'categories')]")
+        sel = ui.Select(sel)
+        sel.deselect_all()
+        sel.select_by_value('Web')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        self.log_out()
+
+        # log in as admin user
+        self.log_in(cfg.common.user, cfg.common.password)
+
+        # check packages count for categories
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(
+                'Web', web_pkg_count + 1))
+        self.check_element_on_page(
+            by.By.XPATH, c.CategoryPackageCount.format(
+                'Databases', database_pkg_count - 1))
+
     def test_category_management(self):
         """Test application category adds and deletes successfully
 
