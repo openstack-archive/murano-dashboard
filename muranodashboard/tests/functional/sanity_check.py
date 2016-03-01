@@ -810,11 +810,61 @@ class TestSuiteApplications(base.ApplicationTestCase):
                 status_xpath = '{0}{1}'.format(row_xpath,
                                                c.Status.format('Completed'))
                 self.check_element_on_page(by.By.XPATH, status_xpath, sec=90)
-
         # Delete applications one by one
         for app_name in app_names:
             self.delete_component(app_name)
             self.check_element_not_on_page(by.By.LINK_TEXT, app_name)
+
+
+class TestSuiteAppsPagination(base.UITestCase):
+    def setUp(self):
+        super(TestSuiteAppsPagination, self).setUp()
+        self.apps = []
+        # Create 30 additinal packages with applications
+        for i in range(100, 130):
+            app_name = self.gen_random_resource_name('app', 4)
+            tag = self.gen_random_resource_name('tag', 8)
+            metadata = {"categories": ["Web"], "tags": [tag]}
+            app_id = utils.upload_app_package(self.murano_client, app_name,
+                                              metadata)
+            self.apps.append(app_id)
+
+    def tearDown(self):
+        super(TestSuiteAppsPagination, self).tearDown()
+        for app_id in self.apps:
+            self.murano_client.packages.delete(app_id)
+
+    def test_apps_pagination(self):
+        """Test check pagination in case of many applications installed."""
+        self.navigate_to('Application_Catalog')
+        self.go_to_submenu('Applications')
+        packages_list = [elem.name for elem in
+                         self.murano_client.packages.list()]
+        # No list of apps available in the client only packages are.
+        # Need to remove 'Core library' from it since it is not visible in
+        # application's list.
+        packages_list.remove('Core library')
+
+        apps_per_page = 6
+        pages_itself = [packages_list[i:i + apps_per_page] for i in
+                        range(0, len(packages_list), apps_per_page)]
+        for i, names in enumerate(pages_itself, 1):
+            for name in names:
+                self.check_element_on_page(by.By.XPATH, c.App.format(name))
+            if i != len(pages_itself):
+                self.driver.find_element_by_link_text('Next Page').click()
+
+        # Wait till the Next button disapper
+        # Otherwise 'Prev' buttion from previous page might be used
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'Next Page')
+
+        # Now go back to the first page
+        pages_itself.reverse()
+        for i, names in enumerate(pages_itself, 1):
+            for name in names:
+                self.check_element_on_page(by.By.XPATH, c.App.format(name))
+            if i != len(pages_itself):
+                self.driver.find_element_by_link_text('Previous Page').click()
 
 
 class TestSuitePackages(base.PackageTestCase):
