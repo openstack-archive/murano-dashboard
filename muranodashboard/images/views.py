@@ -31,6 +31,7 @@ from muranodashboard.images import tables
 class MarkedImagesView(horizon_tables.DataTableView):
     table_class = tables.MarkedImagesTable
     template_name = 'images/index.html'
+    page_title = _("Marked Images")
 
     def has_prev_data(self, table):
         return self._prev

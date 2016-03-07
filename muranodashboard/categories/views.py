@@ -28,6 +28,7 @@ from muranodashboard.categories import tables
 class CategoriesView(horizon_tables.DataTableView):
     table_class = tables.CategoriesTable
     template_name = 'categories/index.html'
+    page_title = _("Application Categories")
 
     def has_prev_data(self, table):
         return self._prev

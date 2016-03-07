@@ -238,7 +238,6 @@ class PackageDefinitionsTable(tables.DataTable):
         name = 'packages'
         prev_pagination_param = 'marker'
         verbose_name = _('Packages')
-        template = 'common/_data_table.html'
         table_actions_menu = (ToggleEnabled,
                               TogglePublicEnabled)
         table_actions = (PackagesFilterAction,

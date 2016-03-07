@@ -1057,12 +1057,13 @@ class TestSuitePackages(base.PackageTestCase):
         pkg_name = self.alt_archive_name
         self.fill_field(by.By.CSS_SELECTOR,
                         "input[name='modify-name']", pkg_name)
-        self.driver.find_element_by_css_selector(
-            "input[name=modify-is_public]"
-        ).click()
-        self.driver.find_element_by_css_selector(
-            "input[name=modify-enabled]"
-        ).click()
+
+        label = self.driver.find_element_by_css_selector(
+            "label[for=id_modify-is_public]")
+        label.click()
+        label = self.driver.find_element_by_css_selector(
+            "label[for=id_modify-enabled]")
+        label.click()
 
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -1162,9 +1163,9 @@ class TestSuitePackages(base.PackageTestCase):
         # Public = OFF; Active = ON.
         public_checkbox = self.driver.find_element_by_id('id_modify-is_public')
         active_checkbox = self.driver.find_element_by_id('id_modify-enabled')
-        if public_checkbox.is_selected() is True:
+        if public_checkbox.is_selected():
             public_checkbox.click()
-        elif active_checkbox.is_selected() is False:
+        if not active_checkbox.is_selected():
             active_checkbox.click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -1177,7 +1178,10 @@ class TestSuitePackages(base.PackageTestCase):
             c.AppPackages.format(self.archive_name))
         pkg_id = package.get_attribute("data-object-id")
         self.select_action_for_package(pkg_id, 'modify_package')
-        self.driver.find_element_by_id('id_is_public').click()
+
+        label = self.driver.find_element_by_css_selector(
+            "label[for=id_is_public]")
+        label.click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         # Expecting Error
         self.wait_for_error_message()

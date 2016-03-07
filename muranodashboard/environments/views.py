@@ -36,6 +36,7 @@ from muranodashboard.environments import tabs as env_tabs
 class IndexView(tables.DataTableView):
     table_class = env_tables.EnvironmentsTable
     template_name = 'environments/index.html'
+    page_title = _("Environments")
 
     def get_data(self):
         environments = []

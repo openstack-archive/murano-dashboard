@@ -323,7 +323,9 @@ class EnvironmentsTable(tables.DataTable):
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        DeleteEnvironment, AbandonEnvironment)
-        multi_select = False
+        # TODO(zhurong) Due to bug/1554087 in horizon, we should temporary
+        # comment out this 'multi_select = False' to pass the ci test
+        # multi_select = False
 
 
 def get_service_details_link(service):
@@ -418,13 +420,14 @@ class ServicesTable(tables.DataTable):
     class Meta(object):
         name = 'services'
         verbose_name = _('Component List')
-        template = 'services/_data_table.html'
         no_data_message = _('No components')
         status_columns = ['status']
         row_class = UpdateServiceRow
         table_actions = (AddApplication, DeployThisEnvironment)
         row_actions = (DeleteService,)
-        multi_select = False
+        # TODO(zhurong) Due to bug/1554087 in horizon, we should temporary
+        # comment out this 'multi_select = False' to pass the ci test
+        # multi_select = False
 
 
 class ShowDeploymentDetails(tables.LinkAction):
@@ -458,7 +461,6 @@ class DeploymentsTable(tables.DataTable):
     class Meta(object):
         name = 'deployments'
         verbose_name = _('Deployments')
-        template = 'common/_data_table.html'
         row_actions = (ShowDeploymentDetails,)
 
 
@@ -475,4 +477,3 @@ class EnvConfigTable(tables.DataTable):
     class Meta(object):
         name = 'environment_configuration'
         verbose_name = _('Deployed Components')
-        template = 'common/_data_table.html'

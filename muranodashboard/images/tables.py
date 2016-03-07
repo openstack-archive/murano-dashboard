@@ -63,6 +63,5 @@ class MarkedImagesTable(tables.DataTable):
     class Meta(object):
         name = 'marked_images'
         verbose_name = _('Marked Images')
-        template = 'common/_data_table.html'
         table_actions = (MarkImage, RemoveImageMetadata)
         row_actions = (RemoveImageMetadata,)

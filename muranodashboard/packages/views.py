@@ -73,6 +73,7 @@ def is_app(wizard):
 class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
+    page_title = _("Packages")
 
     _more = False
     _prev = False
