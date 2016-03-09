@@ -3,39 +3,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-02-20 13:20+0000\n"
+"POT-Creation-Date: 2016-03-03 00:59+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-02-20 06:31+0000\n"
+"PO-Revision-Date: 2016-03-04 06:40+0000\n"
 "Last-Translator: KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-
-#, python-format
-msgid " %(extended_description)s "
-msgstr " %(extended_description)s "
-
-#, python-format
-msgid " %(key)s "
-msgstr " %(key)s "
-
-#, python-format
-msgid " %(service_name)s "
-msgstr " %(service_name)s "
-
-#, python-format
-msgid " %(value)s  "
-msgstr " %(value)s  "
-
-msgid ""
-" No applications matching your criteria.\n"
-"                "
-msgstr ""
-"基準に一致するアプリケーションがありません。\n"
-"                "
 
 msgid "\"Add Application\""
 msgstr "\"アプリケーションの追加\""
@@ -55,14 +32,6 @@ msgstr "「マーク済みイメージ」"
 msgid "\"Packages\""
 msgstr "\"パッケージ\""
 
-#, python-format
-msgid "%(desc)s"
-msgstr "%(desc)s"
-
-#, python-format
-msgid "%(title)s:"
-msgstr "%(title)s:"
-
 msgid "'Import Bundle'"
 msgstr "'インポートバンドル'"
 
@@ -71,41 +40,6 @@ msgstr "'パッケージのインポート'"
 
 msgid "'Modify Package'"
 msgstr "'パッケージの変更'"
-
-msgid "<strong>Bundle Name: </strong>Bundle's full name."
-msgstr "<strong>バンドル名: </strong>バンドルの完全名。"
-
-msgid "<strong>Bundle URL:</strong> HTTP/HTTPS URL of the bundle file."
-msgstr "<strong>バンドル URL:</strong> バンドルファイルの HTTP/HTTPS URL。"
-
-msgid "<strong>Categories</strong> Select one or more categories for a package"
-msgstr ""
-"<strong>カテゴリー</strong> パッケージのカテゴリーを1 つ以上選択してくださ"
-"い。"
-
-msgid ""
-"<strong>Categories</strong> Select one or more categories for a package."
-msgstr ""
-"<strong>カテゴリー</strong> パッケージのカテゴリーを1 つ以上選択してくださ"
-"い。"
-
-msgid "<strong>Name:</strong> Set up for identifying a package."
-msgstr "<strong>名前:</strong> パッケージを識別するために設定します。"
-
-msgid "<strong>Package Name:</strong> Fully qualified package name."
-msgstr "<strong>パッケージ名:</strong> パッケージの完全修飾名。"
-
-msgid "<strong>Package URL:</strong> HTTP/HTTPS URL of the package file."
-msgstr "<strong>パッケージ URL:</strong> パッケージファイルの HTTP/HTTPS URL。"
-
-msgid "<strong>Package Version:</strong> Version of the package (optional)."
-msgstr ""
-"<strong>パッケージバージョン:</strong> パッケージのバージョン (オプション)。"
-
-msgid "<strong>Tags:</strong> Used for identifying and filtering packages."
-msgstr ""
-"<strong>タグ:</strong> パッケージを識別して、フィルターするために使用されま"
-"す。"
 
 msgid "A local zip file to upload"
 msgstr "アップロードするローカルの zip ファイル"
@@ -139,9 +73,6 @@ msgstr "Murano メタデータの追加"
 
 msgid "Add New"
 msgstr "新規追加"
-
-msgid "Add new category to the application catalog. "
-msgstr "新しいカテゴリーをアプリケーションカタログに追加します。"
 
 msgid "Add to Env"
 msgstr "環境への追加"
@@ -178,10 +109,6 @@ msgstr "アプリケーション詳細"
 
 msgid "Application Package"
 msgstr "アプリケーションパッケージ"
-
-#, python-format
-msgid "Application details: %(name)s"
-msgstr "アプリケーション詳細: %(name)s"
 
 msgid "Application&nbsp;Components"
 msgstr "アプリケーション&nbsp;コンポーネント"
@@ -240,8 +167,8 @@ msgstr "murano-api サーバーの Keystone 設定を確認します。"
 msgid "Choose a Zip archive to upload into the catalog."
 msgstr "カタログにアップロードする Zip アーカイブを選択してください。"
 
-msgid "Click to create an environment"
-msgstr "クリックして、環境を作成します。"
+msgid "Click to create new environment"
+msgstr "クリックして、新しい環境を作成します。"
 
 msgid "Component"
 msgstr "コンポーネント"
@@ -260,9 +187,6 @@ msgstr "コンポーネント"
 
 msgid "Configuration"
 msgstr "設定"
-
-msgid "Configure Application: "
-msgstr "アプリケーションの設定: "
 
 msgid "Confirm password"
 msgstr "パスワードの確認"
@@ -287,9 +211,6 @@ msgstr "環境の作成"
 
 msgid "Create New"
 msgstr "新規作成"
-
-msgid "Create a name for the environment"
-msgstr "環境の名前を作成します"
 
 msgid "Create a title for an image."
 msgstr "イメージのタイトルを作成します。"
@@ -328,9 +249,6 @@ msgstr "デプロイ"
 msgid "Description"
 msgstr "説明"
 
-msgid "Description:"
-msgstr "説明:"
-
 msgid "Details"
 msgstr "詳細"
 
@@ -366,15 +284,15 @@ msgstr "環境のデフォルトネットワーク"
 msgid "Environment Name"
 msgstr "環境名"
 
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr "環境の名前は、空白以外の記号を少なくとも 1 つ含む必要があります。"
+
 #, python-format
 msgid "Environment with id %s doesn't exist anymore"
 msgstr "ID %s の環境はすでに存在しません"
 
 msgid "Environment with specified name already exists"
 msgstr "指定された名前を持つ環境が既に存在します。"
-
-msgid "Environment:"
-msgstr "環境:"
 
 msgid "Environments"
 msgstr "環境"
@@ -423,9 +341,6 @@ msgstr "インポートパッケージ"
 
 msgid "Importing package {0} failed. Reason: {1}"
 msgstr "パッケージ {0} のインポートに失敗しました。理由: {1}"
-
-msgid "Info "
-msgstr "情報"
 
 msgid "Invalid metadata for image: {0}"
 msgstr "無効なイメージのメタデータ: {0}"
@@ -565,6 +480,12 @@ msgstr "パッケージソース"
 msgid "Package URL"
 msgstr "パッケージ URL"
 
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr ""
+"パッケージ作成に失敗しました。リポジトリーからパッケージ名を見つけられないた"
+"め。"
+
 msgid "Package creation failed.Reason: {0}"
 msgstr "パッケージ作成に失敗しました。理由: {0}"
 
@@ -658,18 +579,6 @@ msgstr "利用可能な範囲から IP を選択してください: {0} "
 msgid "Select Image"
 msgstr "イメージを選択してください"
 
-msgid ""
-"Select an image registered in Glance Image\n"
-"            Services."
-msgstr ""
-"Image サービスに登録されているイメージを\n"
-"            選択してください。"
-
-msgid ""
-"Select an image type supported by\n"
-"            Murano."
-msgstr "Murano によりイメージ種別を選択してください。"
-
 msgid "Show Details"
 msgstr "詳細表示"
 
@@ -746,6 +655,13 @@ msgstr ""
 msgid "The request data is not acceptable by the server"
 msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
 
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr ""
+"この操作は取り消せません。この環境により作成されたリソースは、手動で開放する"
+"必要があります。"
+
 msgid "This name is already taken."
 msgstr "この名前はすでに使用されています。"
 
@@ -804,8 +720,8 @@ msgstr "環境 {0} を作成できませんでした。理由: {1}"
 msgid "Unable to delete category"
 msgstr "カテゴリーを削除できません。"
 
-msgid "Unable to delete category."
-msgstr "カテゴリーを削除できません。"
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "次の理由により、環境 {0} を削除できません。{1}"
 
 msgid "Unable to delete package in murano-api server"
 msgstr "murano-api サーバーにおいてパッケージを削除できません。"
@@ -852,6 +768,9 @@ msgid ""
 msgstr ""
 "サービスの一覧を取得できません。この環境は、デプロイ中か、他のユーザーにより"
 "デプロイされています。"
+
+msgid "Unable to retrieve package details."
+msgstr "パッケージの詳細を取得できません。"
 
 msgid "Unable to retrieve project list."
 msgstr "プロジェクト一覧を取得できません。"
