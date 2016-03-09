@@ -1,0 +1,7 @@
+---
+features:
+  - When using glare the endpoint for client is now 'artifact'
+    since glare has been moved to a separate service
+upgrade:
+  - Parameters ``GLANCE_API_INSECURE`` and ``GLANCE_API_URL`` have been renamed to
+    ``GLARE_API_INSECURE`` and ``GLARE_API_URL``.
