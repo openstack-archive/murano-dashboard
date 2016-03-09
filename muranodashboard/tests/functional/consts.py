@@ -39,6 +39,8 @@ ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"
 DeleteCategory = "//tr[td[contains(text(), '{0}')]]//button[contains(@id, 'action_delete')]"  # noqa
+NextBtn = "//tfoot//tr//td//a[contains(@href,'?marker')]"
+PrevBtn = "//tfoot//tr//td//a[contains(@href,'prev_marker')]"
 
 # Panel's
 

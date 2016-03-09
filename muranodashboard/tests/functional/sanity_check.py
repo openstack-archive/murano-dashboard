@@ -1752,3 +1752,50 @@ class TestSuitePackageCategory(base.PackageTestCase):
             category_locator = (by.By.XPATH,
                                 "//tr[@data-display='{}']".format(category))
             self.check_element_on_page(*category_locator)
+
+
+class TestSuiteCategoriesPagination(base.PackageTestCase):
+    def setUp(self):
+        super(TestSuiteCategoriesPagination, self).setUp()
+        self.categories_to_delete = []
+        # Create at least 5 more pages with categories
+        for x in range(cfg.common.items_per_page * 5):
+            name = self.gen_random_resource_name('category')
+            category = self.murano_client.categories.add({'name': name})
+            self.categories_to_delete.append(category.id)
+
+    def tearDown(self):
+        super(TestSuiteCategoriesPagination, self).tearDown()
+        for category_id in self.categories_to_delete:
+            self.murano_client.categories.delete(id=category_id)
+
+    def test_category_pagination(self):
+        """Test categires pagination in case of many categires created """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Categories')
+
+        categories_list = [elem.name for elem in
+                           self.murano_client.categories.list()]
+        # Murano client lists the categories in order of creation
+        # starting from the last created. So need to reverse it to align with
+        # the table in UI form. Where categories are listed starting from the
+        # first created to the last one.
+        categories_list.reverse()
+
+        categories_per_page = cfg.common.items_per_page
+        pages_itself = [categories_list[i:i + categories_per_page] for i in
+                        range(0, len(categories_list), categories_per_page)]
+        for i, names in enumerate(pages_itself, 1):
+            for name in names:
+                self.check_element_on_page(by.By.XPATH, c.Status.format(name))
+            if i != len(pages_itself):
+                self.driver.find_element_by_xpath(c.NextBtn).click()
+        # Wait till the Next button disapper
+        # Otherwise 'Prev' buttion from previous page might be used
+        self.check_element_not_on_page(by.By.XPATH, c.NextBtn)
+        pages_itself.reverse()
+        for i, names in enumerate(pages_itself, 1):
+            for name in names:
+                self.check_element_on_page(by.By.XPATH, c.Status.format(name))
+            if i != len(pages_itself):
+                self.driver.find_element_by_xpath(c.PrevBtn).click()
