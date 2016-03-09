@@ -106,7 +106,7 @@ def _get_glare_endpoint(request):
             endpoint = base.url_for(request, "artifact")
         except exceptions.ServiceCatalogException:
             endpoint = 'http://localhost:9494'
-            LOG.warning('Glance API location could not be found in Service '
+            LOG.warning('Glare API location could not be found in Service '
                         'Catalog, using default: {0}'.format(endpoint))
     return endpoint
 
