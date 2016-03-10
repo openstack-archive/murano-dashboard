@@ -1,27 +1,31 @@
 # Gaoxiao Zhu <zhu.gaoxiao@h3c.com>, 2016. #zanata
+# Shengjing Zhu <zsj950618@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-03 00:59+0000\n"
+"POT-Creation-Date: 2016-03-09 15:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-04 03:10+0000\n"
-"Last-Translator: Gaoxiao Zhu <zhu.gaoxiao@h3c.com>\n"
+"PO-Revision-Date: 2016-03-09 10:53+0000\n"
+"Last-Translator: Shengjing Zhu <zsj950618@gmail.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 msgid "An error occurred. Please try again later."
-msgstr "发生错。请稍后重试。"
+msgstr "发生错，请稍后重试。"
 
 msgid "Loading"
 msgstr "加载中"
 
 msgid "Unable to retrieve the packages."
 msgstr "无法获取包。"
+
+msgid "Unable to run action."
+msgstr "无法执行操作。"
 
 msgid "Waiting for a result"
 msgstr "等待结果"

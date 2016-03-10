@@ -1,0 +1,778 @@
+# Shengjing Zhu <zsj950618@gmail.com>, 2016. #zanata
+# Yaguang Tang <heut2008@gmail.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-03-09 15:49+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-03-10 04:14+0000\n"
+"Last-Translator: Shengjing Zhu <zsj950618@gmail.com>\n"
+"Language-Team: Chinese (China)\n"
+"Language: zh-CN\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+msgid ""
+" with the following requirements:\n"
+"*"
+msgstr ""
+"需要满足这些要求：\n"
+"*"
+
+msgid "\"Add Application\""
+msgstr "\"添加应用程序\""
+
+msgid "\"Applications\""
+msgstr "“应用程序”"
+
+msgid "-"
+msgstr "-"
+
+msgid "A local zip file to upload"
+msgstr "从本地上传的一个 ZIP 压缩包"
+
+msgid "Abandon"
+msgstr "丢弃"
+
+msgid "Abandoned"
+msgstr "已丢弃"
+
+#, fuzzy
+msgid "Active"
+msgstr "运行中"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Add Application"
+msgstr "添加应用程序"
+
+msgid "Add Application Category"
+msgstr "添加应用程序目录"
+
+msgid "Add Category"
+msgstr "添加目录"
+
+msgid "Add Component"
+msgstr "增加组件"
+
+msgid "Add Murano Metadata"
+msgstr "增加 Murano 元数据"
+
+msgid "Add to Env"
+msgstr "添加到 Env 中"
+
+msgid "Adding application to an environment failed."
+msgstr "向环境中添加应用程序失败。"
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "从外部的 http/https URL 来加载 Bundle。"
+
+msgid "An external http/https URL to load the package from."
+msgstr "从外部的 http/https URL 来加载软件包。"
+
+msgid "App Category:"
+msgstr "应用程序目录："
+
+msgid "Application Catalog"
+msgstr "应用目录"
+
+msgid "Application Categories"
+msgstr "应用程序目录"
+
+msgid "Application Category"
+msgstr "应用程序目录"
+
+msgid "Application Details"
+msgstr "应用程序详情"
+
+msgid "Application Package"
+msgstr "应用软件包"
+
+msgid "Application details"
+msgstr "应用程序详情"
+
+msgid "Applications"
+msgstr "应用程序"
+
+msgid "Author"
+msgstr "作者"
+
+msgid "Auto"
+msgstr "自动"
+
+msgid "Bundle Name"
+msgstr "Bundle 名称"
+
+msgid "Bundle URL"
+msgstr "Bundle URL"
+
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr "Bundle 创建失败，原因是：无法从仓库中找到该 Bundle。"
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "Bundle 创建失败，原因是：{0}"
+
+msgid "Bundle successfully imported."
+msgstr "已成功导入 Bundle"
+
+msgid "Cannot get allowed subnet for the environment, consult your admin"
+msgstr "无法为这个环境获取可用的子网，请联系您的管理员"
+
+msgid "Categories"
+msgstr "目录"
+
+msgid "Category"
+msgstr "目录"
+
+msgid "Category Name"
+msgstr "目录名称"
+
+msgid "Category {0} created."
+msgstr "目录{0}已创建"
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "检查 Keystone 配置中关于 murano-api 服务的设置"
+
+msgid "Click to create new environment"
+msgstr "点击以创建新的环境"
+
+msgid "Component"
+msgstr "组件"
+
+msgid "Component List"
+msgstr "组件列表"
+
+msgid "Components"
+msgstr "组件"
+
+msgid "Configuration"
+msgstr "配置"
+
+msgid "Confirm password"
+msgstr "确认密码"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "不能获取环境 {0} 的最近状态"
+
+msgid "Couldn't update environment. Reason: "
+msgstr "无法更新环境，原因是："
+
+#, fuzzy
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "无法更新软件包 {0}，错误：{1}"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "Create Env"
+msgstr "创建 Env"
+
+msgid "Create Environment"
+msgstr "创建环境"
+
+msgid "Create New"
+msgstr "新建"
+
+msgid "Create a title for an image."
+msgstr "给镜像创建一个标题。"
+
+msgid "Created"
+msgstr "已创建"
+
+msgid "Deploy"
+msgstr "部署"
+
+msgid "Deploy This Environment"
+msgstr "部署这个环境"
+
+msgid "Deploy started"
+msgstr "部署已经开始"
+
+msgid "Deployed"
+msgstr "已部署"
+
+msgid "Deployed Components"
+msgstr "已部署的组件"
+
+msgid "Deployment History"
+msgstr "部署历史"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "ID 为 %s 的部署不再存在"
+
+msgid "Deployments"
+msgstr "部署"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Details"
+msgstr "详情"
+
+msgid "Download Package"
+msgstr "下载软件包"
+
+msgid "Enabled"
+msgstr "已启用"
+
+msgid ""
+"Enter a complex password with at least one                                "
+"letter, one number and one special character"
+msgstr "请输入复杂密码，必须包含至少一个字面、一个数字和一个特殊字符"
+
+msgid ""
+"Enter a complex password with at least one letter,                 one "
+"number and one special character"
+msgstr "请输入复杂密码，必须包含至少一个字面、一个数字和一个特殊字符"
+
+msgid "Enter a password for the application"
+msgstr "请输入应用密码"
+
+msgid "Environment"
+msgstr "环境"
+
+msgid "Environment Default Network"
+msgstr "环境默认网络"
+
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr "环境名称必须包含一个非空白字符"
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "ID 为 %s 的环境不再存在"
+
+msgid "Environment with specified name already exists"
+msgstr "已经存在相同名称的环境"
+
+msgid "Environments"
+msgstr "环境"
+
+msgid "Error {0} occurred while installing images for {1}"
+msgstr "安装镜像 {1} 时发生错误 {0}"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "安装软件包 {1} 时发生错误 {0}"
+
+msgid "Error {0} occurred while parsing package {1}"
+msgstr "解析软件包 {1} 时发生错误 {0}"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "设置镜像 {1}、{2} 为公有时发生错误 {0}"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed to create environment"
+msgstr "创建环境失败"
+
+msgid "Failed to modify the package. {0}"
+msgstr "修改软件包失败。{0}"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Filter"
+msgstr "过滤"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"第一个字符需要是字母或下划线，后面的字符可以是字母、数字、下划线或者, @, #, $"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Image"
+msgstr "镜像"
+
+msgid "Image Title"
+msgstr "镜像标题"
+
+msgid "Image Type"
+msgstr "镜像类型"
+
+msgid "Image successfully marked"
+msgstr "镜像标记成功"
+
+msgid "Images"
+msgstr "镜像"
+
+msgid "Import Bundle"
+msgstr "导入 Bundle"
+
+msgid "Import Package"
+msgstr "导入软件包"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "导入软件包 {0} 失败，原因是：{1}"
+
+#, fuzzy
+msgid "Invalid metadata for image: {0}"
+msgstr "镜像 {0} 的元数据无效"
+
+msgid "Invalid murano image metadata"
+msgstr "无效的 murano 镜像元数据。"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "“murano_nets”的值无效"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "禁止上传超过 {0} MB 大小的文件。"
+
+msgid "KeyWord"
+msgstr "关键字"
+
+msgid "Last operation"
+msgstr "上次操作"
+
+msgid "Latest Deployment Log"
+msgstr "上次部署日志"
+
+msgid "License"
+msgstr "许可证"
+
+msgid "Logs"
+msgstr "日志"
+
+msgid "Manage"
+msgstr "管理"
+
+msgid "Manage Components"
+msgstr "管理组件"
+
+msgid "Mark Image"
+msgstr "标记镜像"
+
+msgid "Marked Images"
+msgstr "已标记的镜像"
+
+msgid "Metadata"
+msgstr "元数据"
+
+msgid "Modify Package"
+msgstr "修改软件包"
+
+msgid "Modifying package failed"
+msgstr "修改软件包失败"
+
+msgid "Murano"
+msgstr "Murano"
+
+msgid "NO ENVIRONMENTS"
+msgstr "没有环境"
+
+msgid "Name"
+msgstr "名称"
+
+msgid "Name of the bundle."
+msgstr "Bundle 名称"
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "%s的网络"
+
+msgid "Next Page"
+msgstr "下一页"
+
+msgid "No availability zones available"
+msgstr "没有可用区域"
+
+msgid "No categories available"
+msgstr "没有可用的目录"
+
+msgid "No components"
+msgstr "没有组件"
+
+msgid "No images available"
+msgstr "没有可用镜像"
+
+msgid "No keypair"
+msgstr "没有密钥对"
+
+msgid "No license"
+msgstr "没有许可证"
+
+msgid "No recent activity to report at this time."
+msgstr "当前时间没有最近的活动报告"
+
+msgid "No requirements"
+msgstr "没有要求"
+
+msgid "None"
+msgstr "无"
+
+msgid "Not in domain"
+msgstr "不在域中"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr "OpenStack 网络服务（Neuron）当前环境不可用。无法应用自定义的网络设置。"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "操作被 murano-api 服务禁止。"
+
+msgid "Optional"
+msgstr "可选"
+
+msgid "Overview"
+msgstr "概览"
+
+msgid "Package"
+msgstr "软件包"
+
+msgid "Package Bundle Source"
+msgstr "软件包 Bundle 源"
+
+msgid "Package Count"
+msgstr "软件包数目"
+
+msgid "Package Name"
+msgstr "软件包名称"
+
+msgid "Package Source"
+msgstr "软件源"
+
+msgid "Package Tags"
+msgstr "软件包标签"
+
+msgid "Package URL"
+msgstr "软件包 URL"
+
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr "软件包创建失败，原因是：无法从仓库里找到该软件包。"
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "软件包创建失败，原因是：{0}"
+
+msgid "Package modified."
+msgstr "软件包已修改。"
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "仓库中软件包的名称，通常是完整的名称"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "相同名字的软件包或类已经是公有的"
+
+msgid "Package parameters successfully updated."
+msgstr "已成功更新软件包参数"
+
+msgid "Package version"
+msgstr "软件包版本"
+
+msgid "Package with id {0} is not found"
+msgstr "没有发现 ID 为 {0} 的软件"
+
+msgid "Package with specified name already exists"
+msgstr "已经存在相同名称的软件包"
+
+msgid "Package {0} already registered."
+msgstr "已注册软件包 {0}"
+
+msgid "Package {0} upload failed. {1}"
+msgstr "软件包 {0} 上传失败。{1}"
+
+msgid "Package {0} uploaded"
+msgstr "已上传软件包 {0}"
+
+msgid "Packages"
+msgstr "软件包"
+
+msgid "Please confirm your password"
+msgstr "请确认您的密码"
+
+msgid "Please supply a bundle name"
+msgstr "请提供一个 Bundle  名称"
+
+msgid "Please supply a bundle url"
+msgstr "请提供一个 Bundle URL"
+
+msgid "Please supply a package file"
+msgstr "请提供一个软件包文件"
+
+msgid "Please supply a package name"
+msgstr "请提供一个软件包名称"
+
+msgid "Please supply a package url"
+msgstr "请提供一个软件包 URL"
+
+msgid "Previous Page"
+msgstr "上一页"
+
+msgid "Public"
+msgstr "公有"
+
+msgid "Recent Activity"
+msgstr "最近的活动"
+
+msgid "Repository"
+msgstr "仓库"
+
+msgid "Requested object is not found on murano server."
+msgstr "无法在 murano 服务器上找到所请求的对象。"
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "请求的操作和已存在的对象冲突。"
+
+msgid "Requirements"
+msgstr "需求"
+
+msgid "Retype your password"
+msgstr "重新输入密码"
+
+msgid "Router is not found. You should create one explicitly."
+msgstr "找不到路由器，你需要先创建一个。"
+
+msgid "Select Application"
+msgstr "选择应用"
+
+msgid "Select IP from available range: {0} "
+msgstr "从可以的范围中选择 IP：{0}"
+
+msgid "Select Image"
+msgstr "选择镜像"
+
+msgid "Select an image registered in Glance Image Services."
+msgstr "在 Glance 镜像服务中选择一个已注册的镜像。"
+
+msgid "Select an image type supported by Murano."
+msgstr "选择一个 Murano 支持的镜像类型。"
+
+msgid "Show Details"
+msgstr "显示详情"
+
+msgid "Something went wrong during package downloading"
+msgstr "下载软件包的时候发生错误"
+
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "对不起，这个环境不再存在"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr "对不起，您现在不能添加应用程序。当前环境正在部署。"
+
+msgid "Sorry, you can't delete service right now"
+msgstr "对不起，您现在不能删除服务"
+
+msgid "Specified Cluster Static IP is already in use"
+msgstr "指定的集群静态 IP 已经被使用"
+
+msgid "Specified Cluster Static IP is not in valid IP range"
+msgstr "指定的集群静态 IP 不在可用 IP 地址范围内"
+
+msgid "Specified IP address should belong to {0} subnet"
+msgstr "指定的 IP 地址应当属于{0}子网"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "指定的名称已被使用，请更换"
+
+msgid "Specify valid fixed IP"
+msgstr "指定有效的固定 IP"
+
+msgid "Start Deleting"
+msgstr "开始删除"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Step {0}"
+msgstr "步骤 {0}"
+
+msgid "Tags"
+msgstr "标签"
+
+msgid "Tenant Name"
+msgstr "租户名称"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "第 '{0}' 个应用程序已成功添加到环境中。"
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"除非单独设置，否则这个环境中的应用的虚拟机会自动加入这个网络。选择“新建”会创"
+"建一个网络，子网的 IP 段是从这个工程默认的 Murano 路由器的可用资源中分配的。"
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr "密码必须包含至少一个字面、一个数字和一个特殊字符"
+
+msgid "The request data is not acceptable by the server"
+msgstr "请求的数据不能被服务器接受"
+
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr "这个动作不能撤消。这个环境创建的所有资源需要手动释放。"
+
+msgid "This name is already taken."
+msgstr "这个名字已经被使用"
+
+#, fuzzy
+msgid "Time Finished"
+msgstr "计时结束"
+
+#, fuzzy
+msgid "Time Started"
+msgstr "计时开始"
+
+msgid "Time updated"
+msgstr "时间已更新"
+
+msgid "Title"
+msgstr "标题"
+
+#, fuzzy
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "切换运行"
+
+#, fuzzy
+msgid "Toggle Enabled"
+msgstr "切换启用"
+
+#, fuzzy
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "切换公有"
+
+#, fuzzy
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "已切换运行"
+
+#, fuzzy
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "已切换公有"
+
+msgid "Topology"
+msgstr "拓扑"
+
+msgid ""
+"Trying to add {0} image to glance. Image will be ready for deployment after "
+"successful upload"
+msgstr "正在尝试把镜像 {0} 加入到 Glance 中。上传成功后镜像就可以用来部署"
+
+msgid ""
+"Trying to add {0}, {1} image to glance. Image will be ready for deployment "
+"after successful upload"
+msgstr "正在尝试把镜像 {0}, {1} 加入到 Glance 中。上传成功后镜像就可以用来部署"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "UNKNOWN"
+msgstr "未知"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "无法丢弃环境 {0}，原因是：{1}"
+
+msgid "Unable to communicate to murano-api server."
+msgstr "无法和 murano-api 服务通信。"
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "无法创建环境 {0}，原因是：{1}"
+
+msgid "Unable to delete category"
+msgstr "无法删除目录"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "无法删除环境 {0}，原因是：{1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "无法在 murano-api 服务器上删除软件包"
+
+msgid "Unable to deploy. Try again later"
+msgstr "无法部署，请稍后重试"
+
+msgid "Unable to download package."
+msgstr "无法下载软件包"
+
+msgid "Unable to get list of categories"
+msgstr "无法获取目录列表"
+
+msgid "Unable to mark image"
+msgstr "无法标记镜像"
+
+msgid "Unable to modify package"
+msgstr "无法修改软件包"
+
+msgid "Unable to remove metadata"
+msgstr "无法删除元数据"
+
+msgid "Unable to remove package."
+msgstr "无法移除软件包"
+
+msgid "Unable to retrieve  availability zones."
+msgstr "无法获取可用区域"
+
+msgid "Unable to retrieve details for service"
+msgstr "无法获取服务详情"
+
+msgid "Unable to retrieve information about fixed IP or IP is not valid."
+msgstr "无法获取固定 IP 的信息或者 IP 无效"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "无法获取部署列表"
+
+msgid "Unable to retrieve list of images"
+msgstr "无法获取镜像列表"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr "无法获取服务列表。这个环境正在部署或者其他人已经部署了"
+
+msgid "Unable to retrieve package details."
+msgstr "无法获取软件包详情"
+
+msgid "Unable to retrieve project list."
+msgstr "无法获取工程列表"
+
+msgid "Unable to retrieve public images."
+msgstr "无法获取公共镜像。"
+
+msgid "Unavailable"
+msgstr "不可用"
+
+msgid "Update Image"
+msgstr "更新镜像"
+
+msgid "Updated"
+msgstr "已更新"
+
+msgid "Uploading package failed. {0}"
+msgstr "上传软件包失败。{0}"
+
+msgid "Validation Error occurred"
+msgstr "发生验证错误"
+
+msgid "Version"
+msgstr "版本"
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "您不被允许修改这个软件包的属性"
+
+msgid "You are not allowed to delete this package"
+msgstr "您不被允许删除这个软件包"
+
+msgid "You are not allowed to perform this operation"
+msgstr "您不被允许执行这个操作"
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1}不匹配"

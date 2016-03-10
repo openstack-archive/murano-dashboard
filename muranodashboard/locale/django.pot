@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-09 06:31+0000\n"
+"POT-Creation-Date: 2016-03-10 06:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgid "The request data is not acceptable by the server"
 msgstr ""
 
 #: muranodashboard/catalog/panel.py:22
-#: muranodashboard/environments/views.py:121
+#: muranodashboard/environments/views.py:122
 #: muranodashboard/templates/catalog/_details_page_header.html:11
 #: muranodashboard/templates/catalog/index.html:6
 msgid "Applications"
@@ -99,7 +99,7 @@ msgid "Categories"
 msgstr ""
 
 #: muranodashboard/categories/tables.py:29
-#: muranodashboard/categories/views.py:87
+#: muranodashboard/categories/views.py:88
 #: muranodashboard/templates/categories/add.html:3
 msgid "Add Category"
 msgstr ""
@@ -121,15 +121,16 @@ msgid "Package Count"
 msgstr ""
 
 #: muranodashboard/categories/tables.py:62
+#: muranodashboard/categories/views.py:31
 #: muranodashboard/templates/categories/index.html:3
 msgid "Application Categories"
 msgstr ""
 
-#: muranodashboard/categories/views.py:90
+#: muranodashboard/categories/views.py:91
 msgid "Add Application Category"
 msgstr ""
 
-#: muranodashboard/categories/views.py:92
+#: muranodashboard/categories/views.py:93
 msgid "Add"
 msgstr ""
 
@@ -320,8 +321,9 @@ msgstr ""
 #: muranodashboard/environments/tables.py:91
 #: muranodashboard/environments/tables.py:119
 #: muranodashboard/environments/tables.py:318
-#: muranodashboard/environments/views.py:117
-#: muranodashboard/environments/views.py:192
+#: muranodashboard/environments/views.py:39
+#: muranodashboard/environments/views.py:118
+#: muranodashboard/environments/views.py:193
 #: muranodashboard/templates/environments/_data_table.html:3
 #: muranodashboard/templates/environments/index.html:5
 msgid "Environments"
@@ -332,8 +334,8 @@ msgid "Add Component"
 msgstr ""
 
 #: muranodashboard/environments/tables.py:69
-#: muranodashboard/environments/views.py:153
-#: muranodashboard/environments/views.py:155
+#: muranodashboard/environments/views.py:154
+#: muranodashboard/environments/views.py:156
 #: muranodashboard/templates/catalog/env_switcher.html:10
 #: muranodashboard/templates/environments/create.html:3
 msgid "Create Environment"
@@ -385,7 +387,6 @@ msgstr ""
 
 #: muranodashboard/environments/tables.py:147
 #: muranodashboard/environments/tabs.py:195
-#: muranodashboard/templates/services/_data_table.html:4
 #: muranodashboard/templates/services/index.html:8
 msgid "Components"
 msgstr ""
@@ -428,8 +429,8 @@ msgid "Couldn't update environment. Reason: "
 msgstr ""
 
 #: muranodashboard/environments/tables.py:305
-#: muranodashboard/environments/tables.py:340
-#: muranodashboard/environments/tables.py:467
+#: muranodashboard/environments/tables.py:342
+#: muranodashboard/environments/tables.py:469
 #: muranodashboard/packages/forms.py:162 muranodashboard/packages/tables.py:60
 #: muranodashboard/templates/categories/_add.html:8
 #: muranodashboard/templates/packages/_detail.html:5
@@ -438,8 +439,8 @@ msgid "Name"
 msgstr ""
 
 #: muranodashboard/environments/tables.py:311
-#: muranodashboard/environments/tables.py:347
-#: muranodashboard/environments/tables.py:454
+#: muranodashboard/environments/tables.py:349
+#: muranodashboard/environments/tables.py:457
 msgid "Status"
 msgstr ""
 
@@ -447,48 +448,48 @@ msgstr ""
 msgid "NO ENVIRONMENTS"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:344
-#: muranodashboard/environments/tables.py:470
+#: muranodashboard/environments/tables.py:346
+#: muranodashboard/environments/tables.py:472
 #: muranodashboard/images/tables.py:58 muranodashboard/packages/tables.py:59
 #: muranodashboard/packages/tables.py:222
 #: muranodashboard/templates/packages/_detail.html:9
 msgid "Type"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:352
+#: muranodashboard/environments/tables.py:354
 msgid "Last operation"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:355
+#: muranodashboard/environments/tables.py:357
 msgid "Time updated"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:420
+#: muranodashboard/environments/tables.py:422
 msgid "Component List"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:422
+#: muranodashboard/environments/tables.py:423
 msgid "No components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:432
+#: muranodashboard/environments/tables.py:435
 msgid "Show Details"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:446
+#: muranodashboard/environments/tables.py:449
 msgid "Time Started"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:449
+#: muranodashboard/environments/tables.py:452
 msgid "Time Finished"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:460
-#: muranodashboard/environments/views.py:196
+#: muranodashboard/environments/tables.py:463
+#: muranodashboard/environments/views.py:197
 msgid "Deployments"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:477
+#: muranodashboard/environments/tables.py:479
 msgid "Deployed Components"
 msgstr ""
 
@@ -526,27 +527,27 @@ msgid "Deployment History"
 msgstr ""
 
 #: muranodashboard/environments/tabs.py:239
-#: muranodashboard/environments/views.py:85
+#: muranodashboard/environments/views.py:86
 msgid "Unable to retrieve list of deployments"
 msgstr ""
 
-#: muranodashboard/environments/views.py:72
+#: muranodashboard/environments/views.py:73
 msgid "Sorry, this environment doesn't exist anymore"
 msgstr ""
 
-#: muranodashboard/environments/views.py:138
+#: muranodashboard/environments/views.py:139
 msgid "Unable to retrieve details for service"
 msgstr ""
 
-#: muranodashboard/environments/views.py:157
+#: muranodashboard/environments/views.py:158
 #: muranodashboard/templates/packages/_import_bundle.html:49
 #: muranodashboard/templates/packages/_upload.html:67
 #: muranodashboard/templates/services/_wizard_create.html:119
 msgid "Create"
 msgstr ""
 
-#: muranodashboard/environments/views.py:207
-#: muranodashboard/environments/views.py:221
+#: muranodashboard/environments/views.py:208
+#: muranodashboard/environments/views.py:222
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr ""
@@ -559,7 +560,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: muranodashboard/images/forms.py:72 muranodashboard/images/views.py:86
+#: muranodashboard/images/forms.py:72 muranodashboard/images/views.py:87
 msgid "Unable to retrieve list of images"
 msgstr ""
 
@@ -579,7 +580,7 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: muranodashboard/images/tables.py:24 muranodashboard/images/views.py:101
+#: muranodashboard/images/tables.py:24 muranodashboard/images/views.py:102
 #: muranodashboard/templates/images/mark.html:3
 msgid "Mark Image"
 msgstr ""
@@ -597,16 +598,16 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: muranodashboard/images/tables.py:65
+#: muranodashboard/images/tables.py:65 muranodashboard/images/views.py:34
 #: muranodashboard/templates/images/index.html:3
 msgid "Marked Images"
 msgstr ""
 
-#: muranodashboard/images/views.py:96
+#: muranodashboard/images/views.py:97
 msgid "Add Murano Metadata"
 msgstr ""
 
-#: muranodashboard/images/views.py:99
+#: muranodashboard/images/views.py:100
 msgid "Update Image"
 msgstr ""
 
@@ -770,6 +771,7 @@ msgid "No categories available"
 msgstr ""
 
 #: muranodashboard/packages/panel.py:22 muranodashboard/packages/tables.py:240
+#: muranodashboard/packages/views.py:76
 #: muranodashboard/templates/packages/index.html:5
 msgid "Packages"
 msgstr ""
@@ -875,108 +877,108 @@ msgstr ""
 msgid "Updated"
 msgstr ""
 
-#: muranodashboard/packages/views.py:134
+#: muranodashboard/packages/views.py:135
 msgid "Unable to retrieve project list."
 msgstr ""
 
-#: muranodashboard/packages/views.py:144
+#: muranodashboard/packages/views.py:145
 msgid "UNKNOWN"
 msgstr ""
 
-#: muranodashboard/packages/views.py:210
+#: muranodashboard/packages/views.py:211
 msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
 msgstr ""
 
-#: muranodashboard/packages/views.py:213
+#: muranodashboard/packages/views.py:214
 msgid "Bundle creation failed.Reason: {0}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:233
+#: muranodashboard/packages/views.py:234
 msgid "Error {0} occurred while parsing package {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:247 muranodashboard/packages/views.py:454
+#: muranodashboard/packages/views.py:248 muranodashboard/packages/views.py:455
 msgid ""
 "Trying to add {0} image to glance. Image will be ready for deployment "
 "after successful upload"
 msgstr ""
 
-#: muranodashboard/packages/views.py:251 muranodashboard/packages/views.py:458
+#: muranodashboard/packages/views.py:252 muranodashboard/packages/views.py:459
 msgid ""
 "Trying to add {0}, {1} image to glance. Image will be ready for "
 "deployment after successful upload"
 msgstr ""
 
-#: muranodashboard/packages/views.py:257 muranodashboard/packages/views.py:465
+#: muranodashboard/packages/views.py:258 muranodashboard/packages/views.py:466
 msgid "Error {0} occurred while installing images for {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:267 muranodashboard/packages/views.py:483
-#: muranodashboard/packages/views.py:509
+#: muranodashboard/packages/views.py:268 muranodashboard/packages/views.py:484
+#: muranodashboard/packages/views.py:510
 msgid "Package {0} uploaded"
 msgstr ""
 
-#: muranodashboard/packages/views.py:272 muranodashboard/packages/views.py:489
+#: muranodashboard/packages/views.py:273 muranodashboard/packages/views.py:490
 msgid "Package {0} already registered."
 msgstr ""
 
-#: muranodashboard/packages/views.py:281
+#: muranodashboard/packages/views.py:282
 msgid "Package {0} upload failed. {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:286
+#: muranodashboard/packages/views.py:287
 msgid "Importing package {0} failed. Reason: {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:296
+#: muranodashboard/packages/views.py:297
 msgid "Bundle successfully imported."
 msgstr ""
 
-#: muranodashboard/packages/views.py:346
+#: muranodashboard/packages/views.py:347
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:360
+#: muranodashboard/packages/views.py:361
 msgid "Error {0} occurred while setting image {1}, {2} public"
 msgstr ""
 
-#: muranodashboard/packages/views.py:369
+#: muranodashboard/packages/views.py:370
 msgid "You are not allowed to change this properties of the package"
 msgstr ""
 
-#: muranodashboard/packages/views.py:376
+#: muranodashboard/packages/views.py:377
 msgid "Modifying package failed"
 msgstr ""
 
-#: muranodashboard/packages/views.py:378
+#: muranodashboard/packages/views.py:379
 msgid "Unable to modify package"
 msgstr ""
 
-#: muranodashboard/packages/views.py:381
+#: muranodashboard/packages/views.py:382
 msgid "Package parameters successfully updated."
 msgstr ""
 
-#: muranodashboard/packages/views.py:397
+#: muranodashboard/packages/views.py:398
 msgid "Uploading package failed. {0}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:437
+#: muranodashboard/packages/views.py:438
 msgid "Package creation failed.Reason: Can't find Package name from repository."
 msgstr ""
 
-#: muranodashboard/packages/views.py:440
+#: muranodashboard/packages/views.py:441
 msgid "Package creation failed.Reason: {0}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:494
+#: muranodashboard/packages/views.py:495
 msgid "Error {0} occurred while installing package {1}"
 msgstr ""
 
-#: muranodashboard/packages/views.py:515
+#: muranodashboard/packages/views.py:516
 msgid "Package with specified name already exists"
 msgstr ""
 
-#: muranodashboard/packages/views.py:587
+#: muranodashboard/packages/views.py:588
 msgid "Unable to retrieve package details."
 msgstr ""
 
@@ -986,6 +988,10 @@ msgstr ""
 
 #: muranodashboard/templates/catalog/_app_requirements.html:8
 msgid "No requirements"
+msgstr ""
+
+#: muranodashboard/templates/catalog/_details_page_header.html:6
+msgid "Application details"
 msgstr ""
 
 #: muranodashboard/templates/catalog/_overview.html:8
@@ -1042,7 +1048,7 @@ msgid "Next Page"
 msgstr ""
 
 #: muranodashboard/templates/catalog/index.html:110
-#: muranodashboard/templates/services/_data_table.html:66
+#: muranodashboard/templates/services/_data_table.html:61
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 
@@ -1058,7 +1064,7 @@ msgid ""
 msgstr ""
 
 #: muranodashboard/templates/catalog/index.html:119
-#: muranodashboard/templates/services/_data_table.html:80
+#: muranodashboard/templates/services/_data_table.html:75
 msgid "There are no applications matching your criteria."
 msgstr ""
 
@@ -1072,10 +1078,6 @@ msgstr ""
 
 #: muranodashboard/templates/categories/_add.html:9
 msgid "Provide desired name for a new category"
-msgstr ""
-
-#: muranodashboard/templates/categories/index.html:6
-msgid "\"Application Categories\""
 msgstr ""
 
 #: muranodashboard/templates/deployments/_logs.html:4
@@ -1108,10 +1110,6 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: muranodashboard/templates/environments/index.html:8
-msgid "\"Environments\""
-msgstr ""
-
 #: muranodashboard/templates/images/_mark.html:6
 msgid ""
 "Mark an image with Murano specific metadata to be added to the selected "
@@ -1136,10 +1134,6 @@ msgstr ""
 
 #: muranodashboard/templates/images/_mark.html:17
 msgid "Select an image type supported by Murano."
-msgstr ""
-
-#: muranodashboard/templates/images/index.html:6
-msgid "\"Marked Images\""
 msgstr ""
 
 #: muranodashboard/templates/packages/_detail.html:7
@@ -1313,10 +1307,6 @@ msgstr ""
 msgid "'Import Bundle'"
 msgstr ""
 
-#: muranodashboard/templates/packages/index.html:15
-msgid "\"Packages\""
-msgstr ""
-
 #: muranodashboard/templates/packages/modify_package.html:6
 msgid "'Modify Package'"
 msgstr ""
@@ -1325,35 +1315,35 @@ msgstr ""
 msgid "'Import Package'"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:19
+#: muranodashboard/templates/services/_data_table.html:15
 msgid "Application&nbsp;Components"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:21
+#: muranodashboard/templates/services/_data_table.html:17
 msgid "App category"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:31
-#: muranodashboard/templates/services/_data_table.html:40
+#: muranodashboard/templates/services/_data_table.html:27
+#: muranodashboard/templates/services/_data_table.html:36
 msgid "All"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:58
+#: muranodashboard/templates/services/_data_table.html:54
 msgid "Find in a selected category"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:73
+#: muranodashboard/templates/services/_data_table.html:68
 #, python-format
 msgid ""
 "Go to\n"
-"                            <b>\n"
-"                                <a href=%(pkg_def_url)s>Packages</a>\n"
-"                            </b>, click 'Import Package' and select "
+"                        <b>\n"
+"                            <a href=%(pkg_def_url)s>Packages</a>\n"
+"                        </b>, click 'Import Package' and select "
 "<i>Repository</i> as <i>Package Source</i>.\n"
-"                            "
+"                        "
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:111
+#: muranodashboard/templates/services/_data_table.html:97
 msgid "Drop Components here"
 msgstr ""
 
