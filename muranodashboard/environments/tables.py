@@ -323,9 +323,7 @@ class EnvironmentsTable(tables.DataTable):
         table_actions = (CreateEnvironment,)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        DeleteEnvironment, AbandonEnvironment)
-        # TODO(zhurong) Due to bug/1554087 in horizon, we should temporary
-        # comment out this 'multi_select = False' to pass the ci test
-        # multi_select = False
+        multi_select = False
 
 
 def get_service_details_link(service):
@@ -425,9 +423,7 @@ class ServicesTable(tables.DataTable):
         row_class = UpdateServiceRow
         table_actions = (AddApplication, DeployThisEnvironment)
         row_actions = (DeleteService,)
-        # TODO(zhurong) Due to bug/1554087 in horizon, we should temporary
-        # comment out this 'multi_select = False' to pass the ci test
-        # multi_select = False
+        multi_select = False
 
 
 class ShowDeploymentDetails(tables.LinkAction):
