@@ -4,11 +4,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-09 15:49+0000\n"
+"POT-Creation-Date: 2016-03-10 20:19+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-10 04:14+0000\n"
+"PO-Revision-Date: 2016-03-10 07:15+0000\n"
 "Last-Translator: Shengjing Zhu <zsj950618@gmail.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
@@ -27,6 +27,15 @@ msgstr "\"添加应用程序\""
 
 msgid "\"Applications\""
 msgstr "“应用程序”"
+
+msgid "'Import Bundle'"
+msgstr "“导入 Bundle”"
+
+msgid "'Import Package'"
+msgstr "“导入软件包”"
+
+msgid "'Modify Package'"
+msgstr "“修改软件包”"
 
 msgid "-"
 msgstr "-"
@@ -62,11 +71,32 @@ msgstr "增加组件"
 msgid "Add Murano Metadata"
 msgstr "增加 Murano 元数据"
 
+msgid "Add New"
+msgstr "增加新的"
+
+msgid "Add new category to the application catalog."
+msgstr "在应用程序目录中加入一个新分类。"
+
 msgid "Add to Env"
 msgstr "添加到 Env 中"
 
 msgid "Adding application to an environment failed."
 msgstr "向环境中添加应用程序失败。"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Allows adding additional information about a package."
+msgstr "允许给软件包添加额外的信息。"
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr "允许把软件包从目录中隐藏。（同时应用到软件包的依赖）"
+
+msgid ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+msgstr "环境是运行在相似条件下的应用程序的集合。"
 
 msgid "An external http/https URL to load the bundle from."
 msgstr "从外部的 http/https URL 来加载 Bundle。"
@@ -76,6 +106,9 @@ msgstr "从外部的 http/https URL 来加载软件包。"
 
 msgid "App Category:"
 msgstr "应用程序目录："
+
+msgid "App category"
+msgstr "应用程序分类"
 
 msgid "Application Catalog"
 msgstr "应用目录"
@@ -95,6 +128,9 @@ msgstr "应用软件包"
 msgid "Application details"
 msgstr "应用程序详情"
 
+msgid "Application&nbsp;Components"
+msgstr "应用程序组件"
+
 msgid "Applications"
 msgstr "应用程序"
 
@@ -103,6 +139,9 @@ msgstr "作者"
 
 msgid "Auto"
 msgstr "自动"
+
+msgid "Back"
+msgstr "返回"
 
 msgid "Bundle Name"
 msgstr "Bundle 名称"
@@ -118,6 +157,12 @@ msgstr "Bundle 创建失败，原因是：{0}"
 
 msgid "Bundle successfully imported."
 msgstr "已成功导入 Bundle"
+
+msgid "Bundle's full name."
+msgstr "Bundle 全称。"
+
+msgid "Cancel"
+msgstr "取消"
 
 msgid "Cannot get allowed subnet for the environment, consult your admin"
 msgstr "无法为这个环境获取可用的子网，请联系您的管理员"
@@ -137,20 +182,39 @@ msgstr "目录{0}已创建"
 msgid "Check Keystone configuration of murano-api server."
 msgstr "检查 Keystone 配置中关于 murano-api 服务的设置"
 
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "选择一个 ZIP 压缩包来上传到目录中。"
+
+msgid "Choose a name for the environment"
+msgstr "给这个环境选一个名称"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "Classes 定义文件夹"
+
 msgid "Click to create new environment"
 msgstr "点击以创建新的环境"
 
 msgid "Component"
 msgstr "组件"
 
+msgid "Component Details"
+msgstr "组件详情"
+
 msgid "Component List"
 msgstr "组件列表"
+
+msgid "Component Logs"
+msgstr "组件日志"
 
 msgid "Components"
 msgstr "组件"
 
 msgid "Configuration"
 msgstr "配置"
+
+msgid "Configure Application"
+msgstr "设置应用程序"
 
 msgid "Confirm password"
 msgstr "确认密码"
@@ -183,6 +247,11 @@ msgstr "给镜像创建一个标题。"
 msgid "Created"
 msgstr "已创建"
 
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr "定义一个软件包能否被其他租户使用。（同时应用到软件包的依赖）"
+
 msgid "Deploy"
 msgstr "部署"
 
@@ -198,8 +267,14 @@ msgstr "已部署"
 msgid "Deployed Components"
 msgstr "已部署的组件"
 
+msgid "Deployment Details"
+msgstr "部署详情"
+
 msgid "Deployment History"
 msgstr "部署历史"
+
+msgid "Deployment Logs"
+msgstr "部署日志"
 
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
@@ -216,6 +291,10 @@ msgstr "详情"
 
 msgid "Download Package"
 msgstr "下载软件包"
+
+#, fuzzy
+msgid "Drop Components here"
+msgstr "把组件拖拽到此"
 
 msgid "Enabled"
 msgstr "已启用"
@@ -238,6 +317,12 @@ msgstr "环境"
 
 msgid "Environment Default Network"
 msgstr "环境默认网络"
+
+msgid "Environment Deployments"
+msgstr "环境部署"
+
+msgid "Environment Name"
+msgstr "环境名称"
 
 msgid "Environment name must contain at least one non-white space symbol."
 msgstr "环境名称必须包含一个非空白字符"
@@ -264,6 +349,11 @@ msgstr "解析软件包 {1} 时发生错误 {0}"
 msgid "Error {0} occurred while setting image {1}, {2} public"
 msgstr "设置镜像 {1}、{2} 为公有时发生错误 {0}"
 
+#, fuzzy
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "可执行文件文件夹"
+
 msgid "FQN"
 msgstr "FQN"
 
@@ -279,14 +369,80 @@ msgstr "文件"
 msgid "Filter"
 msgstr "过滤"
 
+msgid "Find in a selected category"
+msgstr "在所选分类中查找"
+
 msgid ""
 "First symbol should be latin letter or underscore. Subsequent symbols can be "
 "latin letter, numeric, underscore, at sign, number sign or dollar sign"
 msgstr ""
 "第一个字符需要是字母或下划线，后面的字符可以是字母、数字、下划线或者, @, #, $"
 
+msgid "Fully qualified package name."
+msgstr "有效的软件包名称。"
+
+#, fuzzy, python-format
+msgid ""
+"Go to\n"
+"                        <b>\n"
+"                            <a href=%(pkg_def_url)s>Packages</a>\n"
+"                        </b>, click 'Import Package' and select "
+"<i>Repository</i> as <i>Package Source</i>.\n"
+"                        "
+msgstr ""
+"转到\n"
+"                        <b>\n"
+"                            <a href=%(pkg_def_url)s>软件包</a>\n"
+"                        </b>，点击“导入软件包”并选择 <i>仓库</i> 作为 <i>软件"
+"源</i>。\n"
+"                        "
+
+#, fuzzy, python-format
+msgid ""
+"Go to\n"
+"                <b>\n"
+"                    <a href=%(pkg_def_url)s>Packages</a>\n"
+"                </b>, click 'Import Package' and select <i>Repository</i> as "
+"<i>Package Source</i>.\n"
+"                "
+msgstr ""
+"转到\n"
+"                <b>\n"
+"                    <a href=%(pkg_def_url)s>软件包</a>\n"
+"                </b>，点击“导入软件包”并选择<i>仓库</i> 作为 <i>软件源</"
+"i>。\n"
+"                "
+
+msgid "HTTP/HTTPS URL of the bundle file."
+msgstr "Bundle 文件的 HTTP/HTTPS URL。"
+
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "软件包文件的 HTTP/HTTPS URL。"
+
+#, fuzzy
+msgid "Heat Orchestration stack name"
+msgstr "Heat 编排栈的名称"
+
+#, fuzzy
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat 编排栈 %(forloop.counter)s 的名称"
+
 msgid "ID"
 msgstr "ID"
+
+msgid ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from murano repository."
+msgstr ""
+"如果软件包依赖其他的软件包或特定的 Glance 镜像，那么它们也会从 Murano 仓库中"
+"获取并安装。"
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"如果软件包依赖其他的软件包或特定的 Glance 镜像，那么它们也会从 Murano 仓库中"
+"获取并安装。"
 
 msgid "Image"
 msgstr "镜像"
@@ -311,6 +467,15 @@ msgstr "导入软件包"
 
 msgid "Importing package {0} failed. Reason: {1}"
 msgstr "导入软件包 {0} 失败，原因是：{1}"
+
+msgid "Info"
+msgstr "信息"
+
+msgid "Instance name"
+msgstr "实例名称"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "实例 %(forloop.counter)s 的名称"
 
 #, fuzzy
 msgid "Invalid metadata for image: {0}"
@@ -346,8 +511,18 @@ msgstr "管理"
 msgid "Manage Components"
 msgstr "管理组件"
 
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "Manifest 文件"
+
 msgid "Mark Image"
 msgstr "标记镜像"
+
+#, fuzzy
+msgid ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+msgstr "标记要添加 Murano 相关元数据的镜像。"
 
 msgid "Marked Images"
 msgstr "已标记的镜像"
@@ -376,6 +551,9 @@ msgstr "Bundle 名称"
 #, python-format
 msgid "Network of '%s'"
 msgstr "%s的网络"
+
+msgid "Next"
+msgstr "下一步"
 
 msgid "Next Page"
 msgstr "下一页"
@@ -410,6 +588,9 @@ msgstr "无"
 msgid "Not in domain"
 msgstr "不在域中"
 
+msgid "Note"
+msgstr "提示"
+
 msgid ""
 "OpenStack Networking (Neutron) is not available in current environment. "
 "Custom Network Settings cannot be applied"
@@ -433,6 +614,9 @@ msgstr "软件包 Bundle 源"
 msgid "Package Count"
 msgstr "软件包数目"
 
+msgid "Package Details"
+msgstr "软件包详情"
+
 msgid "Package Name"
 msgstr "软件包名称"
 
@@ -444,6 +628,9 @@ msgstr "软件包标签"
 
 msgid "Package URL"
 msgstr "软件包 URL"
+
+msgid "Package Version"
+msgstr "软件包版本"
 
 msgid ""
 "Package creation failed.Reason: Can't find Package name from repository."
@@ -485,6 +672,9 @@ msgstr "已上传软件包 {0}"
 msgid "Packages"
 msgstr "软件包"
 
+msgid "Packages should contain:"
+msgstr "软件包应该包括："
+
 msgid "Please confirm your password"
 msgstr "请确认您的密码"
 
@@ -506,8 +696,14 @@ msgstr "请提供一个软件包 URL"
 msgid "Previous Page"
 msgstr "上一页"
 
+msgid "Provide desired name for a new category"
+msgstr "给新集合取一个名称"
+
 msgid "Public"
 msgstr "公有"
+
+msgid "Quick Deploy"
+msgstr "快速部署"
 
 msgid "Recent Activity"
 msgstr "最近的活动"
@@ -545,6 +741,12 @@ msgstr "在 Glance 镜像服务中选择一个已注册的镜像。"
 msgid "Select an image type supported by Murano."
 msgstr "选择一个 Murano 支持的镜像类型。"
 
+msgid "Select one or more categories for a package."
+msgstr "为软件包选择一个或多个分类。"
+
+msgid "Set up for identifying a package."
+msgstr "为软件包设置标示。"
+
 msgid "Show Details"
 msgstr "显示详情"
 
@@ -576,6 +778,9 @@ msgstr "指定的名称已被使用，请更换"
 msgid "Specify valid fixed IP"
 msgstr "指定有效的固定 IP"
 
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr "指定一个分类有助于在目录中进行过滤"
+
 msgid "Start Deleting"
 msgstr "开始删除"
 
@@ -603,6 +808,22 @@ msgstr ""
 "除非单独设置，否则这个环境中的应用的虚拟机会自动加入这个网络。选择“新建”会创"
 "建一个网络，子网的 IP 段是从这个工程默认的 Murano 路由器的可用资源中分配的。"
 
+#, python-format
+msgid ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"将从  <a href=\"%(murano_repo_url)s\" target=\"_blank\">%(murano_repo_url)s</"
+"a>  这个仓库安装 Bundle。"
+
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"将从  <a href=\"%(murano_repo_url)s\" target=\"_blank\">%(murano_repo_url)s</"
+"a>  这个仓库导入软件包。"
+
 msgid ""
 "The password must contain at least one letter, "
 "one                                  number and one special character"
@@ -610,6 +831,13 @@ msgstr "密码必须包含至少一个字面、一个数字和一个特殊字符
 
 msgid "The request data is not acceptable by the server"
 msgstr "请求的数据不能被服务器接受"
+
+#, fuzzy
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr "这个目录中没有应用程序。你可以从以下地方导入："
+
+msgid "There are no applications matching your criteria."
+msgstr "没有和您的条件匹配的应用程序。"
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -672,6 +900,10 @@ msgstr "正在尝试把镜像 {0}, {1} 加入到 Glance 中。上传成功后镜
 
 msgid "Type"
 msgstr "类型"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "UI 定义文件夹"
 
 msgid "UNKNOWN"
 msgstr "未知"
@@ -750,6 +982,9 @@ msgstr "无法获取公共镜像。"
 msgid "Unavailable"
 msgstr "不可用"
 
+msgid "Update"
+msgstr "更新"
+
 msgid "Update Image"
 msgstr "更新镜像"
 
@@ -759,11 +994,17 @@ msgstr "已更新"
 msgid "Uploading package failed. {0}"
 msgstr "上传软件包失败。{0}"
 
+msgid "Used for identifying and filtering packages."
+msgstr "用来标示和过滤软件包。"
+
 msgid "Validation Error occurred"
 msgstr "发生验证错误"
 
 msgid "Version"
 msgstr "版本"
+
+msgid "Version of the package (optional)."
+msgstr "软件包版本（可选）。"
 
 msgid "You are not allowed to change this properties of the package"
 msgstr "您不被允许修改这个软件包的属性"
@@ -773,6 +1014,10 @@ msgstr "您不被允许删除这个软件包"
 
 msgid "You are not allowed to perform this operation"
 msgstr "您不被允许执行这个操作"
+
+msgid ""
+"You'll have to configure each package installed from this bundle separately."
+msgstr "你需要为 Bundle 中的每个软件包单独进行设置。"
 
 msgid "{0}{1} don't match"
 msgstr "{0}{1}不匹配"
