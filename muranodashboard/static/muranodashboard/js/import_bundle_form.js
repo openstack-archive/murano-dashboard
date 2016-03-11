@@ -16,10 +16,10 @@
 $(function() {
   "use strict";
 
-  horizon.modals._init_functions.push(muranoUploadBundle);
+  horizon.modals.addModalInitFunction(muranoUploadBundle);
 
-  function muranoUploadBundle() {
-    var uploadForm = $('#import_bundle');
+  function muranoUploadBundle(modal) {
+    var uploadForm = $(modal).find('#import_bundle');
     var importType = uploadForm.find('[name=upload-import_type]');
 
     uploadForm.find('input[name=upload-url]').closest('.form-group').addClass('required');
@@ -37,4 +37,6 @@ $(function() {
     });
     importType.change();
   }
+
+  muranoUploadBundle($('#import_bundle').parent());
 });
