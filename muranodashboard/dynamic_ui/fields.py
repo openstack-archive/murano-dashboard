@@ -245,16 +245,14 @@ class PasswordField(CharField):
 
         validators = kwargs.get('validators')
         help_text = kwargs.get('help_text')
-        if not help_text:
-            help_text = _('Enter a complex password with at least one letter, \
-                one number and one special character')
 
         if not validators:
-            # Apply default validator if it is not provided
+            # No custom validators, using default validator
             validators = [self.validate_password]
             if not help_text:
-                help_text = _('Enter a complex password with at least one \
-                               letter, one number and one special character')
+                help_text = _(
+                    'Enter a complex password with at least one letter, '
+                    'one number and one special character')
 
             kwargs['error_messages'].setdefault(
                 'invalid', self.validate_password.message)
@@ -263,15 +261,11 @@ class PasswordField(CharField):
             kwargs['widget'] = self.PasswordInput(render_value=True)
         else:
             if not help_text:
-                help_text = _('Enter a password for the application')
-                requirements = []
-                for v in validators:
-                    if not isinstance(v, django_validator.RegexValidator):
-                        requirements.append(v['message'])
-                if requirements:
-                    help_text = (help_text +
-                                 _(' with the following requirements:\n*') +
-                                 '\n*'.join(requirements))
+                # NOTE(kzaitsev) There are custom validators for password,
+                # but no help text let's leave only a generic message,
+                # since we do not know exact constraints
+                help_text = _('Enter a password')
+
         kwargs.update({'validators': validators,
                        'help_text': help_text})
 
