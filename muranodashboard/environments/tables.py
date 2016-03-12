@@ -19,6 +19,7 @@ from django import http as django_http
 from django import shortcuts
 from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 
 from horizon import exceptions
 from horizon import forms
@@ -87,10 +88,23 @@ class CreateEnvironment(tables.LinkAction):
 
 
 class DeleteEnvironment(tables.DeleteAction):
-    data_type_singular = _('Environment')
-    data_type_plural = _('Environments')
-    action_past = _('Start Deleting')
     redirect_url = "horizon:project:murano:environments"
+
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Environment",
+            u"Delete Environments",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Start Deleting Environment",
+            u"Start Deleting Environments",
+            count
+        )
 
     def allowed(self, request, environment):
         if environment:
@@ -113,11 +127,23 @@ class AbandonEnvironment(tables.DeleteAction):
     help_text = _("This action cannot be undone. Any resources created by "
                   "this environment will have to be released manually.")
     name = 'abandon'
-    action_present = _('Abandon')
-    action_past = _('Abandoned')
-    data_type_singular = _('Environment')
-    data_type_plural = _('Environments')
     redirect_url = "horizon:project:murano:environments"
+
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Abandon Environment",
+            u"Abandon Environments",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Abandoned Environment",
+            u"Abandoned Environments",
+            count
+        )
 
     def allowed(self, request, environment):
         """Limit when 'Abandon Environment' button is shown
@@ -143,9 +169,22 @@ class AbandonEnvironment(tables.DeleteAction):
 
 
 class DeleteService(tables.DeleteAction):
-    data_type_singular = _('Component')
-    data_type_plural = _('Components')
-    action_past = _('Start Deleting')
+
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Component",
+            u"Delete Components",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Start Deleting Component",
+            u"Start Deleting Components",
+            count
+        )
 
     def allowed(self, request, service=None):
         status, version = _get_environment_status_and_version(request,
@@ -168,11 +207,23 @@ class DeleteService(tables.DeleteAction):
 
 class DeployEnvironment(tables.BatchAction):
     name = 'deploy'
-    action_present = _('Deploy')
-    action_past = _('Deployed')
-    data_type_singular = _('Environment')
-    data_type_plural = _('Environment')
     classes = ('btn-launch',)
+
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Deploy Environment",
+            u"Deploy Environments",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Deployed Environment",
+            u"Deployed Environments",
+            count
+        )
 
     def allowed(self, request, environment):
         """Limit when 'Deploy Environment' button is shown
