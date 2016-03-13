@@ -1,14 +1,15 @@
+# Akihiro Motoki <amotoki@gmail.com>, 2016. #zanata
 # KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-09 15:49+0000\n"
+"POT-Creation-Date: 2016-03-11 13:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-04 06:40+0000\n"
-"Last-Translator: KATO Tomoyuki <kato.tomoyuki@jp.fujitsu.com>\n"
+"PO-Revision-Date: 2016-03-12 06:46+0000\n"
+"Last-Translator: Akihiro Motoki <amotoki@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -29,14 +30,17 @@ msgstr "'パッケージのインポート'"
 msgid "'Modify Package'"
 msgstr "'パッケージの変更'"
 
+msgid "-"
+msgstr "-"
+
 msgid "A local zip file to upload"
 msgstr "アップロードするローカルの zip ファイル"
 
 msgid "Abandon"
-msgstr "中断"
+msgstr "中止"
 
 msgid "Abandoned"
-msgstr "中断済み"
+msgstr "中止しました"
 
 msgid "Active"
 msgstr "稼働中"
@@ -62,6 +66,9 @@ msgstr "Murano メタデータの追加"
 msgid "Add New"
 msgstr "新規追加"
 
+msgid "Add new category to the application catalog."
+msgstr "アプリケーションカタログに新しいカテゴリーを追加します。"
+
 msgid "Add to Env"
 msgstr "環境への追加"
 
@@ -70,6 +77,19 @@ msgstr "アプリケーションを環境に追加できませんでした。"
 
 msgid "All"
 msgstr "すべて"
+
+msgid "Allows adding additional information about a package."
+msgstr "パッケージについての追加の情報を記載できます。"
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr ""
+"パッケージをカタログに表示するかどうか (パッケージの依存関係に影響します)。"
+
+msgid ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+msgstr "環境は類似した条件で実行されるアプリケーションの集合です。"
 
 msgid "An external http/https URL to load the bundle from."
 msgstr "バンドルを読み込む外部 http/https URL。"
@@ -98,6 +118,9 @@ msgstr "アプリケーション詳細"
 msgid "Application Package"
 msgstr "アプリケーションパッケージ"
 
+msgid "Application details"
+msgstr "アプリケーションの詳細"
+
 msgid "Application&nbsp;Components"
 msgstr "アプリケーション&nbsp;コンポーネント"
 
@@ -120,14 +143,16 @@ msgid "Bundle URL"
 msgstr "バンドル URL"
 
 msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
-msgstr ""
-"バンドル作成に失敗しました。リポジトリーからバンドル名を見つけられないため。"
+msgstr "バンドル作成に失敗しました。リポジトリーにバンドル名が見つかりません。"
 
 msgid "Bundle creation failed.Reason: {0}"
 msgstr "バンドル作成に失敗しました。理由: {0}"
 
 msgid "Bundle successfully imported."
 msgstr "バンドルが正常にインポートされました。"
+
+msgid "Bundle's full name."
+msgstr "バンドルの完全な名前"
 
 msgid "Cancel"
 msgstr "取り消し"
@@ -155,6 +180,13 @@ msgstr "murano-api サーバーの Keystone 設定を確認します。"
 msgid "Choose a Zip archive to upload into the catalog."
 msgstr "カタログにアップロードする Zip アーカイブを選択してください。"
 
+msgid "Choose a name for the environment"
+msgstr "環境の名前を指定します"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "クラス定義フォルダー"
+
 msgid "Click to create new environment"
 msgstr "クリックして、新しい環境を作成します。"
 
@@ -176,6 +208,9 @@ msgstr "コンポーネント"
 msgid "Configuration"
 msgstr "設定"
 
+msgid "Configure Application"
+msgstr "アプリケーションの設定"
+
 msgid "Confirm password"
 msgstr "パスワードの確認"
 
@@ -186,7 +221,9 @@ msgid "Couldn't update environment. Reason: "
 msgstr "環境を更新できませんでした。理由:"
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
-msgstr "パッケージ {0} のパラメーターを更新できませんでした。エラー: {1}"
+msgstr ""
+"Couldn't update package {0} parameters. Error: {1}パッケージ {0} のパラメー"
+"ターを更新できませんでした。エラー: {1}"
 
 msgid "Create"
 msgstr "作成"
@@ -206,6 +243,13 @@ msgstr "イメージのタイトルを作成します。"
 msgid "Created"
 msgstr "作成時刻"
 
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr ""
+"パッケージを他のプロジェクトが使用できるかを定義します (パッケージの依存関係"
+"に影響します)。"
+
 msgid "Deploy"
 msgstr "デプロイ"
 
@@ -220,6 +264,9 @@ msgstr "デプロイ済み"
 
 msgid "Deployed Components"
 msgstr "デプロイ済みコンポーネント"
+
+msgid "Deployment Details"
+msgstr "デプロイの詳細"
 
 msgid "Deployment History"
 msgstr "デプロイ履歴"
@@ -246,6 +293,9 @@ msgstr "ダウンロードパッケージ"
 msgid "Drop Components here"
 msgstr "コンポーネントをここにドロップしてください。"
 
+msgid "Enabled"
+msgstr "有効"
+
 msgid ""
 "Enter a complex password with at least one                                "
 "letter, one number and one special character"
@@ -269,6 +319,9 @@ msgstr "環境"
 msgid "Environment Default Network"
 msgstr "環境のデフォルトネットワーク"
 
+msgid "Environment Deployments"
+msgstr "デプロイされた環境"
+
 msgid "Environment Name"
 msgstr "環境名"
 
@@ -285,11 +338,24 @@ msgstr "指定された名前を持つ環境が既に存在します。"
 msgid "Environments"
 msgstr "環境"
 
+msgid "Error {0} occurred while installing images for {1}"
+msgstr "{1} 用のイメージの準備中にエラー {0} が発生しました"
+
 msgid "Error {0} occurred while installing package {1}"
 msgstr "パッケージ {1} のインストール中にエラー {0} が発生しました。"
 
 msgid "Error {0} occurred while parsing package {1}"
 msgstr "パッケージ {1} の解析中にエラー {0} が発生しました。"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "イメージ {1}, {2} をパブリックに設定する際にエラー {0} が発生しました"
+
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "実行プランフォルダー"
+
+msgid "FQN"
+msgstr "FQN"
 
 msgid "Failed to create environment"
 msgstr "環境の作成に失敗しました"
@@ -305,6 +371,80 @@ msgstr "フィルター"
 
 msgid "Find in a selected category"
 msgstr "選択したカテゴリーにおける検索"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"最初のシンボルはラテン文字かアンダースコアでなければいけません。それ以降のシ"
+"ンボルには、ラテン文字、数字、アンダースコア、@ 記号、# 記号、ドル記号が使用"
+"できます。"
+
+msgid "Fully qualified package name."
+msgstr "完全な形のパッケージ名。"
+
+#, python-format
+msgid ""
+"Go to\n"
+"                        <b>\n"
+"                            <a href=%(pkg_def_url)s>Packages</a>\n"
+"                        </b>, click 'Import Package' and select "
+"<i>Repository</i> as <i>Package Source</i>.\n"
+"                        "
+msgstr ""
+"<b>\n"
+"                            <a href=%(pkg_def_url)s>パッケージ</a>\n"
+"                        </b>に進んで、「パッケージのインポート」をクリックし"
+"て、\n"
+"                        <i>パッケージのソース</i>として<i>リポジトリー</i>を"
+"選択してください。\n"
+"                        "
+
+#, python-format
+msgid ""
+"Go to\n"
+"                <b>\n"
+"                    <a href=%(pkg_def_url)s>Packages</a>\n"
+"                </b>, click 'Import Package' and select <i>Repository</i> as "
+"<i>Package Source</i>.\n"
+"                "
+msgstr ""
+"<b>\n"
+"                            <a href=%(pkg_def_url)s>パッケージ</a>\n"
+"                        </b>に進んで、「パッケージのインポート」をクリックし"
+"て、\n"
+"                        <i>パッケージのソース</i>として<i>リポジトリー</i>を"
+"選択してください。\n"
+"                        "
+
+msgid "HTTP/HTTPS URL of the bundle file."
+msgstr "バンドルファイルの HTTP/HTTPS URL。"
+
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "パッケージファイルの HTTP/HTTPS URL。"
+
+msgid "Heat Orchestration stack name"
+msgstr "Heat Orchestration スタック名"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat Orchestration スタック %(forloop.counter)s の名前"
+
+msgid "ID"
+msgstr "ID"
+
+msgid ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from murano repository."
+msgstr ""
+"パッケージが他のパッケージや特定の glance イメージに依存している場合、それら"
+"も murano リポジトリーから一緒にインストールされます。"
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"このパッケージが他のパッケージや特定の glance イメージに依存している場合、そ"
+"れらも murano リポジトリーから一緒にインストールされます。"
 
 msgid "Image"
 msgstr "イメージ"
@@ -329,6 +469,15 @@ msgstr "インポートパッケージ"
 
 msgid "Importing package {0} failed. Reason: {1}"
 msgstr "パッケージ {0} のインポートに失敗しました。理由: {1}"
+
+msgid "Info"
+msgstr "情報"
+
+msgid "Instance name"
+msgstr "インスタンス名"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "インスタンス %(forloop.counter)s の名前"
 
 msgid "Invalid metadata for image: {0}"
 msgstr "無効なイメージのメタデータ: {0}"
@@ -362,6 +511,10 @@ msgstr "管理"
 
 msgid "Manage Components"
 msgstr "コンポーネントの管理"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "マニフェストファイル"
 
 msgid "Mark Image"
 msgstr "イメージのマーク"
@@ -426,13 +579,19 @@ msgid "No license"
 msgstr "ライセンスなし"
 
 msgid "No recent activity to report at this time."
-msgstr "現在、表示する最近の活動状況がありません。"
+msgstr "現在、表示する最近の使用状況がありません。"
 
 msgid "No requirements"
 msgstr "要件なし"
 
+msgid "None"
+msgstr "なし"
+
 msgid "Not in domain"
 msgstr "ドメインにありません"
+
+msgid "Note"
+msgstr "注意"
 
 msgid ""
 "OpenStack Networking (Neutron) is not available in current environment. "
@@ -459,14 +618,23 @@ msgstr "パッケージバンドルソース"
 msgid "Package Count"
 msgstr "パッケージ数"
 
+msgid "Package Details"
+msgstr "パッケージ詳細"
+
 msgid "Package Name"
 msgstr "パッケージ名"
 
 msgid "Package Source"
 msgstr "パッケージソース"
 
+msgid "Package Tags"
+msgstr "パッケージタグ"
+
 msgid "Package URL"
 msgstr "パッケージ URL"
+
+msgid "Package Version"
+msgstr "パッケージバージョン"
 
 msgid ""
 "Package creation failed.Reason: Can't find Package name from repository."
@@ -481,7 +649,7 @@ msgid "Package modified."
 msgstr "パッケージ更新時刻"
 
 msgid "Package name in the repository, usually a fully qualified name"
-msgstr "リポジトリーのパッケージ名、一般的に完全修飾名"
+msgstr "リポジトリーでのパッケージ名、通常は完全な形の名前"
 
 msgid "Package or Class with the same name is already made public"
 msgstr "同じ名前を持つパッケージかクラスが既にパブリックに作成されています。"
@@ -510,6 +678,9 @@ msgstr "パッケージ {0} をアップロードしました"
 msgid "Packages"
 msgstr "パッケージ"
 
+msgid "Packages should contain:"
+msgstr "パッケージには以下が含まれている必要があります。"
+
 msgid "Please confirm your password"
 msgstr "パスワードを確認してください"
 
@@ -531,6 +702,9 @@ msgstr "パッケージの URL を指定してください。"
 msgid "Previous Page"
 msgstr "前のページ"
 
+msgid "Provide desired name for a new category"
+msgstr "新しいカテゴリーには適切な名前を付けてください"
+
 msgid "Public"
 msgstr "パブリック"
 
@@ -538,7 +712,7 @@ msgid "Quick Deploy"
 msgstr "クイックデプロイ"
 
 msgid "Recent Activity"
-msgstr "最近の活動状況"
+msgstr "最近の使用状況"
 
 msgid "Repository"
 msgstr "リポジトリー"
@@ -567,6 +741,18 @@ msgstr "利用可能な範囲から IP を選択してください: {0} "
 msgid "Select Image"
 msgstr "イメージを選択してください"
 
+msgid "Select an image registered in Glance Image Services."
+msgstr "Glance Image サービスに登録されているイメージを選択してください。"
+
+msgid "Select an image type supported by Murano."
+msgstr "Murano でサポートされているイメージ種別を選択してください。"
+
+msgid "Select one or more categories for a package."
+msgstr "パッケージのカテゴリーを 1 つ以上選択してください"
+
+msgid "Set up for identifying a package."
+msgstr "パッケージの識別に使用されます。"
+
 msgid "Show Details"
 msgstr "詳細表示"
 
@@ -582,7 +768,7 @@ msgstr ""
 "ごめんなさい。アプリケーションをすぐに追加できません。環境がデプロイ中です。"
 
 msgid "Sorry, you can't delete service right now"
-msgstr "ごめんなさい。サービスをすぐに削除できません。"
+msgstr "申し訳ありません。サービスをすぐに削除できません。"
 
 msgid "Specified Cluster Static IP is already in use"
 msgstr "指定されたクラスター静的 IP は使用中です。"
@@ -598,6 +784,11 @@ msgstr "すでに使用中のタイトルを指定しました。別のものを
 
 msgid "Specify valid fixed IP"
 msgstr "有効な Fixed IP を指定してください"
+
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr ""
+"カテゴリを指定すると、カタログ内でアプリケーションをフィルタリングする際に使"
+"用できます。"
 
 msgid "Start Deleting"
 msgstr "削除の開始"
@@ -616,6 +807,17 @@ msgstr "テナント名"
 
 msgid "The '{0}' application successfully added to environment."
 msgstr "アプリケーション '{0}' が正常に環境に追加されました。"
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"この環境のアプリケーションの VM は、個別に指定されない限り、デフォルトでこの"
+"ネットワークに接続されます。「新規作成」を選択すると、新しいネットワークを生"
+"成し、サブネットで IP アドレス範囲を指定します。プロジェクトのデフォルトの "
+"Murano 用のルーターにも、この IP アドレス範囲からアドレスが割り当てられます。"
 
 #, python-format
 msgid ""
@@ -642,6 +844,15 @@ msgstr ""
 
 msgid "The request data is not acceptable by the server"
 msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
+
+#, fuzzy
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr ""
+"カタログにはアプリケーションがありません。次の URL からアプリケーションをイン"
+"ポートできます。"
+
+msgid "There are no applications matching your criteria."
+msgstr "基準を満たすアプリケーションはありません。"
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -687,8 +898,26 @@ msgstr[0] "パブリックの切り替え済み"
 msgid "Topology"
 msgstr "トポロジー"
 
+msgid ""
+"Trying to add {0} image to glance. Image will be ready for deployment after "
+"successful upload"
+msgstr ""
+"glance にイメージ {0} を追加しています。アップロードに成功すると、イメージを"
+"デプロイに使用できるようになります。"
+
+msgid ""
+"Trying to add {0}, {1} image to glance. Image will be ready for deployment "
+"after successful upload"
+msgstr ""
+"glance にイメージ {0}, {1} を追加しています。アップロードに成功すると、イメー"
+"ジをデプロイに使用できるようになります。"
+
 msgid "Type"
 msgstr "種別"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "UI 定義フォルダー"
 
 msgid "UNKNOWN"
 msgstr "不明"
@@ -709,7 +938,7 @@ msgid "Unable to delete category"
 msgstr "カテゴリーを削除できません。"
 
 msgid "Unable to delete environment {0} due to: {1}"
-msgstr "次の理由により、環境 {0} を削除できません。{1}"
+msgstr "環境 {0} を削除できません。理由: {1}"
 
 msgid "Unable to delete package in murano-api server"
 msgstr "murano-api サーバーにおいてパッケージを削除できません。"
@@ -781,17 +1010,32 @@ msgstr "更新時刻"
 msgid "Uploading package failed. {0}"
 msgstr "パッケージのアップロードに失敗しました。 {0}"
 
+msgid "Used for identifying and filtering packages."
+msgstr "パッケージの識別やフィルタリングに使用されます。"
+
 msgid "Validation Error occurred"
 msgstr "検証エラーが発生しました"
 
 msgid "Version"
 msgstr "バージョン"
 
+msgid "Version of the package (optional)."
+msgstr "パッケージのバージョン (オプション)。"
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "パッケージのこのプロパティーの変更は許可されていません。"
+
 msgid "You are not allowed to delete this package"
 msgstr "このパッケージの削除は許可されていません。"
 
 msgid "You are not allowed to perform this operation"
 msgstr "この操作は許可されていません。"
+
+msgid ""
+"You'll have to configure each package installed from this bundle separately."
+msgstr ""
+"このバンドルからインストールされる各パッケージはそれぞれ設定する必要がありま"
+"す。"
 
 msgid "{0}{1} don't match"
 msgstr "{0}{1} が一致しません"
