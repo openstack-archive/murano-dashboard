@@ -14,6 +14,7 @@
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import tables
 from openstack_dashboard.api import glance
@@ -31,8 +32,21 @@ class MarkImage(tables.LinkAction):
 
 
 class RemoveImageMetadata(tables.DeleteAction):
-    data_type_singular = _('Metadata')
-    data_type_plural = _('Metadata')
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Metadata",
+            u"Delete Metadata",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Deleted Metadata",
+            u"Deleted Metadata",
+            count
+        )
 
     def delete(self, request, obj_id):
         try:

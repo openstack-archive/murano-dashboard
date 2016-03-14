@@ -175,7 +175,22 @@ class TogglePublicEnabled(tables.BatchAction):
 
 class DeletePackage(tables.DeleteAction):
     name = 'delete_package'
-    data_type_singular = _('Package')
+
+    @staticmethod
+    def action_present(count):
+        return ungettext_lazy(
+            u"Delete Package",
+            u"Delete Packages",
+            count
+        )
+
+    @staticmethod
+    def action_past(count):
+        return ungettext_lazy(
+            u"Deleted Package",
+            u"Deleted Packages",
+            count
+        )
 
     def delete(self, request, obj_id):
         try:
