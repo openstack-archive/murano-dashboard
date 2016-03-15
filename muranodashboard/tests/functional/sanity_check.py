@@ -1671,6 +1671,59 @@ class TestSuiteRepository(base.PackageTestCase):
         self.check_element_not_on_page(
             by.By.XPATH, c.AppPackages.format(pkg_name))
 
+    def test_import_bundle_when_dependencies_installed(self):
+        """Test bundle import if some dependencies are installed.
+
+        Check that bundle can be imported if some of its dependencies
+        are already installed from repository.
+        """
+        pkg_name_parent_one = self.gen_random_resource_name('pkg')
+        pkg_name_child_one = self.gen_random_resource_name('pkg')
+        pkg_name_grand_child = self.gen_random_resource_name('pkg')
+        pkg_name_parent_two = self.gen_random_resource_name('pkg')
+        pkg_name_child_two = self.gen_random_resource_name('pkg')
+
+        self._compose_app(pkg_name_parent_one,
+                          require={pkg_name_child_one: ''})
+        self._compose_app(pkg_name_child_one,
+                          require={pkg_name_grand_child: '0.1'})
+        pkg_name_grand_child += '.0.1'
+        self._compose_app(pkg_name_grand_child)
+        self._compose_app(pkg_name_parent_two,
+                          require={pkg_name_child_two: ''})
+        self._compose_app(pkg_name_child_two)
+
+        bundle_name = self.gen_random_resource_name('bundle')
+        self._compose_bundle(bundle_name,
+                             [pkg_name_parent_one, pkg_name_parent_two])
+
+        utils.upload_app_package(self.murano_client, pkg_name_grand_child,
+                                 {"categories": ["Web"], "tags": ["tag"]})
+        utils.upload_app_package(self.murano_client, pkg_name_child_two,
+                                 {"categories": ["Web"], "tags": ["tag"]})
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.ImportBundle).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-name']")
+        el.send_keys("{0}".format(bundle_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        pkg_names = [pkg_name_parent_one, pkg_name_child_one,
+                     pkg_name_grand_child, pkg_name_parent_two,
+                     pkg_name_child_two]
+        for pkg_name in pkg_names:
+            self.check_element_on_page(
+                by.By.XPATH, c.AppPackages.format(pkg_name))
+
 
 class TestSuitePackageCategory(base.PackageTestCase):
     def _import_package_with_category(self, package_archive, category):
