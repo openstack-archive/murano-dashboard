@@ -110,14 +110,16 @@ class UITestCase(BaseDeps):
             'Environment {0} was not deleted in {1} seconds'.format(
                 environment_id, timeout))
 
-    def create_user(self, name, password=None, email=None, tenant_id=None):
+    @classmethod
+    def create_user(cls, name, password=None, email=None, tenant_id=None):
         if tenant_id is None:
-            tenant_id = self.keystone_client.tenant_id
-        self.keystone_client.users.create(name, password=password, email=email,
-                                          tenant_id=tenant_id, enabled=True)
+            tenant_id = cls.keystone_client.tenant_id
+        cls.keystone_client.users.create(name, password=password, email=email,
+                                         tenant_id=tenant_id, enabled=True)
 
-    def delete_user(self, name):
-        self.keystone_client.users.find(name=name).delete()
+    @classmethod
+    def delete_user(cls, name):
+        cls.keystone_client.users.find(name=name).delete()
 
     def get_tenantid_by_name(self, name):
         """Returns TenantID of the project by project's name"""
