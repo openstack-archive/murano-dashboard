@@ -804,7 +804,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
                 el = self.wait_element_is_clickable(by.By.XPATH, buttons_xpath)
                 el.click()
                 action_xpath = '{0}{1}'.format(row_xpath, c.Action)
-                self.driver.find_element_by_xpath(action_xpath).click()
+                menu_item = self.wait_element_is_clickable(by.By.XPATH,
+                                                           action_xpath)
+                menu_item.click()
 
                 # And check that status of the application is 'Completed'
                 status_xpath = '{0}{1}'.format(row_xpath,
