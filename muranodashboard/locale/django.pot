@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-10 06:35+0000\n"
+"POT-Creation-Date: 2016-03-15 06:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,7 +89,6 @@ msgid "Category {0} created."
 msgstr ""
 
 #: muranodashboard/categories/panel.py:22
-#: muranodashboard/categories/tables.py:37
 #: muranodashboard/templates/catalog/_overview.html:10
 #: muranodashboard/templates/catalog/categories.html:4
 #: muranodashboard/templates/packages/_detail.html:19
@@ -98,29 +97,37 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:29
+#: muranodashboard/categories/tables.py:30
 #: muranodashboard/categories/views.py:88
 #: muranodashboard/templates/categories/add.html:3
 msgid "Add Category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:36
-msgid "Category"
-msgstr ""
+#: muranodashboard/categories/tables.py:39
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/categories/tables.py:49
+#: muranodashboard/categories/tables.py:47
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] ""
+msgstr[1] ""
+
+#: muranodashboard/categories/tables.py:63
 msgid "Unable to delete category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:56
+#: muranodashboard/categories/tables.py:70
 msgid "Category Name"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:58
+#: muranodashboard/categories/tables.py:72
 msgid "Package Count"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:62
+#: muranodashboard/categories/tables.py:76
 #: muranodashboard/categories/views.py:31
 #: muranodashboard/templates/categories/index.html:3
 msgid "Application Categories"
@@ -318,9 +325,7 @@ msgid "Failed to create environment"
 msgstr ""
 
 #: muranodashboard/environments/panel.py:22
-#: muranodashboard/environments/tables.py:91
-#: muranodashboard/environments/tables.py:119
-#: muranodashboard/environments/tables.py:318
+#: muranodashboard/environments/tables.py:369
 #: muranodashboard/environments/views.py:39
 #: muranodashboard/environments/views.py:118
 #: muranodashboard/environments/views.py:193
@@ -329,11 +334,11 @@ msgstr ""
 msgid "Environments"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:52
+#: muranodashboard/environments/tables.py:53
 msgid "Add Component"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:69
+#: muranodashboard/environments/tables.py:70
 #: muranodashboard/environments/views.py:154
 #: muranodashboard/environments/views.py:156
 #: muranodashboard/templates/catalog/env_switcher.html:10
@@ -341,96 +346,104 @@ msgstr ""
 msgid "Create Environment"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:82
+#: muranodashboard/environments/tables.py:83
 msgid "Unable to create environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:90
-#: muranodashboard/environments/tables.py:118
-#: muranodashboard/environments/tables.py:173
-#: muranodashboard/environments/tables.py:174
-#: muranodashboard/templates/catalog/env_switcher.html:3
-msgid "Environment"
-msgstr ""
+#: muranodashboard/environments/tables.py:95
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:92
-#: muranodashboard/environments/tables.py:148
-msgid "Start Deleting"
-msgstr ""
+#: muranodashboard/environments/tables.py:103
+msgid "Start Deleting Environment"
+msgid_plural "Start Deleting Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:105
+#: muranodashboard/environments/tables.py:119
 msgid "Unable to delete environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:113
+#: muranodashboard/environments/tables.py:127
 msgid ""
 "This action cannot be undone. Any resources created by this environment "
 "will have to be released manually."
 msgstr ""
 
-#: muranodashboard/environments/tables.py:116
-msgid "Abandon"
-msgstr ""
+#: muranodashboard/environments/tables.py:134
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:117
-msgid "Abandoned"
-msgstr ""
+#: muranodashboard/environments/tables.py:142
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:138
+#: muranodashboard/environments/tables.py:164
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:146
-#: muranodashboard/environments/tabs.py:32
-msgid "Component"
-msgstr ""
+#: muranodashboard/environments/tables.py:175
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:147
-#: muranodashboard/environments/tabs.py:195
-#: muranodashboard/templates/services/index.html:8
-msgid "Components"
-msgstr ""
+#: muranodashboard/environments/tables.py:183
+msgid "Start Deleting Component"
+msgid_plural "Start Deleting Components"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:164
+#: muranodashboard/environments/tables.py:203
 msgid "Sorry, you can't delete service right now"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:171
-msgid "Deploy"
-msgstr ""
+#: muranodashboard/environments/tables.py:214
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:172
-msgid "Deployed"
-msgstr ""
+#: muranodashboard/environments/tables.py:222
+msgid "Deployed Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/environments/tables.py:199
-#: muranodashboard/environments/tables.py:236
+#: muranodashboard/environments/tables.py:250
+#: muranodashboard/environments/tables.py:287
 msgid "Unable to deploy. Try again later"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:206
+#: muranodashboard/environments/tables.py:257
 msgid "Deploy This Environment"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:234
+#: muranodashboard/environments/tables.py:285
 msgid "Deploy started"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:247
+#: muranodashboard/environments/tables.py:298
 msgid "Manage Components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:284
+#: muranodashboard/environments/tables.py:335
 msgid "This name is already taken."
 msgstr ""
 
-#: muranodashboard/environments/tables.py:286
+#: muranodashboard/environments/tables.py:337
 msgid "Couldn't update environment. Reason: "
 msgstr ""
 
-#: muranodashboard/environments/tables.py:305
-#: muranodashboard/environments/tables.py:342
-#: muranodashboard/environments/tables.py:469
+#: muranodashboard/environments/tables.py:356
+#: muranodashboard/environments/tables.py:391
+#: muranodashboard/environments/tables.py:516
 #: muranodashboard/packages/forms.py:162 muranodashboard/packages/tables.py:60
 #: muranodashboard/templates/categories/_add.html:8
 #: muranodashboard/templates/packages/_detail.html:5
@@ -438,59 +451,63 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:311
-#: muranodashboard/environments/tables.py:349
-#: muranodashboard/environments/tables.py:457
+#: muranodashboard/environments/tables.py:362
+#: muranodashboard/environments/tables.py:398
+#: muranodashboard/environments/tables.py:504
 msgid "Status"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:322
+#: muranodashboard/environments/tables.py:373
 msgid "NO ENVIRONMENTS"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:346
-#: muranodashboard/environments/tables.py:472
-#: muranodashboard/images/tables.py:58 muranodashboard/packages/tables.py:59
-#: muranodashboard/packages/tables.py:222
+#: muranodashboard/environments/tables.py:395
+#: muranodashboard/environments/tables.py:519
+#: muranodashboard/images/tables.py:72 muranodashboard/packages/tables.py:59
+#: muranodashboard/packages/tables.py:237
 #: muranodashboard/templates/packages/_detail.html:9
 msgid "Type"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:354
+#: muranodashboard/environments/tables.py:403
 msgid "Last operation"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:357
+#: muranodashboard/environments/tables.py:406
 msgid "Time updated"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:422
+#: muranodashboard/environments/tables.py:471
 msgid "Component List"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:423
+#: muranodashboard/environments/tables.py:472
 msgid "No components"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:435
+#: muranodashboard/environments/tables.py:482
 msgid "Show Details"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:449
+#: muranodashboard/environments/tables.py:496
 msgid "Time Started"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:452
+#: muranodashboard/environments/tables.py:499
 msgid "Time Finished"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:463
+#: muranodashboard/environments/tables.py:510
 #: muranodashboard/environments/views.py:197
 msgid "Deployments"
 msgstr ""
 
-#: muranodashboard/environments/tables.py:479
+#: muranodashboard/environments/tables.py:526
 msgid "Deployed Components"
+msgstr ""
+
+#: muranodashboard/environments/tabs.py:32
+msgid "Component"
 msgstr ""
 
 #: muranodashboard/environments/tabs.py:128
@@ -508,6 +525,11 @@ msgstr ""
 
 #: muranodashboard/environments/tabs.py:174
 msgid "Topology"
+msgstr ""
+
+#: muranodashboard/environments/tabs.py:195
+#: muranodashboard/templates/services/index.html:8
+msgid "Components"
 msgstr ""
 
 #: muranodashboard/environments/tabs.py:208
@@ -556,7 +578,7 @@ msgstr ""
 msgid "Invalid metadata for image: {0}"
 msgstr ""
 
-#: muranodashboard/images/forms.py:57 muranodashboard/images/tables.py:60
+#: muranodashboard/images/forms.py:57 muranodashboard/images/tables.py:74
 msgid "Title"
 msgstr ""
 
@@ -580,25 +602,33 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: muranodashboard/images/tables.py:24 muranodashboard/images/views.py:102
+#: muranodashboard/images/tables.py:25 muranodashboard/images/views.py:102
 #: muranodashboard/templates/images/mark.html:3
 msgid "Mark Image"
 msgstr ""
 
-#: muranodashboard/images/tables.py:34 muranodashboard/images/tables.py:35
-msgid "Metadata"
-msgstr ""
+#: muranodashboard/images/tables.py:37
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/images/tables.py:44
+#: muranodashboard/images/tables.py:45
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] ""
+msgstr[1] ""
+
+#: muranodashboard/images/tables.py:58
 msgid "Unable to remove metadata"
 msgstr ""
 
-#: muranodashboard/images/tables.py:55
+#: muranodashboard/images/tables.py:69
 #: muranodashboard/templates/images/_mark.html:8
 msgid "Image"
 msgstr ""
 
-#: muranodashboard/images/tables.py:65 muranodashboard/images/views.py:34
+#: muranodashboard/images/tables.py:79 muranodashboard/images/views.py:34
 #: muranodashboard/templates/images/index.html:3
 msgid "Marked Images"
 msgstr ""
@@ -667,7 +697,7 @@ msgid "An external http/https URL to load the package from."
 msgstr ""
 
 #: muranodashboard/packages/forms.py:102 muranodashboard/packages/forms.py:107
-#: muranodashboard/packages/tables.py:218
+#: muranodashboard/packages/tables.py:233
 #: muranodashboard/templates/packages/_upload.html:47
 msgid "Package Name"
 msgstr ""
@@ -714,13 +744,13 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: muranodashboard/packages/forms.py:169 muranodashboard/packages/tables.py:221
+#: muranodashboard/packages/forms.py:169 muranodashboard/packages/tables.py:236
 #: muranodashboard/templates/packages/_detail.html:17
 #: muranodashboard/templates/packages/_package_params.html:6
 msgid "Public"
 msgstr ""
 
-#: muranodashboard/packages/forms.py:172 muranodashboard/packages/tables.py:220
+#: muranodashboard/packages/forms.py:172 muranodashboard/packages/tables.py:235
 #: muranodashboard/templates/packages/_package_params.html:7
 msgid "Active"
 msgstr ""
@@ -770,7 +800,7 @@ msgstr ""
 msgid "No categories available"
 msgstr ""
 
-#: muranodashboard/packages/panel.py:22 muranodashboard/packages/tables.py:240
+#: muranodashboard/packages/panel.py:22 muranodashboard/packages/tables.py:255
 #: muranodashboard/packages/views.py:76
 #: muranodashboard/templates/packages/index.html:5
 msgid "Packages"
@@ -833,47 +863,55 @@ msgid_plural "Toggled Public"
 msgstr[0] ""
 msgstr[1] ""
 
-#: muranodashboard/packages/tables.py:178
-msgid "Package"
-msgstr ""
+#: muranodashboard/packages/tables.py:181
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] ""
+msgstr[1] ""
 
-#: muranodashboard/packages/tables.py:184
+#: muranodashboard/packages/tables.py:189
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: muranodashboard/packages/tables.py:199
 msgid "Package with id {0} is not found"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:191
+#: muranodashboard/packages/tables.py:206
 msgid "You are not allowed to delete this package"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:197
+#: muranodashboard/packages/tables.py:212
 msgid "Unable to delete package in murano-api server"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:200
+#: muranodashboard/packages/tables.py:215
 msgid "Unable to remove package."
 msgstr ""
 
-#: muranodashboard/packages/tables.py:206
+#: muranodashboard/packages/tables.py:221
 #: muranodashboard/templates/packages/_modify_package.html:7
 #: muranodashboard/templates/packages/modify_package.html:3
 msgid "Modify Package"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:219
+#: muranodashboard/packages/tables.py:234
 msgid "Tenant Name"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:224
+#: muranodashboard/packages/tables.py:239
 #: muranodashboard/templates/packages/_detail.html:21
 msgid "Version"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:226
+#: muranodashboard/packages/tables.py:241
 #: muranodashboard/templates/packages/_detail.html:25
 msgid "Created"
 msgstr ""
 
-#: muranodashboard/packages/tables.py:229
+#: muranodashboard/packages/tables.py:244
 msgid "Updated"
 msgstr ""
 
@@ -1015,6 +1053,10 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#: muranodashboard/templates/catalog/env_switcher.html:3
+msgid "Environment"
+msgstr ""
+
 #: muranodashboard/templates/catalog/env_switcher.html:10
 msgid "Click to create new environment"
 msgstr ""
@@ -1047,9 +1089,12 @@ msgstr ""
 msgid "Next Page"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:110
-#: muranodashboard/templates/services/_data_table.html:61
-msgid "There are no applications in the catalog. You can import apps from"
+#: muranodashboard/templates/catalog/index.html:111
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from\n"
+"                <a href=\"%(repo_url)s\" target=\"_blank\"> "
+"%(repo_url)s</a>."
 msgstr ""
 
 #: muranodashboard/templates/catalog/index.html:117
@@ -1330,6 +1375,10 @@ msgstr ""
 
 #: muranodashboard/templates/services/_data_table.html:54
 msgid "Find in a selected category"
+msgstr ""
+
+#: muranodashboard/templates/services/_data_table.html:61
+msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 
 #: muranodashboard/templates/services/_data_table.html:68

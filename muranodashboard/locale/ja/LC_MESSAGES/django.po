@@ -4,16 +4,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-11 13:01+0000\n"
+"POT-Creation-Date: 2016-03-14 21:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-12 06:46+0000\n"
+"PO-Revision-Date: 2016-03-14 09:18+0000\n"
 "Last-Translator: Akihiro Motoki <amotoki@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+
+#, fuzzy
+msgid ""
+" with the following requirements:\n"
+"*"
+msgstr ""
+"以下の要件を満たす\n"
+"必要があります。"
 
 msgid "\"Add Application\""
 msgstr "\"アプリケーションの追加\""
@@ -36,11 +44,13 @@ msgstr "-"
 msgid "A local zip file to upload"
 msgstr "アップロードするローカルの zip ファイル"
 
-msgid "Abandon"
-msgstr "中止"
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "環境の中止"
 
-msgid "Abandoned"
-msgstr "中止しました"
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "環境を中止しました"
 
 msgid "Active"
 msgstr "稼働中"
@@ -165,9 +175,6 @@ msgstr ""
 msgid "Categories"
 msgstr "カテゴリー"
 
-msgid "Category"
-msgstr "カテゴリー"
-
 msgid "Category Name"
 msgstr "カテゴリー名"
 
@@ -250,8 +257,41 @@ msgstr ""
 "パッケージを他のプロジェクトが使用できるかを定義します (パッケージの依存関係"
 "に影響します)。"
 
-msgid "Deploy"
-msgstr "デプロイ"
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "カテゴリーの削除"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "コンポーネントの削除"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "環境の削除"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "メタデータの削除"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "パッケージの削除"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "カテゴリーを削除しました"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "メタデータを削除しました"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "パッケージを削除しました"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "環境のデプロイ"
 
 msgid "Deploy This Environment"
 msgstr "この環境のデプロイ"
@@ -259,11 +299,12 @@ msgstr "この環境のデプロイ"
 msgid "Deploy started"
 msgstr "デプロイを開始しました"
 
-msgid "Deployed"
-msgstr "デプロイ済み"
-
 msgid "Deployed Components"
 msgstr "デプロイ済みコンポーネント"
+
+msgid "Deployed Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "環境をデプロイしました"
 
 msgid "Deployment Details"
 msgstr "デプロイの詳細"
@@ -529,9 +570,6 @@ msgstr ""
 msgid "Marked Images"
 msgstr "マーク済みイメージ"
 
-msgid "Metadata"
-msgstr "メタデータ"
-
 msgid "Modify Package"
 msgstr "パッケージの変更"
 
@@ -608,9 +646,6 @@ msgstr "オプション"
 
 msgid "Overview"
 msgstr "概要"
-
-msgid "Package"
-msgstr "パッケージ"
 
 msgid "Package Bundle Source"
 msgstr "パッケージバンドルソース"
@@ -790,8 +825,13 @@ msgstr ""
 "カテゴリを指定すると、カタログ内でアプリケーションをフィルタリングする際に使"
 "用できます。"
 
-msgid "Start Deleting"
-msgstr "削除の開始"
+msgid "Start Deleting Component"
+msgid_plural "Start Deleting Components"
+msgstr[0] "コンポーネントの削除を開始しました"
+
+msgid "Start Deleting Environment"
+msgid_plural "Start Deleting Environments"
+msgstr[0] "環境の削除を開始しました"
 
 msgid "Status"
 msgstr "状態"
@@ -850,6 +890,15 @@ msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 "カタログにはアプリケーションがありません。次の URL からアプリケーションをイン"
 "ポートできます。"
+
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from\n"
+"                <a href=\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a>."
+msgstr ""
+"カタログにはアプリケーションがありません。\n"
+"<a href=\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a> からアプリケー"
+"ションをインポートできます。"
 
 msgid "There are no applications matching your criteria."
 msgstr "基準を満たすアプリケーションはありません。"
