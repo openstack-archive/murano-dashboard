@@ -527,3 +527,10 @@ h3 .wizard_title {
   color: #d93c27;
   font-weight: bold;
 }
+
+.more_content_dynamicui span {
+    display: none;
+}
+.more_link_dynamicui {
+    display: block;
+}
