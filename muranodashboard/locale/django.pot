@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-15 06:43+0000\n"
+"POT-Creation-Date: 2016-03-16 06:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,113 +178,100 @@ msgstr ""
 msgid "{0}{1} don't match"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:249
+#: muranodashboard/dynamic_ui/fields.py:253
 msgid ""
-"Enter a complex password with at least one letter,                 one "
-"number and one special character"
+"Enter a complex password with at least one letter, one number and one "
+"special character"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:256
-msgid ""
-"Enter a complex password with at least one"
-"                                letter, one number and one special "
-"character"
+#: muranodashboard/dynamic_ui/fields.py:267
+msgid "Enter a password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:266
-msgid "Enter a password for the application"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:273
-msgid ""
-" with the following requirements:\n"
-"*"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:290
+#: muranodashboard/dynamic_ui/fields.py:284
 msgid "Confirm password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:291
+#: muranodashboard/dynamic_ui/fields.py:285
 msgid "Please confirm your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:292
+#: muranodashboard/dynamic_ui/fields.py:286
 msgid "Retype your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:354
+#: muranodashboard/dynamic_ui/fields.py:348
 msgid "No keypair"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:417
+#: muranodashboard/dynamic_ui/fields.py:411
 msgid "Select Image"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:419
+#: muranodashboard/dynamic_ui/fields.py:413
 msgid "No images available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:435
+#: muranodashboard/dynamic_ui/fields.py:429
 msgid "Invalid value of 'murano_nets' option"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:454
+#: muranodashboard/dynamic_ui/fields.py:448
 msgid "Auto"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:477
+#: muranodashboard/dynamic_ui/fields.py:471
 msgid "Unable to retrieve  availability zones."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:482
+#: muranodashboard/dynamic_ui/fields.py:476
 msgid "No availability zones available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:518
+#: muranodashboard/dynamic_ui/fields.py:512
 msgid "Specified Cluster Static IP is not in valid IP range"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:526
+#: muranodashboard/dynamic_ui/fields.py:520
 msgid "Unable to retrieve information about fixed IP or IP is not valid."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:538
+#: muranodashboard/dynamic_ui/fields.py:532
 msgid "Specified Cluster Static IP is already in use"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:551
+#: muranodashboard/dynamic_ui/fields.py:545
 msgid "Cannot get allowed subnet for the environment, consult your admin"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:556
+#: muranodashboard/dynamic_ui/fields.py:550
 msgid "Specified IP address should belong to {0} subnet"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:573
+#: muranodashboard/dynamic_ui/fields.py:567
 msgid "Select IP from available range: {0} "
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:576
+#: muranodashboard/dynamic_ui/fields.py:570
 msgid "Specify valid fixed IP"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:580
+#: muranodashboard/dynamic_ui/fields.py:574
 msgid "Router is not found. You should create one explicitly."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:593
+#: muranodashboard/dynamic_ui/fields.py:587
 msgid ""
 "First symbol should be latin letter or underscore. Subsequent symbols can"
 " be latin letter, numeric, underscore, at sign, number sign or dollar "
 "sign"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:636
+#: muranodashboard/dynamic_ui/fields.py:630
 msgid "Select Application"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:679
+#: muranodashboard/dynamic_ui/fields.py:673
 msgid "Not in domain"
 msgstr ""
 
