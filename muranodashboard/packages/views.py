@@ -565,6 +565,7 @@ class ModifyPackageView(views.ModalFormView):
     def get_context_data(self, **kwargs):
         context = super(ModifyPackageView, self).get_context_data(**kwargs)
         context['app_id'] = self.kwargs['app_id']
+        context['type'] = kwargs['form'].initial['package'].type
         return context
 
 
