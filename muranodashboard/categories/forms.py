@@ -22,9 +22,9 @@ from muranodashboard import api
 
 class AddCategoryForm(horizon_forms.SelfHandlingForm):
 
-    name = forms.CharField(label='Category Name',
+    name = forms.CharField(label=_('Category Name'),
                            max_length=80,
-                           help_text='80 characters max.')
+                           help_text=_('80 characters max.'))
 
     def handle(self, request, data):
         if data:
