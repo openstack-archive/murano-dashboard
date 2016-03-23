@@ -1,15 +1,16 @@
+# Gaoxiao Zhu <zhu.gaoxiao@h3c.com>, 2016. #zanata
 # Shengjing Zhu <zsj950618@gmail.com>, 2016. #zanata
 # Yaguang Tang <heut2008@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-15 23:05+0000\n"
+"POT-Creation-Date: 2016-03-22 13:41+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-10 07:15+0000\n"
-"Last-Translator: Shengjing Zhu <zsj950618@gmail.com>\n"
+"PO-Revision-Date: 2016-03-21 02:59+0000\n"
+"Last-Translator: Gaoxiao Zhu <zhu.gaoxiao@h3c.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -35,6 +36,14 @@ msgstr "-"
 
 msgid "A local zip file to upload"
 msgstr "从本地上传的一个 ZIP 压缩包"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "放弃环境变量"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "已放弃环境变量"
 
 #, fuzzy
 msgid "Active"
@@ -236,6 +245,34 @@ msgid ""
 "package dependencies)"
 msgstr "定义一个软件包能否被其他租户使用。（同时应用到软件包的依赖）"
 
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "删除组件"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "删除环境变量"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "删除元数据"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "删除包"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "已删除的元数据"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "已删除的包"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "部署环境变量"
+
 msgid "Deploy This Environment"
 msgstr "部署这个环境"
 
@@ -244,6 +281,10 @@ msgstr "部署已经开始"
 
 msgid "Deployed Components"
 msgstr "已部署的组件"
+
+msgid "Deployed Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "部署的环境变量"
 
 msgid "Deployment Details"
 msgstr "部署详情"
@@ -276,6 +317,9 @@ msgstr "把组件拖拽到此"
 
 msgid "Enabled"
 msgstr "已启用"
+
+msgid "Enter a password"
+msgstr "输入密码"
 
 msgid "Environment"
 msgstr "环境"
@@ -739,6 +783,14 @@ msgstr "指定有效的固定 IP"
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "指定一个分类有助于在目录中进行过滤"
+
+msgid "Start Deleting Component"
+msgid_plural "Start Deleting Components"
+msgstr[0] "开始删除组件"
+
+msgid "Start Deleting Environment"
+msgid_plural "Start Deleting Environments"
+msgstr[0] "开始删除变量"
 
 msgid "Status"
 msgstr "状态"

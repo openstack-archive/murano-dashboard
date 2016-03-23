@@ -1,0 +1,927 @@
+# Ilya Alekseyev <ilyaalekseyev@acm.org>, 2016. #zanata
+# Kirill Zaitsev <k.zaitsev@me.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-03-22 13:41+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-03-21 06:08+0000\n"
+"Last-Translator: Kirill Zaitsev <k.zaitsev@me.com>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+msgid "\"Add Application\""
+msgstr "Добавить Приложение"
+
+msgid "\"Applications\""
+msgstr "\"Приложения\""
+
+msgid "'Import Bundle'"
+msgstr "'Импортировать Bundle'"
+
+msgid "'Import Package'"
+msgstr "'Импортировать Пакет'"
+
+msgid "'Modify Package'"
+msgstr "'Модифицировать Пакет'"
+
+msgid "-"
+msgstr "-"
+
+msgid "A local zip file to upload"
+msgstr "Zip файл"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Забыть об Окружении"
+msgstr[1] "Забыть об Окружениях"
+msgstr[2] "Забыть об Окружениях"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Окружение Забыто"
+msgstr[1] "Окружения Забыты"
+msgstr[2] "Окружения Забыты"
+
+msgid "Active"
+msgstr "Активный"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Add Application"
+msgstr "Добавить Приложение"
+
+msgid "Add Application Category"
+msgstr "Добавить категорию приложений"
+
+msgid "Add Category"
+msgstr "Добавить Категорию"
+
+msgid "Add Component"
+msgstr "Добавить Компонент"
+
+msgid "Add Murano Metadata"
+msgstr "Добавить Метаданные Murano"
+
+msgid "Add New"
+msgstr "Добавить новый"
+
+msgid "Add new category to the application catalog."
+msgstr "Добавить новую категорию в каталог."
+
+msgid "Add to Env"
+msgstr "Добавить в окружение"
+
+msgid "Adding application to an environment failed."
+msgstr "Произошла ошибка при добавлении приложения в окружение."
+
+msgid "All"
+msgstr "Все"
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "Внешний http/https URL, по которому будет скачен bundle."
+
+msgid "An external http/https URL to load the package from."
+msgstr "Внешний http/https URL с которого будет скачан пакет."
+
+msgid "App Category:"
+msgstr "Категория Приложения:"
+
+msgid "App category"
+msgstr "Категория приложения"
+
+msgid "Application Catalog"
+msgstr "Каталог Приложений"
+
+msgid "Application Categories"
+msgstr "Категории Приложений"
+
+msgid "Application Category"
+msgstr "Категории Приложений"
+
+msgid "Application Details"
+msgstr "Детали Приложения"
+
+msgid "Application Package"
+msgstr "Пакет Приложения"
+
+msgid "Application details"
+msgstr "Детали приложения"
+
+msgid "Application&nbsp;Components"
+msgstr " Компоненты"
+
+msgid "Applications"
+msgstr "Приложения"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Auto"
+msgstr "Авто"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Bundle Name"
+msgstr "Имя bundle"
+
+msgid "Bundle URL"
+msgstr "URL Bundle"
+
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr ""
+"Не удалось создать Bundle. Не удалось найти Bundle с таким именем в "
+"репозитории."
+
+msgid "Bundle successfully imported."
+msgstr "Bundle успешно импортирован."
+
+msgid "Cancel"
+msgstr "Отменить"
+
+msgid "Cannot get allowed subnet for the environment, consult your admin"
+msgstr ""
+"Не удалось получить разрешенные подсети для окружения, обратитесь к вашему "
+"администратору"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Category Name"
+msgstr "Имя Категории"
+
+msgid "Category {0} created."
+msgstr "Категория {0} создана."
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "Проверьте настройки Keystone для сервера murano-api."
+
+msgid "Choose a name for the environment"
+msgstr "Выберите имя для окружения"
+
+msgid "Click to create new environment"
+msgstr "Создать новое окружение"
+
+msgid "Component"
+msgstr "Компонент"
+
+msgid "Component Details"
+msgstr "Детали Компонентов"
+
+msgid "Component List"
+msgstr "Список компонентов"
+
+msgid "Component Logs"
+msgstr "Журнал Компонентов"
+
+msgid "Components"
+msgstr "Компоненты"
+
+msgid "Configuration"
+msgstr "Конфигурация"
+
+msgid "Configure Application"
+msgstr "Настроить Приложение"
+
+msgid "Confirm password"
+msgstr "Подтвердите пароль"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "Не удалось получить последний статус для окружения {0}"
+
+msgid "Couldn't update environment. Reason: "
+msgstr "Не удалось обновить Окружение. Причина:"
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "Пакет {0} не удалось обновить. Ошибка: {1}"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "Create Env"
+msgstr "Создать окружение"
+
+msgid "Create Environment"
+msgstr "Создать Окружение"
+
+msgid "Create New"
+msgstr "Создать новую"
+
+msgid "Create a title for an image."
+msgstr "Выберите имя для образа"
+
+msgid "Created"
+msgstr "Создан"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Удалить Категорию"
+msgstr[1] "Удалить Категории"
+msgstr[2] "Удалить Категории"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Удалить компонент"
+msgstr[1] "Удалить компоненты"
+msgstr[2] "Удалить компоненты"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Удалить Окружение"
+msgstr[1] "Удалить Окружения"
+msgstr[2] "Удалить Окружения"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Удалить Метаданные"
+msgstr[1] "Удалить Метаданные"
+msgstr[2] "Удалить Метаданные"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Удалить Пакет"
+msgstr[1] "Удалить Пакеты"
+msgstr[2] "Удалить Пакеты"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Категория Удалена"
+msgstr[1] "Категории Удалены"
+msgstr[2] "Категории Удалены"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Метаданные Удалены"
+msgstr[1] "Метаданные Удалены"
+msgstr[2] "Метаданные Удалены"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Пакет Удален"
+msgstr[1] "Пакеты Удалены"
+msgstr[2] "Пакеты Удалены"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Удалить Окружение"
+msgstr[1] "Удалить Окружения"
+msgstr[2] "Удалить Окружения"
+
+msgid "Deploy This Environment"
+msgstr "Развернуть это Окружение"
+
+msgid "Deploy started"
+msgstr "Развертывание началось"
+
+msgid "Deployed Components"
+msgstr "Развернутые Компоненты"
+
+msgid "Deployed Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Окружение Развернуто"
+msgstr[1] "Окружения Развернуты"
+msgstr[2] "Окружения Развернуты"
+
+msgid "Deployment Details"
+msgstr "Детали Развертывания"
+
+msgid "Deployment History"
+msgstr "История Развертываний"
+
+msgid "Deployment Logs"
+msgstr "Журнал Развертывания"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "Развертывание с id %s больше не существует"
+
+msgid "Deployments"
+msgstr "Развертывания"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Details"
+msgstr "Детали"
+
+msgid "Download Package"
+msgstr "Скачать Пакет"
+
+msgid "Drop Components here"
+msgstr "Перетащите компоненты сюда"
+
+msgid "Enabled"
+msgstr "Включен"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr ""
+"Введите сложный пароль, содержащий как минимум одну букву, одно число, и "
+"один специальный символ."
+
+msgid "Enter a password"
+msgstr "Введите пароль"
+
+msgid "Environment"
+msgstr "Окружение"
+
+msgid "Environment Default Network"
+msgstr "Сеть по умолчанию для Окружения "
+
+msgid "Environment Deployments"
+msgstr "Развертывания Окружения"
+
+msgid "Environment Name"
+msgstr "Имя Окружения"
+
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr "Имя окружения должно содержать хотя бы один не пробельный символ."
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "Окружение с id %s больше не существует"
+
+msgid "Environment with specified name already exists"
+msgstr "Окружение с указанным именем уже существует"
+
+msgid "Environments"
+msgstr "Окружения"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "Произошла ошибка {0} во время установки пакета {1}"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "Произошла ошибка {0}  во время установки публичности образа {1}, {2}"
+
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "Директория с планами исполнения"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed to create environment"
+msgstr "Ну удалось создать окружение"
+
+msgid "Failed to modify the package. {0}"
+msgstr "Не удалось модифицировать пакет. {0}"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Filter"
+msgstr "Фильтровать"
+
+msgid "Find in a selected category"
+msgstr "Найти в выбранной категории"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"Первым символом должна быть латинская буква или подчеркивание. Последующими "
+"символами могут быть латинские буквы, числа, подчеркивания, символы @, №, $"
+
+msgid "Fully qualified package name."
+msgstr "Полное имя пакета."
+
+msgid "Heat Orchestration stack name"
+msgstr "Имя стека Heat"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Имя стека Heat %(forloop.counter)"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Image"
+msgstr "Образ"
+
+msgid "Image Title"
+msgstr "Имя образа"
+
+msgid "Image Type"
+msgstr "Тип Образа"
+
+msgid "Image successfully marked"
+msgstr "Образ успешно маркирован"
+
+msgid "Images"
+msgstr "Образы"
+
+msgid "Import Bundle"
+msgstr "Импортировать Bundle"
+
+msgid "Import Package"
+msgstr "Импортировать Пакет"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "Пакет {0} не удалось загрузить. Причина: {1}"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Instance name"
+msgstr "Имя инстанса"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "Имя инстанса %(forloop.counter)"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "Не корректные метаданные у образа: {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "Не корректные murano мета-данные образа"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "Не корректное значение опции 'murano_nets'"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "Нельзя загружать файлы размером больше {0} MB."
+
+msgid "KeyWord"
+msgstr "Ключевое Слово"
+
+msgid "Last operation"
+msgstr "Последняя операция"
+
+msgid "Latest Deployment Log"
+msgstr "Последнее развертывание"
+
+msgid "License"
+msgstr "Лицензия"
+
+msgid "Logs"
+msgstr "Журнал событий"
+
+msgid "Manage"
+msgstr "Управление"
+
+msgid "Manage Components"
+msgstr "Управление Компонентами"
+
+msgid "Mark Image"
+msgstr "Маркировать образ"
+
+msgid "Marked Images"
+msgstr "Маркированные образы"
+
+msgid "Modify Package"
+msgstr "Модифицировать Пакет"
+
+msgid "Modifying package failed"
+msgstr "Не удалось изменить пакет"
+
+msgid "Murano"
+msgstr "Murano"
+
+msgid "NO ENVIRONMENTS"
+msgstr "Нет окружений"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Name of the bundle."
+msgstr "Имя bundle."
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "Сеть \"%s\""
+
+msgid "Next"
+msgstr "Далее"
+
+msgid "Next Page"
+msgstr "Следующая Страница"
+
+msgid "No availability zones available"
+msgstr "Ни одной зоны доступности не доступно"
+
+msgid "No categories available"
+msgstr "Ни одной категории не доступно"
+
+msgid "No components"
+msgstr "Нет компонентов"
+
+msgid "No images available"
+msgstr "Ни одного образа не доступно"
+
+msgid "No keypair"
+msgstr "Без ключей"
+
+msgid "No license"
+msgstr "Нет лицензии"
+
+msgid "No recent activity to report at this time."
+msgstr "Вы еще не использовали приложений."
+
+msgid "No requirements"
+msgstr "Нет зависимостей"
+
+msgid "Not in domain"
+msgstr "Не принадлежит домену"
+
+msgid "Note"
+msgstr "Внимание"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"Сетевой сервис Newtron не доступен в текущем окружении. Выбор сетевых "
+"настроек не может быть применен"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "Операция запрещена сервером murano-api."
+
+msgid "Optional"
+msgstr "Необязательно"
+
+msgid "Overview"
+msgstr "Обзор"
+
+msgid "Package Bundle Source"
+msgstr "Источник для Bundle"
+
+msgid "Package Count"
+msgstr "Колтичество Пакетов"
+
+msgid "Package Details"
+msgstr "Детали Пакета"
+
+msgid "Package Name"
+msgstr "Имя Пакета"
+
+msgid "Package Source"
+msgstr "Источник Пакета"
+
+msgid "Package URL"
+msgstr "URL Пакета"
+
+msgid "Package Version"
+msgstr "Версия Пакета"
+
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr ""
+"Не удалось создать пакет. Пакет с таким именем не найден в репозитории."
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "Не удалось создать пакет. Причина: {0}"
+
+msgid "Package modified."
+msgstr "Пакет модифицирован."
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "Имя Пакета в репозитории, обычно полностью специфицированное имя"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "Пакет или Класс с таким же именем уже является публичным"
+
+msgid "Package parameters successfully updated."
+msgstr "Параметры пакета успешно обновлены."
+
+msgid "Package version"
+msgstr "Версия пакета"
+
+msgid "Package with id {0} is not found"
+msgstr "Пакет с id {0} не найден"
+
+msgid "Package with specified name already exists"
+msgstr "Пакет с таким именем уже существует"
+
+msgid "Package {0} already registered."
+msgstr "Пакет {0} уже зарегистрирован."
+
+msgid "Package {0} upload failed. {1}"
+msgstr "Пакет {0} не удалось загрузить. {1}"
+
+msgid "Package {0} uploaded"
+msgstr "Пакет {0} загружен"
+
+msgid "Packages"
+msgstr "Пакеты"
+
+msgid "Please confirm your password"
+msgstr "Пожалуйста подтвердите пароль"
+
+msgid "Please supply a bundle name"
+msgstr "Пожалуйста укажите имя bundle"
+
+msgid "Please supply a bundle url"
+msgstr "Пожалуйста укажите url bundle"
+
+msgid "Please supply a package file"
+msgstr "Пожалуйста укажите файл пакета"
+
+msgid "Please supply a package name"
+msgstr "Пожалуйста укажите имя пакета"
+
+msgid "Please supply a package url"
+msgstr "Пожалуйста укажите url пакета"
+
+msgid "Previous Page"
+msgstr "Предыдущая Страница"
+
+msgid "Provide desired name for a new category"
+msgstr "Выберите имя для новой категории"
+
+msgid "Public"
+msgstr "Публичный"
+
+msgid "Quick Deploy"
+msgstr "Быстрое развертывание"
+
+msgid "Recent Activity"
+msgstr "Недавние приложения"
+
+msgid "Repository"
+msgstr "Репозиторий"
+
+msgid "Requested object is not found on murano server."
+msgstr "Запрашиваемый объект не найден сервером murano."
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "Запрошенная операция конфликтует с существующим объектом."
+
+msgid "Requirements"
+msgstr "Требования"
+
+msgid "Retype your password"
+msgstr "Подтвердите пароль"
+
+msgid "Router is not found. You should create one explicitly."
+msgstr "Маршрутизатор не найден. Вам необходимо создать его явно."
+
+msgid "Select Application"
+msgstr "Выбрать Приолжение"
+
+msgid "Select IP from available range: {0} "
+msgstr "Выберите IP адрес и из диапазона: {0}"
+
+msgid "Select Image"
+msgstr "Выберите образ"
+
+msgid "Select an image type supported by Murano."
+msgstr "Выберите тип образа, поддерживаемый Murano"
+
+msgid "Select one or more categories for a package."
+msgstr "Выберите одну или более категорий для пакета."
+
+msgid "Show Details"
+msgstr "Показать детали"
+
+msgid "Something went wrong during package downloading"
+msgstr "Произошла ошибка при загрузке пакета."
+
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "Это окружение больше не существует"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr "Вы не можете добавить приложение сейчас. Окружение развертывается."
+
+msgid "Sorry, you can't delete service right now"
+msgstr "К сожаление невозможно удалить сервис в данный момент"
+
+msgid "Specified Cluster Static IP is already in use"
+msgstr "Указанный  Статический  IP Кластера уже используется"
+
+msgid "Specified Cluster Static IP is not in valid IP range"
+msgstr "Указаный Статический  IP Кластера не является корректным диапазоном IP"
+
+msgid "Specified IP address should belong to {0} subnet"
+msgstr "Указанный IP адрес должен принадлежать к подсети {0}"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "Указанный заголовок уже используется. Выберите другой."
+
+msgid "Specify valid fixed IP"
+msgstr "Укажите корректный фиксированный IP"
+
+msgid "Start Deleting Component"
+msgid_plural "Start Deleting Components"
+msgstr[0] "Начать удаление компонента"
+msgstr[1] "Начать удаление компонентов"
+msgstr[2] "Начать удаление компонентов"
+
+msgid "Start Deleting Environment"
+msgid_plural "Start Deleting Environments"
+msgstr[0] "Начать удаление Окружения"
+msgstr[1] "Начать удаление Окружений"
+msgstr[2] "Начать удаление Окружений"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Step {0}"
+msgstr "Шаг {0}"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Tenant Name"
+msgstr "Имя Проекта"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "Приложение '{0}' успешно добавлено в окружение."
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"Виртуальные Машины этого окружения будут присоединяться к этой сети по "
+"умолчанию, кроме случаев когда они настроены индивидуально. При выборе "
+"\"Создать Новую\" будет создана новая cеть с подсетью, содержащей диапазон "
+"IP адресов, доступных маршрутизатору Murano по-умолчанию."
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr ""
+"Пароль должен содержать как минимум одну букву, одно число, и один "
+"специальный символ"
+
+msgid "The request data is not acceptable by the server"
+msgstr "Сервер не в состоянии принять данные запроса"
+
+msgid "There are no applications matching your criteria."
+msgstr "Нет приложений, которые подходят под критерии поиска."
+
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr ""
+"Это действие невозможно отменить. Любые ресурсы этого окружения необходимо "
+"будет освободить в ручном режиме."
+
+msgid "This name is already taken."
+msgstr "Это имя уже занято."
+
+msgid "Time Finished"
+msgstr "Время конца"
+
+msgid "Time Started"
+msgstr "Время начала"
+
+msgid "Time updated"
+msgstr "Время обновления"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Изменить Активность"
+msgstr[1] "Изменить Активность"
+msgstr[2] "Изменить Активность"
+
+msgid "Toggle Enabled"
+msgstr "Изменить Активность"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Изменить Публичность"
+msgstr[1] "Изменить Публичность"
+msgstr[2] "Изменить Публичность"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Активность Изменена"
+msgstr[1] "Активность Изменена"
+msgstr[2] "Активность Изменена"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Публичность Изменена"
+msgstr[1] "Публичность Изменена"
+msgstr[2] "Публичность Изменена"
+
+msgid "Topology"
+msgstr "Топология"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "UNKNOWN"
+msgstr "Не известно"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "Не удалось забыть об окружении {0} по причине: {1}"
+
+msgid "Unable to communicate to murano-api server."
+msgstr "Не удалось соединиться с сервером murano-api."
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "Не удалось создать окружение {0} по причине: {1}"
+
+msgid "Unable to delete category"
+msgstr "Не удалось удалить категорию"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "Не удалось удалить окружение {0} по причине: {1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "Не удалось удалить пакет с сервера murano-api"
+
+msgid "Unable to deploy. Try again later"
+msgstr "Не удалось развернуть окружение. Попробуйте снова."
+
+msgid "Unable to download package."
+msgstr "Не удалось скачать пакет."
+
+msgid "Unable to get list of categories"
+msgstr "Не удалось получить список категорий"
+
+msgid "Unable to mark image"
+msgstr "Не удалось маркировать образ"
+
+msgid "Unable to modify package"
+msgstr "Не удалось изменить пакет"
+
+msgid "Unable to remove metadata"
+msgstr "Не удалось получить метаданные"
+
+msgid "Unable to remove package."
+msgstr "Не удалось удалить пакет."
+
+msgid "Unable to retrieve  availability zones."
+msgstr "Не удалось получить список зон доступности"
+
+msgid "Unable to retrieve details for service"
+msgstr "Не удалось получить детали сервиса"
+
+msgid "Unable to retrieve information about fixed IP or IP is not valid."
+msgstr "Не удалось получить информацию о фиксированном IP или IP не корректен."
+
+msgid "Unable to retrieve list of deployments"
+msgstr "Не удалось получить список развертываний"
+
+msgid "Unable to retrieve list of images"
+msgstr "Не удалось получить список образов"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr ""
+"Не удалось получить список сервисов. Это окружение развертывается или уже "
+"развернуто другим пользователем"
+
+msgid "Unable to retrieve package details."
+msgstr "Не удалось получить свойства пакета."
+
+msgid "Unable to retrieve project list."
+msgstr "Не удалось получить список проектов"
+
+msgid "Unable to retrieve public images."
+msgstr "Не удалось получить публичные образы."
+
+msgid "Unavailable"
+msgstr "Недоступно"
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Update Image"
+msgstr "Обновить Образ"
+
+msgid "Updated"
+msgstr "Обновлен"
+
+msgid "Uploading package failed. {0}"
+msgstr "Не удалось загрузить пакет. {0}"
+
+msgid "Validation Error occurred"
+msgstr "Произошла ошибка валидации"
+
+msgid "Version"
+msgstr "Версия"
+
+msgid "Version of the package (optional)."
+msgstr "Версия Пакета (необязательно)"
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "Вам не разрешено менять свойства этого пакета"
+
+msgid "You are not allowed to delete this package"
+msgstr "Вам не разрешено удалить этот пакет"
+
+msgid "You are not allowed to perform this operation"
+msgstr "Вам не разрешено выполнять эту операцию"
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} не совпали"
