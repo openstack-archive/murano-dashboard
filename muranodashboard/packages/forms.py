@@ -161,11 +161,11 @@ class ImportPackageForm(forms.Form):
 class PackageParamsMixin(forms.Form):
     name = forms.CharField(label=_('Name'),
                            max_length=80,
-                           help_text='80 characters max.')
+                           help_text=_('80 characters max.'))
     tags = forms.CharField(label=_('Tags'),
                            required=False,
-                           help_text='Provide comma-separated list of words,'
-                                     ' associated with the package')
+                           help_text=_('Provide comma-separated list of words,'
+                                       ' associated with the package'))
     is_public = forms.BooleanField(label=_('Public'),
                                    required=False,
                                    widget=forms.CheckboxInput)
