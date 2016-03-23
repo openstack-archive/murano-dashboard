@@ -140,6 +140,22 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.driver.find_element_by_xpath(
             c.ErrorMessage.format(error_message))
 
+    def test_environment_detail_page_with_button(self):
+        """Test check ability to change environment name
+
+        Scenario:
+            1. Create environment
+            2. Goto the environment detail page
+            3. Check that 'Delete Environment' button in environment detail
+        """
+        # uuid.uuid4() generates random uuid
+        env_name = str(uuid.uuid4())
+        self.go_to_submenu('Environments')
+        self.create_environment(env_name)
+
+        delete_environment_btn = c.DeleteEnvironment
+        self.check_element_on_page(by.By.XPATH, delete_environment_btn)
+
 
 class TestSuiteImage(base.ImageTestCase):
     def test_rename_image(self):
