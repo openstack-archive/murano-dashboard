@@ -30,7 +30,7 @@ ENV_NAME_HELP_TEXT = _("Environment name must contain at least one "
 
 
 class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
-    name = forms.CharField(label="Environment Name",
+    name = forms.CharField(label=_("Environment Name"),
                            help_text=ENV_NAME_HELP_TEXT,
                            max_length=255,
                            required=True)

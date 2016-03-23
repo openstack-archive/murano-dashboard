@@ -53,9 +53,9 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         'cirros.demo': 'CirrOS for Murano Demo'
     }
 
-    image = forms.ChoiceField(label='Image')
+    image = forms.ChoiceField(label=_('Image'))
     title = forms.CharField(max_length="255", label=_("Title"))
-    type = forms.ChoiceField(label="Type", choices=_metadata.items())
+    type = forms.ChoiceField(label=_("Type"), choices=_metadata.items())
     existing_titles = forms.CharField(widget=forms.HiddenInput)
 
     def __init__(self, request, *args, **kwargs):
