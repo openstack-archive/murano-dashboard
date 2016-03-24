@@ -53,7 +53,9 @@
               {{ title }}:
             </strong>
         {% endif %}
-        {{ description|linebreaksbr }}
+        <div class="more_dynamicui_description">
+          {{ description|linebreaksbr }}
+        </div>
         </p>
     {% endfor %}
 </div>
@@ -118,12 +120,12 @@
     {% else %}
         {% trans "Create" as next %}
     {% endif %}
-	{% if wizard.steps.index > 0 %}
+    {% if wizard.steps.index > 0 %}
         <input type="submit" class="btn btn-primary pull-right" value="{{ next }}"/>
         <button name="wizard_goto_step" type="submit" class="btn btn-small wizard_cancel"
                 id="{{ prefix }}_btn">{% trans "Back" %}</button>
     {% else %}
         <button name="wizard_goto_step" type="submit" class="btn btn-small">
             {{ next }}</button>
-	{% endif %}
+    {% endif %}
 {% endblock %}
