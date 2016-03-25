@@ -216,9 +216,8 @@ class UITestCase(BaseDeps):
                           ".//*[@class='page-header']").text)
 
     def navigate_to(self, menu):
-        el = ui.WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (by.By.XPATH, getattr(consts, menu))))
+        el = self.wait_element_is_clickable(
+            by.By.XPATH, getattr(consts, menu))
         if 'collapsed' in el.get_attribute('class'):
             el.click()
         self.wait_for_sidebar_is_loaded()
