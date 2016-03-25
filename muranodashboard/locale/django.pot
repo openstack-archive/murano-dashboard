@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-16 06:34+0000\n"
+"POT-Creation-Date: 2016-03-25 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,16 +72,25 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: muranodashboard/catalog/views.py:368
+#: muranodashboard/catalog/views.py:380
 msgid "Sorry, you can't add application right now. The environment is deploying."
 msgstr ""
 
-#: muranodashboard/catalog/views.py:372
+#: muranodashboard/catalog/views.py:384
 msgid "Adding application to an environment failed."
 msgstr ""
 
-#: muranodashboard/catalog/views.py:379
+#: muranodashboard/catalog/views.py:391
 msgid "The '{0}' application successfully added to environment."
+msgstr ""
+
+#: muranodashboard/categories/forms.py:25
+#: muranodashboard/categories/tables.py:70
+msgid "Category Name"
+msgstr ""
+
+#: muranodashboard/categories/forms.py:27 muranodashboard/packages/forms.py:164
+msgid "80 characters max."
 msgstr ""
 
 #: muranodashboard/categories/forms.py:33
@@ -117,10 +126,6 @@ msgstr[1] ""
 
 #: muranodashboard/categories/tables.py:63
 msgid "Unable to delete category"
-msgstr ""
-
-#: muranodashboard/categories/tables.py:70
-msgid "Category Name"
 msgstr ""
 
 #: muranodashboard/categories/tables.py:72
@@ -291,6 +296,11 @@ msgstr ""
 msgid "Environment name must contain at least one non-white space symbol."
 msgstr ""
 
+#: muranodashboard/environments/forms.py:33
+#: muranodashboard/templates/environments/_create.html:7
+msgid "Environment Name"
+msgstr ""
+
 #: muranodashboard/environments/forms.py:39
 msgid "Environment Default Network"
 msgstr ""
@@ -450,8 +460,8 @@ msgstr ""
 
 #: muranodashboard/environments/tables.py:395
 #: muranodashboard/environments/tables.py:519
-#: muranodashboard/images/tables.py:72 muranodashboard/packages/tables.py:59
-#: muranodashboard/packages/tables.py:237
+#: muranodashboard/images/forms.py:58 muranodashboard/images/tables.py:72
+#: muranodashboard/packages/tables.py:59 muranodashboard/packages/tables.py:237
 #: muranodashboard/templates/packages/_detail.html:9
 msgid "Type"
 msgstr ""
@@ -565,6 +575,11 @@ msgstr ""
 msgid "Invalid metadata for image: {0}"
 msgstr ""
 
+#: muranodashboard/images/forms.py:56 muranodashboard/images/tables.py:69
+#: muranodashboard/templates/images/_mark.html:8
+msgid "Image"
+msgstr ""
+
 #: muranodashboard/images/forms.py:57 muranodashboard/images/tables.py:74
 msgid "Title"
 msgstr ""
@@ -608,11 +623,6 @@ msgstr[1] ""
 
 #: muranodashboard/images/tables.py:58
 msgid "Unable to remove metadata"
-msgstr ""
-
-#: muranodashboard/images/tables.py:69
-#: muranodashboard/templates/images/_mark.html:8
-msgid "Image"
 msgstr ""
 
 #: muranodashboard/images/tables.py:79 muranodashboard/images/views.py:34
@@ -729,6 +739,10 @@ msgstr ""
 #: muranodashboard/templates/catalog/_overview.html:9
 #: muranodashboard/templates/packages/_package_params.html:5
 msgid "Tags"
+msgstr ""
+
+#: muranodashboard/packages/forms.py:167
+msgid "Provide comma-separated list of words, associated with the package"
 msgstr ""
 
 #: muranodashboard/packages/forms.py:169 muranodashboard/packages/tables.py:236
@@ -1122,10 +1136,6 @@ msgstr ""
 
 #: muranodashboard/templates/deployments/reports.html:5
 msgid "Deployment Details"
-msgstr ""
-
-#: muranodashboard/templates/environments/_create.html:7
-msgid "Environment Name"
 msgstr ""
 
 #: muranodashboard/templates/environments/_create.html:8
