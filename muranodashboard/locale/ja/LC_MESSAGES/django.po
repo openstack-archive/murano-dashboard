@@ -4,11 +4,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-17 01:20+0000\n"
+"POT-Creation-Date: 2016-03-25 12:06+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-16 08:19+0000\n"
+"PO-Revision-Date: 2016-03-25 11:35+0000\n"
 "Last-Translator: Akihiro Motoki <amotoki@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -32,6 +32,9 @@ msgstr "'パッケージの変更'"
 
 msgid "-"
 msgstr "-"
+
+msgid "80 characters max."
+msgstr "最大 80 文字。"
 
 msgid "A local zip file to upload"
 msgstr "アップロードするローカルの zip ファイル"
@@ -722,6 +725,9 @@ msgstr "パッケージの URL を指定してください。"
 msgid "Previous Page"
 msgstr "前のページ"
 
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "パッケージに関連付けるキーワードをコンマ区切りのリストで指定します。"
+
 msgid "Provide desired name for a new category"
 msgstr "新しいカテゴリーには適切な名前を付けてください"
 
@@ -870,7 +876,6 @@ msgstr ""
 msgid "The request data is not acceptable by the server"
 msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
 
-#, fuzzy
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 "カタログにはアプリケーションがありません。次の URL からアプリケーションをイン"
