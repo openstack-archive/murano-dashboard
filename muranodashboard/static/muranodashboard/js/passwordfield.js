@@ -73,7 +73,7 @@ $(function() {
     }
 
     if (password.match(/[!@#$%^&*()_+|\/.,~?><:{}]+/) === null) {
-      text += " 1 specical character";
+      text += " 1 special character";
       meetRequirements = false;
     }
 
@@ -81,6 +81,6 @@ $(function() {
     mainCheck(div, meetRequirements, true, text);
   }
 
-  $("input[id$='assword'][type='password']").keyup(checkStrengthRemoveErrIfMatches);
-  $("input[id$='assword-clone'][type='password']").keyup(checkPasswordsMatch);
+  $("input[id$='password'][type='password']").keyup(checkStrengthRemoveErrIfMatches);
+  $("input[id$='password-clone'][type='password']").keyup(checkPasswordsMatch);
 });
