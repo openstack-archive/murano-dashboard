@@ -48,7 +48,11 @@
                             {% for category in categories %}
                                 <li class="clearfix">
                                     <a tabindex="-1" href="{% url 'horizon:murano:catalog:index' %}?category={{ category.name|urlencode }}" class="btn btn-small">
-                                        {{ category.name }} ({{category.package_count}})</a>
+                                        {{ category.name }}
+                                        {% if not MURANO_USE_GLARE %}
+                                            ({{category.package_count}})
+                                        {% endif %}
+                                        </a>
                                 </li>
                             {% endfor %}
                             </ul>

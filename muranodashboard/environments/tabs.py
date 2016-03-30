@@ -15,6 +15,7 @@
 from collections import OrderedDict
 import json
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -218,6 +219,13 @@ class EnvironmentServicesTab(tabs.TableTab):
             exceptions.handle(self.request)
 
         return services
+
+    def get_context_data(self, request, **kwargs):
+        context = super(EnvironmentServicesTab,
+                        self).get_context_data(request, **kwargs)
+        context['MURANO_USE_GLARE'] = getattr(settings, 'MURANO_USE_GLARE',
+                                              False)
+        return context
 
 
 class DeploymentTab(tabs.TableTab):
