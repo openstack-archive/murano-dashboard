@@ -2071,3 +2071,81 @@ class TestSuiteCategoriesPagination(base.PackageTestCase):
                 self.check_element_on_page(by.By.XPATH, c.Status.format(name))
             if i != len(pages_itself):
                 self.driver.find_element_by_xpath(c.PrevBtn).click()
+
+
+class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
+    def test_create_two_environments_and_delete_them_at_once(self):
+        """Test check ability to create and delete multiple environments
+
+        Scenario:
+            1. Create two environments
+            2. Navigate to environment list
+            3. Check created environments
+            4. Delete created environments at once
+        """
+        self.go_to_submenu('Environments')
+        self.create_environment('test_create_del_env_1')
+        self.go_to_submenu('Environments')
+        self.create_environment('test_create_del_env_2', by_id=True)
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_css_selector(
+            "label[for=ui-id-1]").click()
+        self.driver.find_element_by_css_selector(
+            c.DeleteEnvironments).click()
+        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.LINK_TEXT,
+                                       'test_create_del_env_1')
+        self.check_element_not_on_page(by.By.LINK_TEXT,
+                                       'test_create_del_env_2')
+
+    def test_deploy_two_environments_at_once(self):
+        """Test check ability to deploy multiple environments
+
+        Scenario:
+            1. Add two apps to different environments
+            2. Navigate to environment list
+            3. Check created environments
+            4. Deploy created environments at once
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.add_app_to_env(self.mockapp_id)
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_css_selector(
+            "label[for=ui-id-1]").click()
+        self.driver.find_element_by_css_selector(
+            c.DeployEnvironments).click()
+        # check statuses of two environments
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1', 'Ready'),
+                                   sec=90)
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-2', 'Ready'),
+                                   sec=90)
+
+    def test_abandon_two_environments_at_once(self):
+        """Test check ability to abandon multiple environments
+
+        Scenario:
+            1. Add two apps to different environments
+            2. Navigate to environment list
+            3. Check created environments
+            4. Deploy created environments at once
+            5. Abandon environments before they are deployed
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.add_app_to_env(self.mockapp_id)
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_css_selector(
+            "label[for=ui-id-1]").click()
+        self.driver.find_element_by_css_selector(
+            c.DeployEnvironments).click()
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_css_selector(
+            "label[for=ui-id-1]").click()
+        self.driver.find_element_by_css_selector(
+            c.AbandonEnvironments).click()
+        self.driver.find_element_by_xpath(c.ConfirmAbandon).click()
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-2')

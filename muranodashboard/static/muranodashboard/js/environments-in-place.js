@@ -46,7 +46,7 @@ $(function() {
       }
 
       var $newEnvTr = $('<tr class="new_env">' +
-      '<td id="input_create_env" class="normal_column row"></td>' +
+      '<td id="input_create_env" class="normal_column row" colspan="2"></td>' +
       '<td class="normal_column">New</td>' +
       '<td class="actions_column">' +
       '<div class="btn-group">' +

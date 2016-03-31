@@ -48,6 +48,16 @@ def _get_environment_status_and_version(request, table):
     return status, version
 
 
+def _check_row_actions_allowed(action, request):
+    envs = action.table.data
+    if not envs:
+        return False
+    for env in envs:
+        if action.allowed(request, env):
+            return True
+    return False
+
+
 class AddApplication(tables.LinkAction):
     name = 'AddApplication'
     verbose_name = _('Add Component')
@@ -107,10 +117,13 @@ class DeleteEnvironment(tables.DeleteAction):
         )
 
     def allowed(self, request, environment):
-        if environment:
-            return environment.status not in (consts.STATUS_ID_DEPLOYING,
-                                              consts.STATUS_ID_DELETING)
-        return True
+        # table action case: action allowed if any row action allowed
+        if not environment:
+            return _check_row_actions_allowed(self, request)
+
+        # row action case
+        return environment.status not in (consts.STATUS_ID_DEPLOYING,
+                                          consts.STATUS_ID_DELETING)
 
     def action(self, request, environment_id):
         try:
@@ -152,6 +165,12 @@ class AbandonEnvironment(tables.DeleteAction):
          * environment is new
          * app added to env, but not deploy is not started
         """
+
+        # table action case: action allowed if any row action allowed
+        if not environment:
+            return _check_row_actions_allowed(self, request)
+
+        # row action case
         status = getattr(environment, 'status', None)
         if status in [consts.STATUS_ID_NEW, consts.STATUS_ID_PENDING]:
             return False
@@ -234,6 +253,12 @@ class DeployEnvironment(tables.BatchAction):
         * no new services added to the environment (after env creation
           or successful deploy or delete failure)
         """
+
+        # table action case: action allowed if any row action allowed
+        if not environment:
+            return _check_row_actions_allowed(self, request)
+
+        # row action case
         status = getattr(environment, 'status', None)
         if (status != consts.STATUS_ID_DEPLOY_FAILURE and
                 not environment.has_new_services):
@@ -371,10 +396,10 @@ class EnvironmentsTable(tables.DataTable):
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
         no_data_message = _('NO ENVIRONMENTS')
-        table_actions = (CreateEnvironment,)
+        table_actions = (CreateEnvironment, DeployEnvironment,
+                         DeleteEnvironment, AbandonEnvironment)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        DeleteEnvironment, AbandonEnvironment)
-        multi_select = False
 
 
 def get_service_details_link(service):
