@@ -58,6 +58,15 @@ def _check_row_actions_allowed(action, request):
     return False
 
 
+def _environment_has_deployed_services(request, environment_id):
+    deployments = api.deployments_list(request, environment_id)
+    if not deployments:
+        return False
+    if not deployments[0].description['services']:
+        return False
+    return True
+
+
 class AddApplication(tables.LinkAction):
     name = 'AddApplication'
     verbose_name = _('Add Component')
@@ -230,7 +239,7 @@ class DeployEnvironment(tables.BatchAction):
     icon = "play"
 
     @staticmethod
-    def action_present(count):
+    def action_present_deploy(count):
         return ungettext_lazy(
             u"Deploy Environment",
             u"Deploy Environments",
@@ -238,12 +247,33 @@ class DeployEnvironment(tables.BatchAction):
         )
 
     @staticmethod
-    def action_past(count):
+    def action_past_deploy(count):
         return ungettext_lazy(
             u"Deployed Environment",
             u"Deployed Environments",
             count
         )
+
+    @staticmethod
+    def action_present_update(count):
+        return ungettext_lazy(
+            u"Update Environment",
+            # there can be cases when some of the envs are new and some are not
+            # so it is better to just leave "Deploy" for multiple envs
+            u"Deploy Environments",
+            count
+        )
+
+    @staticmethod
+    def action_past_update(count):
+        return ungettext_lazy(
+            u"Updated Environment",
+            u"Deployed Environments",
+            count
+        )
+
+    action_present = action_present_deploy
+    action_past = action_past_deploy
 
     def allowed(self, request, environment):
         """Limit when 'Deploy Environment' button is shown
@@ -253,6 +283,8 @@ class DeployEnvironment(tables.BatchAction):
         * delete is in progress
         * no new services added to the environment (after env creation
           or successful deploy or delete failure)
+        If environment has already deployed services,
+        button is shown as 'Update environment'
         """
 
         # table action case: action allowed if any row action allowed
@@ -260,6 +292,13 @@ class DeployEnvironment(tables.BatchAction):
             return _check_row_actions_allowed(self, request)
 
         # row action case
+        if _environment_has_deployed_services(request, environment.id):
+            self.action_present = self.action_present_update
+            self.action_past = self.action_past_update
+        else:
+            self.action_present = self.action_present_deploy
+            self.action_past = self.action_past_deploy
+
         status = getattr(environment, 'status', None)
         if (status != consts.STATUS_ID_DEPLOY_FAILURE and
                 not environment.has_new_services):
@@ -286,14 +325,22 @@ class DeployThisEnvironment(tables.Action):
     icon = "play"
 
     def allowed(self, request, service):
-        """Limit when 'Deploy Environment' button is shown
+        """Limit when 'Deploy This Environment' button is shown
 
         'Deploy environment' is not shown in several cases:
         * when deploy is already in progress
         * delete is in progress
         * env was just created and no apps added
         * previous deployment finished successfully
+        If environment has already deployed services, button is shown
+        as 'Update This Environment'
         """
+        environment_id = self.table.kwargs['environment_id']
+        if _environment_has_deployed_services(request, environment_id):
+            self.verbose_name = _('Update This Environment')
+        else:
+            self.verbose_name = _('Deploy This Environment')
+
         status, version = _get_environment_status_and_version(request,
                                                               self.table)
         if (status in consts.NO_ACTION_ALLOWED_STATUSES or
