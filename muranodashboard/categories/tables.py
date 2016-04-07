@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
@@ -51,6 +52,9 @@ class DeleteCategory(tables.DeleteAction):
         )
 
     def allowed(self, request, category=None):
+        use_artifacts = getattr(settings, 'MURANO_USE_GLARE', False)
+        if use_artifacts:
+            return category is not None
         if category is not None:
             if not category.package_count:
                 return True
@@ -68,8 +72,10 @@ class DeleteCategory(tables.DeleteAction):
 
 class CategoriesTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Category Name'))
-    package_count = tables.Column('package_count',
-                                  verbose_name=_('Package Count'))
+    use_artifacts = getattr(settings, 'MURANO_USE_GLARE', False)
+    if not use_artifacts:
+        package_count = tables.Column('package_count',
+                                      verbose_name=_('Package Count'))
 
     class Meta(object):
         name = 'categories'

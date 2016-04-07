@@ -39,7 +39,11 @@
                                 <li role="presentation"><a
                                         role="menuitem" tabindex="-1"
                                         data-category-name="{{ category.name }}"
-                                        href="#">{{ category.name }} ({{category.package_count}})</a>
+                                        href="#">{{ category.name }}
+                                        {% if not MURANO_USE_GLARE %}
+                                            ({{category.package_count}})
+                                        {% endif %}
+                                        </a>
                                 </li>
                             {% endfor %}
                         </ul>

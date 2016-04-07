@@ -599,6 +599,8 @@ class IndexView(list_view.ListView):
         context['no_apps'] = True
         if self.get_current_category() != ALL_CATEGORY_NAME or search:
             context['no_apps'] = False
+        context['MURANO_USE_GLARE'] = getattr(settings, 'MURANO_USE_GLARE',
+                                              False)
         return context
 
 
