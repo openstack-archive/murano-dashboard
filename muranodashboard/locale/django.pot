@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-16 06:34+0000\n"
+"POT-Creation-Date: 2016-04-11 07:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,9 +54,10 @@ msgid "The request data is not acceptable by the server"
 msgstr ""
 
 #: muranodashboard/catalog/panel.py:22
-#: muranodashboard/environments/views.py:122
+#: muranodashboard/environments/views.py:135
 #: muranodashboard/templates/catalog/_details_page_header.html:11
 #: muranodashboard/templates/catalog/index.html:6
+#: muranodashboard/templates/catalog/index.html:17
 msgid "Applications"
 msgstr ""
 
@@ -72,16 +73,25 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: muranodashboard/catalog/views.py:368
+#: muranodashboard/catalog/views.py:380
 msgid "Sorry, you can't add application right now. The environment is deploying."
 msgstr ""
 
-#: muranodashboard/catalog/views.py:372
+#: muranodashboard/catalog/views.py:384
 msgid "Adding application to an environment failed."
 msgstr ""
 
-#: muranodashboard/catalog/views.py:379
+#: muranodashboard/catalog/views.py:391
 msgid "The '{0}' application successfully added to environment."
+msgstr ""
+
+#: muranodashboard/categories/forms.py:25
+#: muranodashboard/categories/tables.py:74
+msgid "Category Name"
+msgstr ""
+
+#: muranodashboard/categories/forms.py:27 muranodashboard/packages/forms.py:164
+msgid "80 characters max."
 msgstr ""
 
 #: muranodashboard/categories/forms.py:33
@@ -97,37 +107,33 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:30
+#: muranodashboard/categories/tables.py:31
 #: muranodashboard/categories/views.py:88
 #: muranodashboard/templates/categories/add.html:3
 msgid "Add Category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:39
+#: muranodashboard/categories/tables.py:40
 msgid "Delete Category"
 msgid_plural "Delete Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: muranodashboard/categories/tables.py:47
+#: muranodashboard/categories/tables.py:48
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: muranodashboard/categories/tables.py:63
+#: muranodashboard/categories/tables.py:67
 msgid "Unable to delete category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:70
-msgid "Category Name"
-msgstr ""
-
-#: muranodashboard/categories/tables.py:72
+#: muranodashboard/categories/tables.py:78
 msgid "Package Count"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:76
+#: muranodashboard/categories/tables.py:82
 #: muranodashboard/categories/views.py:31
 #: muranodashboard/templates/categories/index.html:3
 msgid "Application Categories"
@@ -291,6 +297,11 @@ msgstr ""
 msgid "Environment name must contain at least one non-white space symbol."
 msgstr ""
 
+#: muranodashboard/environments/forms.py:33
+#: muranodashboard/templates/environments/_create.html:7
+msgid "Environment Name"
+msgstr ""
+
 #: muranodashboard/environments/forms.py:39
 msgid "Environment Default Network"
 msgstr ""
@@ -314,8 +325,8 @@ msgstr ""
 #: muranodashboard/environments/panel.py:22
 #: muranodashboard/environments/tables.py:369
 #: muranodashboard/environments/views.py:39
-#: muranodashboard/environments/views.py:118
-#: muranodashboard/environments/views.py:193
+#: muranodashboard/environments/views.py:131
+#: muranodashboard/environments/views.py:206
 #: muranodashboard/templates/environments/_data_table.html:3
 #: muranodashboard/templates/environments/index.html:5
 msgid "Environments"
@@ -326,8 +337,8 @@ msgid "Add Component"
 msgstr ""
 
 #: muranodashboard/environments/tables.py:70
-#: muranodashboard/environments/views.py:154
-#: muranodashboard/environments/views.py:156
+#: muranodashboard/environments/views.py:167
+#: muranodashboard/environments/views.py:169
 #: muranodashboard/templates/catalog/env_switcher.html:10
 #: muranodashboard/templates/environments/create.html:3
 msgid "Create Environment"
@@ -450,8 +461,8 @@ msgstr ""
 
 #: muranodashboard/environments/tables.py:395
 #: muranodashboard/environments/tables.py:519
-#: muranodashboard/images/tables.py:72 muranodashboard/packages/tables.py:59
-#: muranodashboard/packages/tables.py:237
+#: muranodashboard/images/forms.py:58 muranodashboard/images/tables.py:72
+#: muranodashboard/packages/tables.py:59 muranodashboard/packages/tables.py:237
 #: muranodashboard/templates/packages/_detail.html:9
 msgid "Type"
 msgstr ""
@@ -485,7 +496,7 @@ msgid "Time Finished"
 msgstr ""
 
 #: muranodashboard/environments/tables.py:510
-#: muranodashboard/environments/views.py:197
+#: muranodashboard/environments/views.py:210
 msgid "Deployments"
 msgstr ""
 
@@ -493,50 +504,50 @@ msgstr ""
 msgid "Deployed Components"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:32
+#: muranodashboard/environments/tabs.py:33
 msgid "Component"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:128
-#: muranodashboard/environments/tabs.py:142
+#: muranodashboard/environments/tabs.py:129
+#: muranodashboard/environments/tabs.py:143
 msgid "Logs"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:155
+#: muranodashboard/environments/tabs.py:156
 msgid "Latest Deployment Log"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:162
+#: muranodashboard/environments/tabs.py:163
 msgid "Configuration"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:174
+#: muranodashboard/environments/tabs.py:175
 msgid "Topology"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:195
+#: muranodashboard/environments/tabs.py:196
 #: muranodashboard/templates/services/index.html:8
 msgid "Components"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:208
+#: muranodashboard/environments/tabs.py:209
 msgid ""
 "Unable to retrieve list of services. This environment is deploying or "
 "already deployed by other user."
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:213
-#: muranodashboard/environments/tabs.py:243
+#: muranodashboard/environments/tabs.py:214
+#: muranodashboard/environments/tabs.py:251
 #, python-format
 msgid "Environment with id %s doesn't exist anymore"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:225
+#: muranodashboard/environments/tabs.py:233
 msgid "Deployment History"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:239
-#: muranodashboard/environments/views.py:86
+#: muranodashboard/environments/tabs.py:247
+#: muranodashboard/environments/views.py:99
 msgid "Unable to retrieve list of deployments"
 msgstr ""
 
@@ -544,25 +555,30 @@ msgstr ""
 msgid "Sorry, this environment doesn't exist anymore"
 msgstr ""
 
-#: muranodashboard/environments/views.py:139
+#: muranodashboard/environments/views.py:152
 msgid "Unable to retrieve details for service"
 msgstr ""
 
-#: muranodashboard/environments/views.py:158
+#: muranodashboard/environments/views.py:171
 #: muranodashboard/templates/packages/_import_bundle.html:49
 #: muranodashboard/templates/packages/_upload.html:67
-#: muranodashboard/templates/services/_wizard_create.html:119
+#: muranodashboard/templates/services/_wizard_create.html:121
 msgid "Create"
 msgstr ""
 
-#: muranodashboard/environments/views.py:208
-#: muranodashboard/environments/views.py:222
+#: muranodashboard/environments/views.py:221
+#: muranodashboard/environments/views.py:235
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr ""
 
 #: muranodashboard/images/forms.py:37
 msgid "Invalid metadata for image: {0}"
+msgstr ""
+
+#: muranodashboard/images/forms.py:56 muranodashboard/images/tables.py:69
+#: muranodashboard/templates/images/_mark.html:8
+msgid "Image"
 msgstr ""
 
 #: muranodashboard/images/forms.py:57 muranodashboard/images/tables.py:74
@@ -608,11 +624,6 @@ msgstr[1] ""
 
 #: muranodashboard/images/tables.py:58
 msgid "Unable to remove metadata"
-msgstr ""
-
-#: muranodashboard/images/tables.py:69
-#: muranodashboard/templates/images/_mark.html:8
-msgid "Image"
 msgstr ""
 
 #: muranodashboard/images/tables.py:79 muranodashboard/images/views.py:34
@@ -731,6 +742,10 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+#: muranodashboard/packages/forms.py:167
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr ""
+
 #: muranodashboard/packages/forms.py:169 muranodashboard/packages/tables.py:236
 #: muranodashboard/templates/packages/_detail.html:17
 #: muranodashboard/templates/packages/_package_params.html:6
@@ -796,12 +811,14 @@ msgstr ""
 #: muranodashboard/packages/tables.py:34
 #: muranodashboard/templates/packages/_import_bundle.html:9
 #: muranodashboard/templates/packages/import_bundle.html:3
+#: muranodashboard/templates/packages/import_bundle.html:6
 msgid "Import Bundle"
 msgstr ""
 
 #: muranodashboard/packages/tables.py:42
 #: muranodashboard/templates/packages/_upload.html:10
 #: muranodashboard/templates/packages/upload.html:3
+#: muranodashboard/templates/packages/upload.html:6
 msgid "Import Package"
 msgstr ""
 
@@ -881,6 +898,7 @@ msgstr ""
 #: muranodashboard/packages/tables.py:221
 #: muranodashboard/templates/packages/_modify_package.html:7
 #: muranodashboard/templates/packages/modify_package.html:3
+#: muranodashboard/templates/packages/modify_package.html:6
 msgid "Modify Package"
 msgstr ""
 
@@ -1048,10 +1066,6 @@ msgstr ""
 msgid "Click to create new environment"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:17
-msgid "\"Applications\""
-msgstr ""
-
 #: muranodashboard/templates/catalog/index.html:22
 msgid "Recent Activity"
 msgstr ""
@@ -1064,19 +1078,19 @@ msgstr ""
 msgid "App Category:"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:77
+#: muranodashboard/templates/catalog/index.html:81
 msgid "Filter"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:98
+#: muranodashboard/templates/catalog/index.html:102
 msgid "Previous Page"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:102
+#: muranodashboard/templates/catalog/index.html:106
 msgid "Next Page"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:111
+#: muranodashboard/templates/catalog/index.html:115
 #, python-format
 msgid ""
 "There are no applications in the catalog. You can import apps from\n"
@@ -1084,19 +1098,16 @@ msgid ""
 "%(repo_url)s</a>."
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:117
+#: muranodashboard/templates/catalog/index.html:121
+#: muranodashboard/templates/services/_data_table.html:72
 #, python-format
 msgid ""
-"Go to\n"
-"                <b>\n"
-"                    <a href=%(pkg_def_url)s>Packages</a>\n"
-"                </b>, click 'Import Package' and select <i>Repository</i>"
-" as <i>Package Source</i>.\n"
-"                "
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import "
+"Package' and select <i>Repository</i> as <i>Package Source</i>."
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:119
-#: muranodashboard/templates/services/_data_table.html:75
+#: muranodashboard/templates/catalog/index.html:123
+#: muranodashboard/templates/services/_data_table.html:79
 msgid "There are no applications matching your criteria."
 msgstr ""
 
@@ -1122,10 +1133,6 @@ msgstr ""
 
 #: muranodashboard/templates/deployments/reports.html:5
 msgid "Deployment Details"
-msgstr ""
-
-#: muranodashboard/templates/environments/_create.html:7
-msgid "Environment Name"
 msgstr ""
 
 #: muranodashboard/templates/environments/_create.html:8
@@ -1227,7 +1234,7 @@ msgstr ""
 
 #: muranodashboard/templates/packages/_import_bundle.html:47
 #: muranodashboard/templates/packages/_upload.html:65
-#: muranodashboard/templates/services/_wizard_create.html:117
+#: muranodashboard/templates/services/_wizard_create.html:119
 msgid "Next"
 msgstr ""
 
@@ -1238,6 +1245,7 @@ msgid "Cancel"
 msgstr ""
 
 #: muranodashboard/templates/packages/_modify_package.html:12
+#: muranodashboard/templates/packages/_upload.html:33
 msgid "Select one or more categories for a package."
 msgstr ""
 
@@ -1335,18 +1343,6 @@ msgstr ""
 msgid "Package Details"
 msgstr ""
 
-#: muranodashboard/templates/packages/import_bundle.html:6
-msgid "'Import Bundle'"
-msgstr ""
-
-#: muranodashboard/templates/packages/modify_package.html:6
-msgid "'Modify Package'"
-msgstr ""
-
-#: muranodashboard/templates/packages/upload.html:6
-msgid "'Import Package'"
-msgstr ""
-
 #: muranodashboard/templates/services/_data_table.html:15
 msgid "Application&nbsp;Components"
 msgstr ""
@@ -1360,26 +1356,15 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:54
+#: muranodashboard/templates/services/_data_table.html:58
 msgid "Find in a selected category"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:61
+#: muranodashboard/templates/services/_data_table.html:65
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:68
-#, python-format
-msgid ""
-"Go to\n"
-"                        <b>\n"
-"                            <a href=%(pkg_def_url)s>Packages</a>\n"
-"                        </b>, click 'Import Package' and select "
-"<i>Repository</i> as <i>Package Source</i>.\n"
-"                        "
-msgstr ""
-
-#: muranodashboard/templates/services/_data_table.html:97
+#: muranodashboard/templates/services/_data_table.html:101
 msgid "Drop Components here"
 msgstr ""
 
@@ -1416,15 +1401,12 @@ msgstr ""
 msgid "Configure Application"
 msgstr ""
 
-#: muranodashboard/templates/services/_wizard_create.html:124
+#: muranodashboard/templates/services/_wizard_create.html:126
 msgid "Back"
 msgstr ""
 
 #: muranodashboard/templates/services/wizard_create.html:3
-msgid "Add Application"
-msgstr ""
-
 #: muranodashboard/templates/services/wizard_create.html:6
-msgid "\"Add Application\""
+msgid "Add Application"
 msgstr ""
 
