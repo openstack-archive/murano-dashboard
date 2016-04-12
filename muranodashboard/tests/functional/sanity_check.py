@@ -1734,7 +1734,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         # check that error message appeared
-        error_message = ("Error: 400 Bad Request: Uploading file is too "
+        error_message = ("Error: 400 Bad Request Uploading file is too "
                          "large. The limit is 5 Mb")
         self.check_alert_message(error_message)
 
