@@ -1,35 +1,33 @@
-# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
-# Ian Y. Choi <ianyrchoi@gmail.com>, 2016. #zanata
-# SeYeon Lee <sy_lee@kr.ibm.com>, 2016. #zanata
+# Sungjin Kang <gang.sungjin@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-26 18:54+0000\n"
+"POT-Creation-Date: 2016-03-28 14:21+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-28 06:41+0000\n"
-"Last-Translator: Ian Y. Choi <ianyrchoi@gmail.com>\n"
+"PO-Revision-Date: 2016-04-08 05:00+0000\n"
+"Last-Translator: SeYeon Lee <sy_lee@kr.ibm.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 msgid "\"Add Application\""
-msgstr "\"응용 프로그램 추가\""
+msgstr "\"Add Application\""
 
 msgid "\"Applications\""
-msgstr "\"응용 프로그램\""
+msgstr "\"Applications\""
 
 msgid "'Import Bundle'"
-msgstr "'번들 가져오기'"
+msgstr "'Import Bundle'"
 
 msgid "'Import Package'"
-msgstr "'패키지 가져오기'"
+msgstr "'Import Package'"
 
 msgid "'Modify Package'"
-msgstr "'패키지 수정'"
+msgstr "'Modify Package'"
 
 msgid "-"
 msgstr "-"
@@ -246,7 +244,7 @@ msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
 "package dependencies)"
 msgstr ""
-"다른 테넌트에서 패키지를 사용할 수 있는지 정의합니다(패키지 종속성에 적용)."
+"다른 tenant에서 패키지를 사용할 수 있는지 정의합니다(패키지 종속성에 적용)."
 
 msgid "Delete Category"
 msgid_plural "Delete Categories"
@@ -332,7 +330,7 @@ msgid ""
 "Enter a complex password with at least one letter, one number and one "
 "special character"
 msgstr ""
-"최소 하나의 문자, 하나의 숫자 및 하나의 특수 문자를 포함하는 복합 암호를 입력"
+"최소 하나의 문자, 하나의 숫자, 하나의 특수 문자를 포함하는 복합 암호를 입력"
 
 msgid "Enter a password"
 msgstr "암호 입력"
@@ -401,7 +399,7 @@ msgid ""
 "latin letter, numeric, underscore, at sign, number sign or dollar sign"
 msgstr ""
 "첫 번째 기호는 라틴 문자나 밑줄이어야 합니다. 다음 기호는 라틴 문자, 숫자, 밑"
-"줄, @ 기호, # 기호 또는 $ 기호일 수 있습니다."
+"줄, @ 기호, # 기호, $ 기호일 수 있습니다."
 
 msgid "Fully qualified package name."
 msgstr "완전한 패키지 이름입니다."
@@ -445,10 +443,10 @@ msgid "HTTP/HTTPS URL of the package file."
 msgstr "패키지 파일의 HTTP/HTTPS URL입니다."
 
 msgid "Heat Orchestration stack name"
-msgstr "Heat Orchestration 스택 이름"
+msgstr "Heat 오케스트레이션 스택 이름"
 
 msgid "Heat Orchestration stack%(forloop.counter)s name"
-msgstr "Heat Orchestration stack%(forloop.counter)s 이름"
+msgstr "Heat 오케스트레이션 스택 %(forloop.counter)s 이름"
 
 msgid "ID"
 msgstr "ID"
@@ -464,7 +462,7 @@ msgid ""
 "If the package depends upon other packages and/or requires specific glance "
 "images, those are going to be installed with it from murano repository."
 msgstr ""
-"패키지가 다른 패키지에 종속되며/되거나 특정 글랜스 이미지가 필요한 경우 "
+"패키지가 다른 패키지에 종속되며/되거나 특정 glance 이미지가 필요한 경우 "
 "murano 저장소에서 함께 설치됩니다."
 
 msgid "Image"
@@ -564,7 +562,7 @@ msgid "Name"
 msgstr "이름"
 
 msgid "Name of the bundle."
-msgstr "번들의 이름입니다."
+msgstr "번들 이름입니다."
 
 #, python-format
 msgid "Network of '%s'"
@@ -589,7 +587,7 @@ msgid "No images available"
 msgstr "사용 가능한 이미지가 없음"
 
 msgid "No keypair"
-msgstr "키페어가 없음"
+msgstr "키 페어가 없음"
 
 msgid "No license"
 msgstr "라이센스가 없음"
@@ -758,7 +756,7 @@ msgid "Select Image"
 msgstr "이미지 선택"
 
 msgid "Select an image registered in Glance Image Services."
-msgstr "글랜스 이미지 서비스에 등록된 이미지를 선택하십시오."
+msgstr "Glance 이미지 서비스에 등록된 이미지를 선택하십시오."
 
 msgid "Select an image type supported by Murano."
 msgstr "Murano에서 지원하는 이미지 유형을 선택하십시오."
@@ -822,7 +820,7 @@ msgid "Tags"
 msgstr "태그"
 
 msgid "Tenant Name"
-msgstr "테넌트 이름"
+msgstr "Tenant 이름"
 
 msgid "The '{0}' application successfully added to environment."
 msgstr "'{0}' 응용 프로그램을 성공적으로 환경에 추가했습니다."

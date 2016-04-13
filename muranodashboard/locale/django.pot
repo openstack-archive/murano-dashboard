@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-25 06:44+0000\n"
+"POT-Creation-Date: 2016-04-13 06:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,6 +57,7 @@ msgstr ""
 #: muranodashboard/environments/views.py:122
 #: muranodashboard/templates/catalog/_details_page_header.html:11
 #: muranodashboard/templates/catalog/index.html:6
+#: muranodashboard/templates/catalog/index.html:17
 msgid "Applications"
 msgstr ""
 
@@ -810,12 +811,14 @@ msgstr ""
 #: muranodashboard/packages/tables.py:34
 #: muranodashboard/templates/packages/_import_bundle.html:9
 #: muranodashboard/templates/packages/import_bundle.html:3
+#: muranodashboard/templates/packages/import_bundle.html:6
 msgid "Import Bundle"
 msgstr ""
 
 #: muranodashboard/packages/tables.py:42
 #: muranodashboard/templates/packages/_upload.html:10
 #: muranodashboard/templates/packages/upload.html:3
+#: muranodashboard/templates/packages/upload.html:6
 msgid "Import Package"
 msgstr ""
 
@@ -895,6 +898,7 @@ msgstr ""
 #: muranodashboard/packages/tables.py:221
 #: muranodashboard/templates/packages/_modify_package.html:7
 #: muranodashboard/templates/packages/modify_package.html:3
+#: muranodashboard/templates/packages/modify_package.html:6
 msgid "Modify Package"
 msgstr ""
 
@@ -1062,10 +1066,6 @@ msgstr ""
 msgid "Click to create new environment"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:17
-msgid "\"Applications\""
-msgstr ""
-
 #: muranodashboard/templates/catalog/index.html:22
 msgid "Recent Activity"
 msgstr ""
@@ -1099,14 +1099,11 @@ msgid ""
 msgstr ""
 
 #: muranodashboard/templates/catalog/index.html:117
+#: muranodashboard/templates/services/_data_table.html:68
 #, python-format
 msgid ""
-"Go to\n"
-"                <b>\n"
-"                    <a href=%(pkg_def_url)s>Packages</a>\n"
-"                </b>, click 'Import Package' and select <i>Repository</i>"
-" as <i>Package Source</i>.\n"
-"                "
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import "
+"Package' and select <i>Repository</i> as <i>Package Source</i>."
 msgstr ""
 
 #: muranodashboard/templates/catalog/index.html:119
@@ -1345,18 +1342,6 @@ msgstr ""
 msgid "Package Details"
 msgstr ""
 
-#: muranodashboard/templates/packages/import_bundle.html:6
-msgid "'Import Bundle'"
-msgstr ""
-
-#: muranodashboard/templates/packages/modify_package.html:6
-msgid "'Modify Package'"
-msgstr ""
-
-#: muranodashboard/templates/packages/upload.html:6
-msgid "'Import Package'"
-msgstr ""
-
 #: muranodashboard/templates/services/_data_table.html:15
 msgid "Application&nbsp;Components"
 msgstr ""
@@ -1376,17 +1361,6 @@ msgstr ""
 
 #: muranodashboard/templates/services/_data_table.html:61
 msgid "There are no applications in the catalog. You can import apps from"
-msgstr ""
-
-#: muranodashboard/templates/services/_data_table.html:68
-#, python-format
-msgid ""
-"Go to\n"
-"                        <b>\n"
-"                            <a href=%(pkg_def_url)s>Packages</a>\n"
-"                        </b>, click 'Import Package' and select "
-"<i>Repository</i> as <i>Package Source</i>.\n"
-"                        "
 msgstr ""
 
 #: muranodashboard/templates/services/_data_table.html:97
@@ -1431,10 +1405,7 @@ msgid "Back"
 msgstr ""
 
 #: muranodashboard/templates/services/wizard_create.html:3
-msgid "Add Application"
-msgstr ""
-
 #: muranodashboard/templates/services/wizard_create.html:6
-msgid "\"Add Application\""
+msgid "Add Application"
 msgstr ""
 
