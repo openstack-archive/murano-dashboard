@@ -564,3 +564,13 @@ MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 
 # Specify a maximum number of limit packages.
 # PACKAGES_LIMIT = 100
+
+# Set default session backend from browser cookies to database to
+# avoid issues with forms during creating applications.
+DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': 'murano-dashboard.sqlite',
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
