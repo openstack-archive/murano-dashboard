@@ -15,7 +15,6 @@
 import ast
 import copy
 import json
-import netaddr
 import re
 
 from django.core.urlresolvers import reverse
@@ -35,7 +34,6 @@ from oslo_log import log as logging
 import six
 from yaql import legacy
 
-from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.common import net
 from muranodashboard.environments import api as env_api
@@ -499,86 +497,9 @@ class FloatingIpBooleanField(BooleanField):
     pass
 
 
-class ClusterIPField(CharField):
-    existing_subnet = None
-    network_topology = None
-    router_id = None
-
-    @staticmethod
-    def make_nova_validator(request, ip_ranges):
-        def perform_checking(ip):
-            django_validator.validate_ipv4_address(ip)
-            if not netaddr.all_matching_cidrs(ip, ip_ranges) and ip_ranges:
-                raise forms.ValidationError(_('Specified Cluster Static IP is'
-                                              ' not in valid IP range'))
-            try:
-                ip_info = nova.novaclient(request).fixed_ips.get(ip)
-            except exceptions.UNAUTHORIZED:
-                LOG.error("Error to get information about IP address"
-                          " using novaclient")
-                exceptions.handle(
-                    request, _("Unable to retrieve information "
-                               "about fixed IP or IP is not valid."),
-                    ignore=True)
-            except exceptions.NOT_FOUND:
-                msg = "Could not found fixed ips for ip %s" % (ip,)
-                LOG.error(msg)
-                exceptions.handle(
-                    request, msg,
-                    ignore=True)
-            else:
-                if ip_info.hostname:
-                    raise forms.ValidationError(
-                        _('Specified Cluster Static IP is already in use'))
-        return perform_checking
-
-    def update_network_params(self, request, environment_id):
-        env = env_api.environment_get(request, environment_id)
-        self.existing_subnet = env.networking.get('cidr')
-        self.network_topology = env.networking.get('topology')
-
-    def make_neutron_validator(self):
-        def perform_checking(ip):
-            django_validator.validate_ipv4_address(ip)
-            if not self.existing_subnet:
-                raise forms.ValidationError(
-                    _('Cannot get allowed subnet for the environment, '
-                      'consult your admin'))
-            elif not netaddr.IPAddress(ip) in netaddr.IPNetwork(
-                    self.existing_subnet):
-                raise forms.ValidationError(
-                    _('Specified IP address should belong to {0} '
-                      'subnet').format(self.existing_subnet))
-
-        return perform_checking
-
-    @with_request
-    def update(self, request, environment_id, **kwargs):
-        self.update_network_params(request, environment_id)
-
-        if self.network_topology == 'nova':
-            try:
-                network_list = nova.novaclient(request).networks.list()
-                ip_ranges = [network.cidr for network in network_list]
-                ranges = ', '.join(ip_ranges)
-            except StandardError:
-                ip_ranges, ranges = [], ''
-            if ip_ranges:
-                self.help_text = _('Select IP from '
-                                   'available range: {0} ').format(ranges)
-            else:
-                self.help_text = _('Specify valid fixed IP')
-            self.validators = [self.make_nova_validator(request, ip_ranges)]
-        elif self.network_topology in ('routed', 'manual'):
-            if self.network_topology == 'manual' and self.router_id is None:
-                raise muranoclient_exc.NotFound(_(
-                    'Router is not found. You should create one explicitly.'))
-            self.widget.attrs['placeholder'] = self.existing_subnet
-            self.validators = [self.make_neutron_validator()]
-        else:  # 'flat' topology
-            raise NotImplementedError('Flat topology is not implemented yet')
-        self.error_messages['invalid'] = \
-            django_validator.validate_ipv4_address.message
+class ClusterIPField(forms.GenericIPAddressField, CustomPropertiesField):
+    def __init__(self, *args, **kwargs):
+        super(ClusterIPField, self).__init__(protocol='ipv4', *args, **kwargs)
 
 
 class DatabaseListField(CharField):
