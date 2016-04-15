@@ -331,6 +331,10 @@ class UpdateServiceRow(tables.Row):
 class UpdateName(tables.UpdateAction):
     def update_cell(self, request, datum, obj_id, cell_name, new_cell_value):
         try:
+            if not new_cell_value or new_cell_value.isspace():
+                message = _("The environment name field cannot be empty.")
+                messages.warning(request, message)
+                raise ValueError(message)
             mc = api_utils.muranoclient(request)
             mc.environments.update(datum.id, name=new_cell_value)
         except exc.HTTPConflict:
@@ -356,7 +360,7 @@ class EnvironmentsTable(tables.DataTable):
     name = tables.Column('name',
                          link='horizon:murano:environments:services',
                          verbose_name=_('Name'),
-                         form_field=forms.CharField(),
+                         form_field=forms.CharField(required=False),
                          update_action=UpdateName,
                          truncate=40)
 

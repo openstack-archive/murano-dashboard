@@ -83,6 +83,23 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_on_page(by.By.LINK_TEXT, 'edited_env')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'test_edit_env')
 
+    def test_edit_environment_to_empty(self):
+        """Test gives warning message if change environment name to empty
+
+        Scenario:
+            1. Create environment
+            2. Change environment's name to empty
+            3. Check warning message appear
+        """
+        self.go_to_submenu('Environments')
+        self.create_environment('test_edit_env')
+        self.go_to_submenu('Environments')
+
+        self.edit_environment(old_name='test_edit_env', new_name='')
+
+        warning_message = 'The environment name field cannot be empty.'
+        self.check_alert_message(warning_message)
+
     def test_create_env_from_the_catalog_page(self):
         """Test create environment from the catalog page
 
