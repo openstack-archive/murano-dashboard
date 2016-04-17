@@ -9,7 +9,9 @@
 
 {% block modal-body-right %}
     {% include 'packages/_package_params.html' %}
-    <p><strong>{% trans "Categories" %}. </strong>{% trans "Select one or more categories for a package." %}</p>
+    {% if type != 'Library' %}
+      <p><strong>{% trans "Categories" %}. </strong>{% trans "Select one or more categories for a package." %}</p>
+    {% endif %}
 {% endblock %}
 
 {% block modal-footer %}
