@@ -1,14 +1,15 @@
-# Translations template for PROJECT.
+# Translations template for murano-dashboard.
 # Copyright (C) 2016 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the murano-dashboard
+# project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-13 06:49+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.1.dev3\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-18 07:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,7 +87,7 @@ msgid "The '{0}' application successfully added to environment."
 msgstr ""
 
 #: muranodashboard/categories/forms.py:25
-#: muranodashboard/categories/tables.py:70
+#: muranodashboard/categories/tables.py:74
 msgid "Category Name"
 msgstr ""
 
@@ -107,33 +108,33 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:30
+#: muranodashboard/categories/tables.py:31
 #: muranodashboard/categories/views.py:88
 #: muranodashboard/templates/categories/add.html:3
 msgid "Add Category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:39
+#: muranodashboard/categories/tables.py:40
 msgid "Delete Category"
 msgid_plural "Delete Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: muranodashboard/categories/tables.py:47
+#: muranodashboard/categories/tables.py:48
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: muranodashboard/categories/tables.py:63
+#: muranodashboard/categories/tables.py:67
 msgid "Unable to delete category"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:72
+#: muranodashboard/categories/tables.py:78
 msgid "Package Count"
 msgstr ""
 
-#: muranodashboard/categories/tables.py:76
+#: muranodashboard/categories/tables.py:82
 #: muranodashboard/categories/views.py:31
 #: muranodashboard/templates/categories/index.html:3
 msgid "Application Categories"
@@ -504,49 +505,49 @@ msgstr ""
 msgid "Deployed Components"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:32
+#: muranodashboard/environments/tabs.py:33
 msgid "Component"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:128
-#: muranodashboard/environments/tabs.py:142
+#: muranodashboard/environments/tabs.py:129
+#: muranodashboard/environments/tabs.py:143
 msgid "Logs"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:155
+#: muranodashboard/environments/tabs.py:156
 msgid "Latest Deployment Log"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:162
+#: muranodashboard/environments/tabs.py:163
 msgid "Configuration"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:174
+#: muranodashboard/environments/tabs.py:175
 msgid "Topology"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:195
+#: muranodashboard/environments/tabs.py:196
 #: muranodashboard/templates/services/index.html:8
 msgid "Components"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:208
+#: muranodashboard/environments/tabs.py:209
 msgid ""
 "Unable to retrieve list of services. This environment is deploying or "
 "already deployed by other user."
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:213
-#: muranodashboard/environments/tabs.py:243
+#: muranodashboard/environments/tabs.py:214
+#: muranodashboard/environments/tabs.py:251
 #, python-format
 msgid "Environment with id %s doesn't exist anymore"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:225
+#: muranodashboard/environments/tabs.py:233
 msgid "Deployment History"
 msgstr ""
 
-#: muranodashboard/environments/tabs.py:239
+#: muranodashboard/environments/tabs.py:247
 #: muranodashboard/environments/views.py:86
 msgid "Unable to retrieve list of deployments"
 msgstr ""
@@ -1078,19 +1079,19 @@ msgstr ""
 msgid "App Category:"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:77
+#: muranodashboard/templates/catalog/index.html:81
 msgid "Filter"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:98
+#: muranodashboard/templates/catalog/index.html:102
 msgid "Previous Page"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:102
+#: muranodashboard/templates/catalog/index.html:106
 msgid "Next Page"
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:111
+#: muranodashboard/templates/catalog/index.html:115
 #, python-format
 msgid ""
 "There are no applications in the catalog. You can import apps from\n"
@@ -1098,16 +1099,16 @@ msgid ""
 "%(repo_url)s</a>."
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:117
-#: muranodashboard/templates/services/_data_table.html:68
+#: muranodashboard/templates/catalog/index.html:121
+#: muranodashboard/templates/services/_data_table.html:72
 #, python-format
 msgid ""
 "Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import "
 "Package' and select <i>Repository</i> as <i>Package Source</i>."
 msgstr ""
 
-#: muranodashboard/templates/catalog/index.html:119
-#: muranodashboard/templates/services/_data_table.html:75
+#: muranodashboard/templates/catalog/index.html:123
+#: muranodashboard/templates/services/_data_table.html:79
 msgid "There are no applications matching your criteria."
 msgstr ""
 
@@ -1355,15 +1356,15 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:54
+#: muranodashboard/templates/services/_data_table.html:58
 msgid "Find in a selected category"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:61
+#: muranodashboard/templates/services/_data_table.html:65
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 
-#: muranodashboard/templates/services/_data_table.html:97
+#: muranodashboard/templates/services/_data_table.html:101
 msgid "Drop Components here"
 msgstr ""
 

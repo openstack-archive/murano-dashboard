@@ -3,9 +3,9 @@
 # Marcelo Dieder <marcelodieder@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-03-24 15:57+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.1.dev3\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-17 17:22+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,21 +15,6 @@ msgstr ""
 "Language: pt-BR\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-msgid "\"Add Application\""
-msgstr "\"Adicionar Aplicação\""
-
-msgid "\"Applications\""
-msgstr "\"Aplicações\""
-
-msgid "'Import Bundle'"
-msgstr "'Importar Conjunto'"
-
-msgid "'Import Package'"
-msgstr "'Importar Pacote'"
-
-msgid "'Modify Package'"
-msgstr "'Modificar Pacote'"
 
 msgid "-"
 msgstr "- "
@@ -428,38 +413,6 @@ msgstr ""
 
 msgid "Fully qualified package name."
 msgstr "Nome totalmente qualificado do pacote."
-
-#, python-format
-msgid ""
-"Go to\n"
-"                        <b>\n"
-"                            <a href=%(pkg_def_url)s>Packages</a>\n"
-"                        </b>, click 'Import Package' and select "
-"<i>Repository</i> as <i>Package Source</i>.\n"
-"                        "
-msgstr ""
-"Vá para\n"
-"                        <b>\n"
-"                            <a href=%(pkg_def_url)s>Pacotes</a>\n"
-"                        </b>, clique 'Importar Pacotes' e selecione "
-"<i>Repositório</i> como <i>Origem do Pacote</i>.\n"
-"                        "
-
-#, python-format
-msgid ""
-"Go to\n"
-"                <b>\n"
-"                    <a href=%(pkg_def_url)s>Packages</a>\n"
-"                </b>, click 'Import Package' and select <i>Repository</i> as "
-"<i>Package Source</i>.\n"
-"                "
-msgstr ""
-"Vá para\n"
-"                <b>\n"
-"                    <a href=%(pkg_def_url)s>Pacotes</a>\n"
-"                </b>, clique 'Importar Pacote' e selecione <i>Repositório</"
-"i> como <i>Origem do Pacote</i>.\n"
-"                "
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "URL HTTP/HTTPS do arquivo do conjunto."
