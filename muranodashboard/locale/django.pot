@@ -1,14 +1,15 @@
-# Translations template for PROJECT.
+# Translations template for murano-dashboard.
 # Copyright (C) 2016 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the murano-dashboard
+# project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-11 07:05+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev29\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-18 07:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +103,7 @@ msgstr ""
 #: muranodashboard/templates/catalog/_overview.html:10
 #: muranodashboard/templates/catalog/categories.html:4
 #: muranodashboard/templates/packages/_detail.html:19
-#: muranodashboard/templates/packages/_modify_package.html:12
+#: muranodashboard/templates/packages/_modify_package.html:13
 #: muranodashboard/templates/packages/_upload.html:33
 msgid "Categories"
 msgstr ""
@@ -166,118 +167,86 @@ msgstr ""
 msgid "Network of '%s'"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:119
+#: muranodashboard/dynamic_ui/fields.py:117
 msgid "Unable to retrieve public images."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:129
+#: muranodashboard/dynamic_ui/fields.py:127
 msgid "Invalid murano image metadata"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:220
+#: muranodashboard/dynamic_ui/fields.py:218
 msgid ""
 "The password must contain at least one letter, one"
 "                                  number and one special character"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:232
+#: muranodashboard/dynamic_ui/fields.py:230
 msgid "{0}{1} don't match"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:253
+#: muranodashboard/dynamic_ui/fields.py:251
 msgid ""
 "Enter a complex password with at least one letter, one number and one "
 "special character"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:267
+#: muranodashboard/dynamic_ui/fields.py:265
 msgid "Enter a password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:284
+#: muranodashboard/dynamic_ui/fields.py:282
 msgid "Confirm password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:285
+#: muranodashboard/dynamic_ui/fields.py:283
 msgid "Please confirm your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:286
+#: muranodashboard/dynamic_ui/fields.py:284
 msgid "Retype your password"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:348
+#: muranodashboard/dynamic_ui/fields.py:346
 msgid "No keypair"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:411
+#: muranodashboard/dynamic_ui/fields.py:409
 msgid "Select Image"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:413
+#: muranodashboard/dynamic_ui/fields.py:411
 msgid "No images available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:429
+#: muranodashboard/dynamic_ui/fields.py:427
 msgid "Invalid value of 'murano_nets' option"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:448
+#: muranodashboard/dynamic_ui/fields.py:446
 msgid "Auto"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:471
+#: muranodashboard/dynamic_ui/fields.py:469
 msgid "Unable to retrieve  availability zones."
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:476
+#: muranodashboard/dynamic_ui/fields.py:474
 msgid "No availability zones available"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:512
-msgid "Specified Cluster Static IP is not in valid IP range"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:520
-msgid "Unable to retrieve information about fixed IP or IP is not valid."
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:532
-msgid "Specified Cluster Static IP is already in use"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:545
-msgid "Cannot get allowed subnet for the environment, consult your admin"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:550
-msgid "Specified IP address should belong to {0} subnet"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:567
-msgid "Select IP from available range: {0} "
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:570
-msgid "Specify valid fixed IP"
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:574
-msgid "Router is not found. You should create one explicitly."
-msgstr ""
-
-#: muranodashboard/dynamic_ui/fields.py:587
+#: muranodashboard/dynamic_ui/fields.py:508
 msgid ""
 "First symbol should be latin letter or underscore. Subsequent symbols can"
 " be latin letter, numeric, underscore, at sign, number sign or dollar "
 "sign"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:630
+#: muranodashboard/dynamic_ui/fields.py:551
 msgid "Select Application"
 msgstr ""
 
-#: muranodashboard/dynamic_ui/fields.py:673
+#: muranodashboard/dynamic_ui/fields.py:594
 msgid "Not in domain"
 msgstr ""
 
@@ -1021,7 +990,7 @@ msgstr ""
 msgid "Package with specified name already exists"
 msgstr ""
 
-#: muranodashboard/packages/views.py:588
+#: muranodashboard/packages/views.py:589
 msgid "Unable to retrieve package details."
 msgstr ""
 
@@ -1239,17 +1208,17 @@ msgid "Next"
 msgstr ""
 
 #: muranodashboard/templates/packages/_import_bundle.html:51
-#: muranodashboard/templates/packages/_modify_package.html:17
+#: muranodashboard/templates/packages/_modify_package.html:19
 #: muranodashboard/templates/packages/_upload.html:69
 msgid "Cancel"
 msgstr ""
 
-#: muranodashboard/templates/packages/_modify_package.html:12
+#: muranodashboard/templates/packages/_modify_package.html:13
 #: muranodashboard/templates/packages/_upload.html:33
 msgid "Select one or more categories for a package."
 msgstr ""
 
-#: muranodashboard/templates/packages/_modify_package.html:16
+#: muranodashboard/templates/packages/_modify_package.html:18
 msgid "Update"
 msgstr ""
 

@@ -1,10 +1,9 @@
-# Eric Baum <ecbaum@gmail.com>, 2016. #zanata
-# Marcelo Dieder <marcelodieder@gmail.com>, 2016. #zanata
+# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-07 09:39+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev29\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-17 20:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -149,11 +148,6 @@ msgstr "Nome completo do conjunto."
 
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgid "Cannot get allowed subnet for the environment, consult your admin"
-msgstr ""
-"Não foi possível obter as subredes autorizadas para o ambiente, consulte seu "
-"administrador"
 
 msgid "Categories"
 msgstr "Categorias"
@@ -718,14 +712,8 @@ msgstr "Requisitos"
 msgid "Retype your password"
 msgstr "Digite sua senha novamente"
 
-msgid "Router is not found. You should create one explicitly."
-msgstr "Roteador não encontrado. Você deve criar um explicitamente."
-
 msgid "Select Application"
 msgstr "Selecione um aplicação"
-
-msgid "Select IP from available range: {0} "
-msgstr "Selecione um IP do conjunto disponível: {0}"
 
 msgid "Select Image"
 msgstr "Selecione a Imagem"
@@ -760,22 +748,8 @@ msgstr ""
 msgid "Sorry, you can't delete service right now"
 msgstr "Desculpe, você não pode remover o serviço agora"
 
-msgid "Specified Cluster Static IP is already in use"
-msgstr "O IP estático especificado para o cluster já está em uso"
-
-msgid "Specified Cluster Static IP is not in valid IP range"
-msgstr ""
-"O IP estático especificado para o cluster não está em um conjunto válido de "
-"IPs"
-
-msgid "Specified IP address should belong to {0} subnet"
-msgstr "O endereço IP especificado deve pertencer a subrede {0}"
-
 msgid "Specified title already in use. Please choose another one."
 msgstr "O título especificado já esta em uso. Por favor escolha outro."
-
-msgid "Specify valid fixed IP"
-msgstr "Especifique um IP fixo válido"
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "Especificar uma categoria ajuda a filtrar aplicações no catálogo"
@@ -975,10 +949,6 @@ msgstr "Não foi possível obter as zonas de disponibilidade"
 
 msgid "Unable to retrieve details for service"
 msgstr "Não foi possível obter detalhes do serviço"
-
-msgid "Unable to retrieve information about fixed IP or IP is not valid."
-msgstr ""
-"Não foi possível obter informação sobre o IP fixo ou o IP não é válido."
 
 msgid "Unable to retrieve list of deployments"
 msgstr "Não foi possível obter a lista de implantações"

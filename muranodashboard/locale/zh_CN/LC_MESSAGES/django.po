@@ -1,11 +1,9 @@
-# Gaoxiao Zhu <zhu.gaoxiao@h3c.com>, 2016. #zanata
-# Shengjing Zhu <zsj950618@gmail.com>, 2016. #zanata
-# Yaguang Tang <heut2008@gmail.com>, 2016. #zanata
+# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-07 09:39+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev29\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-17 20:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -144,9 +142,6 @@ msgstr "Bundle 全称。"
 
 msgid "Cancel"
 msgstr "取消"
-
-msgid "Cannot get allowed subnet for the environment, consult your admin"
-msgstr "无法为这个环境获取可用的子网，请联系您的管理员"
 
 msgid "Categories"
 msgstr "目录"
@@ -679,14 +674,8 @@ msgstr "需求"
 msgid "Retype your password"
 msgstr "重新输入密码"
 
-msgid "Router is not found. You should create one explicitly."
-msgstr "找不到路由器，你需要先创建一个。"
-
 msgid "Select Application"
 msgstr "选择应用"
-
-msgid "Select IP from available range: {0} "
-msgstr "从可以的范围中选择 IP：{0}"
 
 msgid "Select Image"
 msgstr "选择镜像"
@@ -719,20 +708,8 @@ msgstr "对不起，您现在不能添加应用程序。当前环境正在部署
 msgid "Sorry, you can't delete service right now"
 msgstr "对不起，您现在不能删除服务"
 
-msgid "Specified Cluster Static IP is already in use"
-msgstr "指定的集群静态 IP 已经被使用"
-
-msgid "Specified Cluster Static IP is not in valid IP range"
-msgstr "指定的集群静态 IP 不在可用 IP 地址范围内"
-
-msgid "Specified IP address should belong to {0} subnet"
-msgstr "指定的 IP 地址应当属于{0}子网"
-
 msgid "Specified title already in use. Please choose another one."
 msgstr "指定的名称已被使用，请更换"
-
-msgid "Specify valid fixed IP"
-msgstr "指定有效的固定 IP"
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "指定一个分类有助于在目录中进行过滤"
@@ -916,9 +893,6 @@ msgstr "无法获取可用区域"
 
 msgid "Unable to retrieve details for service"
 msgstr "无法获取服务详情"
-
-msgid "Unable to retrieve information about fixed IP or IP is not valid."
-msgstr "无法获取固定 IP 的信息或者 IP 无效"
 
 msgid "Unable to retrieve list of deployments"
 msgstr "无法获取部署列表"

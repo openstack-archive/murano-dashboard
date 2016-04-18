@@ -1,11 +1,9 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
-# Ilya Alekseyev <ilyaalekseyev@acm.org>, 2016. #zanata
-# Kirill Zaitsev <k.zaitsev@me.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-07 09:39+0000\n"
+"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev29\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-04-17 20:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -153,11 +151,6 @@ msgstr "Полное имя Bundle."
 
 msgid "Cancel"
 msgstr "Отменить"
-
-msgid "Cannot get allowed subnet for the environment, consult your admin"
-msgstr ""
-"Не удалось получить разрешенные подсети для окружения, обратитесь к вашему "
-"администратору"
 
 msgid "Categories"
 msgstr "Категории"
@@ -724,14 +717,8 @@ msgstr "Требования"
 msgid "Retype your password"
 msgstr "Подтвердите пароль"
 
-msgid "Router is not found. You should create one explicitly."
-msgstr "Маршрутизатор не найден. Вам необходимо создать его явно."
-
 msgid "Select Application"
 msgstr "Выбрать Приолжение"
-
-msgid "Select IP from available range: {0} "
-msgstr "Выберите IP адрес и из диапазона: {0}"
 
 msgid "Select Image"
 msgstr "Выберите образ"
@@ -764,20 +751,8 @@ msgstr "Вы не можете добавить приложение сейча�
 msgid "Sorry, you can't delete service right now"
 msgstr "К сожаление невозможно удалить сервис в данный момент"
 
-msgid "Specified Cluster Static IP is already in use"
-msgstr "Указанный  Статический  IP Кластера уже используется"
-
-msgid "Specified Cluster Static IP is not in valid IP range"
-msgstr "Указаный Статический  IP Кластера не является корректным диапазоном IP"
-
-msgid "Specified IP address should belong to {0} subnet"
-msgstr "Указанный IP адрес должен принадлежать к подсети {0}"
-
 msgid "Specified title already in use. Please choose another one."
 msgstr "Указанный заголовок уже используется. Выберите другой."
-
-msgid "Specify valid fixed IP"
-msgstr "Укажите корректный фиксированный IP"
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "Указание категории помогает фильтровать приложения в каталоге"
@@ -983,9 +958,6 @@ msgstr "Не удалось получить список зон доступн�
 
 msgid "Unable to retrieve details for service"
 msgstr "Не удалось получить детали сервиса"
-
-msgid "Unable to retrieve information about fixed IP or IP is not valid."
-msgstr "Не удалось получить информацию о фиксированном IP или IP не корректен."
 
 msgid "Unable to retrieve list of deployments"
 msgstr "Не удалось получить список развертываний"
