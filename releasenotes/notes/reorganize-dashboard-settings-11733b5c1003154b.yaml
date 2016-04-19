@@ -1,0 +1,4 @@
+---
+features:
+  - murano-dashboard now use local_settings.d dir for
+    its own config snippet from Horizon.
