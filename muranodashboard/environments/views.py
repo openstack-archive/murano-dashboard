@@ -20,6 +20,7 @@ from django.core.urlresolvers import reverse_lazy
 from django import http
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+from horizon import conf
 from horizon import exceptions
 from horizon.forms import views
 from horizon import tables
@@ -88,6 +89,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
         context["actions"] = table.render_row_actions(env)
         # recover the origin row_action for EnvironmentsTable Meta
         table._meta.row_actions = ori_row_actions
+        context['poll_interval'] = conf.HORIZON_CONFIG['ajax_poll_interval']
         return context
 
     def get_tabs(self, request, *args, **kwargs):
