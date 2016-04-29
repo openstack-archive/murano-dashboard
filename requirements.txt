@@ -16,5 +16,5 @@ oslo.log>=1.14.0 # Apache-2.0
 semantic-version>=2.3.1 # BSD
 
 # message extraction
-Babel>=1.3 # BSD
+Babel!=2.3.0,!=2.3.1,!=2.3.2,!=2.3.3,>=1.3 # BSD
 django-babel>=0.4.0 # BSD
