@@ -259,13 +259,16 @@ class EnvironmentDetailsTabs(tabs.TabGroup):
     slug = "environment_details"
     tabs = (EnvironmentServicesTab, EnvironmentTopologyTab,
             DeploymentTab, LatestLogsTab)
+    sticky = True
 
 
 class ServicesTabs(tabs.TabGroup):
     slug = "services_details"
     tabs = (OverviewTab, ServiceLogsTab)
+    sticky = True
 
 
 class DeploymentDetailsTabs(tabs.TabGroup):
     slug = "deployment_details"
     tabs = (EnvConfigTab, EnvLogsTab,)
+    sticky = True
