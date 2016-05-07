@@ -27,4 +27,6 @@ urlpatterns = [
              views.ModifyPackageView.as_view(), name='modify'),
     urls.url(r'^(?P<app_id>[^/]+)?$',
              views.DetailView.as_view(), name='detail'),
+    urls.url(r'^download/(?P<app_name>[^/]+)/(?P<app_id>[^/]+)?$',
+             views.download_packge, name='download'),
 ]

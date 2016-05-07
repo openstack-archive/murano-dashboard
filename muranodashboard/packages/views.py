@@ -588,3 +588,21 @@ class DetailView(horizon_views.HorizonTemplateView):
                               _('Unable to retrieve package details.'),
                               redirect=reverse(INDEX_URL))
         return app
+
+
+def download_packge(request, app_name, app_id):
+    try:
+        body = api.muranoclient(request).packages.download(app_id)
+
+        content_type = 'application/octet-stream'
+        response = http.HttpResponse(body, content_type=content_type)
+        response['Content-Disposition'] = 'filename={name}.zip'.format(
+            name=app_name)
+
+        return response
+    except exc.HTTPException:
+        LOG.exception(_('Something went wrong during package downloading'))
+        redirect = reverse('horizon:murano:packages:index')
+        exceptions.handle(request,
+                          _('Unable to download package.'),
+                          redirect=redirect)
