@@ -128,7 +128,6 @@ class DetailServiceView(tabs.TabbedTableView):
         env = api.environment_get(self.request, self.environment_id)
         context["environment_name"] = env.name
         breadcrumb = [
-            (_("Environments"), EnvironmentDetails.get_redirect_url()),
             (context["environment_name"],
              reverse("horizon:murano:environments:services",
                      args=[self.environment_id])),
@@ -203,7 +202,6 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                      self.environment_id,
                                      self.deployment_id)
         breadcrumb = [
-            (_("Environments"), EnvironmentDetails.get_redirect_url()),
             (context["environment_name"],
              reverse("horizon:murano:environments:services",
                      args=[self.environment_id])),

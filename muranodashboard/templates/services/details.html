@@ -1,6 +1,5 @@
 {% extends 'murano_base.html' %}
 {% load i18n sizeformat %}
-{% load breadcrumb_nav %}
 {% load static %}
 {% load compress %}
 
@@ -14,9 +13,7 @@
 {% endblock %}
 
 {% block page_header %}
-  <div class='page-header'>
-    {% breadcrumb_nav %}
-  </div>
+  {% include "horizon/common/_detail_header.html" %}
 {% endblock page_header %}
 
 {% block main %}
