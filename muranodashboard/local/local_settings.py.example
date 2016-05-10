@@ -558,9 +558,9 @@ MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 # algorithms supported by Python's hashlib library.
 #OPENSTACK_TOKEN_HASH_ALGORITHM = 'md5'
 
-# Overrides the default dashboard name (Murano) that is displayed
+# Overrides the default dashboard name (Applications) that is displayed
 # in the main accordion navigation
-# MURANO_DASHBOARD_NAME = "Murano"
+# MURANO_DASHBOARD_NAME = "Applications"
 
 # Specify a maximum number of limit packages.
 # PACKAGES_LIMIT = 100

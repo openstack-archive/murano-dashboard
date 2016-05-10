@@ -36,7 +36,7 @@ class TestSuiteSmoke(base.UITestCase):
         self.check_panel_is_present('Environments')
 
     def test_smoke_applications_panel(self):
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.check_panel_is_present('Applications')
 
     def test_smoke_images_panel(self):
@@ -87,11 +87,11 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         """Test create environment from the catalog page
 
         Scenario:
-           1. Go the the Applications page
+           1. Go the the Browse page
            2. Press 'Create Env'
            3. Make sure that it's possible to chose just created environment
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.driver.find_elements_by_xpath(
             "//a[contains(text(), 'Create Env')]")[0].click()
         self.fill_field(by.By.ID, 'id_name', 'TestEnv')
@@ -120,7 +120,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         """Test checks validation of field that usually define environment name
 
         Scenario:
-            1. Navigate to Application Catalog > Environments
+            1. Navigate to Catalog > Environments
             2. Press 'Create environment'
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
@@ -241,7 +241,7 @@ class TestSuiteFields(base.FieldsTestCase):
             12. Set "domain.local" as a domain name and check that
             error message didn't appear
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
         field_id = self.mockapp_id + "_0-domain"
@@ -293,12 +293,12 @@ class TestSuiteFields(base.FieldsTestCase):
         """Test checks validation of field that usually define application name
 
         Scenario:
-            1. Navigate to Application Catalog > Applications
+            1. Navigate to Catalog > Browse
             2. Start to create Mock App
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -321,7 +321,7 @@ class TestSuiteFields(base.FieldsTestCase):
         are truly required and can't be omitted
 
         Scenario:
-            1. Navigate to Application Catalog > Applications
+            1. Navigate to Catalog > Browse
             2. Start to create MockApp
             3. Don't type app name in the 'Application Name'
             field that is required and click 'Next',check that there is
@@ -329,7 +329,7 @@ class TestSuiteFields(base.FieldsTestCase):
             4. Set app name and click 'Next',
             check that there is no error message
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -345,7 +345,7 @@ class TestSuiteFields(base.FieldsTestCase):
         """Test checks password validation
 
         Scenario:
-            1. Navigate to Application Catalog > Applications
+            1. Navigate to Catalog > Browse
             2. Start to create MockApp
             3. Set weak password consisting of numbers,
             check that error message appears
@@ -353,7 +353,7 @@ class TestSuiteFields(base.FieldsTestCase):
             field, check that validation failed
             5. Set correct password. Validation has to pass
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -374,13 +374,13 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks that transitions "Next" and "Back" are not broken
 
         Scenario:
-            1. Navigate to Application Catalog > Applications
+            1. Navigate to Catalog > Browse
             2. Start to create MockApp
             3. Set app name and click on "Next", check that second wizard step
             will appear
             4. Click 'Back' and check that first wizard step is shown
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -399,13 +399,13 @@ class TestSuiteApplications(base.ApplicationTestCase):
         add to related apps in the one environment
 
         Scenario:
-            1. Navigate to Application Catalog > Applications
+            1. Navigate to Catalog > Browse
             2. Start to create MockApp
             3. Set app name and click on "Next"
             4. Click '+' and verify that creation of second app is possible
         """
 
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -420,13 +420,13 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test check ability to create and delete test app
 
         Scenario:
-            1. Navigate to 'Application Catalog'
+            1. Navigate to 'Catalog' > Browse
             2. Click on 'Quick Deploy' for MockApp application
             3. Create TestApp app by filling the creation form
             4. Delete TestApp app from environment
         """
 
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -446,11 +446,11 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks that 'Search' option is operable.
 
         Scenario:
-            1. Navigate to 'Application Catalog > Applications' panel
+            1. Navigate to 'Catalog > Browse' panel
             2. Set search criterion in the search field(e.g 'PostgreSQL')
             3. Click on 'Filter' and check result
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', 'PostgreSQL')
         self.driver.find_element_by_id('apps__action_filter').click()
 
@@ -463,17 +463,17 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test filtering by category
 
         Test checks ability to filter applications by category
-        in Application Catalog page
+        in Catalog page
 
         Scenario:
-            1. Navigate to 'Application Catalog' panel
+            1. Navigate to 'Catalog'>'Browse' panel
             2. Select 'Databases' category in 'App Category' dropdown menu
             3. Verify that PostgreSQL is shown
             4. Select 'Web' category in
             'App Category' dropdown menu
             5. Verify that MockApp is shown
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
         self.driver.find_element_by_partial_link_text('Databases').click()
@@ -490,14 +490,14 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks ability to switch environment and add app in other env
 
         Scenario:
-            1. Navigate to 'Application Catalog>Environments' panel
+            1. Navigate to 'Catalog>Environments' panel
             2. Create environment 'env1'
             3. Create environment 'env2'
-            4. Navigate to 'Application Catalog>Application Catalog'
+            4. Navigate to 'Catalog>Browse'
             5. Click on 'Environment' panel
             6. Switch to env2
             7. Add application in env2
-            8. Navigate to 'Application Catalog>Environments'
+            8. Navigate to 'Catalog>Environments'
             and go to the env2
             9. Check that added application is here
         """
@@ -511,7 +511,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         env_id = self.get_element_id('env2')
 
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.driver.find_element_by_xpath(
             ".//*[@id='environment_switcher']/a").click()
 
@@ -536,12 +536,12 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test that progress bar appears only for 'Deploying' status
 
         Scenario:
-            1. Navigate Applications and click MockApp 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
             2. Check that for "Ready to deploy" state progress bar is not seen
             3. Click deploy
             4. Check that for "Deploying" status progress bar is seen
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
         field_id = "{0}_0-name".format(self.mockapp_id)
         self.fill_field(by.By.ID, field_id, value='TestApp')
@@ -568,7 +568,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test check that created application overview tab browsed correctly
 
         Scenario:
-            1. Navigate Applications and click MockApp 'Quick Deploy'
+            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click on application name to go to the detail page
         """
         app_name = 'NewTestApp'
@@ -581,7 +581,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Checks that action is available for deployed application
 
         Scenario:
-            1. Navigate Applications and click MockApp 'Quick Deploy'
+            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on application
@@ -606,11 +606,11 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks that information about app is available
 
         Scenario:
-            1. Navigate to 'Application Catalog > Applications' panel
+            1. Navigate to 'Catalog>Browse' panel
             2. Choose some application and click on 'More info'
             3. Verify info about application
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.select_and_click_action_for_app('details', self.mockapp_id)
 
         self.assertEqual('MockApp for webUI tests',
@@ -625,7 +625,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks that topology tab is available displays correctly
 
         Scenario:
-            1. Navigate Applications and click MockApp 'Quick Deploy'
+            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on 'Topology' tab
@@ -645,7 +645,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test checks that deployment history tab is available logs are ok
 
         Scenario:
-            1. Navigate Applications and click MockApp 'Quick Deploy'
+            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on 'Deployment History' tab
@@ -671,11 +671,11 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Checks that UI got the hot app is rendered correctly
 
         Scenario:
-            1. Navigate Applications and click Hot app 'Quick Deploy'
+            1. Navigate Catalog>Browse and click Hot app 'Quick Deploy'
             2. Check for YAQL validator
             3. Check that app is added to the environment
         """
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.select_and_click_action_for_app('quick-add', self.hot_app_id)
         field_id = "{0}_0-name".format(self.hot_app_id)
         self.fill_field(by.By.ID, field_id, value='TestHotApp')
@@ -697,12 +697,12 @@ class TestSuiteApplications(base.ApplicationTestCase):
         Scenario:
             1. Navigate to Environments
             2. Create new environment
-            3. Navigate to Applications and click MockApp 'Add to Env'
+            3. Navigate to Catalog>Browse and click MockApp 'Add to Env'
             4. Fill the form use environment from step 2 and click submit
             5. Click deploy environment
             6. Wait 'Ready' status
             7. Click Delete Application in row actions.
-            8. Navigate to Applications and click MockApp 'Add to Env'
+            8. Navigate to Catalog>Browse and click MockApp 'Add to Env'
             9. Fill the form use environment from step 2 and new app name
                and click submit
             10. Click deploy environment
@@ -726,7 +726,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         for idx, app_name in enumerate(app_names):
             # Add application to the environment
-            self.go_to_submenu('Applications')
+            self.go_to_submenu('Browse')
             self.select_and_click_action_for_app(
                 'add', '{0}/{1}'.format(self.mockapp_id, env_id))
             self.fill_field(by.By.NAME,
@@ -762,7 +762,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         Scenario:
             1. Navigate to Environments
             2. Create new environment
-            3. Navigate to Applications and click MockApp 'Add to Env'
+            3. Navigate to Catalog>Browse and click MockApp 'Add to Env'
             4. Fill the form and use environment from step 2 and click submit
             5. Click deploy environment
             6. Wait 'Ready' status
@@ -787,7 +787,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         for idx, app_name in enumerate(app_names, 1):
             # Add application to the environment
-            self.go_to_submenu('Applications')
+            self.go_to_submenu('Browse')
             self.select_and_click_action_for_app(
                 'add', '{0}/{1}'.format(self.mockapp_id, env_id))
             self.fill_field(by.By.NAME,
@@ -854,8 +854,8 @@ class TestSuiteAppsPagination(base.UITestCase):
 
     def test_apps_pagination(self):
         """Test check pagination in case of many applications installed."""
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         packages_list = [elem.name for elem in
                          self.murano_client.packages.list()]
         # No list of apps available in the client only packages are.
@@ -938,7 +938,7 @@ class TestSuitePackages(base.PackageTestCase):
         Scenario:
             1. Navigate to 'Packages' page
             2. Click on "Modify Package" and add new tag
-            3. Got to the Application Catalog page
+            3. Got to the Catalog page
             4. Check, that new tag is browsed in application description
         """
         self.navigate_to('Manage')
@@ -949,8 +949,8 @@ class TestSuitePackages(base.PackageTestCase):
         self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
         self.modify_package('tags', 'TEST_TAG')
 
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         self.select_and_click_action_for_app('details', self.postgre_id)
         self.assertIn('TEST_TAG',
                       self.driver.find_element_by_xpath(
@@ -976,12 +976,12 @@ class TestSuitePackages(base.PackageTestCase):
             1. Navigate to 'Packages' page
             2. Select some package and make it inactive "More>Toggle Active"
             3. Check that package is inactive
-            4. Switch to 'Applications' page
+            4. Switch to 'Browse' page
             5. Check that application is not available on the page
             6. Navigate to 'Packages' page
             7. Select the same package and make it active "More>Toggle Active"
             8. Check that package is active
-            9. Switch to 'Applications' page
+            9. Switch to 'Browse' page
             10. Check that application now is available on the page
         """
         self.navigate_to('Manage')
@@ -993,8 +993,8 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'False')
 
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determinate is it in catalog or not.
         btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
@@ -1011,8 +1011,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'True')
 
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         self.check_element_on_page(by.By.XPATH, btn_xpath)
 
     def test_check_toggle_public_package(self):
@@ -1050,8 +1050,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         # Check that application is available in other project.
         self.switch_to_project(new_project)
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determinate is it in catalog or not.
         btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
@@ -1072,8 +1072,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         # Check that application now is not available in other porject.
         self.switch_to_project(new_project)
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
 
     def test_modify_description(self):
@@ -1091,8 +1091,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.modify_package('description', 'New Description')
 
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         self.assertEqual('New Description',
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
@@ -1297,7 +1297,7 @@ class TestSuitePackages(base.PackageTestCase):
                 Primary Project: service
                 Enabled: Yes
             3) Login to Horizon as an 'Test_service_user';
-            4) Murano -> Manage -> Packages: Import Package
+            4) Catalog -> Manage -> Packages: Import Package
                 Set public Off, Active On
             5) Try to modify created package and set Public = On.
                 Error: You are not allowed to perform this operation
@@ -1892,7 +1892,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
             by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
 
     def test_filter_by_new_category(self):
-        """Filter by new category from Applications page
+        """Filter by new category from Catalog>Browse page
 
         Scenario:
             1. Log into OpenStack Horizon dashboard as admin user
@@ -1902,12 +1902,12 @@ class TestSuitePackageCategory(base.PackageTestCase):
             5. Navigate to 'Packages' page
             6. Click on 'Import Package' button
             7. Import package and select created 'test' category for it
-            8. Navigate to "Applications" page
+            8. Navigate to "Catalog>Browse" page
             9. Select new category in "App category" dropdown list
         """
         self._import_package_with_category(self.archive, self.category)
-        self.navigate_to('Application_Catalog')
-        self.go_to_submenu('Applications')
+        self.navigate_to('Catalog')
+        self.go_to_submenu('Browse')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
         self.driver.find_element_by_partial_link_text(self.category).click()
@@ -1938,7 +1938,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
         # create environment
         env_name = str(uuid.uuid4())
 
-        self.navigate_to('Application_Catalog')
+        self.navigate_to('Catalog')
         self.go_to_submenu('Environments')
         self.create_environment(env_name)
         self.go_to_submenu('Environments')

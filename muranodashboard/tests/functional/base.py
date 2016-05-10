@@ -177,7 +177,7 @@ class UITestCase(BaseDeps):
         self.fill_field(by.By.ID, 'id_username', username)
         self.fill_field(by.By.ID, 'id_password', password)
         self.driver.find_element_by_xpath("//button[@type='submit']").click()
-        murano = self.driver.find_element_by_xpath(consts.Murano)
+        murano = self.driver.find_element_by_xpath(consts.Applications)
         if 'collapsed' in murano.get_attribute('class'):
             murano.click()
 
@@ -472,7 +472,7 @@ class ApplicationTestCase(ImageTestCase):
         self.wait_for_alert_message()
 
     def add_app_to_env(self, app_id, app_name='TestApp'):
-        self.go_to_submenu('Applications')
+        self.go_to_submenu('Browse')
         self.select_and_click_action_for_app('quick-add', app_id)
         field_id = "{0}_0-name".format(app_id)
         self.fill_field(by.By.ID, field_id, value=app_name)

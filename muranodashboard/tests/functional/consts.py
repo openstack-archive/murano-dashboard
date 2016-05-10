@@ -45,6 +45,6 @@ PrevBtn = "//tfoot//tr//td//a[contains(@href,'prev_marker')]"
 
 # Panel's
 
-Murano = "//*[@id='main_content']/div[2]//a[contains(text(), 'Murano')]"
-Application_Catalog = Murano + "/following::a[span[contains(text(), 'Application Catalog')]]"  # noqa
-Manage = Murano + "/following::a[span[contains(text(), 'Manage')]]"
+Applications = "//*[@id='main_content']/div[2]//a[contains(text(), 'Applications')]"  # noqa
+Catalog = Applications + "/following::a[span[contains(text(), 'Catalog')]]"
+Manage = Applications + "/following::a[span[contains(text(), 'Manage')]]"

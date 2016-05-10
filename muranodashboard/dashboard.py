@@ -25,7 +25,7 @@ assert exceptions
 
 class DeployPanels(horizon.PanelGroup):
     slug = "deployment_group"
-    name = _("Application Catalog")
+    name = _("Catalog")
     panels = ("environments", "catalog")
 
 
@@ -36,7 +36,7 @@ class ManagePanels(horizon.PanelGroup):
 
 
 class Murano(horizon.Dashboard):
-    name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("Murano"))
+    name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("Applications"))
     slug = "murano"
     panels = (DeployPanels, ManagePanels)
     default_panel = "environments"
