@@ -6,7 +6,7 @@ pbr>=1.6 # Apache-2.0
 beautifulsoup4 # MIT
 Django<1.9,>=1.8 # BSD
 django-formtools # BSD
-iso8601>=0.1.9 # MIT
+iso8601>=0.1.11 # MIT
 six>=1.9.0 # MIT
 python-muranoclient>=0.8.2 # Apache-2.0
 PyYAML>=3.1.0 # MIT
@@ -16,5 +16,5 @@ oslo.log>=1.14.0 # Apache-2.0
 semantic-version>=2.3.1 # BSD
 
 # message extraction
-Babel!=2.3.0,!=2.3.1,!=2.3.2,!=2.3.3,>=1.3 # BSD
+Babel>=2.3.4 # BSD
 django-babel>=0.4.0 # BSD
