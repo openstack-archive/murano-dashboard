@@ -87,9 +87,9 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         """Test create environment from the catalog page
 
         Scenario:
-           1. Go the the Browse page
+           1. Go to the Browse page
            2. Press 'Create Env'
-           3. Make sure that it's possible to chose just created environment
+           3. Make sure that it's possible to choose just created environment
         """
         self.go_to_submenu('Browse')
         self.driver.find_elements_by_xpath(
@@ -117,13 +117,13 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_not_on_page(by.By.LINK_TEXT, unicode_name)
 
     def test_check_env_name_validation(self):
-        """Test checks validation of field that usually define environment name
+        """Test checks validation of field that usually defines environment name
 
         Scenario:
             1. Navigate to Catalog > Environments
             2. Press 'Create environment'
             3. Check a set of names, if current name isn't valid
-            appropriate error message should appears
+            appropriate error message should appear
         """
         self.go_to_submenu('Environments')
         self.driver.find_element_by_css_selector(c.CreateEnvironment).click()
@@ -141,12 +141,12 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             c.ErrorMessage.format(error_message))
 
     def test_environment_detail_page_with_button(self):
-        """Test check ability to change environment name
+        """Test check availability of delete button in environment detail
 
         Scenario:
             1. Create environment
-            2. Goto the environment detail page
-            3. Check that 'Delete Environment' button in environment detail
+            2. Go to the environment detail page
+            3. Check that 'Delete Environment' button is in environment detail
         """
         # uuid.uuid4() generates random uuid
         env_name = str(uuid.uuid4())
@@ -158,7 +158,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
 
 
 class TestSuiteImage(base.ImageTestCase):
-    def test_rename_image(self):
+    def test_mark_image(self):
         """Test check ability to mark murano image
 
         Scenario:
@@ -216,8 +216,8 @@ class TestSuiteFields(base.FieldsTestCase):
     def test_check_domain_name_field_validation(self):
         """Check domain name validation
 
-        Test checks that validation of domain name field work
-        and appropriate error message is appeared after entering
+        Test checks that validation of domain name field works
+        and appropriate error message appears after entering
         incorrect domain name
 
         Scenario:
@@ -290,7 +290,7 @@ class TestSuiteFields(base.FieldsTestCase):
             'they are used to delimit the components of domain style names')
 
     def test_check_app_name_validation(self):
-        """Test checks validation of field that usually define application name
+        """Test checks validation of field that usually defines application name
 
         Scenario:
             1. Navigate to Catalog > Browse
@@ -324,7 +324,7 @@ class TestSuiteFields(base.FieldsTestCase):
             1. Navigate to Catalog > Browse
             2. Start to create MockApp
             3. Don't type app name in the 'Application Name'
-            field that is required and click 'Next',check that there is
+            field that is required and click 'Next', check that there is
             error message
             4. Set app name and click 'Next',
             check that there is no error message
@@ -395,8 +395,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
     def test_check_ability_create_two_dependent_apps(self):
         """Test using two dependent apps
 
-        Test checks that using one creation form it is possible to
-        add to related apps in the one environment
+        Test checks that with using one creation form it is possible to
+        add two related apps in one environment
 
         Scenario:
             1. Navigate to Catalog > Browse
@@ -469,8 +469,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             1. Navigate to 'Catalog'>'Browse' panel
             2. Select 'Databases' category in 'App Category' dropdown menu
             3. Verify that PostgreSQL is shown
-            4. Select 'Web' category in
-            'App Category' dropdown menu
+            4. Select 'Web' category in 'App Category' dropdown menu
             5. Verify that MockApp is shown
         """
         self.go_to_submenu('Browse')
@@ -568,7 +567,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Test check that created application overview tab browsed correctly
 
         Scenario:
-            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click on application name to go to the detail page
         """
         app_name = 'NewTestApp'
@@ -581,7 +580,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         """Checks that action is available for deployed application
 
         Scenario:
-            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on application
@@ -622,10 +621,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_class_name('app_license')
 
     def test_check_topology_page(self):
-        """Test checks that topology tab is available displays correctly
+        """Test checks that topology tab is available, displays correctly
 
         Scenario:
-            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on 'Topology' tab
@@ -642,10 +641,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.check_element_on_page(by.By.TAG_NAME, 'image')
 
     def test_check_deployment_history(self):
-        """Test checks that deployment history tab is available logs are ok
+        """Test checks that deployment history tab is available, logs are ok
 
         Scenario:
-            1. Navigate Catalog>Browse and click MockApp 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
             2. Click deploy
             3. Wait 'Ready' status
             4. Click on 'Deployment History' tab
@@ -668,10 +667,10 @@ class TestSuiteApplications(base.ApplicationTestCase):
                       self.driver.find_element_by_class_name('logs').text)
 
     def test_hot_application(self):
-        """Checks that UI got the hot app is rendered correctly
+        """Checks that UI got hot app is rendered correctly
 
         Scenario:
-            1. Navigate Catalog>Browse and click Hot app 'Quick Deploy'
+            1. Navigate to Catalog>Browse and click Hot app 'Quick Deploy'
             2. Check for YAQL validator
             3. Check that app is added to the environment
         """
@@ -838,7 +837,7 @@ class TestSuiteAppsPagination(base.UITestCase):
     def setUp(self):
         super(TestSuiteAppsPagination, self).setUp()
         self.apps = []
-        # Create 30 additinal packages with applications
+        # Create 30 additional packages with applications
         for i in range(100, 130):
             app_name = self.gen_random_resource_name('app', 4)
             tag = self.gen_random_resource_name('tag', 8)
@@ -872,7 +871,7 @@ class TestSuiteAppsPagination(base.UITestCase):
             if i != len(pages_itself):
                 self.driver.find_element_by_link_text('Next Page').click()
 
-        # Wait till the Next button disapper
+        # Wait till the Next button disappear
         # Otherwise 'Prev' buttion from previous page might be used
         self.check_element_not_on_page(by.By.LINK_TEXT, 'Next Page')
 
@@ -1036,7 +1035,7 @@ class TestSuitePackages(base.PackageTestCase):
         project_id = self.create_project(new_project)
         self.add_user_to_project(project_id, self.keystone_client.user_id)
         # Generally the new project will appear in the dropdown menu only after
-        # page refresh. But in this case refresh is not neccesary.
+        # page refresh. But in this case refresh is not necessary.
 
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
@@ -1053,7 +1052,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Catalog')
         self.go_to_submenu('Browse')
         # 'Quick Deploy' button contains id of the application.
-        # So it is possible to definitely determinate is it in catalog or not.
+        # So it is possible to definitely determine is it in catalog or not.
         btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
                      "".format(self.url_prefix, self.postgre_id))
 
@@ -1164,7 +1163,7 @@ class TestSuitePackages(base.PackageTestCase):
         """Test that admin is able to share Murano Apps
 
         Scenario:
-            1. Hit 'Modify Package' on any exists package
+            1. Hit 'Modify Package' on any package
             2. Mark 'Public' checkbox
             3. Hit 'Update' button
             4. Verify, that package is available for other users
@@ -1468,7 +1467,7 @@ class TestSuiteRepository(base.PackageTestCase):
             by.By.XPATH, c.AppPackages.format(pkg_name))
 
     def test_import_package_from_repo(self):
-        """Test package importing via fqn from repo with dependant apps."""
+        """Test package importing via fqn from repo with dependent apps."""
 
         pkg_name_parent = "PackageParent"
         pkg_name_child = "PackageChild"
@@ -1970,7 +1969,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
             3. Add new category
             4. Check that new category has appeared in category list
             5. Try to add category with the same name
-            6. Check that appropriate and user friendly error message has
+            6. Check that appropriate user friendly error message has
                 appeared.
         """
         self.navigate_to('Manage')
@@ -2010,7 +2009,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
             by.By.XPATH, c.DeleteCategory.format(self.category))
 
     def test_list_of_existing_categories(self):
-        """Checks that list of categories avaliable
+        """Checks that list of categories is available
 
         Scenario:
             1. Navigate to 'Categories' page
@@ -2042,7 +2041,7 @@ class TestSuiteCategoriesPagination(base.PackageTestCase):
             self.murano_client.categories.delete(id=category_id)
 
     def test_category_pagination(self):
-        """Test categires pagination in case of many categires created """
+        """Test categories pagination in case of many categories created """
         self.navigate_to('Manage')
         self.go_to_submenu('Categories')
 
@@ -2062,8 +2061,8 @@ class TestSuiteCategoriesPagination(base.PackageTestCase):
                 self.check_element_on_page(by.By.XPATH, c.Status.format(name))
             if i != len(pages_itself):
                 self.driver.find_element_by_xpath(c.NextBtn).click()
-        # Wait till the Next button disapper
-        # Otherwise 'Prev' buttion from previous page might be used
+        # Wait till the Next button disappear
+        # Otherwise 'Prev' button from the previous page might be used
         self.check_element_not_on_page(by.By.XPATH, c.NextBtn)
         pages_itself.reverse()
         for i, names in enumerate(pages_itself, 1):
