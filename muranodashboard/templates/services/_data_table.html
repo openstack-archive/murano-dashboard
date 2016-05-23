@@ -1,15 +1,10 @@
 {% load i18n %}
 {% load custom_filters %}
+{% load jsonify %}
 
 {% block table_caption %}
     {% with apps=table.get_apps_list %}
-        {% comment %}
-          Note(efedorova): We are comparing to the string, since get_apps_list
-          functions returns json.dumps, which is used in js later.
-          So to prevent extra transformations comparing to the string is used
-          to check for app absence.
-        {% endcomment %}
-        {% if apps != '[]' %}
+        {% if apps %}
             <div class="col-xs-5">
                 <h3 class="table_title extra_title table_title">
                     {% trans "Application&nbsp;Components" %}</h3>
@@ -79,7 +74,7 @@
             {% trans "There are no applications matching your criteria." %}</p>
         <div id="apps_carousel" class="carousel">
             <input type="hidden" id="apps_carousel_contents"
-                   value="{{ apps }}">
+                   value="{{ apps|jsonify }}">
 
             <div class="carousel-inner"></div>
             <a class="left carousel-control" ng-non-bindable href="#apps_carousel"
