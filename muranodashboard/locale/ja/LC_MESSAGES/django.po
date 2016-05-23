@@ -1,13 +1,15 @@
+# Akihiro Motoki <amotoki@gmail.com>, 2016. #zanata
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Shu Muto <shu-mutou@rf.jp.nec.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev33\n"
+"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev37\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-05-12 17:41+0000\n"
+"POT-Creation-Date: 2016-05-19 22:27+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-25 11:35+0000\n"
+"PO-Revision-Date: 2016-05-22 06:05+0000\n"
 "Last-Translator: Akihiro Motoki <amotoki@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -16,6 +18,9 @@ msgstr ""
 
 msgid "-"
 msgstr "-"
+
+msgid "80 characters max."
+msgstr "最大 80 文字。"
 
 msgid "A local zip file to upload"
 msgstr "アップロードするローカルの zip ファイル"
@@ -119,6 +124,9 @@ msgstr "自動"
 msgid "Back"
 msgstr "戻る"
 
+msgid "Browse"
+msgstr "探索"
+
 msgid "Bundle Name"
 msgstr "バンドル名"
 
@@ -139,6 +147,9 @@ msgstr "バンドルの完全な名前"
 
 msgid "Cancel"
 msgstr "取り消し"
+
+msgid "Catalog"
+msgstr "カタログ"
 
 msgid "Categories"
 msgstr "カテゴリー"
@@ -384,6 +395,15 @@ msgstr ""
 
 msgid "Fully qualified package name."
 msgstr "完全な形のパッケージ名。"
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"<b> <a href=%(pkg_def_url)s>パッケージ</a> </b>に進んで、「パッケージのイン"
+"ポート」をクリックして、<i>パッケージのソース</i>として<i>リポジトリー</i>を"
+"選択してください。                        "
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "バンドルファイルの HTTP/HTTPS URL。"
@@ -661,6 +681,9 @@ msgstr "パッケージの URL を指定してください。"
 msgid "Previous Page"
 msgstr "前のページ"
 
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "パッケージに関連付けるキーワードをコンマ区切りのリストで指定します。"
+
 msgid "Provide desired name for a new category"
 msgstr "新しいカテゴリーには適切な名前を付けてください"
 
@@ -791,7 +814,6 @@ msgstr ""
 msgid "The request data is not acceptable by the server"
 msgstr "要求されたデータがサーバーにより受け入れられませんでした。"
 
-#, fuzzy
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 "カタログにはアプリケーションがありません。次の URL からアプリケーションをイン"
