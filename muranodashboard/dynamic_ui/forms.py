@@ -149,6 +149,10 @@ class DynamicFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
         field_specs = dct.pop('field_specs', [])
         service = dct['service']
         for field_name, field in _collect_fields(field_specs, name, service):
+            if isinstance(field, fields.PasswordField):
+                field_name += '-password'
+                if field.validate_password not in field.validators:
+                    field_name += '-custom_valid'
             dct[field_name] = field
         return super(DynamicFormMetaclass, meta).__new__(
             meta, name, bases, dct)
