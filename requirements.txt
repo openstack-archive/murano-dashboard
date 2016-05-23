@@ -17,4 +17,4 @@ semantic-version>=2.3.1 # BSD
 
 # message extraction
 Babel>=2.3.4 # BSD
-django-babel>=0.4.0 # BSD
+django-babel>=0.5.1 # BSD
