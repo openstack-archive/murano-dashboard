@@ -1,0 +1,6 @@
+---
+
+fixes:
+  - Environment components page reloads after deployment of
+    empty environment. It allows to add new components to
+    the empty environment without manual page refresh.

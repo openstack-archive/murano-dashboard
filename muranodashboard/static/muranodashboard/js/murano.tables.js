@@ -32,6 +32,23 @@ $(function() {
   });
 });
 
+// Reload page using horizon ajax_poll_interval
+// until deployment of empty environment is finished
+$(function() {
+  "use strict";
+  if ($("div#environment_details__services").find("div.drop_component").length === 0 &&
+      $("table#services.datatable").find("tr.empty").length &&
+      $("button#services__action_deploy_env").length === 0) {
+    var $pollInterval = $("input#pollInterval")[0].value;
+    setTimeout(function () {
+      if (reloadCalled === false) {
+        reloadCalled = true;
+        location.reload(true);
+      }
+    }, $pollInterval);
+  }
+});
+
 var reloadEnvironmentCalled = false;
 
 $(function() {

@@ -11,6 +11,7 @@
 {% endblock page_header %}
 {% block main %}
     <input type="hidden" id="environmentId" value="{{ environment_id }}">
+    <input type="hidden" id="pollInterval" value="{{ poll_interval }}">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             {{ tab_group.render }}
