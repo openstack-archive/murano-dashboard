@@ -208,6 +208,7 @@ class DeleteService(tables.DeleteAction):
 class DeployEnvironment(tables.BatchAction):
     name = 'deploy'
     classes = ('btn-launch',)
+    icon = "play"
 
     @staticmethod
     def action_present(count):
@@ -257,6 +258,7 @@ class DeployThisEnvironment(tables.Action):
     verbose_name = _('Deploy This Environment')
     requires_input = False
     classes = ('btn-launch',)
+    icon = "play"
 
     def allowed(self, request, service):
         """Limit when 'Deploy Environment' button is shown
