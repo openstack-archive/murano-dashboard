@@ -1,0 +1,6 @@
+---
+
+features:
+  - Added possibility for user to select several environments and execute
+    one of the three actions to all of them at once (delete, abandon or
+    deploy).
