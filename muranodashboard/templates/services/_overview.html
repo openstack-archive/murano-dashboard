@@ -14,7 +14,7 @@
             </dd><br>
         {% elif key == 'Instances' %}
             {% for instance in value %}
-                <dt>{% blocktrans %}Instance{{forloop.counter}} name{% endblocktrans %}</dt>
+                <dt>{% blocktrans trimmed %}Instance{{forloop.counter}} name{% endblocktrans %}</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:instances:detail' instance.id %}">
                         {{ instance.name }}
@@ -30,7 +30,7 @@
             </dd><br>
         {% elif key == 'Stacks'%}
             {% for stack in value %}
-            <dt>{% blocktrans %}Heat Orchestration stack{{forloop.counter}} name{% endblocktrans %}</dt>
+            <dt>{% blocktrans trimmed %}Heat Orchestration stack{{forloop.counter}} name{% endblocktrans %}</dt>
                 <dd>
                     <a href=" {% url 'horizon:project:stacks:detail' stack.id %}">
                         {{ stack.name }}
