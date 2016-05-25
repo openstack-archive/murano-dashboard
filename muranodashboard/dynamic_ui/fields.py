@@ -20,7 +20,7 @@ import re
 from django.core.urlresolvers import reverse
 from django.core import validators as django_validator
 from django import forms
-from django.http import Http404
+from django.forms import widgets
 from django.template import defaultfilters
 from django.utils.encoding import force_text
 from django.utils import html
@@ -524,24 +524,37 @@ class DatabaseListField(CharField):
             self.validate_mssql_identifier(db_name)
 
 
+class ErrorWidget(widgets.Widget):
+
+    def __init__(self, *args, **kwargs):
+        self.message = kwargs.pop(
+            'message', _("There was an error initialising this field."))
+        super(ErrorWidget, self).__init__(*args, **kwargs)
+
+    def render(self, name, value, attrs=None):
+        return "<div name={name}>{message}</div>".format(
+            name=name, message=self.message)
+
+
+class MuranoTypeWidget(hz_forms.fields.DynamicSelectWidget):
+    def __init__(self, attrs=None, **kwargs):
+        if attrs is None:
+            attrs = {'class': 'murano_add_select'}
+        else:
+            attrs.setdefault('class', '')
+            attrs['class'] += ' murano_add_select'
+        super(MuranoTypeWidget, self).__init__(attrs=attrs, **kwargs)
+
+    class Media(object):
+        js = ('muranodashboard/js/add-select.js',)
+
+
 def make_select_cls(fqns):
     if not isinstance(fqns, (tuple, list)):
         fqns = (fqns,)
 
-    class Widget(hz_forms.fields.DynamicSelectWidget):
-        def __init__(self, attrs=None, **kwargs):
-            if attrs is None:
-                attrs = {'class': 'murano_add_select'}
-            else:
-                attrs.setdefault('class', '')
-                attrs['class'] += ' murano_add_select'
-            super(Widget, self).__init__(attrs=attrs, **kwargs)
-
-        class Media(object):
-            js = ('muranodashboard/js/add-select.js',)
-
     class DynamicSelect(hz_forms.DynamicChoiceField, CustomPropertiesField):
-        widget = Widget
+        widget = MuranoTypeWidget
 
         def __init__(self, empty_value_message=None, *args, **kwargs):
             super(DynamicSelect, self).__init__(*args, **kwargs)
@@ -552,21 +565,52 @@ def make_select_cls(fqns):
 
         @with_request
         def update(self, request, environment_id, **kwargs):
+            matching_classes = []
+            fqns_seen = set()
+            # NOTE(kzaitsev): it's possible to have a private
+            # and public apps with the same fqn, however the engine would
+            # currently favor private package. Therefore we should squash
+            # these until we devise a better way to work with this
+            # situation and versioning
+
+            for class_fqn in fqns:
+                app_found = pkg_api.app_by_fqn(request, class_fqn)
+                if app_found:
+                    fqns_seen.add(app_found.fully_qualified_name)
+                    matching_classes.append(app_found)
+
+                apps_found = pkg_api.apps_that_inherit(request, class_fqn)
+                for app in apps_found:
+                    if app.fully_qualified_name in fqns_seen:
+                        continue
+                    fqns_seen.add(app.fully_qualified_name)
+                    matching_classes.append(app)
+
+            if not matching_classes:
+                msg = _(
+                    "Couldn't find any apps, required for this field.\n"
+                    "Tried: {fqns}").format(fqns=', '.join(fqns))
+                self.widget = ErrorWidget(message=msg)
+
+            # NOTE(kzaitsev): this closure is needed to allow us have custom
+            # logic when clicking add button
             def _make_link():
                 ns_url = 'horizon:murano:catalog:add'
+                ns_url_args = (environment_id, False, True)
 
-                def _reverse(_fqn):
-                    _app = pkg_api.app_by_fqn(request, _fqn)
-                    if _app is None:
-                        msg = "Application with FQN='{0}' doesn't exist"
-                        messages.error(request, msg.format(_fqn))
-                        raise Http404(msg.format(_fqn))
-                    args = (_app.id, environment_id, False, True)
-                    return _app.name, reverse(ns_url, args=args)
-                return json.dumps([_reverse(cls) for cls in fqns])
+                # This will prevent horizon from adding an extra '+' button
+                if not matching_classes:
+                    return ''
+
+                return json.dumps([
+                    (app.name, reverse(ns_url, args=((app.id,) + ns_url_args)))
+                    for app in matching_classes])
 
             self.widget.add_item_link = _make_link
-            apps = env_api.service_list_by_fqns(request, environment_id, fqns)
+
+            apps = env_api.service_list_by_fqns(
+                request, environment_id,
+                [app.fully_qualified_name for app in matching_classes])
             choices = [('', self.empty_value_message)]
             choices.extend([(app['?']['id'],
                              html.escape(app.name)) for app in apps])

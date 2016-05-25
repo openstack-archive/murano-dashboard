@@ -1,0 +1,4 @@
+---
+fixes:
+  - Specifying a base class in the ui definition now also fetches all the packages with classes
+    that inherit from that class, when glare is used.
