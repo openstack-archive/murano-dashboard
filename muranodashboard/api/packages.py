@@ -63,7 +63,7 @@ def app_by_fqn(request, fqn, catalog=True):
 
 
 def make_loader_cls():
-    class Loader(yaml.Loader):
+    class Loader(yaml.SafeLoader):
         pass
 
     def yaql_constructor(loader, node):
@@ -72,7 +72,7 @@ def make_loader_cls():
 
     # workaround for PyYAML bug: http://pyyaml.org/ticket/221
     resolvers = {}
-    for k, v in yaml.Loader.yaml_implicit_resolvers.items():
+    for k, v in yaml.SafeLoader.yaml_implicit_resolvers.items():
         resolvers[k] = v[:]
     Loader.yaml_implicit_resolvers = resolvers
 
