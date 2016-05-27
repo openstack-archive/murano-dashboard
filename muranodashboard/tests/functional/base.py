@@ -13,10 +13,10 @@
 import json
 import logging
 import os
+import six.moves.urllib.parse as urlparse
 import sys
 import testtools
 import time
-import urlparse
 import uuid
 
 from glanceclient import client as gclient
