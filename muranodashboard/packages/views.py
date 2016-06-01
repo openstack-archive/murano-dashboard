@@ -14,7 +14,6 @@
 
 import json
 import sys
-import urlparse
 
 from django.core.files import storage
 from django.core.urlresolvers import reverse
@@ -39,6 +38,7 @@ from openstack_dashboard.api import glance
 from openstack_dashboard.api import keystone
 from oslo_log import log as logging
 import six
+import six.moves.urllib.parse as urlparse
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
