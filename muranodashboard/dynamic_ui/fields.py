@@ -209,7 +209,7 @@ class CharField(forms.CharField, CustomPropertiesField):
 
 
 class PasswordField(CharField):
-    special_characters = '!@#$%^&*()_+|\/.,~?><:{}'
+    special_characters = '!@#$%^&*()_+|\/.,~?><:{}-'
     password_re = re.compile('^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%s]).*$'
                              % special_characters)
     has_clone = False

@@ -12,6 +12,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from django.core import exceptions
+
 from muranodashboard.dynamic_ui import fields
 from openstack_dashboard.test import helpers
 
@@ -82,3 +84,42 @@ class TestFlavorField(helpers.APITestCase):
         initial_request = {}
         f.update(initial_request, self.request)
         self.assertEqual([], f.choices)
+
+
+class TestPasswordField(helpers.TestCase):
+    def test_valid_input(self):
+        f = fields.PasswordField('')
+        for char in f.special_characters:
+            if char != '\\':
+                password = 'aA1111' + char
+                self.assertEqual(None, f.run_validators(password))
+
+    def test_short_input(self):
+        f = fields.PasswordField('')
+        password = 'aA@111'
+        self.assertRaises(exceptions.ValidationError, f.run_validators,
+                          password)
+
+    def test_input_without_special_characters(self):
+        f = fields.PasswordField('')
+        password = 'aA11111'
+        self.assertRaises(exceptions.ValidationError, f.run_validators,
+                          password)
+
+    def test_input_without_digits(self):
+        f = fields.PasswordField('')
+        password = 'aA@@@@@'
+        self.assertRaises(exceptions.ValidationError, f.run_validators,
+                          password)
+
+    def test_input_without_lowecase(self):
+        f = fields.PasswordField('')
+        password = 'A1@@@@@'
+        self.assertRaises(exceptions.ValidationError, f.run_validators,
+                          password)
+
+    def test_input_without_uppercase(self):
+        f = fields.PasswordField('')
+        password = 'a1@@@@@'
+        self.assertRaises(exceptions.ValidationError, f.run_validators,
+                          password)

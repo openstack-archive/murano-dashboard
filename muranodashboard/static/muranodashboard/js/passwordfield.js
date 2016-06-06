@@ -72,7 +72,7 @@ $(function() {
       meetRequirements = false;
     }
 
-    if (password.match(/[!@#$%^&*()_+|\/.,~?><:{}]+/) === null) {
+    if (password.match(/[!@#$%^&*()_+|\/.,~?><:{}-]+/) === null) {
       text += " 1 special character";
       meetRequirements = false;
     }
