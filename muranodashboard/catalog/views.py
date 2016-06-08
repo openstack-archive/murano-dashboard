@@ -521,7 +521,7 @@ class IndexView(generic_views.PageTitleMixin, list_view.ListView):
                 marker=marker, page_size=self.paginate_by, sort_dir=sort_dir,
                 limit=self.paginate_by)
 
-        if self.request.GET.get('sort_dir', 'asc') == 'desc':
+        if sort_dir == 'desc':
             packages = list(reversed(packages))
 
         return packages
