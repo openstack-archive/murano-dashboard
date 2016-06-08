@@ -40,6 +40,7 @@ from horizon import exceptions
 from horizon.forms import views
 from horizon import messages
 from horizon import tabs
+from horizon import views as generic_views
 from oslo_log import log as logging
 import six
 
@@ -464,8 +465,9 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         return context
 
 
-class IndexView(list_view.ListView):
+class IndexView(generic_views.PageTitleMixin, list_view.ListView):
     paginate_by = 6
+    page_title = _("Browse")
 
     def __init__(self, **kwargs):
         super(IndexView, self).__init__(**kwargs)
@@ -607,6 +609,7 @@ class IndexView(list_view.ListView):
 class AppDetailsView(tabs.TabView):
     tab_group_class = catalog_tabs.ApplicationTabs
     template_name = 'catalog/app_details.html'
+    page_title = '{{ app.name }}'
 
     app = None
 
