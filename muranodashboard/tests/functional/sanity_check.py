@@ -358,15 +358,13 @@ class TestSuiteFields(base.FieldsTestCase):
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
         self.fill_field(by.By.NAME, "0-name", "name")
-        self.fill_field(by.By.NAME, '0-adminPassword-password', value='123456')
+        self.fill_field(by.By.NAME, '0-adminPassword', value='123456')
         self.check_error_message_is_present(
             'The password must contain at least one letter')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
-        self.fill_field(by.By.NAME, "0-adminPassword-password-clone",
-                        value='P@ssw0rd')
+        self.fill_field(by.By.NAME, "0-adminPassword-clone", value='P@ssw0rd')
         self.check_error_message_is_absent('Passwords do not match')
-        self.fill_field(by.By.NAME, '0-adminPassword-password',
-                        value='P@ssw0rd')
+        self.fill_field(by.By.NAME, '0-adminPassword', value='P@ssw0rd')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         self.wait_element_is_clickable(by.By.XPATH, c.ButtonSubmit)
 
