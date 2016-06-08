@@ -1,0 +1,7 @@
+---
+
+features:
+  - Improved the performance of 'Recent Activity' panel at the
+    'Browse Catalog' page.
+    It was done with refactoring single request for every latest app
+    with single for all, using new API 'in' operator.
