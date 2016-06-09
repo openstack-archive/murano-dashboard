@@ -81,6 +81,6 @@ $(function() {
     mainCheck(div, meetRequirements, true, text);
   }
 
-  $("input[id$='password'][type='password']").keyup(checkStrengthRemoveErrIfMatches);
-  $("input[id$='password-clone'][type='password']").keyup(checkPasswordsMatch);
+  $("input[type='password']").not("[id$='-clone']").keyup(checkStrengthRemoveErrIfMatches);
+  $("input[id$='-clone'][type='password']").keyup(checkPasswordsMatch);
 });
