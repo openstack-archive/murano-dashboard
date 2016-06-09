@@ -3,7 +3,7 @@
 {% load static %}
 {% load compress %}
 
-{% block title %}{% trans "Applications" %}{% endblock %}
+{% block title %}{% trans "Browse" %}{% endblock %}
 
 {% block css %}
   {{ block.super }}
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block page_header %}
-    {% include "horizon/common/_page_header.html" with title=_("Applications") %}
+    {% include "horizon/common/_page_header.html" with title=_("Browse") %}
 {% endblock page_header %}
 
 {% block main %}

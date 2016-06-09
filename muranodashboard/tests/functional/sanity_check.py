@@ -37,7 +37,7 @@ class TestSuiteSmoke(base.UITestCase):
 
     def test_smoke_applications_panel(self):
         self.go_to_submenu('Browse')
-        self.check_panel_is_present('Applications')
+        self.check_panel_is_present('Browse')
 
     def test_smoke_images_panel(self):
         self.navigate_to('Manage')
