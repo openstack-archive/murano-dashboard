@@ -120,8 +120,8 @@ class DeleteEnvironment(tables.DeleteAction):
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Start Deleting Environment",
-            u"Start Deleting Environments",
+            u"Started Deleting Environment",
+            u"Started Deleting Environments",
             count
         )
 
@@ -209,8 +209,8 @@ class DeleteService(tables.DeleteAction):
     @staticmethod
     def action_past(count):
         return ungettext_lazy(
-            u"Start Deleting Component",
-            u"Start Deleting Components",
+            u"Started Deleting Component",
+            u"Started Deleting Components",
             count
         )
 
@@ -249,8 +249,8 @@ class DeployEnvironment(tables.BatchAction):
     @staticmethod
     def action_past_deploy(count):
         return ungettext_lazy(
-            u"Deployed Environment",
-            u"Deployed Environments",
+            u"Started deploying Environment",
+            u"Started deploying Environments",
             count
         )
 
