@@ -192,8 +192,8 @@ class UITestCase(BaseDeps):
         self.driver.find_element(by=by_find, value=field).clear()
         self.driver.find_element(by=by_find, value=field).send_keys(value)
 
-    def get_element_id(self, el_name):
-        el = ui.WebDriverWait(self.driver, 10).until(
+    def get_element_id(self, el_name, sec=10):
+        el = ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(
                 (by.By.XPATH, consts.AppPackages.format(el_name))))
         path = el.get_attribute("id")
@@ -222,11 +222,11 @@ class UITestCase(BaseDeps):
             el.click()
         self.wait_for_sidebar_is_loaded()
 
-    def select_from_list(self, list_name, value):
+    def select_from_list(self, list_name, value, sec=10):
         locator = (by.By.XPATH,
                    "//select[contains(@name, '{0}')]"
                    "/option[@value='{1}']".format(list_name, value))
-        el = ui.WebDriverWait(self.driver, 10).until(
+        el = ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(locator))
         el.click()
 
@@ -308,10 +308,10 @@ class UITestCase(BaseDeps):
         btn_id = "environments__row_{0}__action_{1}".format(element_id, action)
         self.driver.find_element_by_id(btn_id).click()
 
-    def wait_for_alert_message(self):
+    def wait_for_alert_message(self, sec=5):
         locator = (by.By.CSS_SELECTOR, 'div.alert-success')
         logger.debug("Waiting for a success message")
-        ui.WebDriverWait(self.driver, 5).until(
+        ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(locator))
 
     def wait_for_error_message(self, sec=20):
@@ -321,12 +321,12 @@ class UITestCase(BaseDeps):
             EC.presence_of_element_located(locator))
         return self.driver.find_element(*locator).text
 
-    def wait_element_is_clickable(self, method, element):
-        return ui.WebDriverWait(self.driver, 10).until(
+    def wait_element_is_clickable(self, method, element, sec=10):
+        return ui.WebDriverWait(self.driver, sec).until(
             EC.element_to_be_clickable((method, element)))
 
-    def wait_for_sidebar_is_loaded(self):
-        ui.WebDriverWait(self.driver, 10).until(
+    def wait_for_sidebar_is_loaded(self, sec=10):
+        ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(
                 (by.By.CSS_SELECTOR, "div#sidebar li.active")))
         time.sleep(0.5)
@@ -434,13 +434,13 @@ class ApplicationTestCase(ImageTestCase):
         el.click()
         self.wait_for_alert_message()
 
-    def select_action_for_package(self, package_id, action):
+    def select_action_for_package(self, package_id, action, sec=10):
         if action == 'more':
             el = self.wait_element_is_clickable(
                 by.By.XPATH, "//tr[@data-object-id='{0}']"
                              "//a[@data-toggle='dropdown']".format(package_id))
             el.click()
-            ui.WebDriverWait(self.driver, 10).until(lambda s: s.find_element(
+            ui.WebDriverWait(self.driver, sec).until(lambda s: s.find_element(
                 by.By.XPATH,
                 ".//*[@id='packages__row_{0}__action_download_package']".
                 format(package_id)).is_displayed())
