@@ -190,7 +190,7 @@ class TestSuiteImage(base.ImageTestCase):
         self.driver.find_element_by_xpath(
             c.DeleteImageMeta.format(self.image_title)).click()
         self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-        self.check_element_not_on_page(by.By,
+        self.check_element_not_on_page(by.By.XPATH,
                                        c.TestImage.format(self.image_title))
 
         self.repair_image()
