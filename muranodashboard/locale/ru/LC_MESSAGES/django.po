@@ -1,9 +1,9 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev33\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev14\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-05-12 17:41+0000\n"
+"POT-Creation-Date: 2016-06-14 11:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -294,12 +294,6 @@ msgstr "Развертывание началось"
 
 msgid "Deployed Components"
 msgstr "Развернутые Компоненты"
-
-msgid "Deployed Environment"
-msgid_plural "Deployed Environments"
-msgstr[0] "Окружение Развернуто"
-msgstr[1] "Окружения Развернуты"
-msgstr[2] "Окружения Развернуты"
 
 msgid "Deployment Details"
 msgstr "Детали Развертывания"
@@ -750,18 +744,6 @@ msgstr "Указанный заголовок уже используется. �
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "Указание категории помогает фильтровать приложения в каталоге"
-
-msgid "Start Deleting Component"
-msgid_plural "Start Deleting Components"
-msgstr[0] "Начать удаление компонента"
-msgstr[1] "Начать удаление компонентов"
-msgstr[2] "Начать удаление компонентов"
-
-msgid "Start Deleting Environment"
-msgid_plural "Start Deleting Environments"
-msgstr[0] "Начать удаление Окружения"
-msgstr[1] "Начать удаление Окружений"
-msgstr[2] "Начать удаление Окружений"
 
 msgid "Status"
 msgstr "Статус"
