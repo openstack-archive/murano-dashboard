@@ -3,9 +3,9 @@
 # Shu Muto <shu-mutou@rf.jp.nec.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev52\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev14\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-05-27 18:29+0000\n"
+"POT-Creation-Date: 2016-06-14 11:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -280,10 +280,6 @@ msgstr "デプロイを開始しました"
 
 msgid "Deployed Components"
 msgstr "デプロイ済みコンポーネント"
-
-msgid "Deployed Environment"
-msgid_plural "Deployed Environments"
-msgstr[0] "環境をデプロイしました"
 
 msgid "Deployment Details"
 msgstr "デプロイの詳細"
@@ -753,14 +749,6 @@ msgid "Specifying a category helps to filter applications in the catalog"
 msgstr ""
 "カテゴリを指定すると、カタログ内でアプリケーションをフィルタリングする際に使"
 "用できます。"
-
-msgid "Start Deleting Component"
-msgid_plural "Start Deleting Components"
-msgstr[0] "コンポーネントの削除を開始しました"
-
-msgid "Start Deleting Environment"
-msgid_plural "Start Deleting Environments"
-msgstr[0] "環境の削除を開始しました"
 
 msgid "Status"
 msgstr "状態"
