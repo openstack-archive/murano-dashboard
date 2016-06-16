@@ -3,13 +3,13 @@
 # Shu Muto <shu-mutou@rf.jp.nec.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev14\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev17\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-06-14 11:49+0000\n"
+"POT-Creation-Date: 2016-06-15 13:29+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-05-27 01:59+0000\n"
+"PO-Revision-Date: 2016-06-16 05:47+0000\n"
 "Last-Translator: Shu Muto <shu-mutou@rf.jp.nec.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -750,6 +750,18 @@ msgstr ""
 "カテゴリを指定すると、カタログ内でアプリケーションをフィルタリングする際に使"
 "用できます。"
 
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "コンポーネントの削除を開始しました"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "環境の削除を開始しました"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "環境のデプロイを開始しました"
+
 msgid "Status"
 msgstr "状態"
 
@@ -965,6 +977,9 @@ msgstr "更新"
 
 msgid "Update Image"
 msgstr "イメージの更新"
+
+msgid "Update This Environment"
+msgstr "この環境の更新"
 
 msgid "Updated"
 msgstr "更新時刻"
