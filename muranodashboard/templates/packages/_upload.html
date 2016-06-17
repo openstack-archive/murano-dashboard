@@ -46,7 +46,7 @@
                 <h3>{% trans "Description" %}:</h3>
                 <p><strong>{% trans "Package Name" %}: </strong>{% trans "Fully qualified package name." %}</p>
                 <p><strong>{% trans "Package Version" %}: </strong>{% trans "Version of the package (optional)." %}</p>
-                <p>{% blocktrans %}The package is going to be imported from <a href="{{murano_repo_url}}" target="_blank">{{murano_repo_url}}</a> repository.{% endblocktrans %}</p>
+                <p>{% blocktrans trimmed %}The package is going to be imported from <a href="{{murano_repo_url}}" target="_blank">{{murano_repo_url}}</a> repository.{% endblocktrans %}</p>
             </div>
             <div class='description-by_url'>
                 <h3>{% trans "Description" %}:</h3>
