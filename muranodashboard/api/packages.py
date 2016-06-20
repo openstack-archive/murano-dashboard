@@ -54,6 +54,14 @@ def package_list(request, marker=None, filters=None, paginate=False,
     return packages, has_more_data
 
 
+def apps_that_inherit(request, fqn):
+    glare = getattr(settings, 'MURANO_USE_GLARE', False)
+    if not glare:
+        return []
+    apps = api.muranoclient(request).packages.filter(inherits=fqn)
+    return apps
+
+
 def app_by_fqn(request, fqn, catalog=True):
     apps = api.muranoclient(request).packages.filter(fqn=fqn, catalog=catalog)
     try:
