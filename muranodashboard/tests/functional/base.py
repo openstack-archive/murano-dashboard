@@ -20,7 +20,8 @@ import urlparse
 import uuid
 
 from glanceclient import client as gclient
-from keystoneclient.v2_0 import client as ksclient
+from keystoneauth1.identity import v3
+from keystoneclient.v3 import client
 from muranoclient import client as mclient
 from oslo_log import handlers
 from oslo_log import log
@@ -54,10 +55,15 @@ else:
 class UITestCase(BaseDeps):
     @classmethod
     def setUpClass(cls):
-        cls.keystone_client = ksclient.Client(username=cfg.common.user,
-                                              password=cfg.common.password,
-                                              tenant_name=cfg.common.tenant,
-                                              auth_url=cfg.common.keystone_url)
+        auth = v3.Password(user_domain_name='Default',
+                           username=cfg.common.user,
+                           password=cfg.common.password,
+                           project_domain_name='Default',
+                           project_name=cfg.common.tenant,
+                           auth_url=cfg.common.keystone_url)
+        cls.keystone_client = client.Client(
+            auth_url=cfg.common.keystone_url, auth=auth,
+            username=cfg.common.user, password=cfg.common.password)
         cls.murano_client = mclient.Client(
             '1', endpoint=cfg.common.murano_url,
             token=cls.keystone_client.auth_token)
@@ -84,7 +90,7 @@ class UITestCase(BaseDeps):
         self.switch_to_project(cfg.common.tenant)
 
         for project_id in self.projects_to_delete:
-            self.keystone_client.tenants.delete(project_id)
+            self.keystone_client.projects.delete(project_id)
 
         for env in self.murano_client.environments.list():
             self.remove_environment(env.id)
@@ -113,9 +119,26 @@ class UITestCase(BaseDeps):
     @classmethod
     def create_user(cls, name, password=None, email=None, tenant_id=None):
         if tenant_id is None:
-            tenant_id = cls.keystone_client.tenant_id
-        cls.keystone_client.users.create(name, password=password, email=email,
-                                         tenant_id=tenant_id, enabled=True)
+            projects = cls.keystone_client.projects.list()
+            tenant_id = [project.id for project in projects
+                         if project.name == cfg.common.tenant][0]
+            cls.keystone_client.users.create(name, domain='Default',
+                                             password=password,
+                                             email=email,
+                                             project=tenant_id,
+                                             enabled=True)
+        else:
+            cls.keystone_client.users.create(name, domain='Default',
+                                             password=password,
+                                             email=email,
+                                             project=tenant_id,
+                                             enabled=True)
+        roles = cls.keystone_client.roles.list()
+        role_id = [role.id for role in roles if role.name == 'Member'][0]
+        users = cls.keystone_client.users.list()
+        user_id = [user.id for user in users if user.name == name][0]
+        cls.keystone_client.roles.grant(role_id, user=user_id,
+                                        project=tenant_id)
 
     @classmethod
     def delete_user(cls, name):
@@ -124,22 +147,25 @@ class UITestCase(BaseDeps):
     def get_tenantid_by_name(self, name):
         """Returns TenantID of the project by project's name"""
         tenant_id = [tenant.id for tenant
-                     in self.keystone_client.tenants.list()
+                     in self.keystone_client.projects.list()
                      if tenant.name == name]
-        return tenant_id[-1]
+        return tenant_id[0]
 
     def create_project(self, name):
-        project = self.keystone_client.tenants.create(
-            tenant_name=name, description="For Test Purposes", enabled=True)
+        project = self.keystone_client.projects.create(
+            name=name, domain="default", description="For Test Purposes",
+            enabled=True)
         self.projects_to_delete.append(project.id)
         return project.id
 
     def add_user_to_project(self, project_id, user_name, user_role=None):
-        if user_role is None:
+        if not user_role:
             roles = self.keystone_client.roles.list()
-            user_role = [role for role in roles if role.name == 'Member'][0]
-        tenant = self.keystone_client.tenants.get(project_id)
-        tenant.add_user(user_name, user_role)
+            role_id = [role.id for role in roles if role.name == 'Member'][0]
+        if not user_name:
+            user_name = cfg.common.user
+        self.keystone_client.roles.grant(role_id, user=user_name,
+                                         project=project_id)
 
     def switch_to_project(self, name):
         projects_xpath = ("//ul[contains(@class, navbar-nav)]"
