@@ -839,7 +839,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
                 action_xpath = '{0}{1}'.format(row_xpath, c.Action)
                 menu_item = self.wait_element_is_clickable(by.By.XPATH,
                                                            action_xpath,
-                                                           sec=30)
+                                                           sec=60)
                 menu_item.click()
 
                 # And check that status of the application is 'Completed'
