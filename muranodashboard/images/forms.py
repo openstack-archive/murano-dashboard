@@ -71,6 +71,10 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
             LOG.error('Failed to request image list from Glance')
             exceptions.handle(request, _('Unable to retrieve list of images'))
 
+        # filter out the image format aki and ari
+        images = filter(
+            lambda x: x.container_format not in ('aki', 'ari'), images)
+
         self.fields['image'].choices = [(i.id, i.name) for i in images]
         self.fields['existing_titles'].initial = \
             [image.title for image in filter_murano_images(images)]
