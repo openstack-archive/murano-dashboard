@@ -22,7 +22,7 @@ class WorkflowManagementForm(object):
             {'name': 'stay_at_the_catalog',
              'initial': False,
              'description': 'If checked, you will be returned to the '
-                            'Application Catalog page. If not - to the '
+                            'Catalog page. If not - to the '
                             'Environment page, where you can deploy'
                             ' the application.',
              'required': False,

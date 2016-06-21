@@ -94,7 +94,7 @@ def make_loader_cls():
 # Here are cached some data calls to api; note that not every package attribute
 # getter should be cached - only immutable ones could be safely cached. E.g.,
 # it would be a mistake to cache Application Name because it is mutable and can
-# be changed in Manage -> Package Definitions while cache is immutable (i.e. it
+# be changed in Manage -> Packages while cache is immutable (i.e. it
 # its contents are obtained from the api only the first time).
 @cache.with_cache('ui', 'ui.yaml')
 def get_app_ui(request, app_id):
