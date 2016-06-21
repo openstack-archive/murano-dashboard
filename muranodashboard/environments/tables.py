@@ -12,8 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
-
 from django.core.urlresolvers import reverse
 from django import http as django_http
 from django import shortcuts
@@ -493,7 +491,7 @@ class ServicesTable(tables.DataTable):
             packages, self._more = pkg_api.package_list(
                 self.request,
                 filters={'type': 'Application', 'catalog': True})
-        return json.dumps([package.to_dict() for package in packages])
+        return [package.to_dict() for package in packages]
 
     def actions_allowed(self):
         status, version = _get_environment_status_and_version(
