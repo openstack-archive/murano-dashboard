@@ -17,7 +17,7 @@ mox3>=0.7.0 # Apache-2.0
 
 # Docs Requirements
 oslosphinx!=3.4.0,>=2.5.0 # Apache-2.0
-sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2 # BSD
+sphinx!=1.3b1,<1.3,>=1.2.1 # BSD
 reno>=1.6.2 # Apache2
 
 # Horizon requirements
