@@ -379,6 +379,11 @@ class ShowEnvironmentServices(tables.LinkAction):
 class UpdateEnvironmentRow(tables.Row):
     ajax = True
 
+    def __init__(self, table, datum=None):
+        super(UpdateEnvironmentRow, self).__init__(table, datum)
+        if hasattr(datum, 'status'):
+            self.attrs['status'] = datum.status
+
     def get_data(self, request, environment_id):
         try:
             return api.environment_get(request, environment_id)

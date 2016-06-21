@@ -2151,8 +2151,8 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
             4. Deploy created environments at once
             5. Abandon environments before they are deployed
         """
-        self.add_app_to_env(self.mockapp_id)
-        self.add_app_to_env(self.mockapp_id)
+        self.add_app_to_env(self.deployingapp_id)
+        self.add_app_to_env(self.deployingapp_id)
         self.go_to_submenu('Environments')
         self.driver.find_element_by_css_selector(
             "label[for=ui-id-1]").click()
@@ -2167,3 +2167,100 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-1')
         self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-2')
+
+    def test_check_necessary_buttons_are_available(self):
+        """Test check if the necessary buttons are available
+
+        Scenario:
+            1. Create 4 environments with different statuses.
+            2. Check that all action buttons are on page.
+            3. Check that "Deploy Environments" button is only clickable
+            if env with status "Ready to deploy" is checked
+            4. Check that "Delete Environments" button is only clickable
+            if envs with statuses "Ready", "Ready to deploy", "Ready to
+            configure" are checked
+            5. Check that "Abandon Environments" button is only clickable
+            if env with status "Ready", "Deploying" are checked
+        """
+        self.go_to_submenu('Environments')
+        self.create_environment('quick-env-1')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to configure'))
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeleteEnvironments)
+
+        self.add_app_to_env(self.mockapp_id)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-2',
+                                                      'Ready to deploy'))
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeployEnvironments)
+
+        self.add_app_to_env(self.mockapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-3', 'Ready'))
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.AbandonEnvironments)
+
+        self.add_app_to_env(self.deployingapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-4',
+                                                      'Deploying'))
+
+        env_1_checkbox = self.driver.find_element_by_xpath(
+            c.EnvCheckbox.format('quick-env-1'))
+        env_2_checkbox = self.driver.find_element_by_xpath(
+            c.EnvCheckbox.format('quick-env-2'))
+        env_3_checkbox = self.driver.find_element_by_xpath(
+            c.EnvCheckbox.format('quick-env-3'))
+
+        # select 'Ready to deploy' env
+        env_2_checkbox.click()
+        # check that Deploy is possible
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeployEnvironments)
+        self.check_element_not_on_page(by.By.CSS_SELECTOR,
+                                       c.DeployEnvironmentsDisabled)
+
+        # add 'Ready to configure' env to selection
+        env_1_checkbox.click()
+        # check that Deploy is no more possible
+        self.check_element_on_page(by.By.CSS_SELECTOR,
+                                   c.DeployEnvironmentsDisabled)
+
+        # add 'Ready' env to selection
+        env_3_checkbox.click()
+        # check that Delete is possible
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeleteEnvironments)
+        self.check_element_not_on_page(by.By.CSS_SELECTOR,
+                                       c.DeleteEnvironmentsDisabled)
+
+        # add 'Deploying' env to selection
+        env_4_checkbox = self.driver.find_element_by_xpath(
+            c.EnvCheckbox.format('quick-env-4'))
+        env_4_checkbox.click()
+        # check that Delete is no more possible
+        self.check_element_on_page(by.By.CSS_SELECTOR,
+                                   c.DeleteEnvironmentsDisabled)
+
+        # check that Abandon is not possible
+        self.check_element_on_page(by.By.CSS_SELECTOR,
+                                   c.AbandonEnvironmentsDisabled)
+
+        # unselect all envs but 'Deploying' and 'Ready'
+        env_1_checkbox.click()
+        env_2_checkbox.click()
+        # check that Abandon is now possible
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.AbandonEnvironments)
+        self.check_element_not_on_page(by.By.CSS_SELECTOR,
+                                       c.AbandonEnvironmentsDisabled)
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-4', 'Ready'),
+                                   sec=90)
