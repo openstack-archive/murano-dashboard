@@ -1,0 +1,5 @@
+---
+fixes:
+  - import horizon filters for murano-dashboard, So
+    murano-dashboard templates can use horizon register filters,
+    such as parse_isotime, timesince_or_never, etc
