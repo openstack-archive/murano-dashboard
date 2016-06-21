@@ -1,9 +1,9 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev14\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev32\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-06-14 11:49+0000\n"
+"POT-Creation-Date: 2016-06-21 05:38+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -797,14 +797,6 @@ msgstr "O dado solicitado não é adequado para o servidor."
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 "Não existem aplicações neste catálogo. Você pode importas aplicações de"
-
-#, python-format
-msgid ""
-"There are no applications in the catalog. You can import apps from\n"
-"                <a href=\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a>."
-msgstr ""
-"Não existem aplicações neste catálogo. Você pode importar aplicações de\n"
-"                <a href=\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a>."
 
 msgid "There are no applications matching your criteria."
 msgstr "Não há aplicações correspondentes aos seus critérios."
