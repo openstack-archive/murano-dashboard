@@ -13,7 +13,6 @@
 #    under the License.
 
 from django.core.urlresolvers import reverse
-from django import http
 from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
@@ -60,38 +59,17 @@ class PackagesFilterAction(tables.FilterAction):
                       ('name', _("Name"), True))
 
 
-class DownloadPackage(tables.Action):
+class DownloadPackage(tables.LinkAction):
     name = 'download_package'
     verbose_name = _('Download Package')
+    url = 'horizon:murano:packages:download'
 
     def allowed(self, request, package):
         return True
 
-    @staticmethod
-    def get_package_name(data_table, app_id):
-        # TODO(tsufiev): should use more optimal search here
-        name = None
-        for pkg in data_table.data:
-            if pkg.id == app_id:
-                name = defaultfilters.slugify(pkg.name)
-                break
-        return name if name is not None else app_id
-
-    def single(self, data_table, request, app_id):
-        try:
-            body = api.muranoclient(request).packages.download(app_id)
-
-            content_type = 'application/octet-stream'
-            response = http.HttpResponse(body, content_type=content_type)
-            response['Content-Disposition'] = 'filename={name}.zip'.format(
-                name=self.get_package_name(data_table, app_id))
-            return response
-        except exc.HTTPException:
-            LOG.exception(_('Something went wrong during package downloading'))
-            redirect = reverse('horizon:murano:packages:index')
-            exceptions.handle(request,
-                              _('Unable to download package.'),
-                              redirect=redirect)
+    def get_link_url(self, app):
+        app_name = defaultfilters.slugify(app.name)
+        return reverse(self.url, args=(app_name, app.id))
 
 
 class ToggleEnabled(tables.BatchAction):
