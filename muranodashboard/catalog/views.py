@@ -325,9 +325,10 @@ class LazyWizard(wizard_views.SessionWizardView):
         return view
 
 
-class Wizard(views.ModalFormMixin, LazyWizard):
+class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
     template_name = 'services/wizard_create.html'
     do_redirect = False
+    page_title = _("Add Application")
 
     def get_prefix(self, *args, **kwargs):
         base = super(Wizard, self).get_prefix(*args, **kwargs)

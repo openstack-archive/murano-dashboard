@@ -162,9 +162,10 @@ class PackageDefinitionsView(horizon_tables.DataTableView):
         return filters
 
 
-class ImportBundleWizard(views.ModalFormMixin,
+class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                          wizard_views.SessionWizardView):
     template_name = 'packages/import_bundle.html'
+    page_title = _("Import Bundle")
 
     def get_context_data(self, **kwargs):
         context = super(ImportBundleWizard, self).get_context_data(**kwargs)
@@ -300,11 +301,12 @@ class ImportBundleWizard(views.ModalFormMixin,
         return http.HttpResponseRedirect(redirect)
 
 
-class ImportPackageWizard(views.ModalFormMixin,
+class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                           wizard_views.SessionWizardView):
     file_storage = storage.FileSystemStorage(location=consts.CACHE_DIR)
     template_name = 'packages/upload.html'
     condition_dict = {'add_category': is_app}
+    page_title = _("Import Package")
 
     def get_form_initial(self, step):
         initial_dict = self.initial_dict.get(step, {})
@@ -553,6 +555,7 @@ class ModifyPackageView(views.ModalFormView):
     template_name = 'packages/modify_package.html'
     success_url = reverse_lazy('horizon:murano:packages:index')
     failure_url = reverse_lazy('horizon:murano:packages:index')
+    page_title = _("Modify Package")
 
     def get_initial(self):
         app_id = self.kwargs['app_id']
