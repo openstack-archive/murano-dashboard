@@ -28,6 +28,9 @@
 {% endblock %}
 
 {% block modal-body %}
+{% for ext_description in extended_descriptions %}
+    <p>{{ ext_description }}</p>
+{% endfor %}
 <div class="left">
 {{ wizard.management_form }}
 {% if wizard.form.forms %}
@@ -42,10 +45,8 @@
     {% endwith %}
     </fieldset>
 {% endif %}
-<p>{{ extended_description }}</p>
 </div>
 <div class="right">
-    <h3>{{ service_name }}</h3>
     {% for name, title, description in field_descriptions %}
         <p>
         {% if title %}
