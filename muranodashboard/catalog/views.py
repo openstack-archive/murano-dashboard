@@ -450,8 +450,9 @@ class Wizard(views.ModalFormMixin, LazyWizard):
         else:
             env_name = get_next_quick_environment_name(self.request)
 
-        context['field_descriptions'] = services.get_app_field_descriptions(
+        field_descr, extended_descr = services.get_app_field_descriptions(
             self.request, app_id, self.steps.index)
+
         context.update({'type': app.fully_qualified_name,
                         'service_name': app.name,
                         'app_id': app_id,
@@ -460,6 +461,8 @@ class Wizard(views.ModalFormMixin, LazyWizard):
                         'do_redirect': self.get_wizard_flag('do_redirect'),
                         'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
                         'prefix': self.prefix,
+                        'field_descriptions': field_descr,
+                        'extended_descriptions': extended_descr,
                         })
         return context
 
