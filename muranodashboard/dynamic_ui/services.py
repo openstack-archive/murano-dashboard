@@ -76,10 +76,12 @@ class Service(object):
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
 
-        if forms:
-            for counter, data in enumerate(forms):
-                name, field_specs, validators = self.extract_form_data(data)
-                self._add_form(name, field_specs, validators)
+        for form in forms:
+            name, field_specs, validators = self.extract_form_data(form)
+            # NOTE(kzaitsev) should be str (not unicode) under python2
+            # however it also works as str under python3
+            name = helpers.to_str(name)
+            self._add_form(name, field_specs, validators)
 
         # Add ManageWorkflowForm
         workflow_form = catalog_forms.WorkflowManagementForm()

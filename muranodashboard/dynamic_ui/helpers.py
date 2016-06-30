@@ -141,3 +141,14 @@ def int2base(x, base):
         digits.append('-')
     digits.reverse()
     return ''.join(digits)
+
+
+def to_str(text):
+    if not isinstance(text, str):
+        # unicode in python2
+        if isinstance(text, six.text_type):
+            text = text.encode('utf-8')
+        # bytes in python3
+        elif isinstance(text, six.binary_type):
+            text = text.decode('utf-8')
+    return text
