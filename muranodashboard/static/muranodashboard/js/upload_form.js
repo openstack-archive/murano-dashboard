@@ -44,7 +44,7 @@ $(function() {
     });
     importType.change();
 
-    $('#upload_package_modal .close').on('click', function() {
+    $('#upload_package_modal .cancel').on('click', function() {
       location.reload();
     });
   }
