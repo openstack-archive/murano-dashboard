@@ -10,7 +10,7 @@ $(function() {
     var lesstext = gettext("Show less");
 
     $(modal).find('.more_dynamicui_description').each(function() {
-      var content = $(this).html();
+      var content = $.trim($(this).html());
 
       if (content.length > showChar) {
 
