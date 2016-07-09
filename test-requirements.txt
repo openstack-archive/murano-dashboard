@@ -6,7 +6,7 @@ hacking<0.11,>=0.10.0
 coverage>=3.6 # Apache-2.0
 django-nose>=1.2 # BSD
 nose # LGPL
-oslo.config>=3.10.0 # Apache-2.0
+oslo.config>=3.12.0 # Apache-2.0
 openstack.nose-plugin>=0.7 # Apache-2.0
 nosehtmloutput>=0.0.3 # Apache-2.0
 selenium>=2.50.1 # Apache-2.0
