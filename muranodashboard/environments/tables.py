@@ -276,11 +276,8 @@ class DeployEnvironment(tables.BatchAction):
     def allowed(self, request, environment):
         """Limit when 'Deploy Environment' button is shown
 
-        'Deploy environment' is not shown in several cases:
-        * when deploy is already in progress
-        * delete is in progress
-        * no new services added to the environment (after env creation
-          or successful deploy or delete failure)
+        'Deploy environment' is shown when set of environment's services
+        changed or previous deploy failed.
         If environment has already deployed services,
         button is shown as 'Update environment'
         """
@@ -298,13 +295,10 @@ class DeployEnvironment(tables.BatchAction):
             self.action_past = self.action_past_deploy
 
         status = getattr(environment, 'status', None)
-        if (status != consts.STATUS_ID_DEPLOY_FAILURE and
-                not environment.has_new_services):
-            return False
-        if (status in consts.NO_ACTION_ALLOWED_STATUSES or
-                status == consts.STATUS_ID_READY):
-            return False
-        return True
+        if status in (consts.STATUS_ID_PENDING,
+                      consts.STATUS_ID_DEPLOY_FAILURE):
+            return True
+        return False
 
     def action(self, request, environment_id):
         try:
