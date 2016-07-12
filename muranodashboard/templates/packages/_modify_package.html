@@ -13,6 +13,6 @@
 {% endblock %}
 
 {% block modal-footer %}
-    <input type='submit' class='btn btn-primary pull-right' value='{% trans "Update" %}' />
-    <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+    <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default cancel">{% trans "Cancel" %}</a>
+    <input type='submit' class='btn btn-primary' value='{% trans "Update" %}' />
 {% endblock %}
