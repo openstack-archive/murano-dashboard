@@ -1,0 +1,5 @@
+---
+fixes:
+  - Fix Downloading Package blocks downloading next package.
+    Use 'tables.LinkAction' instead of 'tables.Action' for
+    DownloadPackage table action.
