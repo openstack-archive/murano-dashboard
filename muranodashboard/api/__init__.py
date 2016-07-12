@@ -18,6 +18,7 @@ from django.conf import settings
 from django.contrib.messages import api as msg_api
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
+from glanceclient.common import exceptions as glance_exc
 from horizon import exceptions
 import muranoclient.client as client
 from muranoclient.common import exceptions as exc
@@ -57,6 +58,10 @@ def handled_exceptions(request):
         yield
     except exc.CommunicationError:
         msg = _('Unable to communicate to murano-api server.')
+        LOG.exception(msg)
+        _handle_message(request, msg)
+    except glance_exc.CommunicationError:
+        msg = _('Unable to communicate to glare-api server.')
         LOG.exception(msg)
         _handle_message(request, msg)
     except exc.HTTPUnauthorized:
