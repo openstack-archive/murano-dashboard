@@ -173,6 +173,35 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         delete_environment_btn = c.DeleteEnvironment
         self.check_element_on_page(by.By.XPATH, delete_environment_btn)
 
+    def test_new_environment_sort(self):
+        """Test check that environment during creation is not sorted
+
+        Scenario:
+            1. Create two environments.
+            2. Add app to one of them and deploy it.
+            3. Start creating new environment.
+            4. Check that row with new environment is present in the table
+            head.
+            5. Sort rows by name and check it again.
+            6. Sort rows in other direction and check it again.
+        """
+        self.go_to_submenu('Environments')
+        self.create_environment('quick-env-1')
+        self.add_app_to_env(self.deployingapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_id(
+            'environments__action_CreateEnvironment').click()
+        self.fill_field(by.By.ID, 'id_name', 'quick-env-3')
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.NewEnvRow)
+        self.driver.find_element_by_css_selector(c.TableSorterByName).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.NewEnvRow)
+        self.driver.find_element_by_css_selector(c.TableSorterByName).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.NewEnvRow)
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-2', 'Ready'),
+                                   sec=90)
+
 
 class TestSuiteImage(base.ImageTestCase):
     def test_mark_image(self):

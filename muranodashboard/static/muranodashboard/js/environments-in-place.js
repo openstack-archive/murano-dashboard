@@ -26,6 +26,7 @@ $(function() {
     }
 
     var $tbody = $('table tbody');
+    var $thead = $('table thead');
     var CREATE_URL = $(this).attr('href');
 
     $.ajax({
@@ -57,7 +58,7 @@ $(function() {
 
       var $emptyRow = $tbody.find('tr.empty');
       $emptyRow.hide();
-      $newEnvTr.prependTo($tbody);
+      $newEnvTr.appendTo($thead);
 
       $name.find('input#id_name').focus();
 

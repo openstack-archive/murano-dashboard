@@ -30,6 +30,8 @@ CategoryPackageCount = "//tr[contains(@data-display, '{0}')]/td[contains(text(),
 Action = '//a[contains(@class, "murano_action") and contains(text(), "testAction")]'  # noqa
 HotFlavorField = '//div[contains(@class, "has-error")]//input'
 EnvCheckbox = "//tr[contains(@data-display, '{0}')]/td[contains(@class, 'multi_select_column')]//div//label"  # noqa
+NewEnvRow = "table#environments thead tr.new_env"
+TableSorterByName = "table#environments thead th.tablesorter-header[data-column='1']"  # noqa
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"
