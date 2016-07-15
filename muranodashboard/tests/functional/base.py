@@ -122,13 +122,13 @@ class UITestCase(BaseDeps):
             projects = cls.keystone_client.projects.list()
             tenant_id = [project.id for project in projects
                          if project.name == cfg.common.tenant][0]
-            cls.keystone_client.users.create(name, domain='Default',
+            cls.keystone_client.users.create(name, domain='default',
                                              password=password,
                                              email=email,
                                              project=tenant_id,
                                              enabled=True)
         else:
-            cls.keystone_client.users.create(name, domain='Default',
+            cls.keystone_client.users.create(name, domain='default',
                                              password=password,
                                              email=email,
                                              project=tenant_id,
