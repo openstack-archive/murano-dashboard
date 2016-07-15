@@ -183,25 +183,12 @@ def cleaned_latest_apps(request):
     Verifies, that apps in the list are either public or belong to current
     project.
     """
-
-    cleaned_apps, cleaned_app_ids = [], []
-    for app_id in request.session.get('latest_apps', []):
-        try:
-            # TODO(kzaitsev): we have to update this to 1 request per list of
-            # apps. Should be trivial and should remove the need to verify that
-            # apps are available. bug/1559066
-            app = api.muranoclient(request).packages.get(app_id)
-        except exc.HTTPNotFound:
-            continue
-        else:
-            if app.type != 'Application':
-                continue
-            if (app.owner_id == request.session['token'].project['id'] or
-                    app.is_public):
-                cleaned_apps.append(app)
-                cleaned_app_ids.append(app_id)
-    request.session['latest_apps'] = collections.deque(cleaned_app_ids)
-    return cleaned_apps
+    id_param = "in:" + ",".join(request.session.get('latest_apps', []))
+    query_params = {'type': 'Application', 'catalog': True, 'id': id_param}
+    user_apps = list(api.muranoclient(request).packages.filter(**query_params))
+    request.session['latest_apps'] = collections.deque([app.id
+                                                        for app in user_apps])
+    return user_apps
 
 
 def clear_forms_data(func):
