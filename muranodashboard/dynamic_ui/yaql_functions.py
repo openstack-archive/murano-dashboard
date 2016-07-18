@@ -50,7 +50,7 @@ def _generate_hostname(pattern, number):
     if pattern:
         # NOTE(kzaitsev) works both for unicode and simple strings in py2
         # and works as expected in py3
-        pattern.replace('#', str(number))
+        return pattern.replace('#', str(number))
 
     counter = _random_string_counter or 1
     # generate first 5 random chars
