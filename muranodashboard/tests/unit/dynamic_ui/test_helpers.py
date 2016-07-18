@@ -22,3 +22,9 @@ class TestHelper(testtools.TestCase):
                  u'\u043d\u0435 \u0430\u0441\u043a\u0438']
         for name in names:
             self.assertIsInstance(helpers.to_str(name), str)
+
+    def test_int2base(self):
+        for x in range(30):
+            self.assertEqual("{0:b}".format(x), helpers.int2base(x, 2))
+            self.assertEqual("{0:o}".format(x), helpers.int2base(x, 8))
+            self.assertEqual("{0:x}".format(x), helpers.int2base(x, 16))
