@@ -32,13 +32,10 @@ ENV_NAME_HELP_TEXT = _("Environment name must contain at least one "
 class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
     name = forms.CharField(label=_("Environment Name"),
                            help_text=ENV_NAME_HELP_TEXT,
-                           max_length=255,
-                           required=True)
+                           max_length=255)
 
     net_config = forms.ChoiceField(
-        label=_("Environment Default Network"),
-        required=True
-    )
+        label=_("Environment Default Network"))
 
     def __init__(self, request, *args, **kwargs):
         super(CreateEnvironmentForm, self).__init__(request, *args, **kwargs)
