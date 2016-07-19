@@ -14,10 +14,8 @@
 
 import re
 import testtools
-import unittest
 
 from muranodashboard.dynamic_ui import yaql_functions
-import six
 
 
 class TestYAQLFunctions(testtools.TestCase):
@@ -28,7 +26,6 @@ class TestYAQLFunctions(testtools.TestCase):
         self.assertEqual(
             yaql_functions._generate_hostname('foo-#', 22), 'foo-22')
 
-    @unittest.skipIf(six.PY3, "lp bug #1604000")
     def test_generate_hostname_random(self):
         random = yaql_functions._generate_hostname('', 3)
         self.assertTrue(bool(re.match(r'^\w{14}$', random)))

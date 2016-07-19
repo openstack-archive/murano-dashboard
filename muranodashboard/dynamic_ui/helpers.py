@@ -125,7 +125,7 @@ def int2base(x, base):
     :param base: number base, max value is 36
     :return: integer converted to the specified base
     """
-    digs = string.digits + string.lowercase
+    digs = string.digits + string.ascii_lowercase
     if x < 0:
         sign = -1
     elif x == 0:
@@ -136,7 +136,7 @@ def int2base(x, base):
     digits = []
     while x:
         digits.append(digs[x % base])
-        x /= base
+        x //= base
     if sign < 0:
         digits.append('-')
     digits.reverse()

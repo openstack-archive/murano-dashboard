@@ -54,7 +54,7 @@ def _generate_hostname(pattern, number):
 
     counter = _random_string_counter or 1
     # generate first 5 random chars
-    prefix = ''.join(random.choice(string.lowercase) for _ in range(5))
+    prefix = ''.join(random.choice(string.ascii_lowercase) for _ in range(5))
     # convert timestamp to higher base to shorten hostname string
     # (up to 8 chars)
     timestamp = helpers.int2base(int(time.time() * 1000), 36)[:8]
