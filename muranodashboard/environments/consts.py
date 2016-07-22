@@ -16,6 +16,7 @@ import os
 import tempfile
 
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 
 # ---- Metadata Consts ---- #
@@ -66,22 +67,22 @@ STATUS_CHOICES = (
 )
 
 STATUS_DISPLAY_CHOICES = (
-    (STATUS_ID_READY, 'Ready'),
-    (STATUS_ID_DEPLOYING, 'Deploying'),
-    (STATUS_ID_DELETING, 'Deleting'),
-    (STATUS_ID_PENDING, 'Ready to deploy'),
-    (STATUS_ID_NEW, 'Ready to configure'),
-    (STATUS_ID_DELETE_FAILURE, 'Delete FAILURE'),
-    (STATUS_ID_DEPLOY_FAILURE, 'Deploy FAILURE'),
-    ('', 'Ready to configure'),
+    (STATUS_ID_READY, _('Ready')),
+    (STATUS_ID_DEPLOYING, _('Deploying')),
+    (STATUS_ID_DELETING, _('Deleting')),
+    (STATUS_ID_PENDING, _('Ready to deploy')),
+    (STATUS_ID_NEW, _('Ready to configure')),
+    (STATUS_ID_DELETE_FAILURE, _('Delete failure')),
+    (STATUS_ID_DEPLOY_FAILURE, _('Deploy failure')),
+    ('', _('Ready to configure')),
 )
 
 DEPLOYMENT_STATUS_DISPLAY_CHOICES = (
-    (DEP_STATUS_ID_COMPLETED_W_ERRORS, 'Failed'),
-    (DEP_STATUS_ID_COMPLETED_W_WARNINGS, 'Completed with warnings'),
-    (DEP_STATUS_ID_RUNNING, 'Running'),
-    (DEP_STATUS_ID_RUNNING_W_ERRORS, 'Running with errors'),
-    (DEP_STATUS_ID_RUNNING_W_WARNINGS, 'Running with warnings'),
-    (DEP_STATUS_ID_SUCCESS, 'Successful'),
-    ('', 'Unknown'),
+    (DEP_STATUS_ID_COMPLETED_W_ERRORS, _('Failed')),
+    (DEP_STATUS_ID_COMPLETED_W_WARNINGS, _('Completed with warnings')),
+    (DEP_STATUS_ID_RUNNING, _('Running')),
+    (DEP_STATUS_ID_RUNNING_W_ERRORS, _('Running with errors')),
+    (DEP_STATUS_ID_RUNNING_W_WARNINGS, _('Running with warnings')),
+    (DEP_STATUS_ID_SUCCESS, _('Successful')),
+    ('', _('Unknown')),
 )
