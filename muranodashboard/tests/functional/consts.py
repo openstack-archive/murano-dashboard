@@ -4,6 +4,8 @@ PackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                           'MockApp')
 HotPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              'HotApp')
+DeployingPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                   'DeployingApp')
 
 CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-toggle')]"  # noqa
 EnvAppsCategorySelector = "//*[contains(@id, 'envAppsCategoryBtn')]"
@@ -27,6 +29,7 @@ DatabaseCategory = "select[name='add_category-categories'] > option[value='Datab
 CategoryPackageCount = "//tr[contains(@data-display, '{0}')]/td[contains(text(), '{1}')]"  # noqa
 Action = '//a[contains(@class, "murano_action") and contains(text(), "testAction")]'  # noqa
 HotFlavorField = '//div[contains(@class, "has-error")]//input'
+EnvCheckbox = "//tr[contains(@data-display, '{0}')]/td[contains(@class, 'multi_select_column')]//div//label"  # noqa
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"
@@ -39,8 +42,11 @@ CreateEnvironment = ".add_env .btn"
 DeployEnvironment = "services__action_deploy_env"
 DeleteEnvironment = "//button[contains(@id, 'action_delete')]"
 DeployEnvironments = ".btn#environments__action_deploy"
+DeployEnvironmentsDisabled = ".btn#environments__action_deploy[disabled]"
 DeleteEnvironments = ".btn#environments__action_delete"
+DeleteEnvironmentsDisabled = ".btn#environments__action_delete[disabled]"
 AbandonEnvironments = ".btn#environments__action_abandon"
+AbandonEnvironmentsDisabled = ".btn#environments__action_abandon[disabled]"
 ConfirmCreateEnvironment = 'confirm_create_env'
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"

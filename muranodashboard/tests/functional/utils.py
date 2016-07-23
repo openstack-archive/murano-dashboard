@@ -31,11 +31,12 @@ class ImageException(Exception):
         return self._error_string
 
 
-def upload_app_package(client, app_name, data, hot=False):
+def upload_app_package(client, app_name, data, hot=False,
+                       package_dir=consts.PackageDir):
     try:
         if not hot:
-            manifest = os.path.join(consts.PackageDir, 'manifest.yaml')
-            archive = compose_package(app_name, manifest, consts.PackageDir)
+            manifest = os.path.join(package_dir, 'manifest.yaml')
+            archive = compose_package(app_name, manifest, package_dir)
         else:
             manifest = os.path.join(consts.HotPackageDir, 'manifest.yaml')
             archive = compose_package(app_name, manifest,

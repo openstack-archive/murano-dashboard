@@ -1,0 +1,114 @@
+#Note: it is a fake application, it isn't intended to be deployed
+Version: 2
+
+
+Application:
+  ?:
+    type: io.murano.apps.DeployingApp
+  name: $.appConfiguration.name
+
+
+Forms:
+  - appConfiguration:
+      fields:
+        - name: title
+          type: string
+          required: false
+          hidden: true
+          description: >-
+            Fields with different types are presented in this step
+        - name: domain
+          type: string
+          required: false
+          label: String - Domain Name
+          description: >-
+            Requirements: only A-Z, a-z, 0-9, (.) and (-) and should not end with a dash.
+            Note: Only first 15 characters or characters
+            before first period is used as NetBIOS name, min/max length are defined
+          minLength: 2
+          maxLength: 255
+          validators:
+            - expr:
+                regexpValidator: '^([0-9A-Za-z]|[0-9A-Za-z][0-9A-Za-z-]*[0-9A-Za-z])\.[0-9A-Za-z][0-9A-Za-z-]*[0-9A-Za-z]$'
+              message: >-
+                Only letters, numbers and dashes in the middle are
+                allowed. Period characters are allowed only when they
+                are used to delimit the components of domain style
+                names. Single-level domain is not
+                appropriate. Subdomains are not allowed.
+
+            - expr:
+                regexpValidator: '(^[^.]+$|^[^.]{1,15}\..*$)'
+              message: >-
+                NetBIOS name cannot be shorter than 1 symbol and
+                longer than 15 symbols.
+
+            - expr:
+                regexpValidator: '(^[^.]+$|^[^.]*\.[^.]{2,63}.*$)'
+              message: >-
+                DNS host name cannot be shorter than 2 symbols and
+                longer than 63 symbols.
+          helpText: >-
+            Just letters, numbers and dashes are allowed.
+            A dot can be used to create subdomains
+
+        - name: name
+          type: string
+          label: Application Name
+          description: >-
+            Requirements: Just A-Z, a-z, 0-9, dash and
+            underline are allowed, min/max value are defined.
+          minLength: 2
+          maxLength: 12
+          regexpValidator: '^[-\w]+$'
+          errorMessages:
+            invalid: Just letters, numbers, underscores and hyphens are allowed.
+          helpText: Just letters, numbers, underscores and hyphens are allowed.
+
+        - name: integer
+          type: integer
+          required: false
+          label: Integer - Instance Count
+          description: >-
+           Integer field, min/max value are provided
+          minValue: 1
+          maxValue: 100
+          helpText: Enter an integer value between 1 and 100
+
+        - name: adminPassword
+          type: password
+          required: false
+          label: Password - Administrator password
+          descriptionTitle: Passwords
+          description: >-
+            Requirements: at least one letter in each
+            register, a number and a special character. Password length should be
+            a minimum of 7 characters.
+
+        - name: recoveryPassword
+          type: password
+          required: false
+          label: Recovery password
+
+  - bindedApps:
+      fields:
+        - name: DeployingApp
+          type: io.murano.apps.DeployingApp
+          required: false
+
+  - instanceConfiguration:
+      fields:
+        - name: flavor
+          type: flavor
+          label: Instance flavor
+          required: false
+        - name: osImage
+          type: image
+          imageType: linux
+          label: Instance image
+        - name: availabilityZone
+          type: azone
+          label: Availability zone
+          required: false
+
+

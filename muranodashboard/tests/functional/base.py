@@ -374,6 +374,12 @@ class PackageBase(UITestCase):
             cls.murano_client,
             "HotExample",
             {"tags": ["hot"]}, hot=True)
+        cls.deployingapp_id = utils.upload_app_package(
+            cls.murano_client,
+            "DeployingApp",
+            {"categories": ["Web"], "tags": ["tag"]},
+            hot=False,
+            package_dir=consts.DeployingPackageDir)
 
     @classmethod
     def tearDownClass(cls):
@@ -381,6 +387,7 @@ class PackageBase(UITestCase):
         cls.murano_client.packages.delete(cls.mockapp_id)
         cls.murano_client.packages.delete(cls.postgre_id)
         cls.murano_client.packages.delete(cls.hot_app_id)
+        cls.murano_client.packages.delete(cls.deployingapp_id)
 
 
 class ImageTestCase(PackageBase):
