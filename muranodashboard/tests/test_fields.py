@@ -92,7 +92,7 @@ class TestPasswordField(helpers.TestCase):
         for char in f.special_characters:
             if char != '\\':
                 password = 'aA1111' + char
-                self.assertEqual(None, f.run_validators(password))
+                self.assertIsNone(f.run_validators(password))
 
     def test_short_input(self):
         f = fields.PasswordField('')
