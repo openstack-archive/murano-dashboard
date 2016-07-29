@@ -1,16 +1,17 @@
 # Eric Baum <ecbaum@gmail.com>, 2016. #zanata
 # José Mello <jose.eduardo.jr@gmail.com>, 2016. #zanata
 # Marcelo Dieder <marcelodieder@gmail.com>, 2016. #zanata
+# Renato Lipi <renatolipi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 2.0.2.dev16\n"
+"Project-Id-Version: murano-dashboard 2.0.2.dev20\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-07-20 15:28+0000\n"
+"POT-Creation-Date: 2016-07-22 14:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-07-22 01:28+0000\n"
-"Last-Translator: Marcelo Dieder <marcelodieder@gmail.com>\n"
+"PO-Revision-Date: 2016-07-28 10:10+0000\n"
+"Last-Translator: Renato Lipi <renatolipi@gmail.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt-BR\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -199,6 +200,9 @@ msgstr "Pasta de definições de classes"
 msgid "Click to create new environment"
 msgstr "Clique para criar um novo ambiente"
 
+msgid "Completed with warnings"
+msgstr "Completo com alertas"
+
 msgid "Component"
 msgstr "Componente"
 
@@ -282,6 +286,9 @@ msgid_plural "Delete Packages"
 msgstr[0] "Remover Pacote"
 msgstr[1] "Remover Pacotes"
 
+msgid "Delete failure"
+msgstr "Falha na exclusão"
+
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] "Categoria Deletada"
@@ -297,6 +304,9 @@ msgid_plural "Deleted Packages"
 msgstr[0] "Pacote Removido"
 msgstr[1] "Pacotes Removidos"
 
+msgid "Deleting"
+msgstr "Excluindo"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "Implantar Ambiente"
@@ -304,6 +314,9 @@ msgstr[1] "Implantar Ambientes"
 
 msgid "Deploy This Environment"
 msgstr "Implantar Este Ambiente"
+
+msgid "Deploy failure"
+msgstr "Falha no deploy"
 
 msgid "Deploy started"
 msgstr "Implatação iniciada"
@@ -315,6 +328,9 @@ msgid "Deployed Environment"
 msgid_plural "Deployed Environments"
 msgstr[0] "Ambiente Implantado"
 msgstr[1] "Ambientes Implantados"
+
+msgid "Deploying"
+msgstr "Fazendo deploy"
 
 msgid "Deployment Details"
 msgstr "Detalhes da Implantação"
@@ -402,6 +418,9 @@ msgstr "Pasta de planos de execução"
 
 msgid "FQN"
 msgstr "NTQ"
+
+msgid "Failed"
+msgstr "Falhou"
 
 msgid "Failed to create environment"
 msgstr "Falha ao criar ambiente"
@@ -755,6 +774,15 @@ msgstr "Público"
 msgid "Quick Deploy"
 msgstr "Implantação Rápida"
 
+msgid "Ready"
+msgstr "Pronto"
+
+msgid "Ready to configure"
+msgstr "Pronto para configurar"
+
+msgid "Ready to deploy"
+msgstr "Prondo para fazer deploy"
+
 msgid "Recent Activity"
 msgstr "Atividade Recente"
 
@@ -775,6 +803,15 @@ msgstr "Digite sua senha novamente"
 
 msgid "Router is not found. You should create one explicitly."
 msgstr "Roteador não encontrado. Você deve criar um explicitamente."
+
+msgid "Running"
+msgstr "Executando"
+
+msgid "Running with errors"
+msgstr "Executando com erros"
+
+msgid "Running with warnings"
+msgstr "Executando com alertas"
 
 msgid "Select Application"
 msgstr "Selecione um aplicação"
@@ -850,6 +887,9 @@ msgstr "Estado"
 
 msgid "Step {0}"
 msgstr "Passo {0}"
+
+msgid "Successful"
+msgstr "Com sucesso"
 
 msgid "Tags"
 msgstr "Etiquetas"
@@ -1065,6 +1105,9 @@ msgstr "Não foi possível obter as imagens públicas."
 
 msgid "Unavailable"
 msgstr "Indisponível"
+
+msgid "Unknown"
+msgstr "Desconhecido"
 
 msgid "Update"
 msgstr "Atualizar"
