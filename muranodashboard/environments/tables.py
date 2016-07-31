@@ -25,6 +25,7 @@ from horizon import messages
 from horizon import tables
 from horizon.utils import filters
 from muranoclient.common import exceptions as exc
+from openstack_dashboard import policy
 from oslo_log import log as logging
 
 from muranodashboard import api as api_utils
@@ -33,7 +34,6 @@ from muranodashboard.catalog import views as catalog_views
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.packages import consts as pkg_consts
-
 
 LOG = logging.getLogger(__name__)
 
@@ -89,6 +89,7 @@ class CreateEnvironment(tables.LinkAction):
     classes = ('btn-launch', 'add_env')
     redirect_url = "horizon:project:murano:environments"
     icon = 'plus'
+    policy_rules = (("murano", "create_environment"),)
 
     def allowed(self, request, datum):
         return True if self.table.data else False
@@ -104,8 +105,9 @@ class CreateEnvironment(tables.LinkAction):
             exceptions.handle(request, msg, redirect=redirect)
 
 
-class DeleteEnvironment(tables.DeleteAction):
+class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
     redirect_url = "horizon:project:murano:environments"
+    policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
     def action_present(count):
@@ -148,6 +150,7 @@ class AbandonEnvironment(tables.DeleteAction):
                   "this environment will have to be released manually.")
     name = 'abandon'
     redirect_url = "horizon:project:murano:environments"
+    policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
     def action_present(count):
@@ -398,6 +401,10 @@ class UpdateServiceRow(tables.Row):
 
 
 class UpdateName(tables.UpdateAction):
+    def allowed(self, request, environment, cell):
+        policy_rule = (("murano", "update_environment"),)
+        return policy.check(policy_rule, request)
+
     def update_cell(self, request, datum, obj_id, cell_name, new_cell_value):
         try:
             if not new_cell_value or new_cell_value.isspace():
@@ -438,6 +445,21 @@ class EnvironmentsTable(tables.DataTable):
                            status=True,
                            status_choices=consts.STATUS_CHOICES,
                            display_choices=consts.STATUS_DISPLAY_CHOICES)
+
+    def get_env_detail_link(self, environment):
+        # NOTE: using the policy check for show_environment
+        if policy.check((("murano", "show_environment"),),
+                        self.request, target={"environment": environment}):
+            return reverse("horizon:murano:environments:services",
+                           args=(environment.id,))
+        return None
+
+    def __init__(self, request, data=None, needs_form_wrapper=None, **kwargs):
+        super(EnvironmentsTable,
+              self).__init__(request, data=data,
+                             needs_form_wrapper=needs_form_wrapper,
+                             **kwargs)
+        self.columns['name'].get_link_url = self.get_env_detail_link
 
     class Meta(object):
         name = 'environments'
