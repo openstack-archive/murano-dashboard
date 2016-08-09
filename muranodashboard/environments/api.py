@@ -154,12 +154,25 @@ class Session(object):
         request.session['sessions'] = sessions
 
 
-def _update_env(env):
-    env.has_new_services = False
+def _update_env(env, request):
+    # TODO(vakovalchuk): optimize latest deployment when limit is available
+    deployments = deployments_list(request, env.id)
+    if deployments:
+        latest_deployment = deployments[0]
+        deployed_services = {service['?']['id'] for service in
+                             latest_deployment.description['services']}
+    else:
+        deployed_services = set()
+
     if env.services:
-        for service in env.services:
-            if service['?']['status'] == 'pending':
-                env.has_new_services = True
+        current_services = {service['?']['id'] for service in env.services}
+    else:
+        current_services = set()
+
+    env.has_new_services = current_services != deployed_services
+
+    if not env.has_new_services and env.status == consts.STATUS_ID_PENDING:
+        env.status = consts.STATUS_ID_READY
 
     if not env.has_new_services and env.version == 0:
         if env.status == consts.STATUS_ID_READY:
@@ -207,7 +220,7 @@ def environment_get(request, environment_id):
         env = client.environments.get(environment_id, acquired)
         Session.set(request, environment_id, acquired)
 
-    env = _update_env(env)
+    env = _update_env(env, request)
 
     LOG.debug('Environment::Get {0}'.format(env))
     return env

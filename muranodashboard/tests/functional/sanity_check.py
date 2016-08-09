@@ -203,6 +203,128 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                    c.EnvStatus.format('quick-env-2', 'Ready'),
                                    sec=90)
 
+    def test_env_status_new_session_add_to_empty(self):
+        """Test that environments status is correct in the new session
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Check that env status is 'Ready to deploy'.
+            4. Log out.
+            5. Log in.
+            6. Check that env status is 'Ready to configure'.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to deploy'))
+        self.log_out()
+        self.log_in(cfg.common.user, cfg.common.password)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to configure'))
+
+    def test_env_status_new_session_add_to_not_empty(self):
+        """Test that environments status is correct in the new session
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Deploy environment.
+            4. Add one more app to environment.
+            5. Check that env status is 'Ready to deploy'.
+            6. Log out.
+            7. Log in.
+            8. Check that env status is 'Ready'.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        env_id = self.get_element_id('quick-env-1')
+        self.add_app_to_env(self.mockapp_id, 'TestApp1', env_id)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to deploy'))
+        self.log_out()
+        self.log_in(cfg.common.user, cfg.common.password)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'))
+
+    def test_env_status_new_session_remove_from_one(self):
+        """Test that environments status is correct in the new session
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Deploy environment.
+            4. Remove app from environment.
+            5. Check that env status is 'Ready to deploy'.
+            6. Log out.
+            7. Log in.
+            8. Check that env status is 'Ready'.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+        self.delete_component('TestApp')
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'TestApp')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to deploy'))
+        self.log_out()
+        self.log_in(cfg.common.user, cfg.common.password)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'))
+
+    def test_env_status_new_session_remove_from_two(self):
+        """Test that environments status is correct in the new session
+
+        Scenario:
+            1. Create environment.
+            2. Add two apps to environment.
+            3. Deploy environment.
+            4. Remove one app from environment.
+            5. Check that env status is 'Ready to deploy'.
+            6. Log out.
+            7. Log in.
+            8. Check that env status is 'Ready'.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        env_id = self.get_element_id('quick-env-1')
+        self.add_app_to_env(self.mockapp_id, 'TestApp1', env_id)
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+        self.delete_component('TestApp1')
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'TestApp1')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready to deploy'))
+        self.log_out()
+        self.log_in(cfg.common.user, cfg.common.password)
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'))
+
 
 class TestSuiteImage(base.ImageTestCase):
     def test_mark_image(self):

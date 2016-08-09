@@ -504,9 +504,15 @@ class ApplicationTestCase(ImageTestCase):
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
         self.wait_for_alert_message()
 
-    def add_app_to_env(self, app_id, app_name='TestApp'):
+    def add_app_to_env(self, app_id, app_name='TestApp', env_id=None):
         self.go_to_submenu('Browse')
-        self.select_and_click_action_for_app('quick-add', app_id)
+        if env_id:
+            action = 'add'
+            app = '{0}/{1}'.format(app_id, env_id)
+        else:
+            action = 'quick-add'
+            app = app_id
+        self.select_and_click_action_for_app(action, app)
         field_id = "{0}_0-name".format(app_id)
         self.fill_field(by.By.ID, field_id, value=app_name)
         self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
@@ -514,7 +520,12 @@ class ApplicationTestCase(ImageTestCase):
         self.select_from_list('osImage', self.image.id)
 
         self.driver.find_element_by_xpath(consts.InputSubmit).click()
-        self.wait_for_alert_message()
+        if env_id:
+            self.driver.find_element_by_xpath(consts.InputSubmit).click()
+            self.wait_element_is_clickable(by.By.ID, consts.AddComponent)
+            self.check_element_on_page(by.By.LINK_TEXT, app_name)
+        else:
+            self.wait_for_alert_message()
 
 
 class PackageTestCase(ApplicationTestCase):
