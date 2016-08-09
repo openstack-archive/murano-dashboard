@@ -48,11 +48,11 @@ $(function() {
 
       var $newEnvTr = $('<tr class="new_env">' +
       '<td id="input_create_env" class="normal_column row" colspan="2"></td>' +
-      '<td class="normal_column">New</td>' +
+      '<td class="normal_column">' + gettext("New") + '</td>' +
       '<td class="actions_column">' +
       '<div class="btn-group">' +
-      '<button id="confirm_create_env" class="btn btn-primary">Create</button>' +
-      '<button id="cancel_create_env" class="btn btn-default">Cancel</button>' +
+      '<button id="confirm_create_env" class="btn btn-primary">' + gettext("Create") + '</button>' +
+      '<button id="cancel_create_env" class="btn btn-default">' + gettext("Cancel") + '</button>' +
       '</div></td></tr>');
       $name.appendTo($newEnvTr.find('td#input_create_env'));
 
@@ -80,7 +80,7 @@ $(function() {
             $newEnvTr.remove();
             hideSpinner();
             horizon.alert('error',
-                'There was an error submitting the form. Please try again.');
+                gettext("There was an error submitting the form. Please try again."));
           },
           success: function(data, status, xhr) {
             if ( data === '' ) {

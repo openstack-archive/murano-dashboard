@@ -186,7 +186,7 @@ class UpdatableFieldsForm(forms.Form):
             if hasattr(field, 'update'):
                 field.update(self.initial, form=self, request=request)
             if not field.required:
-                field.widget.attrs['placeholder'] = 'Optional'
+                field.widget.attrs['placeholder'] = _('Optional')
 
 
 class ServiceConfigurationForm(UpdatableFieldsForm):
