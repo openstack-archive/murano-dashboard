@@ -59,7 +59,7 @@ class Session(object):
         """Get an open session id
 
         Gets id from already opened session for specified environment,
-        otherwise opens new session and returns it's id
+        otherwise opens new session and returns its id
 
         :param request:
         :param environment_id:
@@ -71,7 +71,7 @@ class Session(object):
         if environment_id in sessions:
             id = sessions[environment_id]
         else:
-            id = create_session(environment_id, request)
+            id = create_session(request, environment_id)
         return id
 
     @staticmethod
