@@ -17,6 +17,7 @@ import SimpleHTTPServer
 import SocketServer
 import tempfile
 import time
+import unittest
 import uuid
 import zipfile
 
@@ -801,6 +802,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
         for app_name in app_names[-1::]:
             self.check_element_not_on_page(by.By.LINK_TEXT, app_name)
 
+    @unittest.skip("This test gives sporadic false positives."
+                   "To be fixed in bug #1611732")
     def test_deploy_several_mock_apps_in_a_row(self):
         """Checks that app works after another app is deployed
 
