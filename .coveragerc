@@ -1,0 +1,9 @@
+[run]
+source = muranodashboard
+omit =
+ .tox/*
+ muranodashboard/tests/*
+ muranodashboard/local/*
+
+[report]
+ignore_errors = True
