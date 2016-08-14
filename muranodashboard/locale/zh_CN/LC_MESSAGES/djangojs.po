@@ -1,24 +1,61 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Wu Han <wu.han@h3c.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 2.0.0.0rc2.dev29\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev35\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-04-17 20:08+0000\n"
+"POT-Creation-Date: 2016-08-11 12:16+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-09 10:53+0000\n"
-"Last-Translator: Shengjing Zhu <zsj950618@gmail.com>\n"
+"PO-Revision-Date: 2016-08-14 04:57+0000\n"
+"Last-Translator: Wu Han <wu.han@h3c.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
+msgid " 1 capital letter"
+msgstr "1个大写字母"
+
+msgid " 1 digit"
+msgstr "1个数字"
+
+msgid " 1 non-capital letter"
+msgstr "1个非大写字母"
+
+msgid " 1 special character"
+msgstr "1个特殊字符"
+
+msgid " 7 characters"
+msgstr "7个字符"
+
 msgid "An error occurred. Please try again later."
 msgstr "发生错，请稍后重试。"
 
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Create"
+msgstr "创建"
+
 msgid "Loading"
 msgstr "加载中"
+
+msgid "New"
+msgstr "新"
+
+msgid "Passwords do not match"
+msgstr "密码不匹配"
+
+msgid "Show less"
+msgstr "显示更少"
+
+msgid "Show more"
+msgstr "显示更多"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "提交表单时出错，请重试。"
 
 msgid "Unable to retrieve the packages."
 msgstr "无法获取包。"
@@ -31,3 +68,6 @@ msgstr "等待结果"
 
 msgid "Working"
 msgstr "进行中"
+
+msgid "Your password should have at least"
+msgstr "你的密码应该至少有"

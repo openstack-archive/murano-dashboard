@@ -1,14 +1,15 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Wu Han <wu.han@h3c.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b2.dev14\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev35\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-06-14 11:49+0000\n"
+"POT-Creation-Date: 2016-08-11 12:16+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-21 02:59+0000\n"
-"Last-Translator: Gaoxiao Zhu <zhu.gaoxiao@h3c.com>\n"
+"PO-Revision-Date: 2016-08-14 04:49+0000\n"
+"Last-Translator: Wu Han <wu.han@h3c.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -16,6 +17,9 @@ msgstr ""
 
 msgid "-"
 msgstr "-"
+
+msgid "80 characters max."
+msgstr "最长80个字符"
 
 msgid "A local zip file to upload"
 msgstr "从本地上传的一个 ZIP 压缩包"
@@ -101,9 +105,6 @@ msgstr "应用程序详情"
 msgid "Application Package"
 msgstr "应用软件包"
 
-msgid "Application details"
-msgstr "应用程序详情"
-
 msgid "Application&nbsp;Components"
 msgstr "应用程序组件"
 
@@ -118,6 +119,9 @@ msgstr "自动"
 
 msgid "Back"
 msgstr "返回"
+
+msgid "Browse"
+msgstr "浏览"
 
 msgid "Bundle Name"
 msgstr "Bundle 名称"
@@ -139,6 +143,9 @@ msgstr "Bundle 全称。"
 
 msgid "Cancel"
 msgstr "取消"
+
+msgid "Catalog"
+msgstr "目录"
 
 msgid "Categories"
 msgstr "目录"
@@ -164,6 +171,9 @@ msgstr "Classes 定义文件夹"
 
 msgid "Click to create new environment"
 msgstr "点击以创建新的环境"
+
+msgid "Completed with warnings"
+msgstr "完成同时有一些警告"
 
 msgid "Component"
 msgstr "组件"
@@ -222,6 +232,10 @@ msgid ""
 "package dependencies)"
 msgstr "定义一个软件包能否被其他租户使用。（同时应用到软件包的依赖）"
 
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "删除类别"
+
 msgid "Delete Component"
 msgid_plural "Delete Components"
 msgstr[0] "删除组件"
@@ -238,6 +252,13 @@ msgid "Delete Package"
 msgid_plural "Delete Packages"
 msgstr[0] "删除包"
 
+msgid "Delete failure"
+msgstr "删除失败"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "已删除的类别"
+
 msgid "Deleted Metadata"
 msgid_plural "Deleted Metadata"
 msgstr[0] "已删除的元数据"
@@ -246,18 +267,27 @@ msgid "Deleted Package"
 msgid_plural "Deleted Packages"
 msgstr[0] "已删除的包"
 
+msgid "Deleting"
+msgstr "删除中"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "部署环境变量"
 
 msgid "Deploy This Environment"
-msgstr "部署这个环境"
+msgstr "部署此环境"
+
+msgid "Deploy failure"
+msgstr "部署失败"
 
 msgid "Deploy started"
 msgstr "部署已经开始"
 
 msgid "Deployed Components"
 msgstr "已部署的组件"
+
+msgid "Deploying"
+msgstr "部署中"
 
 msgid "Deployment Details"
 msgstr "部署详情"
@@ -290,6 +320,11 @@ msgstr "把组件拖拽到此"
 
 msgid "Enabled"
 msgstr "已启用"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr "请输入复杂密码，必须包含至少一个字母、一个数字和一个特殊字符"
 
 msgid "Enter a password"
 msgstr "输入密码"
@@ -339,6 +374,9 @@ msgstr "可执行文件文件夹"
 msgid "FQN"
 msgstr "FQN"
 
+msgid "Failed"
+msgstr "失败"
+
 msgid "Failed to create environment"
 msgstr "创建环境失败"
 
@@ -362,6 +400,14 @@ msgstr ""
 
 msgid "Fully qualified package name."
 msgstr "有效的软件包名称。"
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"转到 <b> <a href=%(pkg_def_url)s>软件包</a> </b>, 点击“导入软件包并选择<i>仓"
+"库</i> 作为 <i>软件源</i>."
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "Bundle 文件的 HTTP/HTTPS URL。"
@@ -646,6 +692,15 @@ msgstr "公有"
 msgid "Quick Deploy"
 msgstr "快速部署"
 
+msgid "Ready"
+msgstr "就绪"
+
+msgid "Ready to configure"
+msgstr "待配置"
+
+msgid "Ready to deploy"
+msgstr "待部署"
+
 msgid "Recent Activity"
 msgstr "最近的活动"
 
@@ -663,6 +718,15 @@ msgstr "需求"
 
 msgid "Retype your password"
 msgstr "重新输入密码"
+
+msgid "Running"
+msgstr "运行中"
+
+msgid "Running with errors"
+msgstr "运行中同时有错误"
+
+msgid "Running with warnings"
+msgstr "运行中同时有警告"
 
 msgid "Select Application"
 msgstr "选择应用"
@@ -704,11 +768,26 @@ msgstr "指定的名称已被使用，请更换"
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "指定一个分类有助于在目录中进行过滤"
 
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "开始删除组件"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "开始删除环境"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "开始部署环境"
+
 msgid "Status"
 msgstr "状态"
 
 msgid "Step {0}"
 msgstr "步骤 {0}"
+
+msgid "Successful"
+msgstr "成功"
 
 msgid "Tags"
 msgstr "标签"
@@ -736,6 +815,9 @@ msgstr ""
 "将从  <a href=\"%(murano_repo_url)s\" target=\"_blank\">%(murano_repo_url)s</"
 "a>  这个仓库安装 Bundle。"
 
+msgid "The environment name field cannot be empty."
+msgstr "环境的名称不能为空"
+
 #, python-format
 msgid ""
 "The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
@@ -756,8 +838,19 @@ msgstr "请求的数据不能被服务器接受"
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr "这个目录中没有应用程序。你可以从以下地方导入："
 
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a>."
+msgstr ""
+"目录中没有应用，你可以从 <a href=\"%(repo_url)s\" target=\"_blank\"> "
+"%(repo_url)s</a>导入应用"
+
 msgid "There are no applications matching your criteria."
 msgstr "没有和您的条件匹配的应用程序。"
+
+msgid "There was an error initialising this field."
+msgstr "初始化该域时出错"
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -834,6 +927,9 @@ msgstr "URL"
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr "无法丢弃环境 {0}，原因是：{1}"
 
+msgid "Unable to communicate to glare-api server."
+msgstr "无法与glare-api服务器通信。"
+
 msgid "Unable to communicate to murano-api server."
 msgstr "无法和 murano-api 服务通信。"
 
@@ -899,14 +995,28 @@ msgstr "无法获取公共镜像。"
 msgid "Unavailable"
 msgstr "不可用"
 
+msgid "Unknown"
+msgstr "未知"
+
 msgid "Update"
 msgstr "更新"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "更新环境"
 
 msgid "Update Image"
 msgstr "更新镜像"
 
+msgid "Update This Environment"
+msgstr "更新此环境"
+
 msgid "Updated"
 msgstr "已更新"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "更新环境"
 
 msgid "Uploading package failed. {0}"
 msgstr "上传软件包失败。{0}"
