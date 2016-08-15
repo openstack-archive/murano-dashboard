@@ -542,7 +542,7 @@ class ServicesTable(tables.DataTable):
         return actions
 
     def get_repo_url(self):
-        return pkg_consts.MURANO_REPO_URL
+        return pkg_consts.DISPLAY_MURANO_REPO_URL
 
     def get_pkg_def_url(self):
         return reverse('horizon:murano:packages:index')

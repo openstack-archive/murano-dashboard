@@ -22,6 +22,10 @@ MURANO_REPO_URL = getattr(
     settings, 'MURANO_REPO_URL',
     "http://apps.openstack.org/api/v1/murano_repo/liberty/")
 
+DISPLAY_MURANO_REPO_URL = getattr(
+    settings, 'DISPLAY_MURANO_REPO_URL',
+    "http://apps.openstack.org/#tab=murano-apps")
+
 try:
     MAX_FILE_SIZE_MB = int(getattr(settings, 'MAX_FILE_SIZE_MB', 5))
 except ValueError:

@@ -56,9 +56,9 @@
             </div>
         {% else %}
             <p id="no_apps_in_catalog_message" class="col-xs-12 alert alert-info ">
-                {% with repo_url=table.get_repo_url pkg_def_url=table.get_pkg_def_url %}
+                {% with display_repo_url=table.get_repo_url pkg_def_url=table.get_pkg_def_url %}
                     {% trans "There are no applications in the catalog. You can import apps from" %}
-                        <a href="{{ repo_url }}" target="_blank"> {{ repo_url }}</a>.
+                        <a href="{{ display_repo_url }}" target="_blank"> {{ display_repo_url }}</a>.
                         <br><br>
                         {% blocktrans trimmed %}Go to
                         <b>

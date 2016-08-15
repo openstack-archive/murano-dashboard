@@ -584,7 +584,7 @@ class IndexView(generic_views.PageTitleMixin, list_view.ListView):
 
         context['tenant_id'] = self.request.session['token'].tenant['id']
         context.update(get_environments_context(self.request))
-        context['repo_url'] = pkg_consts.MURANO_REPO_URL
+        context['display_repo_url'] = pkg_consts.DISPLAY_MURANO_REPO_URL
         context['pkg_def_url'] = reverse('horizon:murano:packages:index')
         context['no_apps'] = True
         if self.get_current_category() != ALL_CATEGORY_NAME or search:
