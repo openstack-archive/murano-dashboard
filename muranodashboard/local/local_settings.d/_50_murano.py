@@ -1,11 +1,11 @@
 # MURANO_API_URL = "http://localhost:8082"
 
-# Set to True to use Glance Artifact Repository to store murano packages
+# Set to True to use Glare Artifact Repository to store murano packages
 MURANO_USE_GLARE = False
 
-# Sets the Glance API endpoint to interact with Artifact Repo.
+# Sets the Glare API endpoint to interact with Artifact Repo.
 # If left commented the one from keystone will be used
-# GLANCE_API_URL = 'http://ubuntu1:9292'
+# GLARE_API_URL = 'http://ubuntu1:9494'
 
 MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 
