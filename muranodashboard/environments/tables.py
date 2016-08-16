@@ -509,7 +509,7 @@ class ServicesTable(tables.DataTable):
 
             class CustomAction(tables.LinkAction):
                 name = action_datum['name']
-                verbose_name = action_datum['name']
+                verbose_name = action_datum.get('title') or name
                 url = reverse('horizon:murano:environments:start_action',
                               args=(environment_id, action_datum['id']))
                 classes = _classes
