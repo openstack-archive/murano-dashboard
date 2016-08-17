@@ -25,6 +25,7 @@ doc/build/
 doc/source/sourcecode
 build
 dist
+cover
 
 # Ignore i18n compiled files
 *.mo
