@@ -15,6 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+set -x
+
 ALLOWED_EXTRA_MISSING=4
 
 show_diff () {
@@ -28,7 +30,11 @@ uncommited=$(git status --porcelain | grep -v "^??")
 git checkout HEAD^
 
 baseline_report=$(mktemp -t murano_dashboard_coverageXXXXXXX)
-find . -type f -name "*.pyc" -delete && nosetests --cover-erase --cover-package=muranodashboard
+find . -type f -name "*.pyc" -delete
+echo $(which manage.py)
+python manage.py test muranodashboard \
+--settings=muranodashboard.tests.settings \
+--cover-erase --with-coverage --cover-html --cover-inclusive
 coverage report > $baseline_report
 baseline_missing=$(awk 'END { print $3 }' $baseline_report)
 
@@ -38,7 +44,11 @@ git checkout -
 
 # Generate and save coverage report
 current_report=$(mktemp -t murano_dashboard_coverageXXXXXXX)
-find . -type f -name "*.pyc" -delete && nosetests --cover-erase --cover-package=muranodashboard
+find . -type f -name "*.pyc" -delete
+echo $(which manage.py)
+python manage.py test muranodashboard \
+--settings=muranodashboard.tests.settings \
+--cover-erase --with-coverage --cover-html --cover-inclusive
 coverage report > $current_report
 current_missing=$(awk 'END { print $3 }' $current_report)
 
@@ -76,4 +86,5 @@ else
 fi
 
 rm $baseline_report $current_report
+set +x
 exit $exit_code
