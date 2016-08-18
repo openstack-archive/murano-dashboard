@@ -1081,10 +1081,10 @@ class TestSuitePackages(base.PackageTestCase):
             9. Switch to the new project and check that the application
                is not available in the catalog
         """
-        default_project = self.keystone_client.project_name
+        default_project = self.auth_ref.project_name
         new_project = str(uuid.uuid4())[::4]
         project_id = self.create_project(new_project)
-        self.add_user_to_project(project_id, self.keystone_client.user_id)
+        self.add_user_to_project(project_id, self.auth_ref.user_id)
         # Generally the new project will appear in the dropdown menu only after
         # page refresh. But in this case refresh is not necessary.
 
