@@ -1,0 +1,7 @@
+---
+fixes:
+  - Previously on user relogin changes to the environment made in the
+    previous session (adding or removing components without deploying) were
+    not saved but environment status was updated. Now status of environment is
+    'Ready to deploy' only in case when current services list is not equal to
+    the list of last deployed services.
