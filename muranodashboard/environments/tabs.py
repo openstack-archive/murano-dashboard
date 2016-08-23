@@ -203,7 +203,7 @@ class EnvironmentServicesTab(tabs.TableTab):
     def get_services_data(self):
         services = []
         self.environment_id = self.tab_group.kwargs['environment_id']
-        ns_url = "horizon:murano:environments:index"
+        ns_url = "horizon:app-catalog:environments:index"
         try:
             services = api.services_list(self.request, self.environment_id)
         except exc.HTTPForbidden:
@@ -242,7 +242,7 @@ class DeploymentTab(tabs.TableTab):
     def get_deployments_data(self):
         deployments = []
         self.environment_id = self.tab_group.kwargs['environment_id']
-        ns_url = "horizon:murano:environments:index"
+        ns_url = "horizon:app-catalog:environments:index"
         try:
             deployments = api.deployments_list(self.request,
                                                self.environment_id)

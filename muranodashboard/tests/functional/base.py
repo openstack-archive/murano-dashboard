@@ -90,7 +90,7 @@ class UITestCase(BaseDeps):
         self.driver = webdriver.Firefox()
         self.addCleanup(self.driver.quit)
         self.driver.maximize_window()
-        self.driver.get(cfg.common.horizon_url + '/murano/environments')
+        self.driver.get(cfg.common.horizon_url + '/app-catalog/environments')
         self.driver.implicitly_wait(30)
         self.addOnException(self.take_screenshot)
         self.log_in()
@@ -242,9 +242,8 @@ class UITestCase(BaseDeps):
 
     def select_and_click_action_for_app(self, action, app):
         self.driver.find_element_by_xpath(
-            "//*[@href='{0}/murano/catalog/{1}/{2}']".format(self.url_prefix,
-                                                             action,
-                                                             app)).click()
+            "//*[@href='{0}/app-catalog/catalog/{1}/{2}']".format(
+                self.url_prefix, action, app)).click()
 
     def go_to_submenu(self, link):
         element = self.wait_element_is_clickable(by.By.PARTIAL_LINK_TEXT, link)

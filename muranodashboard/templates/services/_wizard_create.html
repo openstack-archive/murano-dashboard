@@ -1,13 +1,13 @@
 {% extends "horizon/common/_modal_form.html" %}
 {% load i18n humanize %}
 {% block form_action %}
-    {% url 'horizon:murano:catalog:add' app_id environment_id do_redirect drop_wm_form %}
+    {% url 'horizon:app-catalog:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}
 {% block form_id %}form_{{ app_id }}{% endblock %}
 {% block modal_id %}modal_{{ app_id }}{% endblock %}
 {% block modal-header %}
   <span class="wizard_title">
-    <img src="{% url 'horizon:murano:catalog:images' app_id %}" height="25" width="25"/>
+    <img src="{% url 'horizon:app-catalog:catalog:images' app_id %}" height="25" width="25"/>
     {% trans "Configure Application" %}: {{ service_name }}
   </span>
 {% endblock %}

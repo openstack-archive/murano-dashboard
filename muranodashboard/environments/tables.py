@@ -77,18 +77,18 @@ class AddApplication(tables.LinkAction):
         return status not in consts.NO_ACTION_ALLOWED_STATUSES
 
     def get_link_url(self, datum=None):
-        base_url = reverse('horizon:murano:catalog:switch_env',
+        base_url = reverse('horizon:app-catalog:catalog:switch_env',
                            args=(self.table.kwargs['environment_id'],))
-        redirect_url = reverse('horizon:murano:catalog:index')
+        redirect_url = reverse('horizon:app-catalog:catalog:index')
         return '{0}?next={1}'.format(base_url, redirect_url)
 
 
 class CreateEnvironment(tables.LinkAction):
     name = 'CreateEnvironment'
     verbose_name = _('Create Environment')
-    url = 'horizon:murano:environments:create_environment'
+    url = 'horizon:app-catalog:environments:create_environment'
     classes = ('btn-launch', 'add_env')
-    redirect_url = "horizon:murano:environments:index"
+    redirect_url = "horizon:app-catalog:environments:index"
     icon = 'plus'
     policy_rules = (("murano", "create_environment"),)
 
@@ -107,7 +107,7 @@ class CreateEnvironment(tables.LinkAction):
 
 
 class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
-    redirect_url = "horizon:murano:environments:index"
+    redirect_url = "horizon:app-catalog:environments:index"
     policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
@@ -150,7 +150,7 @@ class AbandonEnvironment(tables.DeleteAction):
     help_text = _("This action cannot be undone. Any resources created by "
                   "this environment will have to be released manually.")
     name = 'abandon'
-    redirect_url = "horizon:murano:environments:index"
+    redirect_url = "horizon:app-catalog:environments:index"
     policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
@@ -231,7 +231,7 @@ class DeleteService(tables.DeleteAction):
                                        service_id)
         except Exception:
             msg = _('Sorry, you can\'t delete service right now')
-            redirect = reverse("horizon:murano:environments:index")
+            redirect = reverse("horizon:app-catalog:environments:index")
             exceptions.handle(request, msg, redirect=redirect)
 
 
@@ -309,7 +309,7 @@ class DeployEnvironment(tables.BatchAction):
             api.environment_deploy(request, environment_id)
         except Exception:
             msg = _('Unable to deploy. Try again later')
-            redirect = reverse('horizon:murano:environments:index')
+            redirect = reverse('horizon:app-catalog:environments:index')
             exceptions.handle(request, msg, redirect=redirect)
 
 
@@ -357,16 +357,16 @@ class DeployThisEnvironment(tables.Action):
             msg = _('Unable to deploy. Try again later')
             exceptions.handle(
                 request, msg,
-                redirect=reverse('horizon:murano:environments:index'))
+                redirect=reverse('horizon:app-catalog:environments:index'))
         return shortcuts.redirect(
-            reverse('horizon:murano:environments:services',
+            reverse('horizon:app-catalog:environments:services',
                     args=(environment_id,)))
 
 
 class ShowEnvironmentServices(tables.LinkAction):
     name = 'show'
     verbose_name = _('Manage Components')
-    url = 'horizon:murano:environments:services'
+    url = 'horizon:app-catalog:environments:services'
 
     def allowed(self, request, environment):
         return True
@@ -436,7 +436,7 @@ class UpdateName(tables.UpdateAction):
 class EnvironmentsTable(tables.DataTable):
     name = md_utils.Column(
         'name',
-        link='horizon:murano:environments:services',
+        link='horizon:app-catalog:environments:services',
         verbose_name=_('Name'),
         form_field=forms.CharField(required=False),
         update_action=UpdateName)
@@ -451,7 +451,7 @@ class EnvironmentsTable(tables.DataTable):
         # NOTE: using the policy check for show_environment
         if policy.check((("murano", "show_environment"),),
                         self.request, target={"environment": environment}):
-            return reverse("horizon:murano:environments:services",
+            return reverse("horizon:app-catalog:environments:services",
                            args=(environment.id,))
         return None
 
@@ -476,7 +476,7 @@ class EnvironmentsTable(tables.DataTable):
 
 
 def get_service_details_link(service):
-    return reverse('horizon:murano:environments:service_details',
+    return reverse('horizon:app-catalog:environments:service_details',
                    args=(service.environment_id, service['?']['id']))
 
 
@@ -534,7 +534,7 @@ class ServicesTable(tables.DataTable):
             class CustomAction(tables.LinkAction):
                 name = action_datum['name']
                 verbose_name = action_datum.get('title') or name
-                url = reverse('horizon:murano:environments:start_action',
+                url = reverse('horizon:app-catalog:environments:start_action',
                               args=(environment_id, action_datum['id']))
                 classes = _classes
                 table = self
@@ -563,7 +563,7 @@ class ServicesTable(tables.DataTable):
         return pkg_consts.DISPLAY_MURANO_REPO_URL
 
     def get_pkg_def_url(self):
-        return reverse('horizon:murano:packages:index')
+        return reverse('horizon:app-catalog:packages:index')
 
     class Meta(object):
         name = 'services'
@@ -583,7 +583,7 @@ class ShowDeploymentDetails(tables.LinkAction):
     def get_link_url(self, deployment=None):
         kwargs = {'environment_id': deployment.environment_id,
                   'deployment_id': deployment.id}
-        return reverse('horizon:murano:environments:deployment_details',
+        return reverse('horizon:app-catalog:environments:deployment_details',
                        kwargs=kwargs)
 
     def allowed(self, request, environment):

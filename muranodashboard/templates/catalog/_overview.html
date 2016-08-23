@@ -15,7 +15,7 @@
    <div class="app-supplier clearfix">
      {% if app.supplier.Logo %}
      <div class="app-icon">
-       <img src="{% url 'horizon:murano:catalog:supplier_images' app.id %}" />
+       <img src="{% url 'horizon:app-catalog:catalog:supplier_images' app.id %}" />
      </div>
      {% endif %}
      <div class="app-supplier-data">

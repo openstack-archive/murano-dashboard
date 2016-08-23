@@ -9,7 +9,7 @@
     <div class="colleft">
         <ul>
             {% for category in categories|firsthalf %}
-            <li><a href="{% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}">{{ category }}</a></li>
+            <li><a href="{% url 'horizon:app-catalog:catalog:index' %}?category={{ category|urlencode }}">{{ category }}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -17,11 +17,11 @@
     <div class="colright">
         <ul>
             {% for category in categories|lasthalf %}
-            <li><a href="{% url 'horizon:murano:catalog:index' %}?category={{ category|urlencode }}">{{ category }}</a></li>
+            <li><a href="{% url 'horizon:app-catalog:catalog:index' %}?category={{ category|urlencode }}">{{ category }}</a></li>
             {% endfor %}
         </ul>
     </div>
 {% else %}
-    <a href="{% url 'horizon:murano:catalog:index' %}?category={{ categories.0|urlencode }}">{{ categories.0 }}</a>
+    <a href="{% url 'horizon:app-catalog:catalog:index' %}?category={{ categories.0|urlencode }}">{{ categories.0 }}</a>
 {% endif %}
 </div>

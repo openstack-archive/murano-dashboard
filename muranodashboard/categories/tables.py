@@ -31,7 +31,7 @@ LOG = logging.getLogger(__name__)
 class AddCategory(tables.LinkAction):
     name = "add_category"
     verbose_name = _("Add Category")
-    url = "horizon:murano:categories:add"
+    url = "horizon:app-catalog:categories:add"
     classes = ("ajax-modal",)
     icon = "plus"
     policy_rules = (("murano", "add_category"),)
@@ -71,7 +71,7 @@ class DeleteCategory(policy.PolicyTargetMixin, tables.DeleteAction):
         except exc.HTTPException:
             msg = _('Unable to delete category')
             LOG.exception(msg)
-            url = reverse('horizon:murano:categories:index')
+            url = reverse('horizon:app-catalog:categories:index')
             exceptions.handle(request, msg, redirect=url)
 
 

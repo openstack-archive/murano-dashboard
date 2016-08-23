@@ -89,6 +89,6 @@ class AddCategoryView(views.ModalFormView):
     template_name = 'categories/add.html'
     context_object_name = 'category'
     page_title = _('Add Application Category')
-    success_url = reverse_lazy('horizon:murano:categories:index')
+    success_url = reverse_lazy('horizon:app-catalog:categories:index')
     submit_label = _('Add')
-    submit_url = reverse_lazy('horizon:murano:categories:add')
+    submit_url = reverse_lazy('horizon:app-catalog:categories:add')

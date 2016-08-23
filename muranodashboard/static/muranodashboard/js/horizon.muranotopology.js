@@ -333,7 +333,7 @@ $(function() {
         .attr("width", width)
         .attr("height", height);
 
-      ajaxUrl = '/murano/' + environmentId + '/services/get_d3_data';
+      ajaxUrl = '/app-catalog/' + environmentId + '/services/get_d3_data';
       force = d3.layout.force()
         .nodes(graph.nodes)
         .links([])

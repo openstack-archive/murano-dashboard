@@ -33,7 +33,7 @@ LOG = logging.getLogger(__name__)
 class ImportBundle(tables.LinkAction):
     name = 'import_bundle'
     verbose_name = _('Import Bundle')
-    url = 'horizon:murano:packages:import_bundle'
+    url = 'horizon:app-catalog:packages:import_bundle'
     classes = ('ajax-modal',)
     icon = "plus"
     policy_rules = (("murano", "upload_package"),)
@@ -42,7 +42,7 @@ class ImportBundle(tables.LinkAction):
 class ImportPackage(tables.LinkAction):
     name = 'upload_package'
     verbose_name = _('Import Package')
-    url = 'horizon:murano:packages:upload'
+    url = 'horizon:app-catalog:packages:upload'
     classes = ('ajax-modal',)
     icon = "plus"
     policy_rules = (("murano", "upload_package"),)
@@ -66,8 +66,8 @@ class PackagesFilterAction(tables.FilterAction):
 class DownloadPackage(tables.LinkAction):
     name = 'download_package'
     verbose_name = _('Download Package')
-    url = 'horizon:murano:packages:download'
     policy_rules = (("murano", "download_package"),)
+    url = 'horizon:app-catalog:packages:download'
 
     def allowed(self, request, package):
         return True
@@ -110,7 +110,7 @@ class ToggleEnabled(tables.BatchAction):
             exceptions.handle(
                 request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
 
 
 class TogglePublicEnabled(tables.BatchAction):
@@ -146,7 +146,7 @@ class TogglePublicEnabled(tables.BatchAction):
             exceptions.handle(
                 request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except exc.HTTPConflict:
             msg = _('Package or Class with the same name is already made '
                     'public')
@@ -155,7 +155,7 @@ class TogglePublicEnabled(tables.BatchAction):
             exceptions.handle(
                 request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
 
 
 class DeletePackage(policy.PolicyTargetMixin, tables.DeleteAction):
@@ -187,16 +187,16 @@ class DeletePackage(policy.PolicyTargetMixin, tables.DeleteAction):
             exceptions.handle(
                 self.request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except exc.HTTPForbidden:
             msg = _("You are not allowed to delete this package")
             LOG.exception(msg)
             exceptions.handle(
                 request, msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except Exception:
             LOG.exception(_('Unable to delete package in murano-api server'))
-            url = reverse('horizon:murano:packages:index')
+            url = reverse('horizon:app-catalog:packages:index')
             exceptions.handle(request,
                               _('Unable to remove package.'),
                               redirect=url)
@@ -205,7 +205,7 @@ class DeletePackage(policy.PolicyTargetMixin, tables.DeleteAction):
 class ModifyPackage(tables.LinkAction):
     name = 'modify_package'
     verbose_name = _('Modify Package')
-    url = 'horizon:murano:packages:modify'
+    url = 'horizon:app-catalog:packages:modify'
     classes = ('ajax-modal',)
     icon = "edit"
     policy_rules = (("murano", "modify_package"),)
@@ -217,7 +217,7 @@ class ModifyPackage(tables.LinkAction):
 class PackageDefinitionsTable(tables.DataTable):
     name = md_utils.Column(
         'name',
-        link="horizon:murano:packages:detail",
+        link="horizon:app-catalog:packages:detail",
         verbose_name=_('Package Name'))
     tenant_name = tables.Column('tenant_name', verbose_name=_('Tenant Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))

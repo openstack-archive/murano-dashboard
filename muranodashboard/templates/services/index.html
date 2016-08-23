@@ -32,8 +32,8 @@
     {{ block.super }}
     <script type="text/template" id="app_tile_small">
         {% jstemplate %}
-            {% url 'horizon:murano:catalog:images' '[[app_id]]' as image_url %}
-            {% url 'horizon:murano:catalog:add' '[[app_id]]' '[[environment_id]]' 'True' 'True' as add_url %}
+            {% url 'horizon:app-catalog:catalog:images' '[[app_id]]' as image_url %}
+            {% url 'horizon:app-catalog:catalog:add' '[[app_id]]' '[[environment_id]]' 'True' 'True' as add_url %}
             <div class="col-xs-2 draggable_app">
                 <div class="well well-sm" draggable="true">
                     <img class="centering" src="{{ image_url|unquote }}"

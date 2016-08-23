@@ -215,7 +215,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
             except (exc.HTTPException, Exception):
                 msg = _('Unable to get list of categories')
                 LOG.exception(msg)
-                redirect = reverse('horizon:murano:packages:index')
+                redirect = reverse('horizon:app-catalog:packages:index')
                 exceptions.handle(request,
                                   msg,
                                   redirect=redirect)
@@ -234,7 +234,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
             exceptions.handle(
                 request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except exc.HTTPConflict:
             msg = _('Package or Class with the same name is already made '
                     'public')
@@ -243,7 +243,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
             exceptions.handle(
                 request,
                 msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except Exception as original_e:
             reason = ''
 
@@ -259,7 +259,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
 
             msg = _('Failed to modify the package. {0}').format(reason)
             LOG.exception(msg)
-            redirect = reverse('horizon:murano:packages:index')
+            redirect = reverse('horizon:app-catalog:packages:index')
             exceptions.handle(request,
                               msg,
                               redirect=redirect)
@@ -284,7 +284,7 @@ class SelectCategories(forms.Form):
         except (exc.HTTPException, Exception):
             msg = _('Unable to get list of categories')
             LOG.exception(msg)
-            redirect = reverse('horizon:murano:packages:index')
+            redirect = reverse('horizon:app-catalog:packages:index')
             exceptions.handle(request,
                               msg,
                               redirect=redirect)

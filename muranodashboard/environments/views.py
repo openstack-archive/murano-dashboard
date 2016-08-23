@@ -114,7 +114,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
 
     @staticmethod
     def get_redirect_url():
-        return reverse_lazy("horizon:murano:environments:index")
+        return reverse_lazy("horizon:app-catalog:environments:index")
 
 
 class DetailServiceView(tabs.TabbedTableView):
@@ -131,7 +131,7 @@ class DetailServiceView(tabs.TabbedTableView):
         context["environment_name"] = env.name
         breadcrumb = [
             (context["environment_name"],
-             reverse("horizon:murano:environments:services",
+             reverse("horizon:app-catalog:environments:services",
                      args=[self.environment_id])),
             (_('Applications'),), ]
         context["custom_breadcrumb"] = breadcrumb
@@ -148,7 +148,7 @@ class DetailServiceView(tabs.TabbedTableView):
             exceptions.handle(self.request)
 
         except exc.HTTPForbidden:
-            redirect = reverse('horizon:murano:environments:index')
+            redirect = reverse('horizon:app-catalog:environments:index')
             exceptions.handle(self.request,
                               _('Unable to retrieve details for '
                                 'service'),
@@ -170,7 +170,8 @@ class CreateEnvironmentView(views.ModalFormView):
     page_title = _('Create Environment')
     context_object_name = 'environment'
     submit_label = _('Create')
-    submit_url = reverse_lazy('horizon:murano:environments:create_environment')
+    submit_url = reverse_lazy(
+        'horizon:app-catalog:environments:create_environment')
 
     def get_form(self, form_class):
         if 'next' in self.request.GET:
@@ -183,9 +184,9 @@ class CreateEnvironmentView(views.ModalFormView):
         env_id = self.request.session.get('env_id')
         if env_id:
             del self.request.session['env_id']
-            return reverse("horizon:murano:environments:services",
+            return reverse("horizon:app-catalog:environments:services",
                            args=[env_id])
-        return reverse_lazy('horizon:murano:environments:index')
+        return reverse_lazy('horizon:app-catalog:environments:index')
 
 
 class DeploymentDetailsView(tabs.TabbedTableView):
@@ -205,7 +206,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                      self.deployment_id)
         breadcrumb = [
             (context["environment_name"],
-             reverse("horizon:murano:environments:services",
+             reverse("horizon:app-catalog:environments:services",
                      args=[self.environment_id])),
             (_('Deployments'),), ]
         context["custom_breadcrumb"] = breadcrumb
@@ -219,7 +220,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                                   self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
             msg = _("Deployment with id %s doesn't exist anymore")
-            redirect = reverse("horizon:murano:environments:deployments")
+            redirect = reverse("horizon:app-catalog:environments:deployments")
             exceptions.handle(self.request,
                               msg % self.deployment_id,
                               redirect=redirect)
@@ -233,7 +234,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
                                           self.deployment_id)
         except (exc.HTTPInternalServerError, exc.HTTPNotFound):
             msg = _('Deployment with id %s doesn\'t exist anymore')
-            redirect = reverse("horizon:murano:environments:deployments")
+            redirect = reverse("horizon:app-catalog:environments:deployments")
             exceptions.handle(self.request,
                               msg % self.deployment_id,
                               redirect=redirect)
@@ -271,7 +272,7 @@ class StartActionView(generic.View):
     def post(request, environment_id, action_id):
         if api.action_allowed(request, environment_id):
             task_id = api.run_action(request, environment_id, action_id)
-            url = reverse('horizon:murano:environments:action_result',
+            url = reverse('horizon:app-catalog:environments:action_result',
                           args=(environment_id, task_id))
             return JSONResponse({'url': url})
         else:

@@ -42,12 +42,12 @@
                                     class="caret"></b></a>
                             <ul class="dropdown-menu row_actions clearfix scrollable-menu">
                                 <li class="clearfix">
-                                    <a tabindex="-1" href="{% url 'horizon:murano:catalog:index' %}?category={{ ALL_CATEGORY_NAME|urlencode }}" class="btn btn-small">
+                                    <a tabindex="-1" href="{% url 'horizon:app-catalog:catalog:index' %}?category={{ ALL_CATEGORY_NAME|urlencode }}" class="btn btn-small">
                                         {{ ALL_CATEGORY_NAME }}</a>
                                 </li>
                             {% for category in categories %}
                                 <li class="clearfix">
-                                    <a tabindex="-1" href="{% url 'horizon:murano:catalog:index' %}?category={{ category.name|urlencode }}" class="btn btn-small">
+                                    <a tabindex="-1" href="{% url 'horizon:app-catalog:catalog:index' %}?category={{ category.name|urlencode }}" class="btn btn-small">
                                         {{ category.name }}
                                         {% if not MURANO_USE_GLARE %}
                                             ({{category.package_count}})
@@ -68,7 +68,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-row">
                     <div class="table_search client pull-right">
                         <form class="search" method="GET"
-                              action="{% url 'horizon:murano:catalog:index' %}">
+                              action="{% url 'horizon:app-catalog:catalog:index' %}">
                             <div class="form-group has-feedback">
                                 <input class="form-control"
                                        value="{{ search }}" type="text"

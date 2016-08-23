@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block form_id %}{% endblock %}
-{% block form_action %}{% url 'horizon:murano:packages:modify' app_id %}{% endblock %}
+{% block form_action %}{% url 'horizon:app-catalog:packages:modify' app_id %}{% endblock %}
 
 {% block modal-header %}{% trans "Modify Package" %}{% endblock %}
 {% block modal_id %}modify_package_modal{% endblock %}
@@ -15,6 +15,6 @@
 {% endblock %}
 
 {% block modal-footer %}
-    <a href="{% url 'horizon:murano:packages:index' %}" class="btn btn-default cancel">{% trans "Cancel" %}</a>
+    <a href="{% url 'horizon:app-catalog:packages:index' %}" class="btn btn-default cancel">{% trans "Cancel" %}</a>
     <input type='submit' class='btn btn-primary' value='{% trans "Update" %}' />
 {% endblock %}
