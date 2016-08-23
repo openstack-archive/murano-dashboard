@@ -21,8 +21,9 @@ import uuid
 
 from glanceclient import client as gclient
 from keystoneauth1.identity import v3
-from keystoneclient.v3 import client
-from muranoclient import client as mclient
+from keystoneauth1 import session as ks_session
+from keystoneclient.v3 import client as ks_client
+import muranoclient.v1.client as mclient
 from oslo_log import handlers
 from oslo_log import log
 from selenium.common import exceptions as exc
@@ -61,12 +62,14 @@ class UITestCase(BaseDeps):
                            project_domain_name='Default',
                            project_name=cfg.common.tenant,
                            auth_url=cfg.common.keystone_url)
-        cls.keystone_client = client.Client(
-            auth_url=cfg.common.keystone_url, auth=auth,
-            username=cfg.common.user, password=cfg.common.password)
+        session = ks_session.Session(auth=auth)
         cls.murano_client = mclient.Client(
-            '1', endpoint=cfg.common.murano_url,
-            token=cls.keystone_client.auth_token)
+            endpoint_override=cfg.common.murano_url,
+            session=session)
+        cls.keystone_client = ks_client.Client(session=session)
+        cls.auth_ref = auth.get_auth_ref(session)
+        cls.service_catalog = cls.auth_ref.service_catalog
+
         cls.url_prefix = urlparse.urlparse(cfg.common.horizon_url).path or ''
         if cls.url_prefix.endswith('/'):
             cls.url_prefix = cls.url_prefix[:-1]
@@ -158,13 +161,15 @@ class UITestCase(BaseDeps):
         self.projects_to_delete.append(project.id)
         return project.id
 
-    def add_user_to_project(self, project_id, user_name, user_role=None):
+    def add_user_to_project(self, project_id, user_id, user_role=None):
         if not user_role:
             roles = self.keystone_client.roles.list()
             role_id = [role.id for role in roles if role.name == 'Member'][0]
-        if not user_name:
+        if not user_id:
             user_name = cfg.common.user
-        self.keystone_client.roles.grant(role_id, user=user_name,
+            users = self.keystone_client.users.list()
+            user_id = [user.id for user in users if user.name == user_name][0]
+        self.keystone_client.roles.grant(role_id, user=user_id,
                                          project=project_id)
 
     def switch_to_project(self, name):
@@ -394,10 +399,9 @@ class ImageTestCase(PackageBase):
     @classmethod
     def setUpClass(cls):
         super(ImageTestCase, cls).setUpClass()
-        glance_endpoint = cls.keystone_client.service_catalog.url_for(
-            service_type='image', endpoint_type='publicURL')
+        glance_endpoint = cls.service_catalog.url_for(service_type='image')
         cls.glance = gclient.Client('1', endpoint=glance_endpoint,
-                                    token=cls.keystone_client.auth_token)
+                                    session=cls.keystone_client.session)
         cls.image_title = 'New Image ' + str(time.time())
         cls.image = cls.upload_image(cls.image_title)
 
