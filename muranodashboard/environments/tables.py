@@ -87,7 +87,7 @@ class CreateEnvironment(tables.LinkAction):
     verbose_name = _('Create Environment')
     url = 'horizon:murano:environments:create_environment'
     classes = ('btn-launch', 'add_env')
-    redirect_url = "horizon:project:murano:environments"
+    redirect_url = "horizon:murano:environments:index"
     icon = 'plus'
     policy_rules = (("murano", "create_environment"),)
 
@@ -106,7 +106,7 @@ class CreateEnvironment(tables.LinkAction):
 
 
 class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
-    redirect_url = "horizon:project:murano:environments"
+    redirect_url = "horizon:murano:environments:index"
     policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
@@ -149,7 +149,7 @@ class AbandonEnvironment(tables.DeleteAction):
     help_text = _("This action cannot be undone. Any resources created by "
                   "this environment will have to be released manually.")
     name = 'abandon'
-    redirect_url = "horizon:project:murano:environments"
+    redirect_url = "horizon:murano:environments:index"
     policy_rules = (("murano", "delete_environment"),)
 
     @staticmethod
