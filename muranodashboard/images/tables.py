@@ -19,6 +19,8 @@ from horizon import exceptions
 from horizon import tables
 from openstack_dashboard.api import glance
 
+from muranodashboard.common import utils as md_utils
+
 
 class MarkImage(tables.LinkAction):
     name = "mark_image"
@@ -70,9 +72,8 @@ class MarkedImagesTable(tables.DataTable):
     )
     type = tables.Column(lambda obj: getattr(obj, 'type', None),
                          verbose_name=_('Type'))
-    title = tables.Column(lambda obj: getattr(obj, 'title', None),
-                          verbose_name=_('Title'),
-                          truncate=40)
+    title = md_utils.Column(lambda obj: getattr(obj, 'title', None),
+                            verbose_name=_('Title'))
 
     class Meta(object):
         name = 'marked_images'

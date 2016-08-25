@@ -23,6 +23,13 @@ from muranodashboard.dynamic_ui import yaql_expression
 import six
 import yaql
 
+# WrappingColumn is only available in N-horizon
+# This make murano-dashboard compatible with Mitaka-horizon
+try:
+    from horizon.tables import WrappingColumn as Column
+except ImportError:
+    from horizon.tables import Column as Column  # noqa
+
 
 def parse_api_error(api_error_html):
     error_html = bs4.BeautifulSoup(api_error_html)
