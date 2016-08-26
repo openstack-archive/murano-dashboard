@@ -1,13 +1,14 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Ian Y. Choi <ianyrchoi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev35\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev54\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-08-11 12:16+0000\n"
+"POT-Creation-Date: 2016-08-23 16:43+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-28 06:41+0000\n"
+"PO-Revision-Date: 2016-08-25 02:21+0000\n"
 "Last-Translator: Ian Y. Choi <ianyrchoi@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
@@ -16,6 +17,9 @@ msgstr ""
 
 msgid "-"
 msgstr "-"
+
+msgid "80 characters max."
+msgstr "최대 80 문자입니다."
 
 msgid "A local zip file to upload"
 msgstr "업로드할 로컬 zip 파일"
@@ -115,6 +119,9 @@ msgstr "자동"
 msgid "Back"
 msgstr "뒤로"
 
+msgid "Browse"
+msgstr "탐색"
+
 msgid "Bundle Name"
 msgstr "번들 이름"
 
@@ -136,6 +143,9 @@ msgstr "번들의 전체 이름입니다."
 
 msgid "Cancel"
 msgstr "취소"
+
+msgid "Catalog"
+msgstr "카탈로그"
 
 msgid "Categories"
 msgstr "카테고리"
@@ -161,6 +171,9 @@ msgstr "클래스 정의 폴더"
 
 msgid "Click to create new environment"
 msgstr "클릭하여 새 환경 생성"
+
+msgid "Completed with warnings"
+msgstr "경고와 함께 완료"
 
 msgid "Component"
 msgstr "구성 요소"
@@ -188,6 +201,13 @@ msgstr "암호 확인"
 
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "{0} 환경의 최신 상태를 검색할 수 없음"
+
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"이 필드에 필수인 app을 찾을 수 없습니다.\n"
+"시도: {fqns}"
 
 msgid "Couldn't update environment. Reason: "
 msgstr "환경을 업데이트할 수 없습니다. 이유:"
@@ -239,6 +259,9 @@ msgid "Delete Package"
 msgid_plural "Delete Packages"
 msgstr[0] "패키지 삭제"
 
+msgid "Delete failure"
+msgstr "삭제 실패"
+
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] "삭제된 카테고리"
@@ -251,6 +274,9 @@ msgid "Deleted Package"
 msgid_plural "Deleted Packages"
 msgstr[0] "삭제된 패키지"
 
+msgid "Deleting"
+msgstr "삭제중"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "환경 배포"
@@ -258,11 +284,17 @@ msgstr[0] "환경 배포"
 msgid "Deploy This Environment"
 msgstr "이 환경 배포"
 
+msgid "Deploy failure"
+msgstr "배포 실패"
+
 msgid "Deploy started"
 msgstr "배포가 시작됨"
 
 msgid "Deployed Components"
 msgstr "배포된 구성요소"
+
+msgid "Deploying"
+msgstr "배포중"
 
 msgid "Deployment Details"
 msgstr "배포 세부 사항"
@@ -348,6 +380,9 @@ msgstr "실행 계획 폴더"
 msgid "FQN"
 msgstr "FQN"
 
+msgid "Failed"
+msgstr "실패함"
+
 msgid "Failed to create environment"
 msgstr "환경을 생성하는 데 실패"
 
@@ -372,6 +407,14 @@ msgstr ""
 
 msgid "Fully qualified package name."
 msgstr "완전한 패키지 이름입니다."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+" <b> <a href=%(pkg_def_url)s>패키지</a> </b>로 이동하여 '패키지 가져오기'를 "
+"클릭하고 <i>저장소</i>를 <i>패키지 소스</i>로 선택합니다."
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "번들 파일의 HTTP/HTTPS URL입니다."
@@ -647,6 +690,9 @@ msgstr "패키지 URL 제공"
 msgid "Previous Page"
 msgstr "이전 페이지"
 
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "패키지와 관련된 콤마로 구분된 단어 목록을 제공합니다"
+
 msgid "Provide desired name for a new category"
 msgstr "새 카테고리의 원하는 이름 제공"
 
@@ -655,6 +701,15 @@ msgstr "공용"
 
 msgid "Quick Deploy"
 msgstr "빠른 배포"
+
+msgid "Ready"
+msgstr "준비됨"
+
+msgid "Ready to configure"
+msgstr "구성 준비 완료"
+
+msgid "Ready to deploy"
+msgstr "배포 준비 완료"
 
 msgid "Recent Activity"
 msgstr "최신 활동"
@@ -673,6 +728,15 @@ msgstr "요구사항"
 
 msgid "Retype your password"
 msgstr "암호 다시 입력"
+
+msgid "Running"
+msgstr "실행중"
+
+msgid "Running with errors"
+msgstr "실행 중 오류 발생"
+
+msgid "Running with warnings"
+msgstr "실행 중 경고 발생"
 
 msgid "Select Application"
 msgstr "응용 프로그램 선택"
@@ -715,11 +779,26 @@ msgstr "지정된 제목이 이미 사용 중입니다. 다른 제목을 사용�
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "카테고리를 지정하면 카탈로그에서 응용 프로그램을 필터링할 수 있음"
 
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "구성요소 삭제 시작"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "환경 삭제 시작"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "환경 배포 시작"
+
 msgid "Status"
 msgstr "상태"
 
 msgid "Step {0}"
 msgstr "{0}단계"
+
+msgid "Successful"
+msgstr "완료"
 
 msgid "Tags"
 msgstr "태그"
@@ -749,6 +828,9 @@ msgstr ""
 "<a href=\"%(murano_repo_url)s\" target=\"_blank\">%(murano_repo_url)s</a> 저"
 "장소에서 번들이 설치됩니다."
 
+msgid "The environment name field cannot be empty."
+msgstr "환경 이름 필드는 비울 수 없습니다."
+
 #, python-format
 msgid ""
 "The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
@@ -770,8 +852,19 @@ msgstr "요청된 데이터는 서버에서 허용되지 않음"
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr "카탈로그에 응용 프로그램이 없습니다. 앱을 가져올 수 있습니다."
 
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(repo_url)s\" target=\"_blank\"> %(repo_url)s</a>."
+msgstr ""
+"카탈로그에 응용 프로그램이 없습니다. <a href=\"%(repo_url)s\" target=\"_blank"
+"\"> %(repo_url)s</a>에서 앱을 가져올 수 있습니다."
+
 msgid "There are no applications matching your criteria."
 msgstr "기준에 맞는 응용 프로그램이 없습니다."
+
+msgid "There was an error initialising this field."
+msgstr "해당 필드를 초기화하는 데 오류가 발생하였습니다."
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -847,6 +940,9 @@ msgstr "URL"
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr "다음 이유로 인해 {0} 환경을 폐기할 수 없음: {1}"
 
+msgid "Unable to communicate to glare-api server."
+msgstr "glare-api 서버와 통신할 수 없습니다."
+
 msgid "Unable to communicate to murano-api server."
 msgstr "murano-api 서버와 통신할 수 없습니다."
 
@@ -914,14 +1010,28 @@ msgstr "공용 이미지를 검색할 수 없습니다."
 msgid "Unavailable"
 msgstr "사용할 수 없음"
 
+msgid "Unknown"
+msgstr "알 수 없음"
+
 msgid "Update"
 msgstr "업데이트"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "환경 업데이트"
 
 msgid "Update Image"
 msgstr "이미지 업데이트"
 
+msgid "Update This Environment"
+msgstr "이 환경을 업데이트합니다"
+
 msgid "Updated"
 msgstr "업데이트됨"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "업데이트된 환경"
 
 msgid "Uploading package failed. {0}"
 msgstr "패키지를 업로드하지 못했습니다. {0}"
