@@ -28,7 +28,7 @@ AppDetail = "//dl[dt[contains(text(), 'Name')]]/dd"
 TagInDetails = "//div[contains(@class, 'app-meta')]//ul//li[strong[contains(text(), 'Tags')]]"  # noqa
 TestImage = "//tr[td[contains(text(), '{0}')]]"
 DeleteImageMeta = TestImage + "//td//button[contains(text(), 'Delete Metadata')]"  # noqa
-ImageMeta = "//dl[dt[contains(text(), 'murano_image_info')]]/dd"
+ImageMeta = "//dl//div[dt[contains(text(), 'murano_image_info')]]/dd"
 More = "//tr[contains(@id, '{0}__row__{1}')]//a[contains(@class, dropdown-toggle) and @href='#']"  # noqa
 Status = "//td[contains(text(), '{0}')]"
 EnvStatus = "//tr[contains(@data-display, '{0}')]/td[contains(text(), '{1}')]"
