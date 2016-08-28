@@ -30,4 +30,4 @@ Project Resources
 * `Wiki <https://wiki.openstack.org/wiki/Murano>`_
 * `Code Review <https://review.openstack.org/>`_
 * `Sources <https://wiki.openstack.org/wiki/Murano/SourceCode>`_
-* `Documentation <http://murano.readthedocs.org/>`_
+* `Documentation <http://docs.openstack.org/developer/murano/>`_
