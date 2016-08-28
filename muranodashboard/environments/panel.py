@@ -15,13 +15,8 @@
 from django.utils.translation import ugettext_lazy as _
 import horizon
 
-from muranodashboard import dashboard
-
 
 class Environments(horizon.Panel):
     name = _("Environments")
     slug = 'environments'
     policy_rules = (("murano", "list_environments"),)
-
-
-dashboard.Murano.register(Environments)

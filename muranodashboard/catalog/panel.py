@@ -15,12 +15,7 @@
 from django.utils.translation import ugettext_lazy as _
 import horizon
 
-from muranodashboard import dashboard
-
 
 class AppCatalog(horizon.Panel):
-    name = _('Browse')
+    name = _('Browse Local')
     slug = 'catalog'
-
-
-dashboard.Murano.register(AppCatalog)

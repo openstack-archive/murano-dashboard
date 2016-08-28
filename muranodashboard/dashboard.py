@@ -18,29 +18,15 @@ import horizon
 
 # Load the api rest services into Horizon
 import muranodashboard.api.rest  # noqa
-from muranodashboard import exceptions
-# prevent pyflakes from fail
-assert exceptions
 
 
-class DeployPanels(horizon.PanelGroup):
-    slug = "deployment_group"
-    name = _("Catalog")
-    panels = ("environments", "catalog")
-
-
-class ManagePanels(horizon.PanelGroup):
-    slug = "manage_metadata"
-    name = _("Manage")
-    panels = ("images", "packages", "categories")
-
-
-class Murano(horizon.Dashboard):
-    name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("Applications"))
+class AppCatalog(horizon.Dashboard):
+    name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("App Catalog"))
     slug = "app-catalog"
-    panels = (DeployPanels, ManagePanels)
     default_panel = "environments"
     supports_tenants = True
 
-
-horizon.register(Murano)
+try:
+    horizon.base.Horizon.registered('app-catalog')
+except horizon.base.NotRegistered:
+    horizon.register(AppCatalog)

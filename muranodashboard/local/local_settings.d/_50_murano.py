@@ -11,9 +11,9 @@ MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 
 DISPLAY_MURANO_REPO_URL = 'http://apps.openstack.org/#tab=murano-apps'
 
-# Overrides the default dashboard name (Murano) that is displayed
+# Overrides the default dashboard name (App Catalog) that is displayed
 # in the main accordion navigation
-# MURANO_DASHBOARD_NAME = "Murano"
+# MURANO_DASHBOARD_NAME = "App Catalog"
 
 # Specify a maximum number of limit packages.
 # PACKAGES_LIMIT = 100
