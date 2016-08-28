@@ -5,6 +5,6 @@
 </div>
 <div class="reports logs">
     {% for report in reports %}
-        <div title="{{report.level|capfirst}}" class="report-{{report.level}}">{{report.created}} &mdash; {{report.text | urlize}}</div>
+        <div title="{{report.level|capfirst}}" class="report-{{report.level}}">{{report.created}} &mdash; {{report.text | linebreaksbr | urlize}}</div>
     {% endfor %}
 </div>
