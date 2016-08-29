@@ -37,6 +37,9 @@ MuranoGroup = [
     cfg.IntOpt('items_per_page',
                default=20,
                help='items per page displayed'),
+    cfg.StrOpt('packages_service',
+               default='murano',
+               help='murano packages service, either "murano" or "glare"'),
 ]
 
 

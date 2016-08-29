@@ -725,9 +725,6 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         self.driver.find_element_by_id('services__action_deploy_env').click()
         self.check_element_on_page(by.By.XPATH,
-                                   c.Status.format('Deploying'))
-        self.check_element_on_page(by.By.XPATH, c.CellStatus.format('unknown'))
-        self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
         self.check_element_on_page(by.By.XPATH, c.CellStatus.format('up'))
@@ -1269,6 +1266,9 @@ class TestSuitePackages(base.PackageTestCase):
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "GLARE backend doesn't honor public flag. "
+                     "Bug #1618222")
     def test_upload_package(self):
         """Test package uploading via Packages view.
 
@@ -1378,12 +1378,19 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.wait_for_alert_message()
 
+        # TODO(kzaitsev): We need to wait while the spinner is gone
+        # instead will add a 5 sec sleep, should fix as part of 1618271
+        time.sleep(5)
+
         pkg_name = self.archive_name
         self.driver.find_element_by_xpath(
             "//a[contains(text(), '{0}')]".format(pkg_name)).click()
         self.assertIn(pkg_name,
                       self.driver.find_element(by.By.XPATH, c.AppDetail).text)
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "GLARE backend doesn't expose category count"
+                     "Bug #1618228")
     def test_add_pkg_to_category_non_admin(self):
         """Test package addition to category as non admin user
 
@@ -1459,6 +1466,9 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "This test fails with GLARE, shoud be fixed as part of "
+                     "bug #1618266")
     def test_sharing_app_without_permission(self):
         """Tests sharing Murano App without permission
 
@@ -1875,7 +1885,9 @@ class TestSuiteRepository(base.PackageTestCase):
         self.check_element_not_on_page(
             by.By.XPATH, c.AppPackages.format(pkg_name))
 
-    def test_import_big_zip_file(self):
+    @unittest.skipIf(utils.glare_enabled(),
+                     'GLARE allows importing big files')
+    def test_import_big_zip_file_negative(self):
         """Import very big zip archive.
 
         Scenario:
@@ -1911,6 +1923,47 @@ class TestSuiteRepository(base.PackageTestCase):
         self.check_alert_message(error_message)
 
         self.check_element_not_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
+
+    @unittest.skipUnless(utils.glare_enabled(),
+                         'Without GLARE backend murano restricts file size')
+    def test_import_big_zip_file(self):
+        """Import very big zip archive.
+
+        Scenario:
+            1. Log in Horizon with admin credentials
+            2. Navigate to 'Packages' page
+            3. Click 'Import Package' and select 'File' as a package source
+            4. Choose very big zip file
+            5. Click on 'Next' button
+            6. Check that error message that user can't upload file more than
+                5 MB is displayed
+        """
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._make_big_zip_pkg(name=pkg_name,
+                               size=10 * 1024 * 1024)
+
+        # import package and choose big zip file for it
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        # no additional input needed
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        self.check_element_on_page(
             by.By.XPATH, c.AppPackages.format(pkg_name))
 
     def test_import_bundle_when_dependencies_installed(self):
@@ -2003,8 +2056,12 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         self.wait_for_alert_message()
-        self.check_element_on_page(
-            by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
+
+        if utils.glare_enabled():
+            # TODO(kzaitsev): see Bug #1618228
+            # GLARE doesn't expose category package count
+            self.check_element_on_page(
+                by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
 
         # save category id
         self.category_id = self.get_element_id(self.category)
@@ -2015,6 +2072,9 @@ class TestSuitePackageCategory(base.PackageTestCase):
         # delete created category
         self.murano_client.categories.delete(self.category_id)
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "GLARE backend doesn't expose category count"
+                     "Bug #1618228")
     def test_add_delete_category_for_package(self):
         """Test package importing with new category and changing the category.
 
@@ -2157,6 +2217,9 @@ class TestSuitePackageCategory(base.PackageTestCase):
                          "with an existing object.")
         self.check_alert_message(error_message)
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "GLARE backend doesn't expose category count"
+                     "Bug #1618228")
     def test_delete_category_with_package(self):
         """Deletion of category with package in it
 

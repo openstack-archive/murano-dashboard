@@ -18,6 +18,7 @@ import zipfile
 
 from oslo_log import log
 
+import config.config as cfg
 from muranodashboard.tests.functional import consts
 
 log = log.getLogger(__name__).logger
@@ -108,3 +109,7 @@ def compose_bundle(bundle_path, app_names):
         bundle['Packages'].append({'Name': app_name})
     with open(bundle_path, 'w') as f:
         f.write(json.dumps(bundle))
+
+
+def glare_enabled():
+    return cfg.common.packages_service == "glare"
