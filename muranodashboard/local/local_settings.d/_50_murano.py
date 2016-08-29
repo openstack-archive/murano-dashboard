@@ -9,6 +9,8 @@ MURANO_USE_GLARE = False
 
 MURANO_REPO_URL = 'http://apps.openstack.org/api/v1/murano_repo/liberty/'
 
+DISPLAY_MURANO_REPO_URL = 'http://apps.openstack.org/#tab=murano-apps'
+
 # Overrides the default dashboard name (Murano) that is displayed
 # in the main accordion navigation
 # MURANO_DASHBOARD_NAME = "Murano"
