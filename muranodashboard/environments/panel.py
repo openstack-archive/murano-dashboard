@@ -21,6 +21,7 @@ from muranodashboard import dashboard
 class Environments(horizon.Panel):
     name = _("Environments")
     slug = 'environments'
+    policy_rules = (("murano", "list_environments"),)
 
 
 dashboard.Murano.register(Environments)

@@ -22,6 +22,7 @@ from horizon import exceptions
 from horizon import tabs
 from openstack_dashboard.api import heat as heat_api
 from openstack_dashboard.api import nova as nova_api
+from openstack_dashboard import policy
 
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import api
@@ -234,6 +235,9 @@ class DeploymentTab(tabs.TableTab):
     table_classes = (tables.DeploymentsTable,)
     template_name = 'horizon/common/_detail_table.html'
     preload = False
+
+    def allowed(self, request):
+        return policy.check((("murano", "list_deployments"),), request)
 
     def get_deployments_data(self):
         deployments = []
