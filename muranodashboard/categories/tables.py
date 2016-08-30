@@ -19,6 +19,7 @@ from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import tables
 from muranoclient.common import exceptions as exc
+from openstack_dashboard import policy
 from oslo_log import log as logging
 
 from muranodashboard import api
@@ -32,9 +33,12 @@ class AddCategory(tables.LinkAction):
     url = "horizon:murano:categories:add"
     classes = ("ajax-modal",)
     icon = "plus"
+    policy_rules = (("murano", "add_category"),)
 
 
-class DeleteCategory(tables.DeleteAction):
+class DeleteCategory(policy.PolicyTargetMixin, tables.DeleteAction):
+    policy_rules = (("murano", "delete_category"),)
+
     @staticmethod
     def action_present(count):
         return ungettext_lazy(

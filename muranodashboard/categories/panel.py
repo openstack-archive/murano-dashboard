@@ -21,7 +21,7 @@ from muranodashboard import dashboard
 class Categories(horizon.Panel):
     name = _("Categories")
     slug = 'categories'
-    permissions = ('openstack.roles.admin',)
+    policy_rules = (("murano", "get_category"),)
 
 
 dashboard.Murano.register(Categories)
