@@ -109,7 +109,7 @@ $(function() {
   "use strict";
   var $statuses = {
     environments__deploy: ['pending', 'deploy failure'],
-    environments__delete: ['ready', 'pending', 'new', 'deploy failure'],
+    environments__delete: ['ready', 'pending', 'new', 'deploy failure', 'delete failure'],
     environments__abandon: ['ready', 'in process', 'deploy failure', 'delete failure']
   };
 
