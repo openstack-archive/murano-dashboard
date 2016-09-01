@@ -2054,7 +2054,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
 
         self.wait_for_alert_message()
 
-        if utils.glare_enabled():
+        if not utils.glare_enabled():
             # TODO(kzaitsev): see Bug #1618228
             # GLARE doesn't expose category package count
             self.check_element_on_page(
