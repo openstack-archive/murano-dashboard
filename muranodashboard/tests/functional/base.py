@@ -23,6 +23,7 @@ from glanceclient import client as gclient
 from keystoneauth1.identity import v3
 from keystoneauth1 import session as ks_session
 from keystoneclient.v3 import client as ks_client
+from muranoclient.glance import client as glare_client
 import muranoclient.v1.client as mclient
 from oslo_log import handlers
 from oslo_log import log
@@ -63,12 +64,21 @@ class UITestCase(BaseDeps):
                            project_name=cfg.common.tenant,
                            auth_url=cfg.common.keystone_url)
         session = ks_session.Session(auth=auth)
-        cls.murano_client = mclient.Client(
-            endpoint_override=cfg.common.murano_url,
-            session=session)
         cls.keystone_client = ks_client.Client(session=session)
         cls.auth_ref = auth.get_auth_ref(session)
         cls.service_catalog = cls.auth_ref.service_catalog
+        if utils.glare_enabled():
+            glare_endpoint = "http://127.0.0.1:9494"
+            artifacts_client = glare_client.Client(
+                endpoint=glare_endpoint, token=cls.auth_ref.auth_token,
+                insecure=False, key_file=None, ca_file=None, cert_file=None,
+                type_name="murano", type_version=1)
+        else:
+            artifacts_client = None
+        cls.murano_client = mclient.Client(
+            artifacts_client=artifacts_client,
+            endpoint_override=cfg.common.murano_url,
+            session=session)
 
         cls.url_prefix = urlparse.urlparse(cfg.common.horizon_url).path or ''
         if cls.url_prefix.endswith('/'):
