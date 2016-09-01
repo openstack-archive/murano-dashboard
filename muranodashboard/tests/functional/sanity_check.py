@@ -1266,9 +1266,6 @@ class TestSuitePackages(base.PackageTestCase):
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
 
-    @unittest.skipIf(utils.glare_enabled(),
-                     "GLARE backend doesn't honor public flag. "
-                     "Bug #1618222")
     def test_upload_package(self):
         """Test package uploading via Packages view.
 
