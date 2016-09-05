@@ -25,6 +25,7 @@ from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
+from muranodashboard.common import utils as md_utils
 
 LOG = logging.getLogger(__name__)
 
@@ -214,9 +215,10 @@ class ModifyPackage(tables.LinkAction):
 
 
 class PackageDefinitionsTable(tables.DataTable):
-    name = tables.Column('name',
-                         link="horizon:murano:packages:detail",
-                         verbose_name=_('Package Name'))
+    name = md_utils.Column(
+        'name',
+        link="horizon:murano:packages:detail",
+        verbose_name=_('Package Name'))
     tenant_name = tables.Column('tenant_name', verbose_name=_('Tenant Name'))
     enabled = tables.Column('enabled', verbose_name=_('Active'))
     is_public = tables.Column('is_public', verbose_name=_('Public'))

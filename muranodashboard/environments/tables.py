@@ -31,6 +31,7 @@ from oslo_log import log as logging
 from muranodashboard import api as api_utils
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import views as catalog_views
+from muranodashboard.common import utils as md_utils
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.packages import consts as pkg_consts
@@ -433,12 +434,12 @@ class UpdateName(tables.UpdateAction):
 
 
 class EnvironmentsTable(tables.DataTable):
-    name = tables.Column('name',
-                         link='horizon:murano:environments:services',
-                         verbose_name=_('Name'),
-                         form_field=forms.CharField(required=False),
-                         update_action=UpdateName,
-                         truncate=40)
+    name = md_utils.Column(
+        'name',
+        link='horizon:murano:environments:services',
+        verbose_name=_('Name'),
+        form_field=forms.CharField(required=False),
+        update_action=UpdateName)
 
     status = tables.Column('status',
                            verbose_name=_('Status'),
@@ -484,9 +485,10 @@ def get_service_type(datum):
 
 
 class ServicesTable(tables.DataTable):
-    name = tables.Column('name',
-                         verbose_name=_('Name'),
-                         link=get_service_details_link)
+    name = md_utils.Column(
+        'name',
+        verbose_name=_('Name'),
+        link=get_service_details_link)
 
     _type = tables.Column(get_service_type,
                           verbose_name=_('Type'))
@@ -609,8 +611,7 @@ class DeploymentsTable(tables.DataTable):
 
 
 class EnvConfigTable(tables.DataTable):
-    name = tables.Column('name',
-                         verbose_name=_('Name'))
+    name = md_utils.Column('name', verbose_name=_('Name'))
     _type = tables.Column(
         lambda datum: get_service_type(datum) or 'Unknown',
         verbose_name=_('Type'))

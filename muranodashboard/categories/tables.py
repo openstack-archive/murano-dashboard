@@ -23,6 +23,7 @@ from openstack_dashboard import policy
 from oslo_log import log as logging
 
 from muranodashboard import api
+from muranodashboard.common import utils as md_utils
 
 LOG = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class DeleteCategory(policy.PolicyTargetMixin, tables.DeleteAction):
 
 
 class CategoriesTable(tables.DataTable):
-    name = tables.Column('name', verbose_name=_('Category Name'))
+    name = md_utils.Column('name', verbose_name=_('Category Name'))
     use_artifacts = getattr(settings, 'MURANO_USE_GLARE', False)
     if not use_artifacts:
         package_count = tables.Column('package_count',
