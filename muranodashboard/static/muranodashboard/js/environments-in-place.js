@@ -43,7 +43,7 @@ $(function() {
       var $name = $form.find('div.form-group');
       $name.addClass("col-md-6");
       if ( validationFailed ) {
-        $tbody.find('tr.new_env').remove();
+        $thead.find('tr.new_env').remove();
       }
 
       var $newEnvTr = $('<tr class="new_env">' +

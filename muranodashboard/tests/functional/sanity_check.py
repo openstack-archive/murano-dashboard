@@ -203,6 +203,27 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                    c.EnvStatus.format('quick-env-2', 'Ready'),
                                    sec=90)
 
+    def test_new_environments_in_one_moment(self):
+        """Test check that only one environment can be created in one moment
+
+        Scenario:
+            1. Go to environments submenu.
+            2. Create one environment.
+            3. Go to environments submenu.
+            4. Press create new environment button.
+            5. Press create new environment button again.
+            6. Check that only one form for creating environment is created.
+        """
+        self.go_to_submenu('Environments')
+        self.create_environment('temp_environment')
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_id(
+            'environments__action_CreateEnvironment').click()
+        self.driver.find_element_by_id(
+            'environments__action_CreateEnvironment').click()
+        new_environments = self.driver.find_elements_by_class_name('new_env')
+        self.assertEqual(len(new_environments), 1)
+
     def test_env_status_new_session_add_to_empty(self):
         """Test that environments status is correct in the new session
 
