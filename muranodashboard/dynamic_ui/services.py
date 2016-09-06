@@ -242,9 +242,13 @@ def get_app_field_descriptions(request, app_id, index):
 
     form_cls = app.forms[index]
     descriptions = []
+    no_field_descriptions = []
     for name, field in six.iteritems(form_cls.base_fields):
         title = field.description_title
         description = field.description
         if description:
-            descriptions.append((name, title, description))
-    return descriptions
+            if field.widget.is_hidden:
+                no_field_descriptions.extend([description, title])
+            else:
+                descriptions.append((name, title, description))
+    return descriptions, no_field_descriptions
