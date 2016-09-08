@@ -29,7 +29,7 @@ from oslo_log import handlers
 from oslo_log import log
 from selenium.common import exceptions as exc
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common import action_chains
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support import ui
@@ -323,7 +323,7 @@ class UITestCase(BaseDeps):
             'button.ajax-inline-edit')
 
         # hover to make pencil visible
-        hover = ActionChains(self.driver).move_to_element(el_td)
+        hover = action_chains.ActionChains(self.driver).move_to_element(el_td)
         hover.perform()
         el_pencil.click()
 
