@@ -1,15 +1,16 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 # Wu Han <wu.han@h3c.com>, 2016. #zanata
+# sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev76\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0b4.dev6\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-09-01 17:18+0000\n"
+"POT-Creation-Date: 2016-09-06 10:58+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-09-05 01:52+0000\n"
-"Last-Translator: Wu Han <wu.han@h3c.com>\n"
+"PO-Revision-Date: 2016-09-08 07:14+0000\n"
+"Last-Translator: sunanchen <KF.sunanchen@h3c.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -32,7 +33,6 @@ msgid "Abandoned Environment"
 msgid_plural "Abandoned Environments"
 msgstr[0] "已放弃环境变量"
 
-#, fuzzy
 msgid "Active"
 msgstr "运行中"
 
@@ -202,12 +202,18 @@ msgstr "确认密码"
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "不能获取环境 {0} 的最近状态"
 
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"无法找到应用，需要以下字段。\n"
+"Tried:{fqns}"
+
 msgid "Couldn't update environment. Reason: "
 msgstr "无法更新环境，原因是："
 
-#, fuzzy
 msgid "Couldn't update package {0} parameters. Error: {1}"
-msgstr "无法更新软件包 {0}，错误：{1}"
+msgstr "无法更新创建包 {0} 参数错误: {1}"
 
 msgid "Create"
 msgstr "创建"
@@ -314,7 +320,6 @@ msgstr "详情"
 msgid "Download Package"
 msgstr "下载软件包"
 
-#, fuzzy
 msgid "Drop Components here"
 msgstr "把组件拖拽到此"
 
@@ -414,11 +419,9 @@ msgstr "Bundle 文件的 HTTP/HTTPS URL。"
 msgid "HTTP/HTTPS URL of the package file."
 msgstr "软件包文件的 HTTP/HTTPS URL。"
 
-#, fuzzy
 msgid "Heat Orchestration stack name"
 msgstr "Heat 编排栈的名称"
 
-#, fuzzy
 msgid "Heat Orchestration stack%(forloop.counter)s name"
 msgstr "Heat 编排栈 %(forloop.counter)s 的名称"
 
@@ -472,7 +475,6 @@ msgstr "实例名称"
 msgid "Instance%(forloop.counter)s name"
 msgstr "实例 %(forloop.counter)s 的名称"
 
-#, fuzzy
 msgid "Invalid metadata for image: {0}"
 msgstr "镜像 {0} 的元数据无效"
 
@@ -513,11 +515,10 @@ msgstr "Manifest 文件"
 msgid "Mark Image"
 msgstr "标记镜像"
 
-#, fuzzy
 msgid ""
 "Mark an image with Murano specific metadata to be added to the selected "
 "image."
-msgstr "用 Murano 相关元数据标记镜像。"
+msgstr "用 Murano标记镜像并指定增加到已选择镜像的元数据"
 
 msgid "Marked Images"
 msgstr "已标记的镜像"
@@ -682,7 +683,6 @@ msgstr "请提供一个软件包 URL"
 msgid "Previous Page"
 msgstr "上一页"
 
-#, fuzzy
 msgid "Provide comma-separated list of words, associated with the package"
 msgstr "提供与包相关的一组词，用逗号分隔"
 
@@ -837,7 +837,6 @@ msgstr "密码必须包含至少一个字面、一个数字和一个特殊字符
 msgid "The request data is not acceptable by the server"
 msgstr "请求的数据不能被服务器接受"
 
-#, fuzzy
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr "这个目录中没有应用程序。你可以从以下地方导入："
 
@@ -863,11 +862,9 @@ msgstr "这个动作不能撤消。这个环境创建的所有资源需要手动
 msgid "This name is already taken."
 msgstr "这个名字已经被使用"
 
-#, fuzzy
 msgid "Time Finished"
 msgstr "计时结束"
 
-#, fuzzy
 msgid "Time Started"
 msgstr "计时开始"
 
@@ -877,29 +874,24 @@ msgstr "时间已更新"
 msgid "Title"
 msgstr "标题"
 
-#, fuzzy
 msgid "Toggle Active"
 msgid_plural "Toggle Active"
-msgstr[0] "切换运行"
+msgstr[0] "切换至Active状态"
 
-#, fuzzy
 msgid "Toggle Enabled"
 msgstr "切换启用"
 
-#, fuzzy
 msgid "Toggle Public"
 msgid_plural "Toggle Public"
-msgstr[0] "切换公有"
+msgstr[0] "切换至Public状态"
 
-#, fuzzy
 msgid "Toggled Active"
 msgid_plural "Toggled Active"
-msgstr[0] "已切换运行"
+msgstr[0] "已切换至Active状态"
 
-#, fuzzy
 msgid "Toggled Public"
 msgid_plural "Toggled Public"
-msgstr[0] "已切换公有"
+msgstr[0] "已切换至Public状态"
 
 msgid "Topology"
 msgstr "拓扑"

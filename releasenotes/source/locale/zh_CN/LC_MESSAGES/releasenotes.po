@@ -1,0 +1,140 @@
+# Wu Han <wu.han@h3c.com>, 2016. #zanata
+# sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: Murano Dashboard Release Notes 3.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-06 10:58+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-09-08 07:31+0000\n"
+"Last-Translator: sunanchen <KF.sunanchen@h3c.com>\n"
+"Language-Team: Chinese (China)\n"
+"Language: zh-CN\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+msgid "1.0.3"
+msgstr "1.0.3"
+
+msgid "2.0.0"
+msgstr "2.0.0"
+
+msgid "2.0.0.0b2"
+msgstr "2.0.0.0b2"
+
+msgid "2.0.0.0b3"
+msgstr "2.0.0.0b3"
+
+msgid "2.0.0.0rc1"
+msgstr "2.0.0.0rc1"
+
+msgid "2.0.1"
+msgstr "2.0.1"
+
+msgid "2.0.2"
+msgstr "2.0.2"
+
+msgid "3.0.0.0b1"
+msgstr "3.0.0.0b1"
+
+msgid "3.0.0.0b2"
+msgstr "3.0.0.0b2"
+
+msgid "3.0.0.0b3"
+msgstr "3.0.0.0b3版本"
+
+msgid ""
+"Add details page for packages, The details page will show more info to user, "
+"such as FQN, Description, etc."
+msgstr ""
+"为软件包增加详情页面，详情页面将向用户展示更多信息，例如FQN，描述等等。"
+
+msgid ""
+"Added :filter by 'KeyWord' in package definition can matches all the package "
+"parameters like name, tags ..etc."
+msgstr "增加：软件包的关键词过滤 可以通过例如名称，标签等参数来匹配软件包"
+
+msgid ""
+"Added possibility for user to select several environments and execute one of "
+"the three actions to all of them at once (delete, abandon or deploy)."
+msgstr ""
+"使用户可以选择几个环境并同时对它们执行3种操作（删除，放弃，部署）中的一种"
+
+msgid "Bug Fixes"
+msgstr "漏洞修复"
+
+msgid "Current Series Release Notes"
+msgstr "当前版本发布说明"
+
+msgid ""
+"Environment components page reloads after deployment of empty environment. "
+"It allows to add new components to the empty environment without manual page "
+"refresh."
+msgstr ""
+"在空环境部署后，环境组件页面会重新载入，这样在添加新组件到空环境时就不需要手"
+"动刷新页面了"
+
+msgid "Filter by 'Name' in package definition only matches package name."
+msgstr "通过名称过滤软件包只匹配软件包包名"
+
+msgid ""
+"Fix Downloading Package blocks downloading next package. Use 'tables."
+"LinkAction' instead of 'tables.Action' for DownloadPackage table action."
+msgstr ""
+"修复了下载软件包时阻碍下载下一个软件包的问题。下载软件包时，使用'tables."
+"LinkAction'代替'tables.Action'"
+
+msgid ""
+"Fixed password-checking in dynamic UI forms by using just type of the field "
+"rather than type and ending of field id to determine the password field. "
+"Previously password fields with the ids not ending with 'password' were not "
+"validated by javascript."
+msgstr ""
+"修正了动态UI表单的密码检查方式，只需输入该域而不再使用密码加上域id来确认为密"
+"码的方式。以前的密码，如果id不是以password结尾的，不能被javascript验证通过"
+
+msgid ""
+"Improved the performance of 'Recent Activity' panel at the 'Browse Catalog' "
+"page. It was done with refactoring single request for every latest app with "
+"single for all, using new API 'in' operator."
+msgstr ""
+"提升了“浏览目录”页面中“最近活动”面板的性能，这通过使用新的API来为每一个最新的"
+"app重构单一的请求来实现"
+
+msgid "It is now possible to use any symbols in environments name."
+msgstr "现在可以在环境名称中使用任何符号了"
+
+msgid "Liberty Series Release Notes"
+msgstr "Liberty版本发布说明"
+
+msgid "Mitaka Series Release Notes"
+msgstr "Mitaka版本发布说明"
+
+msgid "Murano Dashboard Release Notes"
+msgstr "Murano Dashboard发布说明"
+
+msgid "Murano-dashboard now supports python3"
+msgstr "Murano-dashboard 现已支持 python3"
+
+msgid "New Features"
+msgstr "新特性"
+
+msgid ""
+"Parameters ``GLANCE_API_INSECURE`` and ``GLANCE_API_URL`` have been renamed "
+"to ``GLARE_API_INSECURE`` and ``GLARE_API_URL``."
+msgstr ""
+"参数``GLANCE_API_INSECURE`` 和 ``GLANCE_API_URL`` 已被重命名为 "
+"``GLARE_API_INSECURE`` 和 ``GLARE_API_URL``."
+
+msgid "Security Issues"
+msgstr "安全问题"
+
+msgid "Upgrade Notes"
+msgstr "升级说明"
+
+msgid ""
+"murano-dashboard now use local_settings.d dir for its own config snippet "
+"from Horizon."
+msgstr "murano-dashboard现在使用local_settings.d文件夹来存放自己的配置信息"
