@@ -1,4 +1,7 @@
 ---
 fixes:
-  - Specifying a base class in the ui definition now also fetches all the packages with classes
-    that inherit from that class, when glare is used.
+  - Specifying a base class in the UI definition now also fetches all the packages with classes
+    that inherit from that class, when glare is used. For example, if you
+    specify the 'io.example.Parent' class, the dashboard
+    fetches 'io.example.Child1' and 'io.example.Child2', and any other
+    descendants of 'io.example.Parent' that are present.

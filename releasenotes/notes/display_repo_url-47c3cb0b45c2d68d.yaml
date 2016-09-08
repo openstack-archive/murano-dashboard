@@ -1,0 +1,5 @@
+---
+features:
+  - Added ``DISPLAY_MURANO_REPO_URL`` setting that is used as a
+    user-visible link to ``apps.openstack.org`` or any other murano
+    applications repository.
