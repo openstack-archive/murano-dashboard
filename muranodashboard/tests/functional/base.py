@@ -472,10 +472,16 @@ class FieldsTestCase(PackageBase):
 
 
 class ApplicationTestCase(ImageTestCase):
-    def delete_component(self, component_name):
-        component_id = self.get_element_id(component_name)
-        self.driver.find_element_by_id(
-            'services__row_{0}__action_delete'.format(component_id)).click()
+    def delete_component(self, component_name=None):
+        if component_name:
+            component_id = self.get_element_id(component_name)
+            btn = self.driver.find_element_by_id(
+                'services__row_{0}__action_delete'.format(
+                    component_id))
+        else:
+            btn = self.driver.find_element_by_css_selector(
+                consts.DeleteComponent)
+        btn.click()
         el = self.wait_element_is_clickable(by.By.LINK_TEXT,
                                             'Delete Component')
         el.click()

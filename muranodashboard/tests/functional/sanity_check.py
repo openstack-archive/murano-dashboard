@@ -277,7 +277,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
-        self.delete_component('TestApp')
+        self.delete_component()
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestApp')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
@@ -312,8 +312,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
-        self.delete_component('TestApp1')
-        self.check_element_not_on_page(by.By.LINK_TEXT, 'TestApp1')
+        self.delete_component()
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
@@ -608,7 +607,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
         self.wait_element_is_clickable(by.By.ID, c.AddComponent)
         self.check_element_on_page(by.By.LINK_TEXT, 'TestA')
-        self.delete_component('TestA')
+        self.delete_component()
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
 
     def test_check_search_option(self):
@@ -915,7 +914,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             if idx:
                 self.check_element_not_on_page(by.By.LINK_TEXT,
                                                app_names[idx - 1])
-            self.delete_component(app_name)
+            self.delete_component()
 
         # To ensure that the very last application is deleted as well
         for app_name in app_names[-1::]:
