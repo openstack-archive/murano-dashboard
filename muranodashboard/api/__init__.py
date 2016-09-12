@@ -88,6 +88,15 @@ def handled_exceptions(request):
         if not reason:
             reason = msg
         _handle_message(request, reason)
+    except (exc.HTTPInternalServerError,
+            glance_exc.HTTPInternalServerError) as e:
+        msg = _("There was an error communicating with server")
+        LOG.exception(msg)
+        reason = muranodashboard_utils.parse_api_error(
+            getattr(e, 'details', ''))
+        if not reason:
+            reason = msg
+        _handle_message(request, reason)
 
 
 def _get_endpoint(request):
