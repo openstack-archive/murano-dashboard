@@ -52,7 +52,7 @@ def get_available_networks(request, include_subnets=True,
                                                    tenant_id=tenant_id)
     except exceptions.ServiceCatalogException:
         LOG.warning("Neutron not found. Assuming Nova Network usage")
-        return None
+        return []
 
     # Remove external networks
     networks = [network for network in networks
