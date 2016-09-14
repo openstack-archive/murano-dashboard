@@ -1,4 +1,11 @@
 ---
 features:
-  - murano-dashboard now use local_settings.d dir for
-    its own config snippet from Horizon.
+  - Murano dashboard now comes with the ``muranodashboard/local/local_settings.d/_50_murano.py``
+    file that contains murano-specific settings for horizon
+    (for example, ``MURANO_API_URL``).
+upgrade:
+  - Previously all murano-specific horizon settings had to be kept in ``local_settings.py``
+    file of Horizon. You need to remove those settings from local_settings.py and
+    copy ``muranodashboard/local/local_settings.d/_50_murano.py``
+    to ``openstack_dashboard/local/local_settings.d/`` directory in horizon and keep all
+    murano-related changes there.

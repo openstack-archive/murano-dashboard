@@ -1,5 +1,5 @@
 ---
 fixes:
-  - Fix Downloading Package blocks downloading next package.
-    Use 'tables.LinkAction' instead of 'tables.Action' for
+  - Fixed the issue with sequential download of packages.
+    Dashboard is now using 'tables.LinkAction' instead of 'tables.Action' for
     DownloadPackage table action.
