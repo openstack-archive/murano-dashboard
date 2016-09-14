@@ -1407,8 +1407,7 @@ class TestSuitePackages(base.PackageTestCase):
                       self.driver.find_element(by.By.XPATH, c.AppDetail).text)
 
     @unittest.skipIf(utils.glare_enabled(),
-                     "GLARE backend doesn't expose category count"
-                     "Bug #1618228")
+                     "GLARE backend doesn't expose category count")
     def test_add_pkg_to_category_non_admin(self):
         """Test package addition to category as non admin user
 
@@ -1462,6 +1461,47 @@ class TestSuitePackages(base.PackageTestCase):
         self.check_element_on_page(
             by.By.XPATH, c.CategoryPackageCount.format(
                 'Databases', database_pkg_count - 1))
+
+    def test_add_pkg_to_category_without_count(self):
+        """Test package addition to category as non admin user
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as non-admin user
+            2. Navigate to 'Packages' page
+            3. Navigate to package details page
+            4. Check that 'category 1' is among package's categories
+            5. Navigate to 'Packages' page
+            6. Modify any package by changing its category from
+                'category 1' to 'category 2'
+            7. Navigate to package details page
+            8. Check that 'category 2' is among package's categories
+            9. Check that 'category 1' is not among package's categories
+        """
+        # relogin as test user
+        self.log_out()
+        self.log_in(self.testuser_name, self.testuser_password)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_link_text("MockApp").click()
+        self.check_element_on_page(by.By.XPATH, c.CategoryName.format(
+            'Web'))
+
+        self.go_to_submenu('Packages')
+        self.select_action_for_package(self.mockapp_id, 'modify_package')
+        sel = self.driver.find_element_by_xpath(
+            "//select[contains(@name, 'categories')]")
+        sel = ui.Select(sel)
+        sel.deselect_all()
+        sel.select_by_value('Databases')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.wait_for_alert_message()
+
+        self.driver.find_element_by_link_text('MockApp').click()
+        self.check_element_on_page(by.By.XPATH, c.CategoryName.format(
+            'Databases'))
+        self.check_element_not_on_page(by.By.XPATH, c.CategoryName.format(
+            'Web'))
 
     def test_category_management(self):
         """Test application category adds and deletes successfully
