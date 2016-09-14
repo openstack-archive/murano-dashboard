@@ -1396,11 +1396,10 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.wait_for_alert_message()
 
-        # TODO(kzaitsev): We need to wait while the spinner is gone
-        # instead will add a 5 sec sleep, should fix as part of 1618271
-        time.sleep(5)
-
         pkg_name = self.archive_name
+
+        self.check_element_on_page(by.By.LINK_TEXT, pkg_name)
+
         self.driver.find_element_by_xpath(
             "//a[contains(text(), '{0}')]".format(pkg_name)).click()
         self.assertIn(pkg_name,
