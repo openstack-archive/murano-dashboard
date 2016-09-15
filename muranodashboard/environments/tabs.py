@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from collections import OrderedDict
+import collections
 import json
 
 from django.conf import settings
@@ -77,7 +77,7 @@ class OverviewTab(tabs.Tab):
             if id == service_data['?']['status']:
                 status_name = name
 
-        detail_info = OrderedDict([
+        detail_info = collections.OrderedDict([
             ('Name', getattr(service_data, 'name', '')),
             ('ID', service_data['?']['id']),
             ('Type', tables.get_service_type(service_data) or 'Unknown'),
