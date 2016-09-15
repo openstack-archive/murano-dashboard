@@ -22,7 +22,7 @@ $(function() {
   "use strict";
   $("table#services.datatable").on("update", function () {
     // If every component has finished installing (with error or success): reloads the page.
-    var $rowsToUpdate = $(this).find('tr.status_unknown.ajax-update');
+    var $rowsToUpdate = $(this).find('tr.warning.ajax-update');
     if ($rowsToUpdate.length === 0) {
       if (reloadCalled === false) {
         reloadCalled = true;
@@ -84,7 +84,7 @@ $(function() {
 
 function getRowStatus($row) {
   "use strict";
-  if ($row.hasClass('status_unknown')) {
+  if ($row.hasClass('warning')) {
     return "in process";
   } else {
     return $row.attr("status");
