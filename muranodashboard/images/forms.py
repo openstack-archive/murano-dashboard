@@ -50,12 +50,27 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
     _metadata = {
         'windows.2012': ' Windows Server 2012',
         'linux': 'Generic Linux',
-        'cirros.demo': 'CirrOS for Murano Demo'
+        'cirros.demo': 'CirrOS for Murano Demo',
+        'custom': "Custom type"
     }
 
     image = forms.ChoiceField(label=_('Image'))
     title = forms.CharField(max_length="255", label=_("Title"))
-    type = forms.ChoiceField(label=_("Type"), choices=_metadata.items())
+    type = forms.ChoiceField(
+        label=_("Type"),
+        choices=_metadata.items(),
+        initial='custom',
+        widget=forms.Select(attrs={
+            'class': 'switchable',
+            'data-slug': 'type'}))
+    custom_type = forms.CharField(
+        max_length="255",
+        label=_("Custom Type"),
+        widget=forms.TextInput(attrs={
+            'class': 'switched',
+            'data-switch-on': 'type',
+            'data-type-custom': _('Custom Type')}),
+        required=False)
     existing_titles = forms.CharField(widget=forms.HiddenInput)
 
     def __init__(self, request, *args, **kwargs):
@@ -83,10 +98,12 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         LOG.debug('Marking image with specified metadata: {0}'.format(data))
 
         image_id = data['image']
+        image_type = data['type'] if data['type'] != 'custom' else \
+            data['custom_type']
         properties = glance.image_get(request, image_id).properties
         properties['murano_image_info'] = json.dumps({
             'title': data['title'],
-            'type': data['type']
+            'type': image_type
         })
 
         try:
