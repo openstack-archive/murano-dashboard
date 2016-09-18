@@ -61,33 +61,47 @@ class MarkedImagesView(horizon_tables.DataTableView):
         images = []
         self._prev = False
         self._more = False
+
+        # TODO(kzaitsev) add v2 client support for marking images
         try:
-            images_iter = glance.glanceclient(self.request).images.list(
-                **kwargs)
-            marked_images_iter = forms.filter_murano_images(
-                images_iter,
-                request=self.request)
-            images = list(itertools.islice(marked_images_iter, request_size))
-            # first and middle page condition
-            if len(images) > page_size:
-                images.pop(-1)
-                self._more = True
-                # middle page condition
-                if marker is not None:
-                    self._prev = True
-            # first page condition when reached via prev back
-            elif sort_dir == 'asc' and marker is not None:
-                self._more = True
-            # last page condition
-            elif marker is not None:
-                self._prev = True
-            if prev_marker is not None:
-                images.reverse()
+            glance_v1_client = glance.glanceclient(self.request, "1")
         except Exception:
-            msg = _('Unable to retrieve list of images')
-            uri = reverse('horizon:murano:images:index')
+            # Horizon seems to raise ImportError which doesn't look
+            # specific enough. Let's catch any exceptions.
+            msg = _('Unable to create v1 glance client. Marking images '
+                    'from murano-dashboard will be unavailable.')
+            uri = reverse('horizon:murano:catalog:index')
 
             exceptions.handle(self.request, msg, redirect=uri)
+
+        try:
+            images_iter = glance_v1_client.images.list(
+                **kwargs)
+        except Exception:
+            msg = _('Unable to retrieve list of images')
+            uri = reverse('horizon:murano:catalog:index')
+
+            exceptions.handle(self.request, msg, redirect=uri)
+
+        marked_images_iter = forms.filter_murano_images(
+            images_iter,
+            request=self.request)
+        images = list(itertools.islice(marked_images_iter, request_size))
+        # first and middle page condition
+        if len(images) > page_size:
+            images.pop(-1)
+            self._more = True
+            # middle page condition
+            if marker is not None:
+                self._prev = True
+        # first page condition when reached via prev back
+        elif sort_dir == 'asc' and marker is not None:
+            self._more = True
+        # last page condition
+        elif marker is not None:
+            self._prev = True
+        if prev_marker is not None:
+            images.reverse()
         return images
 
 

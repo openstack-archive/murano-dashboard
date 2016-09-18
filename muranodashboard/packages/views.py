@@ -70,6 +70,61 @@ def is_app(wizard):
     return False
 
 
+def _ensure_images(name, package, request, step_data=None):
+    try:
+        glance_client = glance.glanceclient(
+            request, version='1')
+    except Exception:
+        glance_client = None
+
+    base_url = packages_consts.MURANO_REPO_URL
+    image_specs = package.images()
+    if not glance_client and len(image_specs):
+        # NOTE(kzaitsev): no glance_client. Probably v1 client
+        # is not available. Add warning, to let user know that
+        # we were unable to load images automagically
+        # since v2 does not have copy_from
+        download_urls = []
+        for image_spec in image_specs:
+            download_url = muranoclient_utils.to_url(
+                image_spec.get("Url", image_spec['Name']),
+                base_url=base_url,
+                path='images/',
+            )
+            download_urls.append(download_url)
+        msg = _("Couldn't initialise glance v1 client, "
+                "therefore could not download images for "
+                "'{0}' package. You may need to download them "
+                "manually from these locations: {1}").format(
+                    name, ' '.join(download_urls))
+        messages.error(request, msg)
+        LOG.error(msg)
+        return
+
+    try:
+        imgs = muranoclient_utils.ensure_images(
+            glance_client=glance_client,
+            image_specs=package.images(),
+            base_url=base_url)
+        for img in imgs:
+            msg = _("Trying to add {0} image to glance. "
+                    "Image will be ready for deployment after "
+                    "successful upload").format(img['name'],)
+            messages.warning(request, msg)
+            log_msg = _("Trying to add {0}, {1} image to "
+                        "glance. Image will be ready for "
+                        "deployment after successful upload")\
+                .format(img['name'], img['id'],)
+            LOG.info(log_msg)
+            if step_data:
+                step_data['images'].append(img)
+    except Exception as e:
+        msg = _("Error {0} occurred while installing "
+                "images for {1}").format(e, name)
+        messages.error(request, msg)
+        LOG.exception(msg)
+
+
 class PackageDefinitionsView(horizon_tables.DataTableView):
     table_class = tables.PackageDefinitionsTable
     template_name = 'packages/index.html'
@@ -219,10 +274,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 raise exceptions.Http302(
                     reverse('horizon:murano:packages:index'))
 
-            glance_client = glance.glanceclient(self.request, version='1')
-
             for package_spec in bundle.package_specs():
-
                 try:
                     package = muranoclient_utils.Package.from_location(
                         package_spec['Name'],
@@ -240,26 +292,9 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
 
                 reqs = package.requirements(base_url=base_url)
                 for dep_name, dep_package in six.iteritems(reqs):
-                    try:
-                        imgs = muranoclient_utils.ensure_images(
-                            glance_client=glance_client,
-                            image_specs=dep_package.images(),
-                            base_url=base_url)
-                        for img in imgs:
-                            msg = _("Trying to add {0} image to glance. "
-                                    "Image will be ready for deployment after"
-                                    " successful upload").format(img['name'],)
-                            messages.warning(self.request, msg)
-                            log_msg = _("Trying to add {0}, {1} image to "
-                                        "glance. Image will be ready for "
-                                        "deployment after successful upload")\
-                                .format(img['name'], img['id'],)
-                            LOG.info(log_msg)
-                    except Exception as e:
-                        msg = _("Error {0} occurred while installing "
-                                "images for {1}").format(e, dep_name)
-                        messages.error(self.request, msg)
-                        LOG.exception(msg)
+                    _ensure_images(dep_name, dep_package,
+                                   self.request)
+
                     try:
                         files = {dep_name: dep_package.file()}
                         package = api.muranoclient(
@@ -354,16 +389,29 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         # Images have been imported as private images during the 'upload' step
         # If the package is public, make the required images public
         if data['is_public']:
-            glance_client = glance.glanceclient(self.request, version='1')
-            for img in installed_images:
-                try:
-                    glance_client.images.update(img['id'], is_public=True)
-                    LOG.debug('Success update for image {0}'.format(img['id']))
-                except Exception as e:
-                    msg = _("Error {0} occurred while setting image {1}, {2} "
-                            "public").format(e, img['name'], img['id'])
-                    messages.error(self.request, msg)
-                    LOG.exception(msg)
+            try:
+                glance_client = glance.glanceclient(self.request, '1')
+            except Exception:
+                glance_client = None
+
+            if glance_client:
+                for img in installed_images:
+                    try:
+                        glance_client.images.update(img['id'], is_public=True)
+                        LOG.debug(
+                            'Success update for image {0}'.format(img['id']))
+                    except Exception as e:
+                        msg = _("Error {0} occurred while setting image {1}, "
+                                "{2} public").format(e, img['name'], img['id'])
+                        messages.error(self.request, msg)
+                        LOG.exception(msg)
+            elif len(installed_images):
+                msg = _("Couldn't initialise glance v1 client, "
+                        "therefore could not make the following images "
+                        "public: {0}").format(' '.join(
+                            [img['name'] for img in installed_images]))
+                messages.warning(self.request, msg)
+                LOG.warning(msg)
 
         try:
             data['tags'] = [t.strip() for t in data['tags'].split(',')]
@@ -447,36 +495,13 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 raise exceptions.Http302(
                     reverse('horizon:murano:packages:index'))
 
-            def _ensure_images(name, package):
-                try:
-                    imgs = muranoclient_utils.ensure_images(
-                        glance_client=glance_client,
-                        image_specs=package.images(),
-                        base_url=base_url)
-                    for img in imgs:
-                        msg = _("Trying to add {0} image to glance. "
-                                "Image will be ready for deployment after "
-                                "successful upload").format(img['name'],)
-                        messages.warning(self.request, msg)
-                        log_msg = _("Trying to add {0}, {1} image to "
-                                    "glance. Image will be ready for "
-                                    "deployment after successful upload")\
-                            .format(img['name'], img['id'],)
-                        LOG.info(log_msg)
-                        step_data['images'].append(img)
-                except Exception as e:
-                    msg = _("Error {0} occurred while installing "
-                            "images for {1}").format(e, name)
-                    messages.error(self.request, msg)
-                    LOG.exception(msg)
-
             reqs = package.requirements(base_url=base_url)
-            glance_client = glance.glanceclient(self.request, version='1')
             original_package = reqs.pop(name)
             step_data['dependencies'] = []
             step_data['images'] = []
             for dep_name, dep_package in six.iteritems(reqs):
-                _ensure_images(dep_name, dep_package)
+                _ensure_images(dep_name, dep_package, self.request, step_data)
+
                 try:
                     files = {dep_name: dep_package.file()}
                     package = api.muranoclient(self.request).packages.create(
@@ -501,7 +526,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                     continue
 
             # add main packages images
-            _ensure_images(name, original_package)
+            _ensure_images(name, original_package, self.request, step_data)
 
             # import main package itself
             try:
