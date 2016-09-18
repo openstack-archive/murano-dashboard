@@ -100,14 +100,13 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         image_id = data['image']
         image_type = data['type'] if data['type'] != 'custom' else \
             data['custom_type']
-        properties = glance.image_get(request, image_id).properties
-        properties['murano_image_info'] = json.dumps({
+        kwargs = {}
+        kwargs['murano_image_info'] = json.dumps({
             'title': data['title'],
             'type': image_type
         })
-
         try:
-            img = glance.image_update(request, image_id, properties=properties)
+            img = glance.image_update_properties(request, image_id, **kwargs)
             messages.success(request, _('Image successfully marked'))
             return img
         except Exception:

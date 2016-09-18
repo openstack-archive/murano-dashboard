@@ -1,0 +1,5 @@
+---
+other:
+  - Murano Dashboard relies on Glance v1 API for image uploads.
+    In case it is not available an error will be shown and all the
+    image-related functionality will be unavailable.
