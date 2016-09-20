@@ -37,7 +37,7 @@ def get_app_image(request, app_fqdn, status=None):
         url = static('dashboard/img/stack-gray.svg')
     if package:
         app_id = package.id
-        url = reverse("horizon:murano:catalog:images", args=(app_id,))
+        url = reverse("horizon:app-catalog:catalog:images", args=(app_id,))
     return url
 
 

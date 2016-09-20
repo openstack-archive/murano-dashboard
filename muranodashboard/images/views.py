@@ -85,7 +85,7 @@ class MarkedImagesView(horizon_tables.DataTableView):
                 images.reverse()
         except Exception:
             msg = _('Unable to retrieve list of images')
-            uri = reverse('horizon:murano:images:index')
+            uri = reverse('horizon:app-catalog:images:index')
 
             exceptions.handle(self.request, msg, redirect=uri)
         return images
@@ -98,6 +98,6 @@ class MarkImageView(views.ModalFormView):
     template_name = 'images/mark.html'
     context_object_name = 'image'
     page_title = _("Update Image")
-    success_url = reverse_lazy('horizon:murano:images:index')
+    success_url = reverse_lazy('horizon:app-catalog:images:index')
     submit_label = _('Mark Image')
-    submit_url = reverse_lazy('horizon:murano:images:mark_image')
+    submit_url = reverse_lazy('horizon:app-catalog:images:mark_image')

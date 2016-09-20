@@ -112,7 +112,8 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
             return img
         except Exception:
             exceptions.handle(request, _('Unable to mark image'),
-                              redirect=reverse('horizon:murano:images:index'))
+                              redirect=reverse(
+                                  'horizon:app-catalog:images:index'))
 
     def clean_title(self):
         cleaned_data = super(MarkImageForm, self).clean()

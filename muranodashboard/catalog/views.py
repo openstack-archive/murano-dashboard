@@ -346,7 +346,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             do_redirect = do_redirect or not wm_form_data.get(
                 'stay_at_the_catalog', True)
 
-        fail_url = reverse("horizon:murano:environments:index")
+        fail_url = reverse("horizon:app-catalog:environments:index")
         environment_id = utils.ensure_python_obj(kwargs.get('environment_id'))
         quick_environment_id = self.request.session.get('quick_env_id')
         try:
@@ -360,7 +360,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
                     environment_id = env.id
                 else:
                     environment_id = quick_environment_id
-            env_url = reverse('horizon:murano:environments:services',
+            env_url = reverse('horizon:app-catalog:environments:services',
                               args=(environment_id,))
 
             srv = env_api.service_create(
@@ -374,7 +374,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             LOG.exception(message)
             if quick_environment_id:
                 env_api.environment_delete(self.request, quick_environment_id)
-                fail_url = reverse('horizon:murano:catalog:index')
+                fail_url = reverse('horizon:app-catalog:catalog:index')
             exceptions.handle(self.request, message, redirect=fail_url)
         else:
             message = _("The '{0}' application successfully added to "
@@ -554,21 +554,21 @@ class IndexView(generic_views.PageTitleMixin, list_view.ListView):
             query_params['marker'] = marker
         if sort_dir:
             query_params['sort_dir'] = sort_dir
-        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+        return '{0}?{1}'.format(reverse('horizon:app-catalog:catalog:index'),
                                 http_utils.urlencode(query_params))
 
     def prev_page_url(self):
         query_params = self.get_query_params()
         query_params['marker'] = self.get_marker(0)
         query_params['sort_dir'] = 'desc'
-        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+        return '{0}?{1}'.format(reverse('horizon:app-catalog:catalog:index'),
                                 http_utils.urlencode(query_params))
 
     def next_page_url(self):
         query_params = self.get_query_params()
         query_params['marker'] = self.get_marker()
         query_params['sort_dir'] = 'asc'
-        return '{0}?{1}'.format(reverse('horizon:murano:catalog:index'),
+        return '{0}?{1}'.format(reverse('horizon:app-catalog:catalog:index'),
                                 http_utils.urlencode(query_params))
 
     def get_context_data(self, **kwargs):
@@ -588,7 +588,7 @@ class IndexView(generic_views.PageTitleMixin, list_view.ListView):
         context['tenant_id'] = self.request.session['token'].tenant['id']
         context.update(get_environments_context(self.request))
         context['display_repo_url'] = pkg_consts.DISPLAY_MURANO_REPO_URL
-        context['pkg_def_url'] = reverse('horizon:murano:packages:index')
+        context['pkg_def_url'] = reverse('horizon:app-catalog:packages:index')
         context['no_apps'] = True
         if self.get_current_category() != ALL_CATEGORY_NAME or search:
             context['no_apps'] = False

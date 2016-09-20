@@ -37,7 +37,7 @@ class ManagePanels(horizon.PanelGroup):
 
 class Murano(horizon.Dashboard):
     name = getattr(settings, 'MURANO_DASHBOARD_NAME', _("Applications"))
-    slug = "murano"
+    slug = "app-catalog"
     panels = (DeployPanels, ManagePanels)
     default_panel = "environments"
     supports_tenants = True

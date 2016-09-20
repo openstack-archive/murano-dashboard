@@ -25,7 +25,7 @@ from muranodashboard.common import utils as md_utils
 class MarkImage(tables.LinkAction):
     name = "mark_image"
     verbose_name = _("Mark Image")
-    url = "horizon:murano:images:mark_image"
+    url = "horizon:app-catalog:images:mark_image"
     classes = ("ajax-modal",)
     icon = "plus"
 
@@ -56,7 +56,8 @@ class RemoveImageMetadata(tables.DeleteAction):
             glance.image_update_properties(request, obj_id, remove_props)
         except Exception:
             exceptions.handle(request, _('Unable to remove metadata'),
-                              redirect=reverse('horizon:murano:images:index'))
+                              redirect=reverse(
+                                  'horizon:app-catalog:images:index'))
 
     def allowed(self, request, image):
         return request.user.is_superuser

@@ -16,4 +16,4 @@ import horizon
 
 
 def get_user_home(user):
-    return horizon.get_dashboard('murano').get_absolute_url()
+    return horizon.get_dashboard('app-catalog').get_absolute_url()

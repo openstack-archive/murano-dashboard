@@ -1187,7 +1187,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.go_to_submenu('Browse')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determinate is it in catalog or not.
-        btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
+        btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
                      "".format(self.url_prefix, self.postgre_id))
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
 
@@ -1244,7 +1244,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.go_to_submenu('Browse')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determine is it in catalog or not.
-        btn_xpath = ("//*[@href='{0}/murano/catalog/quick-add/{1}']"
+        btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
                      "".format(self.url_prefix, self.postgre_id))
 
         self.check_element_on_page(by.By.XPATH, btn_xpath)

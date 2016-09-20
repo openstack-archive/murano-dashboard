@@ -595,7 +595,7 @@ def make_select_cls(fqns):
             # NOTE(kzaitsev): this closure is needed to allow us have custom
             # logic when clicking add button
             def _make_link():
-                ns_url = 'horizon:murano:catalog:add'
+                ns_url = 'horizon:app-catalog:catalog:add'
                 ns_url_args = (environment_id, False, True)
 
                 # This will prevent horizon from adding an extra '+' button

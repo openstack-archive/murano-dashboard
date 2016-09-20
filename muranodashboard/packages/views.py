@@ -217,7 +217,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 LOG.exception(msg)
                 messages.error(self.request, msg)
                 raise exceptions.Http302(
-                    reverse('horizon:murano:packages:index'))
+                    reverse('horizon:app-catalog:packages:index'))
 
             glance_client = glance.glanceclient(self.request, version='1')
 
@@ -294,7 +294,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         return step_data
 
     def done(self, form_list, **kwargs):
-        redirect = reverse('horizon:murano:packages:index')
+        redirect = reverse('horizon:app-catalog:packages:index')
         msg = _('Bundle successfully imported.')
         LOG.info(msg)
         messages.success(self.request, msg)
@@ -337,7 +337,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         installed_images = self.storage.get_step_data('upload').get(
             'images', [])
 
-        redirect = reverse('horizon:murano:packages:index')
+        redirect = reverse('horizon:app-catalog:packages:index')
         dep_data = {'enabled': data['enabled'],
                     'is_public': data['is_public']}
         murano_client = api.muranoclient(self.request)
@@ -374,7 +374,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             LOG.exception(msg)
             exceptions.handle(
                 self.request, msg,
-                redirect=reverse('horizon:murano:packages:index'))
+                redirect=reverse('horizon:app-catalog:packages:index'))
         except (exc.HTTPException, Exception):
             LOG.exception(_('Modifying package failed'))
             exceptions.handle(self.request,
@@ -402,7 +402,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         exceptions.handle(
             self.request,
             msg,
-            redirect=reverse('horizon:murano:packages:index'))
+            redirect=reverse('horizon:app-catalog:packages:index'))
 
     def process_step(self, form):
         @catalog_views.update_latest_apps
@@ -445,7 +445,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 LOG.exception(msg)
                 messages.error(self.request, msg)
                 raise exceptions.Http302(
-                    reverse('horizon:murano:packages:index'))
+                    reverse('horizon:app-catalog:packages:index'))
 
             def _ensure_images(name, package):
                 try:
@@ -520,7 +520,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 exceptions.handle(
                     self.request,
                     msg,
-                    redirect=reverse('horizon:murano:packages:index'))
+                    redirect=reverse('horizon:app-catalog:packages:index'))
             except exc.HTTPInternalServerError as e:
                 self._handle_exception(e)
 
@@ -533,7 +533,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 exceptions.handle(
                     self.request,
                     reason,
-                    redirect=reverse('horizon:murano:packages:index'))
+                    redirect=reverse('horizon:app-catalog:packages:index'))
 
             except Exception as original_e:
                 self._handle_exception(original_e)
@@ -553,8 +553,8 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
 class ModifyPackageView(views.ModalFormView):
     form_class = forms.ModifyPackageForm
     template_name = 'packages/modify_package.html'
-    success_url = reverse_lazy('horizon:murano:packages:index')
-    failure_url = reverse_lazy('horizon:murano:packages:index')
+    success_url = reverse_lazy('horizon:app-catalog:packages:index')
+    failure_url = reverse_lazy('horizon:app-catalog:packages:index')
     page_title = _("Modify Package")
 
     def get_initial(self):
@@ -587,7 +587,7 @@ class DetailView(horizon_views.HorizonTemplateView):
             app_id = self.kwargs['app_id']
             app = api.muranoclient(self.request).packages.get(app_id)
         except Exception:
-            INDEX_URL = 'horizon:murano:packages:index'
+            INDEX_URL = 'horizon:app-catalog:packages:index'
             exceptions.handle(self.request,
                               _('Unable to retrieve package details.'),
                               redirect=reverse(INDEX_URL))
@@ -606,7 +606,7 @@ def download_packge(request, app_name, app_id):
         return response
     except exc.HTTPException:
         LOG.exception(_('Something went wrong during package downloading'))
-        redirect = reverse('horizon:murano:packages:index')
+        redirect = reverse('horizon:app-catalog:packages:index')
         exceptions.handle(request,
                           _('Unable to download package.'),
                           redirect=redirect)

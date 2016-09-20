@@ -5,9 +5,9 @@
     <div class="well app">
         <div class="app-description">
             <div class="col-xs-2 col-sm-4 col-md-4 col-lg-4 app-icon">
-                <a href="{% url 'horizon:murano:catalog:application_details' app.id %}"
+                <a href="{% url 'horizon:app-catalog:catalog:application_details' app.id %}"
                    class="btn-link">
-                    <img src="{% url 'horizon:murano:catalog:images' app.id %}"/>
+                    <img src="{% url 'horizon:app-catalog:catalog:images' app.id %}"/>
                 </a>
             </div>
             <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 description">
@@ -16,7 +16,7 @@
                 <p>{{ app.description|striptags|truncatechars:130 }}</p>
 
                 <div class="app-details-link"><a
-                        href="{% url 'horizon:murano:catalog:application_details' app.id %}"
+                        href="{% url 'horizon:app-catalog:catalog:application_details' app.id %}"
                         class="btn-link">{% trans "Details" %} &raquo;</a></div>
             </div>
 
