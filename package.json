@@ -6,8 +6,8 @@
   "repository": "none",
   "license": "Apache 2.0",
   "devDependencies": {
-    "eslint": "1.2.1",
-    "eslint-config-openstack": "1.2.3"
+    "eslint": "1.10.3",
+    "eslint-config-openstack": "1.2.4"
   },
   "scripts": {
     "lint": "eslint --no-color muranodashboard/static"

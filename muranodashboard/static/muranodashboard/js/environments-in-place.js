@@ -42,7 +42,7 @@ $(function() {
       var $form = $(data).find('form');
       var $name = $form.find('div.form-group');
       $name.addClass("col-md-6");
-      if ( validationFailed ) {
+      if (validationFailed) {
         $thead.find('tr.new_env').remove();
       }
 
@@ -83,7 +83,7 @@ $(function() {
                 gettext("There was an error submitting the form. Please try again."));
           },
           success: function(data, status, xhr) {
-            if ( data === '' ) {
+            if (data === '') {
               // environment was created successfully
               var redirUrl = xhr.getResponseHeader('X-Horizon-Location');
               $newEnvTr.remove();

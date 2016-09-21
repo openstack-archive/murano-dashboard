@@ -241,9 +241,9 @@ $(function() {
         modalContent.append(button);
         $('.modal-close button').tooltip();
         $('.modal-close button').on("click", function () {
-            window.clearInterval(intervalId);
-            document.location = $form.attr('action');
-          });
+          window.clearInterval(intervalId);
+          document.location = $form.attr('action');
+        });
         if (startUrl) {
           $.ajax({
             type: 'POST',
@@ -255,7 +255,7 @@ $(function() {
             },
             error: handleError
           });
-          if ( resultUrl ) {
+          if (resultUrl) {
 
             intervalId = window.setInterval(function () {
               // it's better to avoid placing the whole downloadable content
