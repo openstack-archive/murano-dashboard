@@ -28,16 +28,16 @@ class TestLicenseTab(helpers.APITestCase):
         """Check that a license is returned."""
 
         # Fake the services.get_app_forms() call.
-        m = mock.MagicMock()
+        m = mock.Mock()
         m.base_fields = {
-            'license': mock.MagicMock(
+            'license': mock.Mock(
                 description='Lorem ipsum dolor sit '
                             'amet, consectetur adipiscing elit.')
         }
         mock_services.get_app_forms.return_value = [('', m)]
 
         # Fake an application object, needed when instantiating tabs.
-        app = mock.MagicMock()
+        app = mock.Mock()
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
@@ -54,12 +54,12 @@ class TestLicenseTab(helpers.APITestCase):
         """Check that no license is returned."""
 
         # Fake the services.get_app_forms() call.
-        m = mock.MagicMock()
+        m = mock.Mock()
         m.base_fields = {}
         mock_services.get_app_forms.return_value = [('', m)]
 
         # Fake an application object, needed when instantiating tabs.
-        app = mock.MagicMock()
+        app = mock.Mock()
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
@@ -79,9 +79,9 @@ class TestRequirementsTab(helpers.APITestCase):
     def test_requirements(self, mock_services):
         """Check that requirements are returned."""
 
-        m = mock.MagicMock()
+        m = mock.Mock()
         m.base_fields = {
-            'flavor': mock.MagicMock(requirements={
+            'flavor': mock.Mock(requirements={
                 'min_disk': 10,
                 'min_vcpus': 2,
                 'min_memory_mb': 2048,
@@ -92,7 +92,7 @@ class TestRequirementsTab(helpers.APITestCase):
         }
         mock_services.get_app_forms.return_value = [('', m)]
 
-        app = mock.MagicMock()
+        app = mock.Mock()
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
@@ -121,11 +121,11 @@ class TestRequirementsTab(helpers.APITestCase):
     def test_no_requirements(self, mock_services):
         """Check that no requirements are returned."""
 
-        m = mock.MagicMock()
+        m = mock.Mock()
         m.base_fields = {}
         mock_services.get_app_forms.return_value = [('', m)]
 
-        app = mock.MagicMock()
+        app = mock.Mock()
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
