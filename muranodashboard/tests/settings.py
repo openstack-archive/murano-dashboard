@@ -70,7 +70,7 @@ LOGGING = {
             'handlers': ['null'],
             'propagate': False,
         },
-        'quantum': {
+        'neutronclient': {
             'handlers': ['null'],
             'propagate': False,
         },
