@@ -17,6 +17,7 @@ import copy
 import functools
 import json
 import re
+import uuid
 
 from django.conf import settings
 from django.contrib import auth
@@ -432,6 +433,10 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             app = mc.packages.get(app_id)
             self.storage.extra_data['app'] = app
 
+        wizard_id = self.request.REQUEST.get('wizard_id')
+        if wizard_id is None:
+            wizard_id = uuid.uuid4()
+
         environment_id = self.kwargs.get('environment_id')
         environment_id = utils.ensure_python_obj(environment_id)
         if environment_id is not None:
@@ -450,6 +455,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
                         'do_redirect': self.get_wizard_flag('do_redirect'),
                         'drop_wm_form': self.get_wizard_flag('drop_wm_form'),
                         'prefix': self.prefix,
+                        'wizard_id': wizard_id,
                         'field_descriptions': field_descr,
                         'extended_descriptions': extended_descr,
                         })
