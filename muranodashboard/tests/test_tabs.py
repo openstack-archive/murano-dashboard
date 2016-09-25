@@ -19,10 +19,6 @@ from openstack_dashboard.test import helpers
 
 
 class TestLicenseTab(helpers.APITestCase):
-    def setUp(self):
-        """Set up the Form data."""
-        super(TestLicenseTab, self).setUp()
-
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_license(self, mock_services):
         """Check that a license is returned."""
@@ -71,10 +67,6 @@ class TestLicenseTab(helpers.APITestCase):
 
 
 class TestRequirementsTab(helpers.APITestCase):
-    def setUp(self):
-        """Set up the Form data."""
-        super(TestRequirementsTab, self).setUp()
-
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_requirements(self, mock_services):
         """Check that requirements are returned."""
