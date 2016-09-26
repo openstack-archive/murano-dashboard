@@ -30,8 +30,3 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # from openstack_dashboard.settings import POLICY_FILES
 POLICY_FILES.update({'murano': 'murano_policy.json',})
-
-OPENSTACK_API_VERSIONS = {
-    "identity": 3,
-    "image": 1,
-}
