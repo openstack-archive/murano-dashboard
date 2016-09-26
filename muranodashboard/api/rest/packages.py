@@ -26,7 +26,7 @@ CLIENT_KEYWORDS = {'marker', 'sort_dir', 'paginate'}
 class Packages(generic.View):
     """API for Murano packages.
     """
-    url_regex = r'murano/packages/$'
+    url_regex = r'app-catalog/packages/$'
 
     @rest_utils.ajax()
     def get(self, request):
@@ -35,7 +35,7 @@ class Packages(generic.View):
         The listing result is an object with property "packages".
 
         Example GET:
-        http://localhost/api/murano/packages?sort_dir=desc #flake8: noqa
+        http://localhost/api/app-catalog/packages?sort_dir=desc #flake8: noqa
 
         The following get parameters may be passed in the GET
         request:
