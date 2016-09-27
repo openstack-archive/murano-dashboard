@@ -64,7 +64,7 @@
      */
 
     function getPackages(params) {
-      var config = params ? { 'params' : params} : {};
+      var config = params ? { "params" : params} : {};
       return apiService.get('/api/app-catalog/packages/', config)
         .error(function () {
           toastService.add('error', gettext('Unable to retrieve the packages.'));

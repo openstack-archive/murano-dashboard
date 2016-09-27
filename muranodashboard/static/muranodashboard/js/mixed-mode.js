@@ -16,10 +16,10 @@ $(function() {
   "use strict";
   function checkMixedMode() {
     var checked = $("input[id*='mixedModeAuth']").prop('checked');
-    if ( checked === true) {
-      $("label[for*='saPassword']").parent().css({'display': 'inline-block'});
+    if (checked === true) {
+      $("label[for*='saPassword']").parent().css({"display": 'inline-block'});
     } else if (checked === false) {
-      $("label[for*='saPassword']").parent().css({'display': 'none'});
+      $("label[for*='saPassword']").parent().css({"display": 'none'});
     }
   }
 

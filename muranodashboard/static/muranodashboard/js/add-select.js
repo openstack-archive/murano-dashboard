@@ -17,11 +17,11 @@ $(function() {
   "use strict";
   var plus = "<i class='fa fa-plus-circle'></i>";
 
-  if ( typeof window.murano === "undefined" ) {
+  if (typeof window.murano === "undefined") {
     window.murano = {};
   }
 
-  if ( !window.murano.bind_add_item_handlers ) {
+  if (!window.murano.bind_add_item_handlers) {
     window.murano.bind_add_item_handlers = true;
     horizon.modals.addModalInitFunction(initPlusButton);
 
@@ -37,13 +37,13 @@ $(function() {
       var urls, link, $choices;
       try {
         urls = $.parseJSON($this.attr("data-add-item-url"));
-      } catch(err) {
+      } catch (err) {
         if (window.console) {
           window.console.log(err);
         }
       }
-      if ( urls && urls[0].length ) {
-        if ( urls.length === 1 ) {
+      if (urls && urls[0].length) {
+        if (urls.length === 1) {
           link = $this.next().find('a');
           link.html(plus);
           link.attr('href', urls[0][1]);
@@ -62,9 +62,9 @@ $(function() {
           $this.next('span').append($choices);
         }
       }
-      if ( $this.hasClass('murano_add_select') ) {
+      if ($this.hasClass('murano_add_select')) {
         // NOTE(tsufiev): hide selectbox in case it contains no elements
-        if ( this.options.length === 1 ) {
+        if (this.options.length === 1) {
           $this.hide();
           $this.next('span').removeClass('input-group-btn').find('i').text(
               ' Add Application');
@@ -72,7 +72,7 @@ $(function() {
         // NOTE(tsufiev): show hidden select once the new option was added to it
         // programmatically (on return from the finished modal dialog)
         $this.change(function() {
-          if ( !$this.is(':visible') && this.options.length > 1 ) {
+          if (!$this.is(':visible') && this.options.length > 1) {
             $this.show();
             $this.next('span').addClass('input-group-btn').find('i').text('');
             $this.val($(this.options[1]).val());

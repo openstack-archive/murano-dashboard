@@ -15,6 +15,25 @@ globals:
   # allow passing TENANT_ID from django templates
   TENANT_ID: false
 
+# Below we adjust rules specific to horizon's usage of openstack's linting
+# rules, and its own plugin inclusions.
+rules:
+  #############################################################################
+  # Disabled Rules from eslint-config-openstack
+  #############################################################################
+  valid-jsdoc: [1, {
+    requireParamDescription: false
+  }]
+  no-undefined: 1
+  brace-style: 1
+  no-extra-parens: 1
+  callback-return: 1
+  block-scoped-var: 1
+  quote-props: 0
+  space-in-parens: 1
+  no-use-before-define: 1
+  no-unneeded-ternary: 1
+
 # Only support ECMA5, disable everything else.
 # NOTE(kzaitsev): blatantly copied from horizon
 ecmaFeatures:

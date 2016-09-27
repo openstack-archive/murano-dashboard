@@ -56,46 +56,46 @@ $(function() {
 
     function update() {
       node = node.data(nodes, function(d) {
-            return d.id;
-          });
+        return d.id;
+      });
       link = link.data(links);
 
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("node_name", function(d) {
-              return d.name;
-            })
+          return d.name;
+        })
         .attr("node_id", function(d) {
-              return d.id;
-            })
+          return d.id;
+        })
         .call(force.drag);
 
       nodeEnter.append("image")
         .attr("xlink:href", function(d) {
-              return d.image;
-            })
+          return d.image;
+        })
         .attr("id", function(d) {
-              return "image_" + d.id;
-            })
+          return "image_" + d.id;
+        })
         .attr("x", function(d) {
-              return d.image_x;
-            })
+          return d.image_x;
+        })
         .attr("y", function(d) {
-              return d.image_y;
-            })
+          return d.image_y;
+        })
         .attr("width", function(d) {
-              return d.image_size;
-            })
+          return d.image_size;
+        })
         .attr("height", function(d) {
-              return d.image_size;
-            })
+          return d.image_size;
+        })
         .attr("clip-path", "url(#clipCircle)");
       node.exit().remove();
 
       link.enter().insert("path", "g.node")
         .attr("class", function(d) {
-              return "link " + d.link_type;
-            });
+          return "link " + d.link_type;
+        });
 
       link.exit().remove();
       //Setup click action for all nodes
@@ -117,8 +117,8 @@ $(function() {
     function tick() {
       link.attr('d', drawLink).style('stroke-width', 3).attr('marker-end', "url(#end)");
       node.attr("transform", function(d) {
-              return "translate(" + d.x + "," + d.y + ")";
-            });
+        return "translate(" + d.x + "," + d.y + ")";
+      });
     }
 
     function setInProgress(stack, innerNodes) {
@@ -192,7 +192,7 @@ $(function() {
         //make sure target node exists
         try {
           targetIdx = findNodeIndex(innerNode.required_by[j]);
-        } catch(err) {
+        } catch (err) {
           if (window.console) {
             window.console.log(err);
           }
@@ -208,10 +208,10 @@ $(function() {
 
         if (pushLink === true && (sourceIdx && targetIdx)) {
           links.push({
-            'target': sourceIdx,
-            'source': targetIdx,
-            'value': 1,
-            'link_type': innerNode.link_type
+            "target": sourceIdx,
+            "source": targetIdx,
+            "value": 1,
+            "link_type": innerNode.link_type
           });
         }
       }
@@ -225,10 +225,10 @@ $(function() {
             //if new node is required by existing node, push new link
             if (innerNode.id === dependency) {
               links.push({
-                'target': findNodeIndex(nodes[i].id),
-                'source': findNodeIndex(innerNode.id),
-                'value': 1,
-                'link_type': nodes[i].link_type
+                "target": findNodeIndex(nodes[i].id),
+                "source": findNodeIndex(innerNode.id),
+                "value": 1,
+                "link_type": nodes[i].link_type
               });
             }
           }
