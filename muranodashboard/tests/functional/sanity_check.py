@@ -1048,9 +1048,10 @@ class TestSuiteAppsPagination(base.UITestCase):
         packages_list = [elem.name for elem in
                          self.murano_client.packages.list()]
         # No list of apps available in the client only packages are.
-        # Need to remove 'Core library' from it since it is not visible in
-        # application's list.
+        # Need to remove 'Core library' and 'Application Development Library'
+        # from it since it is not visible in application's list.
         packages_list.remove('Core library')
+        packages_list.remove('Application Development Library')
 
         apps_per_page = 6
         pages_itself = [packages_list[i:i + apps_per_page] for i in
