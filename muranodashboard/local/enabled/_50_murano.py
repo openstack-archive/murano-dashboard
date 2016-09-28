@@ -28,11 +28,14 @@ ADD_EXCEPTIONS = {
     'unauthorized': exceptions.UNAUTHORIZED,
 }
 
+ADD_ANGULAR_MODULES = ['horizon.app.murano']
+
 ADD_JS_FILES = [
     'muranodashboard/js/upload_form.js',
     'muranodashboard/js/import_bundle_form.js',
     'muranodashboard/js/more-less.js',
 
     'app/murano/murano.service.js',
+    'app/murano/murano.module.js'
 
 ]
