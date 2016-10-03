@@ -66,12 +66,45 @@
     <script type="text/javascript">
         {# TODO(efedorova): extract to a separate file #}
         $(function() {
+          "use strict";
           {# Make element ids unique per-wizard to avoid interference #}
           {# upon pressing 'Back' button while creating one application #}
           {# from another #}
-          var btn_id = '#{{ prefix }}_btn', val_id = '#{{ prefix }}_val';
+          var btn_id = '#{{ prefix }}_btn',
+              val_id = '#{{ prefix }}_val',
+              current_step = {{ wizard.steps.index }},
+              form_data = {},
+              wizard_id = '{{ wizard_id }}',
+              session_data = sessionStorage.getItem(wizard_id + current_step),
+              form = $('#form_' + '{{ prefix }}'.split("_")[1]),
+              fields = '.form-group input, .form-group select, .form-group textarea';
+          if (current_step > 0) {
+            // Update form with saved data
+            if (session_data) {
+              setFormData(JSON.parse(session_data));
+            }
+            // Collect loaded form data
+            form_data = rearrangeKeys(getFormData());
+          }
           $(btn_id).click(function() {
+            var current_data = JSON.stringify(rearrangeKeys(getFormData()));
+            // Check if there any changes in the form
+            if (current_data != JSON.stringify(form_data)) {
+              // Save current data into session storage
+              sessionStorage.setItem(wizard_id + current_step, current_data);
+            }
             $(val_id).val('{{ wizard.steps.prev }}')
+          });
+          $('input[type="submit"]').click(function() {
+            clearSession(current_step);
+            return true;
+          });
+          $('a.close').click(function() {
+            var step = 1;
+            for (; step < {{ wizard.steps.count }}; step++) {
+              clearSession(step);
+            }
+            return true;
           });
           $('#modal_wrapper').on('new_modal', function(evt, modal) {
             var $modal = $(modal);
@@ -99,20 +132,49 @@
               }
             }).filter(':first').trigger('focus');
           });
-            // show full name on text overflow
-            $('.modal-dialog h3').each(function () {
-                $(this).bind('mouseenter', function () {
-                    var $this = $(this);
+          // show full name on text overflow
+          $('.modal-dialog h3').each(function () {
+            $(this).bind('mouseenter', function () {
+                var $this = $(this);
 
-                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                        $this.attr('title', $this.text());
-                    }
-                });
+                if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                    $this.attr('title', $this.text());
+                }
             });
+          });
+          function getFormData() {
+            var inputs = {};
+            form.find(fields).each(function() {
+              inputs[this.id] = [$(this).val(), $(this).is(':checked')];
+            });
+            return inputs;
+          }
+          function setFormData(data) {
+            form.find(fields).each(function() {
+              var field = $(this);
+              if (field.is('select')) {
+                field.find('option:selected').removeAttr('selected');
+              }
+              if (data[this.id][1]) {
+                field.prop('checked', true);
+              }
+              field.val(data[this.id][0]);
+            });
+          }
+          function clearSession(step) {
+            sessionStorage.removeItem(wizard_id + step);
+          }
+          function rearrangeKeys(obj) {
+            return Object.keys(obj).sort().reduce(function assemble(acc, key) {
+              acc[key] = obj[key];
+              return acc;
+            }, {});
+          }
         });
     </script>
     {{ wizard.form.media }}
 
+    <input type="hidden" name="wizard_id" value="{{ wizard_id }}"/>
     <input type="hidden" name="wizard_goto_step" id="{{ prefix }}_val"/>
     <input type="hidden" name="do_redirect" value="{{ do_redirect }}"/>
     <input type="hidden" name="drop_wm_form" value="{{ drop_wm_form }}"/>
