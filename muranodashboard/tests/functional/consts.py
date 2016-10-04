@@ -44,7 +44,8 @@ HotFlavorField = '//div[contains(@class, "has-error")]//input'
 EnvCheckbox = "//tr[contains(@data-display, '{0}')]/td[contains(@class, 'multi_select_column')]//div//label"  # noqa
 NewEnvRow = "table#environments thead tr.new_env"
 TableSorterByName = "table#environments thead th.tablesorter-header[data-column='1']"  # noqa
-CategoryName = "//dd[contains(text(), '{0}')]"
+ServiceDetail = "//dd[contains(text(), '{0}')]"
+ServiceType = "//table[@id='services']//tbody//tr//td[2][contains(text(), '{0}')]"  # noqa
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"

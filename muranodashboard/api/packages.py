@@ -62,8 +62,12 @@ def apps_that_inherit(request, fqn):
     return apps
 
 
-def app_by_fqn(request, fqn, catalog=True):
-    apps = api.muranoclient(request).packages.filter(fqn=fqn, catalog=catalog)
+def app_by_fqn(request, fqn, catalog=True, version=None):
+    kwargs = {'fqn': fqn, 'catalog': catalog}
+    glare = getattr(settings, 'MURANO_USE_GLARE', False)
+    if glare and version:
+        kwargs['version'] = version
+    apps = api.muranoclient(request).packages.filter(**kwargs)
     try:
         return apps.next()
     except StopIteration:

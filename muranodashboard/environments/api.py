@@ -19,6 +19,7 @@ import six
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
+from muranodashboard.api import packages as packages_api
 from muranodashboard.common import utils
 from muranodashboard.environments import consts
 from muranodashboard.environments import topology
@@ -290,6 +291,18 @@ def services_list(request, environment_id):
         service_data['operation_updated'] = time
         if service_data['?'].get('name'):
             service_data['name'] = service_data['?']['name']
+        if (consts.DASHBOARD_ATTRS_KEY not in service_data['?'] or
+                not service_data['?'][consts.DASHBOARD_ATTRS_KEY].get('name')):
+            fqn = service_data['?']['type']
+            version = None
+            if '/' in fqn:
+                version, fqn = fqn.split('/')[1].split('@')
+            pkg = packages_api.app_by_fqn(request, fqn, version=version)
+            if pkg:
+                app_name = pkg.name
+                storage = service_data['?'].setdefault(
+                    consts.DASHBOARD_ATTRS_KEY, {})
+                storage['name'] = app_name
 
         services.append(service_data)
 

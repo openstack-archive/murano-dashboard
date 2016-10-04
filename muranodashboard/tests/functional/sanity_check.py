@@ -852,6 +852,48 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.assertIn('Follow the white rabbit',
                       self.driver.find_element_by_class_name('logs').text)
 
+    def test_check_service_name_and_type(self):
+        """Test checks that service name and type are displayed correctly
+
+        Scenario:
+            1. Navigate to Catalog>Browse and click MockApp 'Quick Deploy'
+            2. Check service name and type
+            3. Navigate to service details page
+            4. Check service name and type there
+            5. Navigate back to the environment details page
+            6. Click deploy
+            7. Wait 'Ready' status
+            8. Check service name and type
+            9. Navigate to service details page
+            10. Check service name and type
+        """
+        self.add_app_to_env(self.mockapp_id)
+        name = 'TestApp'
+        type_ = 'MockApp'
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.ServiceType.format(type_))
+        self.driver.find_element_by_link_text(name).click()
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(name))
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(type_))
+        self.check_element_not_on_page(by.By.XPATH, c.ServiceDetail.format(
+            'Unknown'))
+
+        self.go_to_submenu('Environments')
+        self.driver.find_element_by_link_text('quick-env-1').click()
+        self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+
+        self.check_element_on_page(by.By.XPATH,
+                                   c.ServiceType.format(type_))
+        self.driver.find_element_by_link_text(name).click()
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(name))
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(type_))
+        self.check_element_not_on_page(by.By.XPATH, c.ServiceDetail.format(
+            'Unknown'))
+
     def test_hot_application(self):
         """Checks that UI got hot app is rendered correctly
 
@@ -1483,7 +1525,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_link_text("MockApp").click()
-        self.check_element_on_page(by.By.XPATH, c.CategoryName.format(
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(
             'Web'))
 
         self.go_to_submenu('Packages')
@@ -1497,9 +1539,9 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
 
         self.driver.find_element_by_link_text('MockApp').click()
-        self.check_element_on_page(by.By.XPATH, c.CategoryName.format(
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(
             'Databases'))
-        self.check_element_not_on_page(by.By.XPATH, c.CategoryName.format(
+        self.check_element_not_on_page(by.By.XPATH, c.ServiceDetail.format(
             'Web'))
 
     def test_category_management(self):
