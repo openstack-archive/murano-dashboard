@@ -63,6 +63,8 @@ class Service(object):
         self.cleaned_data = cleaned_data
         self.templates = templates or {}
         self.spec_version = str(version)
+        if forms is None:
+            forms = []
 
         if application is None:
             raise ValueError('Application section is required')
