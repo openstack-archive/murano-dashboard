@@ -2157,8 +2157,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.wait_for_alert_message()
 
         if not utils.glare_enabled():
-            # TODO(kzaitsev): see Bug #1618228
-            # GLARE doesn't expose category package count
+            # GLARE backend doesn't expose category package count
             self.check_element_on_page(
                 by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
 
@@ -2172,8 +2171,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.murano_client.categories.delete(self.category_id)
 
     @unittest.skipIf(utils.glare_enabled(),
-                     "GLARE backend doesn't expose category count"
-                     "Bug #1618228")
+                     "GLARE backend doesn't expose category count")
     def test_add_delete_category_for_package(self):
         """Test package importing with new category and changing the category.
 
@@ -2221,6 +2219,56 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.go_to_submenu('Categories')
         self.check_element_on_page(
             by.By.XPATH, c.CategoryPackageCount.format(self.category, 0))
+
+    def test_add_delete_category_for_package_without_count(self):
+        """Test package importing with new category and changing the category.
+
+        Scenario:
+            1. Log into OpenStack Horizon dashboard as admin user
+            2. Navigate to 'Categories' page
+            3. Click on 'Add Category' button
+            4. Create new category
+            5. Navigate to 'Packages' page
+            6. Click on 'Import Package' button
+            7. Import package and select created 'test' category for it
+            8. Navigate to package details page
+            9. Check that new category is among package's categories
+            10. Navigate to 'Packages' page
+            11. Modify imported earlier package, by changing its category
+            12. Navigate to package details page
+            13. Check that new category is not among package's categories
+        """
+        # add new package to the created category
+        self._import_package_with_category(self.archive, self.category)
+
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_link_text(self.archive_name).click()
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(
+            self.category))
+
+        # Modify imported earlier package by changing its category
+        self.go_to_submenu('Packages')
+
+        package = self.driver.find_element_by_xpath(
+            c.AppPackages.format(self.archive_name))
+        pkg_id = package.get_attribute("data-object-id")
+
+        self.select_action_for_package(pkg_id, 'modify_package')
+        sel = self.driver.find_element_by_xpath(
+            "//select[contains(@name, 'categories')]")
+        sel = ui.Select(sel)
+        sel.deselect_all()
+        sel.select_by_value('Web')
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.wait_for_alert_message()
+
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_link_text(self.archive_name).click()
+        self.check_element_on_page(by.By.XPATH, c.ServiceDetail.format(
+            'Web'))
+        self.check_element_not_on_page(by.By.XPATH, c.ServiceDetail.format(
+            self.category))
 
     def test_filter_by_new_category(self):
         """Filter by new category from Catalog>Browse page
@@ -2317,8 +2365,8 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.check_alert_message(error_message)
 
     @unittest.skipIf(utils.glare_enabled(),
-                     "GLARE backend doesn't expose category count"
-                     "Bug #1618228")
+                     "GLARE backend doesn't expose category count, "
+                     "'Delete category' button is always displayed with GLARE")
     def test_delete_category_with_package(self):
         """Deletion of category with package in it
 
