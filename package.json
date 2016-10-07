@@ -7,10 +7,19 @@
   "license": "Apache 2.0",
   "devDependencies": {
     "eslint": "1.10.3",
-    "eslint-config-openstack": "1.2.4"
+    "eslint-config-openstack": "1.2.4",
+    "jasmine-core": "2.4.1",
+    "karma": "1.1.2",
+    "karma-chrome-launcher": "1.0.1",
+    "karma-cli": "1.0.1",
+    "karma-jasmine": "1.0.2",
+    "karma-ng-html2js-preprocessor": "1.0.0"
   },
   "scripts": {
-    "lint": "eslint --no-color muranodashboard/static"
+    "postinstall": "./tools/post_install.sh",
+    "lint": "eslint --no-color muranodashboard/static",
+    "lintq": "eslint --quiet muranodashboard/static",
+    "test": "karma start karma.conf.js --single-run"
   },
   "dependencies": {}
 }

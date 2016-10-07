@@ -31,6 +31,8 @@ ADD_EXCEPTIONS = {
 ADD_JS_FILES = [
     'muranodashboard/js/upload_form.js',
     'muranodashboard/js/import_bundle_form.js',
-    'muranodashboard/js/murano.service.js',
     'muranodashboard/js/more-less.js',
+
+    'app/murano/murano.service.js',
+
 ]
