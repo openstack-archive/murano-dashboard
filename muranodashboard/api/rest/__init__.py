@@ -11,4 +11,5 @@
 # limitations under the License.
 
 # import REST API modules here
+from . import environments  # noqa
 from . import packages  # noqa

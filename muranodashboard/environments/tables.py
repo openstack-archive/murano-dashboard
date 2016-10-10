@@ -433,6 +433,36 @@ class UpdateName(tables.UpdateAction):
         return True
 
 
+class UpdateEnvMetadata(tables.LinkAction):
+    name = "update_env_metadata"
+    verbose_name = _("Update Metadata")
+    ajax = False
+    icon = "pencil"
+    attrs = {"ng-controller": "MetadataModalHelperController as modal"}
+
+    def __init__(self, attrs=None, **kwargs):
+        kwargs['preempt'] = True
+        self.session_id = None
+        super(UpdateEnvMetadata, self).__init__(attrs, **kwargs)
+
+    def get_link_url(self, environment):
+        target = {
+            'environment': str(environment.id),
+            'session': str(self.session_id),
+        }
+        self.attrs['ng-click'] = (
+            "modal.openMetadataModal('muranoenv', %s, true)" % target)
+        return "javascript:void(0);"
+
+    def allowed(self, request, environment=None):
+        return environment.status not in (consts.STATUS_ID_DEPLOYING,
+                                          consts.STATUS_ID_DELETING)
+
+    def update(self, request, datum):
+        env_id = self.table.kwargs.get('environment_id')
+        self.session_id = api.Session.get_if_available(request, env_id)
+
+
 class EnvironmentsTable(tables.DataTable):
     name = md_utils.Column(
         'name',
@@ -472,7 +502,8 @@ class EnvironmentsTable(tables.DataTable):
         table_actions = (CreateEnvironment, DeployEnvironment,
                          DeleteEnvironment, AbandonEnvironment)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
-                       DeleteEnvironment, AbandonEnvironment)
+                       DeleteEnvironment, AbandonEnvironment,
+                       UpdateEnvMetadata)
 
 
 def get_service_details_link(service):
@@ -482,6 +513,40 @@ def get_service_details_link(service):
 
 def get_service_type(datum):
     return datum['?'].get(consts.DASHBOARD_ATTRS_KEY, {}).get('name')
+
+
+class UpdateMetadata(tables.LinkAction):
+    name = "update_metadata"
+    verbose_name = _("Update Metadata")
+    ajax = False
+    icon = "pencil"
+    attrs = {"ng-controller": "MetadataModalHelperController as modal"}
+
+    def __init__(self, attrs=None, **kwargs):
+        kwargs['preempt'] = True
+        self.session_id = None
+        super(UpdateMetadata, self).__init__(attrs, **kwargs)
+
+    def get_link_url(self, service):
+        env_id = self.table.kwargs.get('environment_id')
+        comp_id = service['?']['id']
+        target = {
+            'environment': str(env_id),
+            'component': str(comp_id),
+            'session': str(self.session_id),
+        }
+        self.attrs['ng-click'] = (
+            "modal.openMetadataModal('muranoapp', %s, true)" % target)
+        return "javascript:void(0);"
+
+    def allowed(self, request, service=None):
+        status, version = _get_environment_status_and_version(request,
+                                                              self.table)
+        return status != consts.STATUS_ID_DEPLOYING
+
+    def update(self, request, datum):
+        env_id = self.table.kwargs.get('environment_id')
+        self.session_id = api.Session.get_if_available(request, env_id)
 
 
 class ServicesTable(tables.DataTable):
@@ -572,7 +637,7 @@ class ServicesTable(tables.DataTable):
         status_columns = ['status']
         row_class = UpdateServiceRow
         table_actions = (AddApplication, DeployThisEnvironment)
-        row_actions = (DeleteService,)
+        row_actions = (DeleteService, UpdateMetadata)
         multi_select = False
 
 

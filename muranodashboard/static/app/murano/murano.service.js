@@ -31,7 +31,11 @@
 
   function muranoAPI(apiService, toastService) {
     var service = {
-      getPackages: getPackages
+      getPackages: getPackages,
+      getComponentMeta: getComponentMeta,
+      editComponentMeta: editComponentMeta,
+      getEnvironmentMeta: getEnvironmentMeta,
+      editEnvironmentMeta: editEnvironmentMeta
     };
 
     return service;
@@ -70,5 +74,130 @@
           toastService.add('error', gettext('Unable to retrieve the packages.'));
         });
     }
+
+    /**
+    * @name horizon.app.core.openstack-service-api.murano.getComponentMeta
+    * @description
+    * Get metadata attributes associated with a given component
+    *
+    * @param {Object} target
+    * The object identifying the target component
+    *
+    * @param {string} target.environment
+    * The identifier of the environment the component belongs to
+    *
+    * @param {string} target.component
+    * The identifier of the component within the environment
+    *
+    * @param {string} target.session
+    * The identifier of the configuration session for which the data should be
+    * fetched
+    *
+    * @returns {Object} The metadata object
+    */
+    function getComponentMeta(target) {
+      var params = { params: { session: target.session} };
+      var url = '/api/app-catalog/environments/' + target.environment +
+          '/components/' + target.component + '/metadata/';
+      return apiService.get(url, params)
+          .error(function () {
+            toastService.add('error', gettext('Unable to retrieve component metadata.'));
+          });
+    }
+
+    /**
+    * @name horizon.app.core.openstack-service-api.murano.editComponentMetadata
+    * @description
+    * Update metadata attributes associated with a given component
+    *
+    * @param {Object} target
+    * The object identifying the target component
+    *
+    * @param {string} target.environment
+    * The identifier of the environment the component belongs to
+    *
+    * @param {string} target.component
+    * The identifier of the component within the environment
+    *
+    * @param {string} target.session
+    * The identifier of the configuration session for which the data should be
+    * updated
+    *
+    * @param {object} updated New metadata definitions.
+    *
+    * @param {[]} removed Names of removed metadata definitions.
+    *
+    * @returns {Object} The result of the API call
+    */
+    function editComponentMeta(target, updated, removed) {
+      var params = { params: { session: target.session} };
+      var url = '/api/app-catalog/environments/' + target.environment +
+          '/components/' + target.component + '/metadata/';
+      return apiService.post(
+          url, { updated: updated, removed: removed}, params)
+          .error(function () {
+            toastService.add('error', gettext('Unable to edit component metadata.'));
+          });
+    }
+
+    /**
+    * @name horizon.app.core.openstack-service-api.murano.getEnvironmentMeta
+    * @description
+    * Get metadata attributes associated with a given environment
+    *
+    * @param {Object} target
+    * The object identifying the target environment
+    *
+    * @param {string} target.environment
+    * The identifier of the target environment
+    *
+    * @param {string} target.session
+    * The identifier of the configuration session for which the data should be
+    * fetched
+    *
+    * @returns {Object} The metadata object
+    */
+    function getEnvironmentMeta(target) {
+      var params = { params: { session: target.session} };
+      var url = '/api/app-catalog/environments/' + target.environment +
+          '/metadata/';
+      return apiService.get(url, params)
+          .error(function () {
+            toastService.add('error', gettext('Unable to retrieve environment metadata.'));
+          });
+    }
+
+    /**
+    * @name horizon.app.core.openstack-service-api.murano.editEnvironmentMeta
+    * @description
+    * Update metadata attributes associated with a given environment
+    *
+    * @param {Object} target
+    * The object identifying the target environment
+    *
+    * @param {string} target.environment
+    * The identifier of the environment the component belongs to
+    *
+    * @param {string} target.session
+    * The identifier of the configuration session for which the data should be
+    * updated
+    *
+    * @param {object} updated New metadata definitions.
+    *
+    * @param {[]} removed Names of removed metadata definitions.
+    *
+    * @returns {Object} The result of the API call
+    */
+    function editEnvironmentMeta(target, updated, removed) {
+      var params = { params: { session: target.session} };
+      var url = '/api/app-catalog/environments/' + target.environment +
+          '/metadata/';
+      return apiService.post(
+          url, { updated: updated, removed: removed}, params)
+          .error(function () {
+            toastService.add('error', gettext('Unable to edit environment metadata.'));
+          });
+    }
+
   }
 })();

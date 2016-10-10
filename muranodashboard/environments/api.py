@@ -118,6 +118,27 @@ class Session(object):
         return id
 
     @staticmethod
+    def get_if_available(request, environment_id):
+        """Get an id of open session if it exists and is not in deployed state.
+
+        Returns None otherwise
+        """
+        sessions = request.session.get('sessions', {})
+        client = api.muranoclient(request)
+
+        if environment_id in sessions:
+            id = sessions[environment_id]
+            try:
+                session_data = client.sessions.get(environment_id, id)
+            except exc.HTTPForbidden:
+                return None
+            else:
+                if session_data.state in [consts.STATUS_ID_DEPLOY_FAILURE,
+                                          consts.STATUS_ID_READY]:
+                    return None
+                return id
+
+    @staticmethod
     def get(request, environment_id):
         """Get an open session id
 
