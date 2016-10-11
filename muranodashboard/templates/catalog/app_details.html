@@ -8,12 +8,16 @@
   {{ block.super }}
   {% compress css %}
     <link rel="stylesheet" href="{% static 'muranodashboard/css/catalog.css' %}">
-    <link rel="stylesheet" href="{% static 'horizon/lib/font_awesome/css/font-awesome.min.css' %}">
+    {% if HORIZON_CONFIG.legacy_static_settings %}
+      <link rel="stylesheet" href="{% static 'horizon/lib/font-awesome/css/font-awesome.min.css' %}">
+    {% else %}
+      <link rel="stylesheet" href="{% static 'horizon/lib/font_awesome/css/font-awesome.min.css' %}">
+    {% endif %}
   {% endcompress %}
 {% endblock %}
 
 {% block page_header %}
-  {% include "horizon/common/_detail_header.html" %}
+  {% include "common/_detail_header.html" %}
 {% endblock %}
 
 {% block main %}
