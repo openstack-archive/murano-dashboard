@@ -25,7 +25,7 @@ from muranodashboard.dynamic_ui import helpers
 
 @specs.parameter('times', int)
 def _repeat(context, template, times):
-    for i in xrange(times):
+    for i in range(times):
         context['index'] = i + 1
         yield helpers.evaluate(template, context)
 
