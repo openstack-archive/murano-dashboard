@@ -28,5 +28,13 @@ DATABASES = {
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
+try:
+    from openstack_dashboard import static_settings
+    LEGACY_STATIC_SETTINGS = True
+except ImportError:
+    LEGACY_STATIC_SETTINGS = False
+
+HORIZON_CONFIG['legacy_static_settings'] = LEGACY_STATIC_SETTINGS
+
 # from openstack_dashboard.settings import POLICY_FILES
 POLICY_FILES.update({'murano': 'murano_policy.json',})
