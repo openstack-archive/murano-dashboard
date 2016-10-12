@@ -1,16 +1,14 @@
-# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
-# Frank Kloeker <eumel@arcor.de>, 2016. #zanata
 # Robert Simai <robert.simai@suse.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.1.dev3\n"
+"Project-Id-Version: murano-dashboard 3.0.1.dev6\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-09 21:21+0000\n"
+"POT-Creation-Date: 2016-10-11 16:15+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-10-11 09:29+0000\n"
-"Last-Translator: Frank Kloeker <eumel@arcor.de>\n"
+"PO-Revision-Date: 2016-10-11 09:55+0000\n"
+"Last-Translator: Robert Simai <robert.simai@suse.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -73,20 +71,20 @@ msgid "All"
 msgstr "Alle"
 
 msgid "Allows adding additional information about a package."
-msgstr "Erlaubt das Hinzufügen zusätzlicher Informationen über das Paket."
+msgstr "Erlaubt das Hinzufügen zusätzlicher Informationen über ein Paket."
 
 msgid ""
 "Allows to hide a package from the catalog. (Applies to package dependencies)"
 msgstr ""
-"Erlaubt das Verstecken eines Paketes vom Katalog. (Gilt für "
-"Paketabhängigkeiten)"
+"Erlaubt das Verstecken eines Paketes vom Katalog (in Bezug auf "
+"Paketabhängigkeiten)."
 
 msgid ""
 "An environment is a collection of applications that are meant to operate "
 "under similar conditions."
 msgstr ""
-"Eine Umgebung ist eine Sammlung von Applikationen, die unter denselben "
-"Bedingungen arbeiten."
+"Eine Umgebung ist eine Sammlung von Applikationen, die unter ähnlichen "
+"Bedingungen arbeiten sollen."
 
 msgid "An external http/https URL to load the bundle from."
 msgstr "Eine externe http/https URL zum Laden des Bündels."
@@ -148,7 +146,7 @@ msgid "Bundle successfully imported."
 msgstr "Bündel erfolgreich importiert."
 
 msgid "Bundle's full name."
-msgstr "Voller Bündelname"
+msgstr "Vollständiger Bündelname."
 
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -169,7 +167,7 @@ msgid "Check Keystone configuration of murano-api server."
 msgstr "Überprüfen Sie die Keystone-Konfiguration des Murano-API-Servers."
 
 msgid "Choose a Zip archive to upload into the catalog."
-msgstr "Wähle ein Zip-Archiv zum Hochladen in den Katalog."
+msgstr "Wählen Sie ein Zip-Archiv zum Hochladen in den Katalog."
 
 msgid "Choose a name for the environment"
 msgstr "Wähle einen Namen für die Umgebung"
@@ -179,7 +177,7 @@ msgid "Classes definition folder"
 msgstr "Klassendefinitionsverzeichnis"
 
 msgid "Click to create new environment"
-msgstr "Neue Umgebung erstellen anklicken"
+msgstr "Zum erstellen einer neuen Umgebung anklicken"
 
 msgid "Completed with warnings"
 msgstr "Abgeschlossen mit Warnungen"
@@ -223,9 +221,9 @@ msgid ""
 "for '{0}' package. You may need to download them manually from these "
 "locations: {1}"
 msgstr ""
-"Konnte Glance'V1 Client nicht aktualisieren, da das Abbild für '{0}' Paket "
-"nicht heruntergeladen werden konnte. Sie müssen es möglicherweise manuell "
-"herunterladen von hier: {1}"
+"Konnte Glance v1 Klient nicht initialisieren und daher das Abbild für '{0}' "
+"Paket nicht herunterladen. Sie müssen es möglicherweise manuell von hier "
+"herunterladen: {1}"
 
 msgid ""
 "Couldn't initialise glance v1 client, therefore could not make the following "
@@ -238,7 +236,7 @@ msgid "Couldn't update environment. Reason: "
 msgstr "Konnte Umgebung nicht aktualisieren. Grund:"
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
-msgstr "Konnte Paketparameter '{0}' nicht aktualisieren. Fehler: '{1}'"
+msgstr "Konnte Parameter des Paketes {0} nicht aktualisieren. Fehler: {1}"
 
 msgid "Create"
 msgstr "Erstellen"
@@ -262,8 +260,8 @@ msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
 "package dependencies)"
 msgstr ""
-"Definiert ob oder ob nicht ein Paket von anderen Mandanten benutzt werden "
-"kann. (Gilt für Paketabhängigkeiten)"
+"Definiert, ob ein Paket von anderen Mandanten benutzt werden kann (in Bezug "
+"auf Paketabhängigkeiten)."
 
 msgid "Delete Category"
 msgid_plural "Delete Categories"
@@ -357,7 +355,7 @@ msgid "Download Package"
 msgstr "Paket herunterladen"
 
 msgid "Drop Components here"
-msgstr "Lass Komponenten hier fallen"
+msgstr "Lassen Sie Komponenten hier fallen"
 
 msgid "Enabled"
 msgstr "Aktiviert"
@@ -398,15 +396,14 @@ msgid "Environments"
 msgstr "Umgebungen"
 
 msgid "Error {0} occurred while installing images for {1}"
-msgstr "Fehler {0} aufgetreten beim Installieren des Abbildes für {1}"
+msgstr "Fehler {0} aufgetreten beim Installieren der Abbilder für {1}"
 
 msgid "Error {0} occurred while installing package {1}"
 msgstr "Fehler {0} beim installieren des Pakets {1}"
 
 msgid "Error {0} occurred while parsing package {1}"
-msgstr "Fehler {0} aufgetreten beim Zerlegen des Paketes {1}"
+msgstr "Fehler {0} aufgetreten beim analysieren des Paketes {1}"
 
-#, fuzzy
 msgid "Error {0} occurred while setting image {1}, {2} public"
 msgstr "Fehler {0} beim setzen des Abbildes {1}, {2} auf öffentlich"
 
@@ -445,7 +442,7 @@ msgstr ""
 "Dollarzeichen."
 
 msgid "Fully qualified package name."
-msgstr "Vollqualifizierter Paketname."
+msgstr "Vollständig qualifizierter Paketname."
 
 #, python-format
 msgid ""
@@ -462,10 +459,10 @@ msgid "HTTP/HTTPS URL of the package file."
 msgstr "HTTP/HTTPS URL der Paketdatei."
 
 msgid "Heat Orchestration stack name"
-msgstr "Heat Orchestration Stack Name"
+msgstr "Heat-Orchestrierung Stack-Name"
 
 msgid "Heat Orchestration stack%(forloop.counter)s name"
-msgstr "Heat Orchestration Stack%(forloop.counter)s Name"
+msgstr "Heat-Orchestrierung Stack%(forloop.counter)s Name"
 
 msgid "ID"
 msgstr "ID"
@@ -506,7 +503,7 @@ msgid "Import Package"
 msgstr "Paketimport"
 
 msgid "Importing package {0} failed. Reason: {1}"
-msgstr "Paketimport {0} fehlgeschlagen. Grund: {1}"
+msgstr "Import des Paketes {0} fehlgeschlagen. Grund: {1}"
 
 msgid "Info"
 msgstr "Info"
@@ -611,7 +608,7 @@ msgid "No license"
 msgstr "Keine Lizenz"
 
 msgid "No recent activity to report at this time."
-msgstr "Keine vergangene Aktivitäten zu reporten um diese Zeit."
+msgstr "Derzeit sind keine jüngsten Aktivitäten vorhanden"
 
 msgid "No requirements"
 msgstr "Keine Anforderungen"
@@ -657,7 +654,7 @@ msgid "Package Source"
 msgstr "Paketquelle"
 
 msgid "Package Tags"
-msgstr "Paketschlaglichter"
+msgstr "Paketschlagwörter"
 
 msgid "Package URL"
 msgstr "Paket-URL"
@@ -690,19 +687,19 @@ msgid "Package version"
 msgstr "Paketversion"
 
 msgid "Package with id {0} is not found"
-msgstr "Paket mit ID {0} nicht gefunden"
+msgstr "Paket mit ID {0} wurde nicht gefunden"
 
 msgid "Package with specified name already exists"
 msgstr "Ein Paket mit dem angegebenen Namen existiert bereits"
 
 msgid "Package {0} already registered."
-msgstr "Paket {0} schon registriert."
+msgstr "Paket {0} ist schon registriert."
 
 msgid "Package {0} upload failed. {1}"
 msgstr "Paket {0} hochladen fehlgeschlagen. {1}"
 
 msgid "Package {0} uploaded"
-msgstr "Packet {0} hochgeladen"
+msgstr "Paket {0} hochgeladen"
 
 msgid "Packages"
 msgstr "Pakete"
@@ -735,7 +732,7 @@ msgid "Provide comma-separated list of words, associated with the package"
 msgstr "Komma-separierte Liste von Wörtern im Zusammenhang mit dem Paket"
 
 msgid "Provide desired name for a new category"
-msgstr "Stelle gewünschten Namen für neue Kategorie zur Verfügung"
+msgstr "Geben Sie den gewünschten Namen für eine neue Kategorie an"
 
 msgid "Public"
 msgstr "Öffentlich"
@@ -753,7 +750,7 @@ msgid "Ready to deploy"
 msgstr "Fertig zum Bereitstellen"
 
 msgid "Recent Activity"
-msgstr "Vergangene Aktivitäten"
+msgstr "Jüngste Aktivitäten"
 
 msgid "Repository"
 msgstr "Repository"
@@ -791,7 +788,7 @@ msgid "Select an image registered in Glance Image Services."
 msgstr "Wählen Sie ein im Glance-Abbilddienst registriertes Abbild."
 
 msgid "Select an image type supported by Murano."
-msgstr "Wähle einen Abbildtyp unterstützt von Murano."
+msgstr "Wähle einen von Murano unterstützten Abbildtyp."
 
 msgid "Select one or more categories for a package."
 msgstr "Wählen Sie eine oder mehrere Kategorien für ein Paket."
@@ -818,11 +815,11 @@ msgid "Sorry, you can't delete service right now"
 msgstr "Sorry, Sie können den Dienst jetzt nicht löschen"
 
 msgid "Specified title already in use. Please choose another one."
-msgstr "Spezifizierter Titel existiert schon. Bitte wähle einen anderen."
+msgstr "Der angegebene Titel existiert schon. Bitte wählen Sie einen anderen."
 
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr ""
-"Spezifikation einer Kategorie hilft beim Filtern von Applikationen im Katalog"
+"Die Angabe einer Kategorie hilft beim Filtern von Applikationen im Katalog"
 
 msgid "Started Deleting Component"
 msgid_plural "Started Deleting Components"
@@ -857,22 +854,24 @@ msgstr "Mandantenname"
 msgid "The '{0}' application successfully added to environment."
 msgstr "Die Anwendung '{0}' wurde erfolgreich zur Umgebung hinzugefügt."
 
-#, fuzzy
 msgid ""
 "The VMs of the applications in this environment will join this net by "
 "default, unless configured individually. Choosing 'Create New' will generate "
 "a new Network with a Subnet having an IP range allocated among the ones "
 "available for the default Murano Router of this project"
 msgstr ""
-"Die VMs der Anwendungen dieser Umgebung werden diesem Netzwerk hinzugefügt, "
-"wenn sie nicht individuell konfiguriert wurden."
+"Die VMs der Anwendungen in dieser Umgebung werden diesem Netzwerk "
+"hinzugefügt, sofern sie nicht individuell konfiguriert wurden. Wählen Sie "
+"\"Neu erstellen\", um ein neues Netzwerk mit einem Subnetz zu erstellen, "
+"dessen IP-Bereich aus dem durch den Murano-Router des Projektes "
+"bereitgestellten Bereich stammt."
 
 #, python-format
 msgid ""
 "The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
 "target=\"_blank\">%(murano_repo_url)s</a> repository."
 msgstr ""
-"Das Bündel wird installiert von <a href=\"%(murano_repo_url)s\" target="
+"Das Bündel wird installiert vom <a href=\"%(murano_repo_url)s\" target="
 "\"_blank\">%(murano_repo_url)s</a> Repository."
 
 msgid "The environment name field cannot be empty."
@@ -897,7 +896,8 @@ msgid "The request data is not acceptable by the server"
 msgstr "Die angeforderten Daten werden vom Server nicht akzeptiert."
 
 msgid "There are no applications in the catalog. You can import apps from"
-msgstr "Es sind keine Applikationen im Katalog. Du kannst apps importieren von"
+msgstr ""
+"Es sind keine Applikationen im Katalog. Sie können Apps importieren von"
 
 #, python-format
 msgid ""
@@ -1123,8 +1123,8 @@ msgstr "Sie haben keine Berechtigung zum Durchführen dieser Operation"
 msgid ""
 "You'll have to configure each package installed from this bundle separately."
 msgstr ""
-"Sie haben jedes Paket, welches von diesem Bündel separat installiert wurde, "
-"einzeln zu konfigurieren."
+"Sie müssen jedes Paket, welches von diesem Bündel separat installiert wurde, "
+"einzeln konfigurieren."
 
 msgid "{0}{1} don't match"
 msgstr "{0}{1} stimmen nicht überein"
