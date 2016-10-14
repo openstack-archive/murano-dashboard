@@ -1,13 +1,13 @@
 # suhartono <cloudsuhartono@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.1.dev7\n"
+"Project-Id-Version: murano-dashboard 3.0.1.dev8\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-12 11:05+0000\n"
+"POT-Creation-Date: 2016-10-13 11:42+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-10-13 09:01+0000\n"
+"PO-Revision-Date: 2016-10-13 09:34+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -22,6 +22,14 @@ msgstr "80 karakter max."
 
 msgid "A local zip file to upload"
 msgstr "Sebuah file zip lokal untuk meng-upload"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Abandon Environment"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Abandoned Environment"
 
 msgid "Active"
 msgstr "Active (aktif)"
@@ -56,6 +64,18 @@ msgstr "Add to Env (Tambahkan ke Env)"
 msgid "Adding application to an environment failed."
 msgstr "Menambahkan aplikasi untuk lingkungan gagal."
 
+msgid "All"
+msgstr "All (semua)"
+
+msgid "Allows adding additional information about a package."
+msgstr "Mengizinkan menambahkan informasi tambahan tentang paket."
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr ""
+"Mengizinkan untuk menyembunyikan paket dari katalog. (Berlaku untuk paket "
+"dependensi)"
+
 msgid ""
 "An environment is a collection of applications that are meant to operate "
 "under similar conditions."
@@ -72,6 +92,9 @@ msgstr "URLhttp/https eksternal untuk memuat paket dari."
 msgid "App Category:"
 msgstr "App Category:"
 
+msgid "App category"
+msgstr "Kategori aplikasi (App)"
+
 msgid "Application Categories"
 msgstr "Application Categories (kategori aplikasi)"
 
@@ -84,6 +107,9 @@ msgstr "Application Details (rincian aplikasi)"
 msgid "Application Package"
 msgstr "Application Package (paket aplikasi)"
 
+msgid "Application&nbsp;Components"
+msgstr "Application&nbsp;Components"
+
 msgid "Applications"
 msgstr "Applications (aplikasi)"
 
@@ -92,6 +118,9 @@ msgstr "Author (penulis)"
 
 msgid "Auto"
 msgstr "Auto"
+
+msgid "Back"
+msgstr "Back (kembali)"
 
 msgid "Browse"
 msgstr "Browse (melihat-lihat)"
@@ -134,8 +163,15 @@ msgstr "Kategori {0} dibuat."
 msgid "Check Keystone configuration of murano-api server."
 msgstr "Periksa konfigurasi server murano-api Keystone."
 
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "Pilih arsip Zip untuk meng-upload ke katalog."
+
 msgid "Choose a name for the environment"
 msgstr "Pilih nama untuk lingkungan"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "Folder definisi kelas"
 
 msgid "Click to create new environment"
 msgstr "Klik untuk membuat lingkungan baru"
@@ -146,14 +182,23 @@ msgstr "Selesai dengan peringatan"
 msgid "Component"
 msgstr "Component (komponen)"
 
+msgid "Component Details"
+msgstr "Component Details (rincian komponen)"
+
 msgid "Component List"
 msgstr "Daftar komponen"
+
+msgid "Component Logs"
+msgstr "Component Logs (jejak rekam komponen)"
 
 msgid "Components"
 msgstr "Components (komponen)"
 
 msgid "Configuration"
 msgstr "Configuration (konfigurasi)"
+
+msgid "Configure Application"
+msgstr "Configure Application (aplikasi konfigurasi)"
 
 msgid "Confirm password"
 msgstr "Konfirmasi kata sandi"
@@ -208,11 +253,54 @@ msgstr "Buat judul untuk image."
 msgid "Created"
 msgstr "Created"
 
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr ""
+"Mendefinisikan apakah sebuah paket dapat digunakan atau tidak oleh penyewa "
+"(tenant) lainnya. (Berlaku untuk paket dependensi)"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Delete Category"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Delete Component"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Delete Environment"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Delete Metadata"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Delete Package"
+
 msgid "Delete failure"
 msgstr "Hapus kegagalan"
 
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Deleted Category"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Deleted Metadata"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Deleted Package"
+
 msgid "Deleting"
 msgstr "Deleting (penghapusan)"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Deploy Environment"
 
 msgid "Deploy This Environment"
 msgstr "Kerahkan di lingkungan ini"
@@ -253,6 +341,9 @@ msgstr "Details (rincian)"
 
 msgid "Download Package"
 msgstr "Download Package (download paket)"
+
+msgid "Drop Components here"
+msgstr "Jatuhkan komponen disini"
 
 msgid "Enabled"
 msgstr "Enabled (aktif)"
@@ -305,6 +396,10 @@ msgstr "Kesalahan {0} terjadi saat mengurai paket {1}"
 msgid "Error {0} occurred while setting image {1}, {2} public"
 msgstr "Kesalahan {0} terjadi saat pengaturan image {1}, {2} publik"
 
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "Folder rencana eksekusi"
+
 msgid "FQN"
 msgstr "FQN"
 
@@ -323,12 +418,18 @@ msgstr "File"
 msgid "Filter"
 msgstr "Filter (saringan)"
 
+msgid "Find in a selected category"
+msgstr "Cari dalam kategori yang dipilih"
+
 msgid ""
 "First symbol should be latin letter or underscore. Subsequent symbols can be "
 "latin letter, numeric, underscore, at sign, number sign or dollar sign"
 msgstr ""
 "Simbol pertama harus huruf latin atau garis bawah. Simbol berikutnya dapat "
 "huruf latin, angka, garis bawah, tanda, angka tanda atau tanda dolar"
+
+msgid "Fully qualified package name."
+msgstr "Nama paket berkualifikasi lengkap."
 
 #, python-format
 msgid ""
@@ -341,6 +442,15 @@ msgstr ""
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "URL HTTP/HTTPS dari file bundel."
 
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "URL HTTP/HTTPS dari file paket."
+
+msgid "Heat Orchestration stack name"
+msgstr "Nama stack Heat Orchestration"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat Orchestration stack%(forloop.counter)s nama"
+
 msgid "ID"
 msgstr "ID"
 
@@ -350,6 +460,13 @@ msgid ""
 msgstr ""
 "Jika paket tergantung pada paket lain dan / atau membutuhkan glance image "
 "tertentu, mereka akan diinstal dengan mereka dari repositori murano."
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"Jika paket tergantung pada paket lain dan / atau membutuhkan image glance "
+"tertentu, mereka akan diinstal dengan itu dari repositori murano."
 
 msgid "Image"
 msgstr "Image (image)"
@@ -374,6 +491,15 @@ msgstr "Import Package (import paket)"
 
 msgid "Importing package {0} failed. Reason: {1}"
 msgstr "Mengimport paket {0} failed.Reason: {1}"
+
+msgid "Info"
+msgstr "Info (informasi)"
+
+msgid "Instance name"
+msgstr "Nama instance"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "Nama instance%(forloop.counter)s"
 
 msgid "Invalid metadata for image: {0}"
 msgstr "metadata tidak valid untuk image: {0}"
@@ -407,6 +533,10 @@ msgstr "Manage (kelola)"
 
 msgid "Manage Components"
 msgstr "Manage Components (mengelola komponen)"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "file manifest"
 
 msgid "Mark Image"
 msgstr "Mark Image (menandai image)"
@@ -501,6 +631,9 @@ msgstr "Package Bundle Source (sumber bundle paket)"
 msgid "Package Count"
 msgstr "Package Count (jumlah paket)"
 
+msgid "Package Details"
+msgstr "Package Details (rincian paket)"
+
 msgid "Package Name"
 msgstr "Package Name (nama paket)"
 
@@ -512,6 +645,9 @@ msgstr "Package Tags (tags paket)"
 
 msgid "Package URL"
 msgstr "Package URL (URL paket)"
+
+msgid "Package Version"
+msgstr "Package Version (versi paket)"
 
 msgid ""
 "Package creation failed.Reason: Can't find Package name from repository."
@@ -554,6 +690,9 @@ msgstr "Paket {0} diunggah"
 
 msgid "Packages"
 msgstr "Packages (paket)"
+
+msgid "Packages should contain:"
+msgstr "Paket harus berisi:"
 
 msgid "Please confirm your password"
 msgstr "Silahkan konfirmasi kata sandi"
@@ -664,6 +803,21 @@ msgstr "Maaf, Anda tidak dapat menghapus layanan sekarang"
 msgid "Specified title already in use. Please choose another one."
 msgstr "Judul yang ditentukan sudah digunakan. Silakan pilih yang lain."
 
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr "Menentukan kategori membantu untuk menyaring aplikasi di katalog"
+
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Started Deleting Component"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Started Deleting Environment"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Started deploying Environment"
+
 msgid "Status"
 msgstr "Status (status)"
 
@@ -705,6 +859,14 @@ msgstr ""
 msgid "The environment name field cannot be empty."
 msgstr "Kolom nama lingkungan tidak boleh kosong."
 
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"Paket ini akan diimpor dari repositori <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a>."
+
 msgid ""
 "The password must contain at least one letter, "
 "one                                  number and one special character"
@@ -714,6 +876,9 @@ msgstr ""
 
 msgid "The request data is not acceptable by the server"
 msgstr "Permintaan data tidak diterima oleh server"
+
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr "Tidak ada aplikasi di katalog. Anda dapat mengimpor aplikasi dari"
 
 #, python-format
 msgid ""
@@ -754,8 +919,24 @@ msgstr "Waktu diperbarui"
 msgid "Title"
 msgstr "Title (judul)"
 
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Toggle Active"
+
 msgid "Toggle Enabled"
 msgstr "Toggle diaktifkan"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Toggle Public"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Toggled Active"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Toggled Public"
 
 msgid "Topology"
 msgstr "Topology (topologi)"
@@ -776,6 +957,10 @@ msgstr ""
 
 msgid "Type"
 msgstr "Type (tipe)"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "Folder definisi UI"
 
 msgid "UNKNOWN"
 msgstr "UNKNOWN (tidak diketahui)"
@@ -869,6 +1054,10 @@ msgstr "Unknown (tidak diketahui)"
 msgid "Update"
 msgstr "Update (memperbarui)"
 
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Update Environment"
+
 msgid "Update Image"
 msgstr "Perbarui image"
 
@@ -877,6 +1066,10 @@ msgstr "Perbarui lingkungan ini"
 
 msgid "Updated"
 msgstr "Updated"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Updated Environment"
 
 msgid "Uploading package failed. {0}"
 msgstr "Upload paket gagal. {0}"
@@ -889,6 +1082,9 @@ msgstr "Kesalahan validasi terjadi"
 
 msgid "Version"
 msgstr "Version"
+
+msgid "Version of the package (optional)."
+msgstr "Versi paket (opsional)."
 
 msgid "You are not allowed to change this properties of the package"
 msgstr "Anda tidak diperbolehkan untuk mengubah sifat dari paket"
