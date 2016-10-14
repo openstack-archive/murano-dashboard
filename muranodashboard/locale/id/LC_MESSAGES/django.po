@@ -1,0 +1,1102 @@
+# suhartono <cloudsuhartono@gmail.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev51\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-10-13 17:23+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-10-13 09:34+0000\n"
+"Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
+"Language-Team: Indonesian\n"
+"Language: id\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+msgid "-"
+msgstr "-"
+
+msgid "80 characters max."
+msgstr "80 karakter max."
+
+msgid "A local zip file to upload"
+msgstr "Sebuah file zip lokal untuk meng-upload"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Abandon Environment"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Abandoned Environment"
+
+msgid "Active"
+msgstr "Active (aktif)"
+
+msgid "Add"
+msgstr "Add (timbah)"
+
+msgid "Add Application"
+msgstr "Add Application (tambahkan aplikasi)"
+
+msgid "Add Application Category"
+msgstr "Add Application Category (timbah kategori aplikasi)"
+
+msgid "Add Category"
+msgstr "Add Category (timbah kategori)"
+
+msgid "Add Component"
+msgstr "Add Component (tambahkan komponen)"
+
+msgid "Add Murano Metadata"
+msgstr "Menambahkan metadata Murano"
+
+msgid "Add New"
+msgstr "Add New (tambah baru)"
+
+msgid "Add new category to the application catalog."
+msgstr "Menambahkan kategori baru untuk katalog aplikasi."
+
+msgid "Add to Env"
+msgstr "Add to Env (Tambahkan ke Env)"
+
+msgid "Adding application to an environment failed."
+msgstr "Menambahkan aplikasi untuk lingkungan gagal."
+
+msgid "All"
+msgstr "All (semua)"
+
+msgid "Allows adding additional information about a package."
+msgstr "Mengizinkan menambahkan informasi tambahan tentang paket."
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr ""
+"Mengizinkan untuk menyembunyikan paket dari katalog. (Berlaku untuk paket "
+"dependensi)"
+
+msgid ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+msgstr ""
+"Lingkungan adalah kumpulan aplikasi yang dimaksudkan untuk beroperasi di "
+"bawah kondisi yang sama."
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "URL http/https eksternal untuk memuat bundel dari."
+
+msgid "An external http/https URL to load the package from."
+msgstr "URLhttp/https eksternal untuk memuat paket dari."
+
+msgid "App Category:"
+msgstr "App Category:"
+
+msgid "App category"
+msgstr "Kategori aplikasi (App)"
+
+msgid "Application Categories"
+msgstr "Application Categories (kategori aplikasi)"
+
+msgid "Application Category"
+msgstr "Application Category (categori aplikasi)"
+
+msgid "Application Details"
+msgstr "Application Details (rincian aplikasi)"
+
+msgid "Application Package"
+msgstr "Application Package (paket aplikasi)"
+
+msgid "Application&nbsp;Components"
+msgstr "Application&nbsp;Components"
+
+msgid "Applications"
+msgstr "Applications (aplikasi)"
+
+msgid "Author"
+msgstr "Author (penulis)"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Back"
+msgstr "Back (kembali)"
+
+msgid "Browse"
+msgstr "Browse (melihat-lihat)"
+
+msgid "Bundle Name"
+msgstr "Bundle Name (nama bundle)"
+
+msgid "Bundle URL"
+msgstr "Bundle URL (URL bundle)"
+
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr ""
+"Pembuatan bundle failed.Reason: Tidak dapat menemukan nama bundle dari "
+"repositori."
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "Pembuatan bundle failed.Reason: {0}"
+
+msgid "Bundle successfully imported."
+msgstr "Bundel berhasil diimpor."
+
+msgid "Bundle's full name."
+msgstr "Nama lengkap bundel ini."
+
+msgid "Cancel"
+msgstr "Cancel (membatalkan)"
+
+msgid "Catalog"
+msgstr "Catalog (katalog)"
+
+msgid "Categories"
+msgstr "Categories (kategori)"
+
+msgid "Category Name"
+msgstr "Category Name (nama kategori)"
+
+msgid "Category {0} created."
+msgstr "Kategori {0} dibuat."
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "Periksa konfigurasi server murano-api Keystone."
+
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "Pilih arsip Zip untuk meng-upload ke katalog."
+
+msgid "Choose a name for the environment"
+msgstr "Pilih nama untuk lingkungan"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "Folder definisi kelas"
+
+msgid "Click to create new environment"
+msgstr "Klik untuk membuat lingkungan baru"
+
+msgid "Completed with warnings"
+msgstr "Selesai dengan peringatan"
+
+msgid "Component"
+msgstr "Component (komponen)"
+
+msgid "Component Details"
+msgstr "Component Details (rincian komponen)"
+
+msgid "Component List"
+msgstr "Daftar komponen"
+
+msgid "Component Logs"
+msgstr "Component Logs (jejak rekam komponen)"
+
+msgid "Components"
+msgstr "Components (komponen)"
+
+msgid "Configuration"
+msgstr "Configuration (konfigurasi)"
+
+msgid "Configure Application"
+msgstr "Configure Application (aplikasi konfigurasi)"
+
+msgid "Confirm password"
+msgstr "Konfirmasi kata sandi"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "tidak bisa mengambil status terbaru untuk lingkungan {0}"
+
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Tidak bisa menemukan aplikasi, diperlukan untuk field ini.\n"
+"Tried: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not download images "
+"for '{0}' package. You may need to download them manually from these "
+"locations: {1}"
+msgstr ""
+"Tidak bisa menginisialisasi glance v1 client, karena itu tidak bisa men-"
+"download image untuk paket '{0}'. Anda mungkin perlu men-download mereka "
+"secara manual dari lokasi tersebut: {1}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Tidak bisa menginisialisasi glance v1 client, karena itu tidak bisa membuat "
+"publik image berikut: {0}"
+
+msgid "Couldn't update environment. Reason: "
+msgstr "Tidak bisa memperbarui lingkungan. Alasan:"
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "Tidak dapat memperbarui paket {0} parameter. Kesalahan: {1}"
+
+msgid "Create"
+msgstr "Create (membuat)"
+
+msgid "Create Env"
+msgstr "Buat Env"
+
+msgid "Create Environment"
+msgstr "Create Environment (buat lingkungan)"
+
+msgid "Create New"
+msgstr "Create New (membuat baru)"
+
+msgid "Create a title for an image."
+msgstr "Buat judul untuk image."
+
+msgid "Created"
+msgstr "Created"
+
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr ""
+"Mendefinisikan apakah sebuah paket dapat digunakan atau tidak oleh penyewa "
+"(tenant) lainnya. (Berlaku untuk paket dependensi)"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Delete Category"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Delete Component"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Delete Environment"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Delete Metadata"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Delete Package"
+
+msgid "Delete failure"
+msgstr "Hapus kegagalan"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Deleted Category"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Deleted Metadata"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Deleted Package"
+
+msgid "Deleting"
+msgstr "Deleting (penghapusan)"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Deploy Environment"
+
+msgid "Deploy This Environment"
+msgstr "Kerahkan di lingkungan ini"
+
+msgid "Deploy failure"
+msgstr "Pengerahan gagal"
+
+msgid "Deploy started"
+msgstr "Mengerahkan mulai"
+
+msgid "Deployed Components"
+msgstr "Deployed Components (komponen yang dikerahkan)"
+
+msgid "Deploying"
+msgstr "Deploying (pengerahan)"
+
+msgid "Deployment Details"
+msgstr "Deployment Details (rincian pengerahan)"
+
+msgid "Deployment History"
+msgstr "Deployment History (sejarah pengerahan)"
+
+msgid "Deployment Logs"
+msgstr "Deployment Logs (jejak rekam pengerahan)"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "Pengerahan dengan id %s tidak ada lagi"
+
+msgid "Deployments"
+msgstr "Deployments (pengerahan)"
+
+msgid "Description"
+msgstr "Description (deskripsi)"
+
+msgid "Details"
+msgstr "Details (rincian)"
+
+msgid "Download Package"
+msgstr "Download Package (download paket)"
+
+msgid "Drop Components here"
+msgstr "Jatuhkan komponen disini"
+
+msgid "Enabled"
+msgstr "Enabled (aktif)"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr ""
+"Masukkan password yang kompleks dengan setidaknya satu huruf, satu nomor dan "
+"satu karakter khusus"
+
+msgid "Enter a password"
+msgstr "Masukan kata sandi"
+
+msgid "Environment"
+msgstr "Environment (lingkungan)"
+
+msgid "Environment Default Network"
+msgstr "Environment Default Network (jaringan default lingkungan)"
+
+msgid "Environment Deployments"
+msgstr "Environment Deployments (pengerahan lingkungan)"
+
+msgid "Environment Name"
+msgstr "Environment Name (nama lingkungan)"
+
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr ""
+"Nama lingkungan harus mengandung setidaknya satu simbol non-white space."
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "Lingkungan dengan id %s tidak ada lagi"
+
+msgid "Environment with specified name already exists"
+msgstr "Lingkungan dengan nama yang ditentukan sudah ada"
+
+msgid "Environments"
+msgstr "Environments (lingkungan)"
+
+msgid "Error {0} occurred while installing images for {1}"
+msgstr "Kesalahan {0} terjadi ketika menginstal image untuk {1}"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "Kesalahan {0} terjadi ketika menginstal paket {1}"
+
+msgid "Error {0} occurred while parsing package {1}"
+msgstr "Kesalahan {0} terjadi saat mengurai paket {1}"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "Kesalahan {0} terjadi saat pengaturan image {1}, {2} publik"
+
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "Folder rencana eksekusi"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed"
+msgstr "Failed (gagal)"
+
+msgid "Failed to create environment"
+msgstr "Gagal membuat lingkungan"
+
+msgid "Failed to modify the package. {0}"
+msgstr "Gagal untuk memodifikasi paket. {0}"
+
+msgid "File"
+msgstr "File"
+
+msgid "Filter"
+msgstr "Filter (saringan)"
+
+msgid "Find in a selected category"
+msgstr "Cari dalam kategori yang dipilih"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"Simbol pertama harus huruf latin atau garis bawah. Simbol berikutnya dapat "
+"huruf latin, angka, garis bawah, tanda, angka tanda atau tanda dolar"
+
+msgid "Fully qualified package name."
+msgstr "Nama paket berkualifikasi lengkap."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Buka <b> <a href=%(pkg_def_url)s>Packages</a> </b>, klik 'Import Package' "
+"dan pilih <i>Repository</i> sebagai <i>Package Source</i>."
+
+msgid "HTTP/HTTPS URL of the bundle file."
+msgstr "URL HTTP/HTTPS dari file bundel."
+
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "URL HTTP/HTTPS dari file paket."
+
+msgid "Heat Orchestration stack name"
+msgstr "Nama stack Heat Orchestration"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat Orchestration stack%(forloop.counter)s nama"
+
+msgid "ID"
+msgstr "ID"
+
+msgid ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from murano repository."
+msgstr ""
+"Jika paket tergantung pada paket lain dan / atau membutuhkan glance image "
+"tertentu, mereka akan diinstal dengan mereka dari repositori murano."
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"Jika paket tergantung pada paket lain dan / atau membutuhkan image glance "
+"tertentu, mereka akan diinstal dengan itu dari repositori murano."
+
+msgid "Image"
+msgstr "Image (image)"
+
+msgid "Image Title"
+msgstr "Image Title (judul gambar)"
+
+msgid "Image Type"
+msgstr "Image Type (tipe image)"
+
+msgid "Image successfully marked"
+msgstr "Image berhasil ditandai"
+
+msgid "Images"
+msgstr "Images (image)"
+
+msgid "Import Bundle"
+msgstr "Import Bundle (import bundle)"
+
+msgid "Import Package"
+msgstr "Import Package (import paket)"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "Mengimport paket {0} failed.Reason: {1}"
+
+msgid "Info"
+msgstr "Info (informasi)"
+
+msgid "Instance name"
+msgstr "Nama instance"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "Nama instance%(forloop.counter)s"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "metadata tidak valid untuk image: {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "metadata image murano tidak valid"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "Nilai yang tidak valid dari opsi 'murano_nets'"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "Hal ini dilarang untuk meng-upload file yang lebih besar dari {0} MB."
+
+msgid "KeyWord"
+msgstr "KeyWord (kata kunci)"
+
+msgid "Last operation"
+msgstr "Operasi terakhir"
+
+msgid "Latest Deployment Log"
+msgstr "Latest Deployment Log (catatan pengerahan terbaru)"
+
+msgid "License"
+msgstr "License (zin)"
+
+msgid "Logs"
+msgstr "Logs (catatan)"
+
+msgid "Manage"
+msgstr "Manage (kelola)"
+
+msgid "Manage Components"
+msgstr "Manage Components (mengelola komponen)"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "file manifest"
+
+msgid "Mark Image"
+msgstr "Mark Image (menandai image)"
+
+msgid ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+msgstr ""
+"Menandai image dengan Murano metadata spesifik yang akan ditambahkan ke "
+"image yang dipilih."
+
+msgid "Marked Images"
+msgstr "Image ditandai"
+
+msgid "Modify Package"
+msgstr "Modify Package (memodifikasi paket)"
+
+msgid "Modifying package failed"
+msgstr "Memodifikasi paket gagal"
+
+msgid "NO ENVIRONMENTS"
+msgstr "NO ENVIRONMENTS (tidak ada lingkungan)"
+
+msgid "Name"
+msgstr "Name (nama)"
+
+msgid "Name of the bundle."
+msgstr "Nama bundle"
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "Jaringan of '%s'"
+
+msgid "Next"
+msgstr "Next (berikutnya)"
+
+msgid "Next Page"
+msgstr "Next Page (halaman selanjutnya)"
+
+msgid "No availability zones available"
+msgstr "Tidak ada zona ketersediaan tersedia"
+
+msgid "No categories available"
+msgstr "Kategori tidak tersedia"
+
+msgid "No components"
+msgstr "Tidak ada komponen"
+
+msgid "No images available"
+msgstr "Tidak ada image yang tersedia"
+
+msgid "No keypair"
+msgstr "Tidak ada pasangan kunci"
+
+msgid "No license"
+msgstr "Tidak ada lisensi"
+
+msgid "No recent activity to report at this time."
+msgstr "Tidak ada aktivitas terbaru melaporkan saat ini."
+
+msgid "No requirements"
+msgstr "Tidak ada persyaratan"
+
+msgid "None"
+msgstr "None (tak satupun)"
+
+msgid "Not in domain"
+msgstr "Tidak dalam domain"
+
+msgid "Note"
+msgstr "Note (catatan)"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"OpenStack Networking (Neutron) tidak tersedia di lingkungan saat ini. Custom "
+"Network Setting tidak dapat diterapkan"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "Operasi dilarang oleh server murano-api."
+
+msgid "Optional"
+msgstr "Optional (opsional)"
+
+msgid "Overview"
+msgstr "Overview (ikhtisar)"
+
+msgid "Package Bundle Source"
+msgstr "Package Bundle Source (sumber bundle paket)"
+
+msgid "Package Count"
+msgstr "Package Count (jumlah paket)"
+
+msgid "Package Details"
+msgstr "Package Details (rincian paket)"
+
+msgid "Package Name"
+msgstr "Package Name (nama paket)"
+
+msgid "Package Source"
+msgstr "Package Source (sumber paket)"
+
+msgid "Package Tags"
+msgstr "Package Tags (tags paket)"
+
+msgid "Package URL"
+msgstr "Package URL (URL paket)"
+
+msgid "Package Version"
+msgstr "Package Version (versi paket)"
+
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr ""
+"Pembuatan paket failed.Reason: Tidak dapat menemukan nama paket dari "
+"repositori."
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "Pembuatan paket failed.Reason: {0}"
+
+msgid "Package modified."
+msgstr "Paket dimodifikasi."
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "Nama paket di repositori, biasanya nama yang memenuhi syarat"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "Paket atau kelas dengan nama yang sama sudah dibuat publik"
+
+msgid "Package parameters successfully updated."
+msgstr "Parameter paket berhasil diperbarui."
+
+msgid "Package version"
+msgstr "Versi paket"
+
+msgid "Package with id {0} is not found"
+msgstr "Paket dengan id {0} tidak ditemukan"
+
+msgid "Package with specified name already exists"
+msgstr "Paket dengan nama yang ditentukan sudah ada"
+
+msgid "Package {0} already registered."
+msgstr "Paket {0} sudah terdaftar."
+
+msgid "Package {0} upload failed. {1}"
+msgstr "Paket {0} gagal mengunggah. {1}"
+
+msgid "Package {0} uploaded"
+msgstr "Paket {0} diunggah"
+
+msgid "Packages"
+msgstr "Packages (paket)"
+
+msgid "Packages should contain:"
+msgstr "Paket harus berisi:"
+
+msgid "Please confirm your password"
+msgstr "Silahkan konfirmasi kata sandi"
+
+msgid "Please supply a bundle name"
+msgstr "Silahkan menyediakan nama bundel"
+
+msgid "Please supply a bundle url"
+msgstr "Silahkan menyediakan url bundel"
+
+msgid "Please supply a package file"
+msgstr "Silahkan menyediakan file paket"
+
+msgid "Please supply a package name"
+msgstr "Silahkan menyediakan nama paket"
+
+msgid "Please supply a package url"
+msgstr "Silahkan menyediakan url paket"
+
+msgid "Previous Page"
+msgstr "Previous Page (halaman sebelumnya)"
+
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr ""
+"Berikan daftar kata-kata yang dipisahkan koma, yang terkait dengan paket"
+
+msgid "Provide desired name for a new category"
+msgstr "Memberikan nama yang diinginkan untuk kategori baru"
+
+msgid "Public"
+msgstr "Public (publik)"
+
+msgid "Quick Deploy"
+msgstr "Quick Deploy (pengerahan cepat)"
+
+msgid "Ready"
+msgstr "Ready (siap)"
+
+msgid "Ready to configure"
+msgstr "Siap untuk mengkonfigurasi"
+
+msgid "Ready to deploy"
+msgstr "Siap untuk mengerahkan"
+
+msgid "Recent Activity"
+msgstr "Recent Activity (aktivitas terbaru)"
+
+msgid "Repository"
+msgstr "Repository (repositori)"
+
+msgid "Requested object is not found on murano server."
+msgstr "Objek yang diminta tidak ditemukan di server murano."
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "Operasi yang dimintan konflik dengan objek yang ada."
+
+msgid "Requirements"
+msgstr "Requirements (persyaratan)"
+
+msgid "Retype your password"
+msgstr "Ketik ulang kata sandi Anda"
+
+msgid "Running"
+msgstr "Menjalankan"
+
+msgid "Running with errors"
+msgstr "Berjalan dengan kesalahan"
+
+msgid "Running with warnings"
+msgstr "Berjalan dengan peringatan"
+
+msgid "Select Application"
+msgstr "Pilih aplikasi"
+
+msgid "Select Image"
+msgstr "Pilih image"
+
+msgid "Select an image registered in Glance Image Services."
+msgstr "Pilih image yang terdaftar di layanan Glance Image."
+
+msgid "Select one or more categories for a package."
+msgstr "Pilih satu atau lebih kategori untuk paket."
+
+msgid "Set up for identifying a package."
+msgstr "Diatur untuk mengidentifikasi paket."
+
+msgid "Show Details"
+msgstr "Tampilkan rincian"
+
+msgid "Something went wrong during package downloading"
+msgstr "Ada yang salah selama men-download paket"
+
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "Maaf, lingkungan ini tidak ada lagi"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr ""
+"Maaf, Anda tidak dapat menambahkan aplikasi sekarang. Lingkungan ini sedang "
+"mengerahkan."
+
+msgid "Sorry, you can't delete service right now"
+msgstr "Maaf, Anda tidak dapat menghapus layanan sekarang"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "Judul yang ditentukan sudah digunakan. Silakan pilih yang lain."
+
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr "Menentukan kategori membantu untuk menyaring aplikasi di katalog"
+
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Started Deleting Component"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Started Deleting Environment"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Started deploying Environment"
+
+msgid "Status"
+msgstr "Status (status)"
+
+msgid "Step {0}"
+msgstr "Step {0}"
+
+msgid "Successful"
+msgstr "Successful (sukses)"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Tenant Name"
+msgstr "Tenant Name"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "Aplikasi '{0}' berhasil ditambahkan ke lingkungan."
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"Aplikasi VM dalam lingkungan ini akan bergabung dengan jaringan ini secara "
+"default, kecuali dikonfigurasi secara individual. Pilih 'Create New' akan "
+"menghasilkan Jaringan baru dengan Subnet memiliki rentang IP yang "
+"dialokasikan diantara jaringan yang tersedia untuk Murano Router secara "
+"default dari proyek ini"
+
+#, python-format
+msgid ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"Bundel akan diinstal dari repositori <a href=\"%(murano_repo_url)s\" target="
+"\"_blank\">%(murano_repo_url)s</a>."
+
+msgid "The environment name field cannot be empty."
+msgstr "Kolom nama lingkungan tidak boleh kosong."
+
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"Paket ini akan diimpor dari repositori <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a>."
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr ""
+"Password harus mengandung setidaknya satu huruf, satu nomor dan satu "
+"karakter khusus"
+
+msgid "The request data is not acceptable by the server"
+msgstr "Permintaan data tidak diterima oleh server"
+
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr "Tidak ada aplikasi di katalog. Anda dapat mengimpor aplikasi dari"
+
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"Tidak ada aplikasi di katalog. Anda dapat mengimpor aplikasi dari <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+
+msgid "There are no applications matching your criteria."
+msgstr "Tidak ada aplikasi yang cocok dengan kriteria Anda."
+
+msgid "There was an error communicating with server"
+msgstr "Terjadi kesalahan saat berkomunikasi dengan server"
+
+msgid "There was an error initialising this field."
+msgstr "Terjadi kesalahan inisialisasi field ini."
+
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr ""
+"Tindakan ini tidak bisa dibatalkan. Sumber daya yang diciptakan oleh "
+"lingkungan ini harus dirilis secara manual."
+
+msgid "This name is already taken."
+msgstr "Nama ini sudah diambil."
+
+msgid "Time Finished"
+msgstr "Waktu selesai"
+
+msgid "Time Started"
+msgstr "Waktu dimulai"
+
+msgid "Time updated"
+msgstr "Waktu diperbarui"
+
+msgid "Title"
+msgstr "Title (judul)"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Toggle Active"
+
+msgid "Toggle Enabled"
+msgstr "Toggle diaktifkan"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Toggle Public"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Toggled Active"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Toggled Public"
+
+msgid "Topology"
+msgstr "Topology (topologi)"
+
+msgid ""
+"Trying to add {0} image to glance. Image will be ready for deployment after "
+"successful upload"
+msgstr ""
+"Coba untuk menambahkan image {0} untuk glance. Image akan siap untuk "
+"pengerahan setelah upload sukses"
+
+msgid ""
+"Trying to add {0}, {1} image to glance. Image will be ready for deployment "
+"after successful upload"
+msgstr ""
+"Coba untuk menambahkan image {0}, {1} untuk glance. Image akan siap untuk "
+"pengerahan setelah upload sukses"
+
+msgid "Type"
+msgstr "Type (tipe)"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "Folder definisi UI"
+
+msgid "UNKNOWN"
+msgstr "UNKNOWN (tidak diketahui)"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "Tidak dapat meninggalkan lingkungan {0} disebabkan oleh:  {1}"
+
+msgid "Unable to communicate to glare-api server."
+msgstr "Tidak dapat berkomunikasi dengan server glare-api."
+
+msgid "Unable to communicate to murano-api server."
+msgstr "Tidak dapat berkomunikasi ke server murano-api."
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "Tidak dapat menciptakan lingkungan {0} disebabkan oleh: {1}"
+
+msgid ""
+"Unable to create v1 glance client. Marking images from murano-dashboard will "
+"be unavailable."
+msgstr ""
+"Tidak dapat membuat v1 glance client. Menandai image dari murano-dashboard "
+"akan tersedia."
+
+msgid "Unable to delete category"
+msgstr "Tidak dapat menghapus kategori"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "Tidak dapat menghapus lingkungant {0} disebabkan oleh: {1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "Tidak dapat menghapus paket di server murano-api"
+
+msgid "Unable to deploy. Try again later"
+msgstr "Tidak dapat mengerahkan. Coba lagi nanti"
+
+msgid "Unable to download package."
+msgstr "Tidak dapat men-download paket."
+
+msgid "Unable to get list of categories"
+msgstr "Tidak dapat mendapatkan daftar kategori"
+
+msgid "Unable to mark image"
+msgstr "Tidak dapat menandai image"
+
+msgid "Unable to modify package"
+msgstr "Tidak dapat memodifikasi paket"
+
+msgid "Unable to remove metadata"
+msgstr "Tidak dapat menghapus metadata"
+
+msgid "Unable to remove package."
+msgstr "Tidak dapat menghapus paket."
+
+msgid "Unable to retrieve  availability zones."
+msgstr "Tidak dapat mengambil zona ketersediaan."
+
+msgid "Unable to retrieve details for service"
+msgstr "Tidak dapat mengambil rincian untuk layanan"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "Tidak dapat mengambil daftar pengerahan"
+
+msgid "Unable to retrieve list of images"
+msgstr "Tidak dapat mengambil daftar image"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr ""
+"Tidak dapat mengambil daftar layanan. Lingkungan ini sedang mengerahkan atau "
+"sudah digunakan oleh pengguna lain."
+
+msgid "Unable to retrieve package details."
+msgstr "Tidak dapat mengambil rincian paket."
+
+msgid "Unable to retrieve project list."
+msgstr "Tidak dapat mengambil daftar proyek."
+
+msgid "Unable to retrieve public images."
+msgstr "Tidak dapat mengambil image publik."
+
+msgid "Unavailable"
+msgstr "Unavailable (tidak tersedia)"
+
+msgid "Unknown"
+msgstr "Unknown (tidak diketahui)"
+
+msgid "Update"
+msgstr "Update (memperbarui)"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Update Environment"
+
+msgid "Update Image"
+msgstr "Perbarui image"
+
+msgid "Update This Environment"
+msgstr "Perbarui lingkungan ini"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Updated Environment"
+
+msgid "Uploading package failed. {0}"
+msgstr "Upload paket gagal. {0}"
+
+msgid "Used for identifying and filtering packages."
+msgstr "Digunakan untuk mengidentifikasi dan paket penyaringan."
+
+msgid "Validation Error occurred"
+msgstr "Kesalahan validasi terjadi"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Version of the package (optional)."
+msgstr "Versi paket (opsional)."
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "Anda tidak diperbolehkan untuk mengubah sifat dari paket"
+
+msgid "You are not allowed to delete this package"
+msgstr "Anda tidak diizinkan untuk menghapus paket ini"
+
+msgid "You are not allowed to perform this operation"
+msgstr "Anda tidak diizinkan untuk melakukan operasi ini"
+
+msgid ""
+"You'll have to configure each package installed from this bundle separately."
+msgstr ""
+"Anda harus mengkonfigurasi setiap paket yang diinstal dari bundel ini secara "
+"terpisah."
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} don't match"

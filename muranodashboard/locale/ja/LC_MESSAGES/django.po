@@ -1,16 +1,17 @@
 # Akihiro Motoki <amotoki@gmail.com>, 2016. #zanata
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 # Shu Muto <shu-mutou@rf.jp.nec.com>, 2016. #zanata
+# Yoshiki Eguchi <yoshiki.eguchi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev1\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev51\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-09-16 02:13+0000\n"
+"POT-Creation-Date: 2016-10-13 17:23+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-09-16 02:28+0000\n"
-"Last-Translator: Shu Muto <shu-mutou@rf.jp.nec.com>\n"
+"PO-Revision-Date: 2016-10-13 04:43+0000\n"
+"Last-Translator: Akihiro Motoki <amotoki@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -173,6 +174,9 @@ msgstr "クラス定義フォルダー"
 msgid "Click to create new environment"
 msgstr "クリックして、新しい環境を作成します。"
 
+msgid "Completed with warnings"
+msgstr "警告付き完了"
+
 msgid "Component"
 msgstr "コンポーネント"
 
@@ -204,9 +208,7 @@ msgid "Couldn't update environment. Reason: "
 msgstr "環境を更新できませんでした。理由:"
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
-msgstr ""
-"Couldn't update package {0} parameters. Error: {1}パッケージ {0} のパラメー"
-"ターを更新できませんでした。エラー: {1}"
+msgstr "パッケージ {0} のパラメーターを更新できませんでした。エラー: {1}"
 
 msgid "Create"
 msgstr "作成"
@@ -701,6 +703,15 @@ msgstr "パブリック"
 msgid "Quick Deploy"
 msgstr "クイックデプロイ"
 
+msgid "Ready"
+msgstr "準備完了"
+
+msgid "Ready to configure"
+msgstr "設定準備完了"
+
+msgid "Ready to deploy"
+msgstr "デプロイの準備完了"
+
 msgid "Recent Activity"
 msgstr "最近の使用状況"
 
@@ -730,9 +741,6 @@ msgstr "イメージを選択してください"
 
 msgid "Select an image registered in Glance Image Services."
 msgstr "Glance Image サービスに登録されているイメージを選択してください。"
-
-msgid "Select an image type supported by Murano."
-msgstr "Murano でサポートされているイメージ種別を選択してください。"
 
 msgid "Select one or more categories for a package."
 msgstr "パッケージのカテゴリーを 1 つ以上選択してください"
@@ -783,6 +791,9 @@ msgstr "ステータス"
 msgid "Step {0}"
 msgstr "手順 {0}"
 
+msgid "Successful"
+msgstr "成功"
+
 msgid "Tags"
 msgstr "タグ"
 
@@ -811,6 +822,9 @@ msgstr ""
 "バンドルは <a href=\"%(murano_repo_url)s\" target=\"_blank\">"
 "%(murano_repo_url)s</a> リポジトリーからインストールされます。"
 
+msgid "The environment name field cannot be empty."
+msgstr "環境名は空にできません。"
+
 #, python-format
 msgid ""
 "The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
@@ -836,6 +850,12 @@ msgstr ""
 
 msgid "There are no applications matching your criteria."
 msgstr "基準を満たすアプリケーションはありません。"
+
+msgid "There was an error communicating with server"
+msgstr "サーバとの通信中にエラーが発生しました。"
+
+msgid "There was an error initialising this field."
+msgstr "このフィールドの初期化中にエラーが発生しました。"
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -911,6 +931,9 @@ msgstr "URL"
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr "環境 {0} を中断できませんでした。理由: {1}"
 
+msgid "Unable to communicate to glare-api server."
+msgstr "glare-api サーバーと通信できません。"
+
 msgid "Unable to communicate to murano-api server."
 msgstr "murano-api サーバーと通信できません。"
 
@@ -977,6 +1000,9 @@ msgstr "公開イメージの一覧を取得できません。"
 
 msgid "Unavailable"
 msgstr "利用不可"
+
+msgid "Unknown"
+msgstr "不明"
 
 msgid "Update"
 msgstr "更新"

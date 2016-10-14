@@ -1,14 +1,18 @@
+# Aleksey Alekseenko <9118250541@mail.ru>, 2016. #zanata
+# Alexander <ainikitenkov@gmail.com>, 2016. #zanata
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Irina Kochetova <ikochetova@hystax.com>, 2016. #zanata
+# Yulia Ryndenkova <yryndenkova@hystax.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0b3.dev35\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev51\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-08-11 12:16+0000\n"
+"POT-Creation-Date: 2016-10-13 17:23+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-27 10:15+0000\n"
-"Last-Translator: Ilya Alekseyev <ilyaalekseyev@acm.org>\n"
+"PO-Revision-Date: 2016-10-12 02:19+0000\n"
+"Last-Translator: Irina Kochetova <ikochetova@hystax.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -17,6 +21,9 @@ msgstr ""
 
 msgid "-"
 msgstr "-"
+
+msgid "80 characters max."
+msgstr "максимум 80 символов"
 
 msgid "A local zip file to upload"
 msgstr "Zip файл"
@@ -123,6 +130,9 @@ msgstr "Авто"
 msgid "Back"
 msgstr "Назад"
 
+msgid "Browse"
+msgstr "Просмотр"
+
 msgid "Bundle Name"
 msgstr "Имя bundle"
 
@@ -145,6 +155,9 @@ msgstr "Полное имя Bundle."
 
 msgid "Cancel"
 msgstr "Отменить"
+
+msgid "Catalog"
+msgstr "Каталог "
 
 msgid "Categories"
 msgstr "Категории"
@@ -170,6 +183,9 @@ msgstr "Каталог содержащий определения классо�
 
 msgid "Click to create new environment"
 msgstr "Создать новое окружение"
+
+msgid "Completed with warnings"
+msgstr "Завершено с предупреждениями"
 
 msgid "Component"
 msgstr "Компонент"
@@ -197,6 +213,28 @@ msgstr "Подтвердите пароль"
 
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "Не удалось получить последний статус для окружения {0}"
+
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Не найдено каких-либо приложений, необходимых для этого поля\n"
+"Попытка: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not download images "
+"for '{0}' package. You may need to download them manually from these "
+"locations: {1}"
+msgstr ""
+"Невозможно инициализировать glance v1 клиент, и поэтому не удалось загрузить "
+"образы для пакетов {0}. Вам следует загрузить их вручную отсюда: {1}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Невозможно инициализировать glance v1 клиент, и поэтому не удалось сделать "
+"следующие образы публичными: {0}"
 
 msgid "Couldn't update environment. Reason: "
 msgstr "Не удалось обновить Окружение. Причина:"
@@ -259,6 +297,9 @@ msgstr[0] "Удалить Пакет"
 msgstr[1] "Удалить Пакеты"
 msgstr[2] "Удалить Пакеты"
 
+msgid "Delete failure"
+msgstr "Не удалось удалить"
+
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] "Категория Удалена"
@@ -277,6 +318,9 @@ msgstr[0] "Пакет Удален"
 msgstr[1] "Пакеты Удалены"
 msgstr[2] "Пакеты Удалены"
 
+msgid "Deleting"
+msgstr "Удаление"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "Удалить Окружение"
@@ -286,11 +330,17 @@ msgstr[2] "Удалить Окружения"
 msgid "Deploy This Environment"
 msgstr "Развернуть это Окружение"
 
+msgid "Deploy failure"
+msgstr "Не удалось развернуть"
+
 msgid "Deploy started"
 msgstr "Развертывание началось"
 
 msgid "Deployed Components"
 msgstr "Развернутые Компоненты"
+
+msgid "Deploying"
+msgstr "Развёртывание"
 
 msgid "Deployment Details"
 msgstr "Детали Развертывания"
@@ -377,6 +427,9 @@ msgstr "Директория с планами исполнения"
 msgid "FQN"
 msgstr "FQN"
 
+msgid "Failed"
+msgstr "Не удалось"
+
 msgid "Failed to create environment"
 msgstr "Ну удалось создать окружение"
 
@@ -401,6 +454,14 @@ msgstr ""
 
 msgid "Fully qualified package name."
 msgstr "Полное имя пакета."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Перейдите в <b> <a href=%(pkg_def_url)s>Пакеты</a> </b>, нажмите 'Импорт "
+"Пакета' и выберите <i>Репозиторий</i> в качестве <i>Источника Пакета</i>."
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "HTTP/HTTPS URL bundle файла."
@@ -675,6 +736,9 @@ msgstr "Пожалуйста укажите url пакета"
 msgid "Previous Page"
 msgstr "Предыдущая Страница"
 
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "Введите разделенный запятыми список слов, связанных с пакетом"
+
 msgid "Provide desired name for a new category"
 msgstr "Выберите имя для новой категории"
 
@@ -683,6 +747,15 @@ msgstr "Публичный"
 
 msgid "Quick Deploy"
 msgstr "Быстрое развертывание"
+
+msgid "Ready"
+msgstr "Готов"
+
+msgid "Ready to configure"
+msgstr "Готов к настройке"
+
+msgid "Ready to deploy"
+msgstr "Готов к развёртыванию"
 
 msgid "Recent Activity"
 msgstr "Недавние приложения"
@@ -702,6 +775,15 @@ msgstr "Требования"
 msgid "Retype your password"
 msgstr "Подтвердите пароль"
 
+msgid "Running"
+msgstr "Запущенный"
+
+msgid "Running with errors"
+msgstr "Запущенный с ошибками"
+
+msgid "Running with warnings"
+msgstr "Запущенный с предупреждениями"
+
 msgid "Select Application"
 msgstr "Выбрать Приолжение"
 
@@ -710,9 +792,6 @@ msgstr "Выберите образ"
 
 msgid "Select an image registered in Glance Image Services."
 msgstr "Выберите образ, зарегистрированный в Glance"
-
-msgid "Select an image type supported by Murano."
-msgstr "Выберите тип образа, поддерживаемый Murano"
 
 msgid "Select one or more categories for a package."
 msgstr "Выберите одну или более категорий для пакета."
@@ -742,11 +821,32 @@ msgstr "Указанный заголовок уже используется. �
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "Указание категории помогает фильтровать приложения в каталоге"
 
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Начато удаление компонента"
+msgstr[1] "Начато удаление компонентов"
+msgstr[2] "Начато удаление компонентов"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Начато удаление Окружения"
+msgstr[1] "Начато удаление Окружений"
+msgstr[2] "Начато удаление Окружений"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Начато развертывание Окружения"
+msgstr[1] "Начато развертывание Окружений"
+msgstr[2] "Начато развертывание Окружений"
+
 msgid "Status"
 msgstr "Статус"
 
 msgid "Step {0}"
 msgstr "Шаг {0}"
+
+msgid "Successful"
+msgstr "Успешый"
 
 msgid "Tags"
 msgstr "Теги"
@@ -776,6 +876,9 @@ msgstr ""
 "Bundle будет установлен из репозитория <a href=\"%(murano_repo_url)s\" "
 "target=\"_blank\">%(murano_repo_url)s</a>."
 
+msgid "The environment name field cannot be empty."
+msgstr "Поле с именем окружения не может быть пустым."
+
 #, python-format
 msgid ""
 "The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
@@ -797,8 +900,22 @@ msgstr "Сервер не в состоянии принять данные за
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr "Нет приложений в каталоге. Вы можете импортировать их по адресу"
 
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"Нет приложений в каталоге. Вы можете импортировать их по адресу <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+
 msgid "There are no applications matching your criteria."
 msgstr "Нет приложений, которые подходят под критерии поиска."
+
+msgid "There was an error communicating with server"
+msgstr "При взаимодействии с сервером возникла ошибка"
+
+msgid "There was an error initialising this field."
+msgstr "При инициализации этого поля возникла ошибка."
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -882,11 +999,21 @@ msgstr "URL"
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr "Не удалось забыть об окружении {0} по причине: {1}"
 
+msgid "Unable to communicate to glare-api server."
+msgstr "Не удалось соединиться с сервером glare-api."
+
 msgid "Unable to communicate to murano-api server."
 msgstr "Не удалось соединиться с сервером murano-api."
 
 msgid "Unable to create environment {0} due to: {1}"
 msgstr "Не удалось создать окружение {0} по причине: {1}"
+
+msgid ""
+"Unable to create v1 glance client. Marking images from murano-dashboard will "
+"be unavailable."
+msgstr ""
+"Невозможно создать v1 glance  клиент. Пометить образ через контрольную "
+"панель murano будет невозможно."
 
 msgid "Unable to delete category"
 msgstr "Не удалось удалить категорию"
@@ -949,14 +1076,32 @@ msgstr "Не удалось получить публичные образы."
 msgid "Unavailable"
 msgstr "Недоступно"
 
+msgid "Unknown"
+msgstr "Неизвестно"
+
 msgid "Update"
 msgstr "Обновить"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Обновить Окружение"
+msgstr[1] "Развернуть Окружение"
+msgstr[2] "Обновить  Окружение"
 
 msgid "Update Image"
 msgstr "Обновить Образ"
 
+msgid "Update This Environment"
+msgstr "Обновите это окружение"
+
 msgid "Updated"
 msgstr "Обновлен"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Окружение обновлено"
+msgstr[1] "Окружение развернуто"
+msgstr[2] "Окружение обновлено"
 
 msgid "Uploading package failed. {0}"
 msgstr "Не удалось загрузить пакет. {0}"
