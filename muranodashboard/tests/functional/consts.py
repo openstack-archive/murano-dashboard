@@ -73,6 +73,7 @@ DeleteComponent = ".btn[id^='services__row_'][id$='__action_delete']"
 
 # Panel's
 
-Applications = "//*[@id='main_content']/div[2]//a[contains(text(), 'Applications')]"  # noqa
-Catalog = Applications + "/following::a[span[contains(text(), 'Catalog')]]"
-Manage = Applications + "/following::a[span[contains(text(), 'Manage')]]"
+AppCatalog = "//*[@id='main_content']/div[2]//a[contains(text(), 'App Catalog')]"  # noqa
+Browse = AppCatalog + "/following::a[span[contains(text(), 'Browse')]]"
+Manage = AppCatalog + "/following::a[span[contains(text(), 'Manage')]]"
+Applications = AppCatalog + "/following::a[span[contains(text(), 'Applications')]]"  # noqa

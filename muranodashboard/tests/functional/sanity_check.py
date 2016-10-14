@@ -33,11 +33,13 @@ from muranodashboard.tests.functional import utils
 class TestSuiteSmoke(base.UITestCase):
     """This class keeps smoke tests which check operability of main panels"""
     def test_smoke_environments_panel(self):
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_panel_is_present('Environments')
 
     def test_smoke_applications_panel(self):
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.check_panel_is_present('Browse')
 
     def test_smoke_images_panel(self):
@@ -60,6 +62,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             2. Navigate to this environment
             3. Go back to environment list and delete created environment
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('test_create_del_env')
         self.go_to_submenu('Environments')
@@ -74,6 +77,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             2. Change environment's name
             3. Check that renamed environment is in environment list
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('test_edit_env')
         self.go_to_submenu('Environments')
@@ -92,6 +96,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             2. Change environment's name to empty
             3. Check warning message appear
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('test_edit_env')
         self.go_to_submenu('Environments')
@@ -109,7 +114,8 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
            2. Press 'Create Env'
            3. Make sure that it's possible to choose just created environment
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.driver.find_elements_by_xpath(
             "//a[contains(text(), 'Create Env')]")[0].click()
         self.fill_field(by.By.ID, 'id_name', 'TestEnv')
@@ -128,6 +134,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             3. Go back to environment list and delete created environment
         """
         unicode_name = u'$yaql \u2665 unicode'
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment(unicode_name)
         self.go_to_submenu('Environments')
@@ -143,6 +150,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             3. Check a set of names, if current name isn't valid
             appropriate error message should appear
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.driver.find_element_by_css_selector(c.CreateEnvironment).click()
 
@@ -168,6 +176,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         """
         # uuid.uuid4() generates random uuid
         env_name = str(uuid.uuid4())
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment(env_name)
 
@@ -186,6 +195,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             5. Sort rows by name and check it again.
             6. Sort rows in other direction and check it again.
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('quick-env-1')
         self.add_app_to_env(self.deployingapp_id)
@@ -236,12 +246,14 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             6. Check that env status is 'Ready to configure'.
         """
         self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
                                                       'Ready to deploy'))
         self.log_out()
         self.log_in(cfg.common.user, cfg.common.password)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
@@ -265,6 +277,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
         env_id = self.get_element_id('quick-env-1')
@@ -275,6 +288,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                                       'Ready to deploy'))
         self.log_out()
         self.log_in(cfg.common.user, cfg.common.password)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
@@ -300,12 +314,14 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                    sec=90)
         self.delete_component()
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestApp')
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
                                                       'Ready to deploy'))
         self.log_out()
         self.log_in(cfg.common.user, cfg.common.password)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
@@ -325,6 +341,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             8. Check that env status is 'Ready'.
         """
         self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
         env_id = self.get_element_id('quick-env-1')
@@ -340,6 +357,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                                       'Ready to deploy'))
         self.log_out()
         self.log_in(cfg.common.user, cfg.common.password)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
@@ -430,7 +448,8 @@ class TestSuiteFields(base.FieldsTestCase):
             12. Set "domain.local" as a domain name and check that
             error message didn't appear
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
         field_id = self.mockapp_id + "_0-domain"
@@ -487,7 +506,8 @@ class TestSuiteFields(base.FieldsTestCase):
             3. Check a set of names, if current name isn't valid
             appropriate error message should appears
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -518,7 +538,8 @@ class TestSuiteFields(base.FieldsTestCase):
             4. Set app name and click 'Next',
             check that there is no error message
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -542,7 +563,8 @@ class TestSuiteFields(base.FieldsTestCase):
             field, check that validation failed
             5. Set correct password. Validation has to pass
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -569,7 +591,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             will appear
             4. Click 'Back' and check that first wizard step is shown
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -594,7 +617,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             4. Click '+' and verify that creation of second app is possible
         """
 
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -615,7 +639,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             4. Delete TestApp app from environment
         """
 
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
 
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
 
@@ -639,7 +664,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             2. Set search criterion in the search field(e.g 'PostgreSQL')
             3. Click on 'Filter' and check result
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', 'PostgreSQL')
         self.driver.find_element_by_id('apps__action_filter').click()
 
@@ -661,7 +687,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             4. Select 'Web' category in 'App Category' dropdown menu
             5. Verify that MockApp is shown
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
         self.driver.find_element_by_partial_link_text('Databases').click()
@@ -689,6 +716,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             and go to the env2
             9. Check that added application is here
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('env1')
         self.go_to_submenu('Environments')
@@ -699,7 +727,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         env_id = self.get_element_id('env2')
 
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.driver.find_element_by_xpath(
             ".//*[@id='environment_switcher']/a").click()
 
@@ -729,7 +758,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             3. Click deploy
             4. Check that for "Deploying" status progress bar is seen
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.select_and_click_action_for_app('quick-add', self.mockapp_id)
         field_id = "{0}_0-name".format(self.mockapp_id)
         self.fill_field(by.By.ID, field_id, value='TestApp')
@@ -795,7 +825,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             2. Choose some application and click on 'More info'
             3. Verify info about application
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.select_and_click_action_for_app('details', self.mockapp_id)
 
         self.assertEqual('MockApp for webUI tests',
@@ -902,7 +933,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
             2. Check for YAQL validator
             3. Check that app is added to the environment
         """
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.select_and_click_action_for_app('quick-add', self.hot_app_id)
         field_id = "{0}_0-name".format(self.hot_app_id)
         self.fill_field(by.By.ID, field_id, value='TestHotApp')
@@ -945,6 +977,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             # In case of application some short name is needed to fit on page
             app_names.append(str(uuid.uuid4())[::4])
 
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment(env_name)
         self.go_to_submenu('Environments')
@@ -953,7 +986,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         for idx, app_name in enumerate(app_names):
             # Add application to the environment
-            self.go_to_submenu('Browse')
+            self.navigate_to('Browse')
+            self.go_to_submenu('Browse Local')
             self.select_and_click_action_for_app(
                 'add', '{0}/{1}'.format(self.mockapp_id, env_id))
             self.fill_field(by.By.NAME,
@@ -1008,6 +1042,7 @@ class TestSuiteApplications(base.ApplicationTestCase):
             # In case of application some short name is needed to fit on page
             app_names.append(str(uuid.uuid4())[::4])
 
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment(env_name)
         self.go_to_submenu('Environments')
@@ -1016,7 +1051,8 @@ class TestSuiteApplications(base.ApplicationTestCase):
 
         for idx, app_name in enumerate(app_names, 1):
             # Add application to the environment
-            self.go_to_submenu('Browse')
+            self.navigate_to('Browse')
+            self.go_to_submenu('Browse Local')
             self.select_and_click_action_for_app(
                 'add', '{0}/{1}'.format(self.mockapp_id, env_id))
             self.fill_field(by.By.NAME,
@@ -1085,8 +1121,8 @@ class TestSuiteAppsPagination(base.UITestCase):
 
     def test_apps_pagination(self):
         """Test check pagination in case of many applications installed."""
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         packages_list = [elem.name for elem in
                          self.murano_client.packages.list()]
         # No list of apps available in the client only packages are.
@@ -1181,8 +1217,8 @@ class TestSuitePackages(base.PackageTestCase):
         self.fill_field(by.By.ID, 'id_tags', 'TEST_TAG')
         self.modify_package('tags', 'TEST_TAG')
 
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.select_and_click_action_for_app('details', self.postgre_id)
         self.assertIn('TEST_TAG',
                       self.driver.find_element_by_xpath(
@@ -1225,8 +1261,8 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'False')
 
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determinate is it in catalog or not.
         btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
@@ -1243,8 +1279,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.check_package_parameter_by_id(self.postgre_id, 'Active', 'True')
 
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.check_element_on_page(by.By.XPATH, btn_xpath)
 
     def test_check_toggle_public_package(self):
@@ -1282,8 +1318,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         # Check that application is available in other project.
         self.switch_to_project(new_project)
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determine is it in catalog or not.
         btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
@@ -1304,8 +1340,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         # Check that application now is not available in other porject.
         self.switch_to_project(new_project)
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
 
     def test_modify_description(self):
@@ -1323,8 +1359,8 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.modify_package('description', 'New Description')
 
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.assertEqual('New Description',
                          self.driver.find_element_by_xpath(
                              c.MockAppDescr).text)
@@ -2237,8 +2273,8 @@ class TestSuitePackageCategory(base.PackageTestCase):
             9. Select new category in "App category" dropdown list
         """
         self._import_package_with_category(self.archive, self.category)
-        self.navigate_to('Catalog')
-        self.go_to_submenu('Browse')
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
         self.driver.find_element_by_xpath(
             c.CategorySelector.format('All')).click()
         self.driver.find_element_by_partial_link_text(self.category).click()
@@ -2269,7 +2305,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
         # create environment
         env_name = str(uuid.uuid4())
 
-        self.navigate_to('Catalog')
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment(env_name)
         self.go_to_submenu('Environments')
@@ -2417,6 +2453,7 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
             3. Check created environments
             4. Delete created environments at once
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('test_create_del_env_1')
         self.go_to_submenu('Environments')
@@ -2444,6 +2481,7 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
         """
         self.add_app_to_env(self.mockapp_id)
         self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.driver.find_element_by_css_selector(
             "label[for=ui-id-1]").click()
@@ -2469,6 +2507,7 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
         """
         self.add_app_to_env(self.deployingapp_id)
         self.add_app_to_env(self.deployingapp_id)
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.driver.find_element_by_css_selector(
             "label[for=ui-id-1]").click()
@@ -2498,6 +2537,7 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
             5. Check that "Abandon Environments" button is only clickable
             if env with status "Ready", "Deploying" are checked
         """
+        self.navigate_to('Applications')
         self.go_to_submenu('Environments')
         self.create_environment('quick-env-1')
         self.go_to_submenu('Environments')

@@ -9,8 +9,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API for the murano packages service.
-"""
+"""API for the murano packages service."""
 
 from django.views import generic
 from openstack_dashboard.api.rest import utils as rest_utils
@@ -24,8 +23,7 @@ CLIENT_KEYWORDS = {'marker', 'sort_dir', 'paginate'}
 
 @urls.register
 class Packages(generic.View):
-    """API for Murano packages.
-    """
+    """API for Murano packages."""
     url_regex = r'app-catalog/packages/$'
 
     @rest_utils.ajax()

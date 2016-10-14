@@ -1,0 +1,16 @@
+---
+prelude: >
+    Murano Dashboard has been renamed to App Catalog and now allows
+    seamless integration and single panel structure
+    with App Catalog UI dashboard.
+features:
+  - Murano dashboard has been renamed to App Catalog,
+    monolithic config file has been split into multiple small files.
+    Every such file defines either a panel group or adds
+    general murano-related settings to horizon.
+upgrade:
+  - To upgrade to Newton version of app catalog you need to remove old
+    ``_50_murano.py`` config file, that defined in murano dashboard. Be sure to
+    also remove any .pyc and .po files. After that you need to copy all new
+    config files from ``muranodashboard/local/enabled/*.py`` to
+    ``openstack_dashboard/local/enabled/`` and restart horizon
