@@ -1,0 +1,18 @@
+---
+features:
+  - >
+    New section ``Parameters`` was added to UI definition markup. Parameters
+    is a key-value storage, whose values are available as YAQL variables. Thus
+    if the section has a key ``var`` its value can be retrieved using ``$var``
+    syntax and used anywhere in the markup - both as a field attribute values
+    and in Application/Templates sections. Parameter values can be a YAQL
+    expressions. The difference between Templates and Parameters is that
+    Parameters are evaluated once before form render whereas Templates are
+    evaluated on each access.
+  - >
+    ``choice`` field  type now can accept list of choices in a form of
+    dictionary. I.e. in addition to [[key1, value1], [key2, value2]] one can
+    provide {key1: value1, key2: value2}
+  - >
+    UI definition version was bumped to ``2.4``. If application is going to
+    use Parameters it should indicate it by setting the version in UI file.

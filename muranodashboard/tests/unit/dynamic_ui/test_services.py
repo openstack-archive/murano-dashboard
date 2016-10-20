@@ -144,20 +144,16 @@ class TestService(helpers.APITestCase):
                                    fqn='io.murano.Test',
                                    application=self.application)
         service.set_data(cleaned_data)
-        have_data, result = service.get_data(catalog_forms.WF_MANAGEMENT_NAME,
-                                             expr)
+        result = service.get_data(catalog_forms.WF_MANAGEMENT_NAME, expr)
         expected = {'workflowManagement': {'application_name': 'foobar'}}
 
-        self.assertTrue(have_data)
         self.assertEqual(expected, result)
 
         # Test whether passing data to get_data works.
         service.set_data({})
         cleaned_data = cleaned_data[catalog_forms.WF_MANAGEMENT_NAME]
-        have_data, result = service.get_data(catalog_forms.WF_MANAGEMENT_NAME,
-                                             expr,
-                                             data=cleaned_data)
-        self.assertTrue(have_data)
+        result = service.get_data(
+            catalog_forms.WF_MANAGEMENT_NAME, expr, data=cleaned_data)
         self.assertEqual(expected, result)
 
     def test_get_apps_data(self):
@@ -165,36 +161,18 @@ class TestService(helpers.APITestCase):
         self.assertEqual({}, result)
         self.assertEqual(self.request.session['apps_data'], result)
 
-    @mock.patch.object(services, 'LOG')
     @mock.patch.object(services, 'pkg_api')
-    def test_import_app(self, mock_pkg_api, mock_log):
+    def test_import_app(self, mock_pkg_api):
         mock_pkg_api.get_app_ui.return_value = {
             'foo': 'bar',
             'application': self.application
         }
         mock_pkg_api.get_app_fqn.return_value = 'foo_fqn'
 
-        services._apps = {}
         service = services.import_app(self.request, '123')
         self.assertEqual(services.Service, type(service))
         self.assertEqual('bar', service.foo)
         self.assertEqual(self.application, service.application)
-        self.assertIn('123', services._apps)
-        self.assertEqual(services._apps['123'], service)
-        mock_log.debug.assert_any_call(
-            'Using data {0} for app {1}'.format({}, 'foo_fqn'))
-        mock_log.debug.assert_any_call(
-            'Creating new forms for app {0}'.format('foo_fqn'))
-
-        # Test whether the service was cached.
-        service = services.import_app(self.request, '123')
-        self.assertEqual(services.Service, type(service))
-        self.assertEqual('bar', service.foo)
-        self.assertEqual(self.application, service.application)
-        self.assertIn('123', services._apps)
-        self.assertEqual(services._apps['123'], service)
-        mock_log.debug.assert_any_call(
-            'Using in-memory forms for app {0}'.format('foo_fqn'))
 
     @mock.patch.object(services, 'pkg_api')
     def test_condition_getter_with_stay_at_the_catalog(self, mock_pkg_api):
@@ -286,7 +264,7 @@ class TestService(helpers.APITestCase):
 
     @mock.patch.object(services, 'pkg_api')
     def test_get_app_forms(self, mock_pkg_api):
-        mock_pkg_api.get_app_ui.return_value = {}
+        mock_pkg_api.get_app_ui.return_value = {'Application': {}}
 
         kwargs = {'app_id': '123'}
         result = services.get_app_forms(self.request, kwargs)

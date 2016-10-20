@@ -31,14 +31,13 @@ from horizon import messages
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import nova
 from oslo_log import log as logging
+from oslo_log import versionutils
 import six
 from yaql import legacy
 
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.common import net
 from muranodashboard.environments import api as env_api
-
-from oslo_log import versionutils
 
 
 LOG = logging.getLogger(__name__)
@@ -135,17 +134,23 @@ class RawProperty(object):
     def __init__(self, key, spec):
         self.key = key
         self.spec = spec
+        self.value = None
+        self.value_evaluated = False
 
-    def finalize(self, form_name, service):
+    def finalize(self, form_name, service, cls):
         def _get(field):
-            data_ready, value = service.get_data(form_name, self.spec)
-            return value if data_ready else field.__dict__[self.key]
+            if self.value_evaluated:
+                return self.value
+            return service.get_data(form_name, self.spec)
 
         def _set(field, value):
-            field.__dict__[self.key] = value
+            self.value = value
+            self.value_evaluated = value is not None
+            if hasattr(cls, self.key):
+                getattr(cls, self.key).fset(field, value)
 
         def _del(field):
-            del field.__dict__[self.key]
+            _set(field, None)
         return property(_get, _set, _del)
 
 
@@ -197,7 +202,7 @@ class CustomPropertiesField(forms.Field):
         kwargs_ = copy.copy(kwargs)
         for key, value in kwargs_.items():
             if isinstance(value, RawProperty):
-                props[key] = value.finalize(form_name, service)
+                props[key] = value.finalize(form_name, service, cls)
                 del kwargs[key]
         if props:
             return type(cls.__name__, (cls,), props)
@@ -294,7 +299,13 @@ class IntegerField(forms.IntegerField, CustomPropertiesField):
 
 
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):
-    pass
+    def __init__(self, **kwargs):
+        choices = kwargs.get('choices') or getattr(self, 'choices', None)
+        if choices:
+            if isinstance(choices, dict):
+                choices = list(choices.items())
+            kwargs['choices'] = choices
+        super(ChoiceField, self).__init__(**kwargs)
 
 
 class DynamicChoiceField(hz_forms.DynamicChoiceField, CustomPropertiesField):
