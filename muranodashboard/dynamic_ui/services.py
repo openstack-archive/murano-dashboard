@@ -22,6 +22,7 @@ from oslo_log import log as logging
 import six
 from yaql import legacy
 
+from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.catalog import forms as catalog_forms
 from muranodashboard.dynamic_ui import helpers
@@ -71,8 +72,9 @@ class Service(object):
         self.context = legacy.create_context()
         yaql_functions.register(self.context)
 
+        params = parameters or {}
         self.parameters = {}
-        for k, v in six.iteritems(parameters or {}):
+        for k, v in six.iteritems(params):
             if not k or not k[0].isalpha():
                 continue
             v = helpers.evaluate(v, self.context)
@@ -163,7 +165,35 @@ def import_app(request, app_id):
     version.check_version(app_version)
     service = dict(
         (helpers.decamelize(k), v) for (k, v) in six.iteritems(ui_desc))
-    return Service(app_data, app_version, fqn, **service)
+    parameters = service.pop('parameters', {})
+    parameters_source = service.pop('parameters_source', None)
+    if parameters_source is not None:
+        parts = parameters_source.rsplit('.', 1)
+        if 2 >= len(parts) > 0:
+            if len(parts) == 2:
+                class_name, method_name = parts
+            else:
+                method_name = parts[0]
+                class_name = service.get('application', {}).get('?', {}).get(
+                    'type', fqn)
+
+            details = pkg_api.get_package_details(request, app_id)
+            pkg_version = getattr(details, 'version', '*')
+            request_body = {
+                'className': class_name,
+                'methodName': method_name,
+                'packageName': fqn,
+                'classVersion': pkg_version,
+                'parameters': {}
+            }
+
+            result = api.muranoclient(request).static_actions.call(
+                request_body).get_result()
+            if result and isinstance(result, dict):
+                parameters.update(result)
+
+    return Service(app_data, app_version, fqn, parameters=parameters,
+                   **service)
 
 
 def condition_getter(request, kwargs):
