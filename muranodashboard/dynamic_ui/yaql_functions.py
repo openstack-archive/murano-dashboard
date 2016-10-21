@@ -71,7 +71,39 @@ def _name(context):
     return name
 
 
+@specs.parameter('template_name', yaqltypes.String())
+@specs.parameter('parameter_name', yaqltypes.String(nullable=True))
+@specs.parameter('id_only', yaqltypes.PythonType(bool, nullable=True))
+def _ref(context, template_name, parameter_name=None, id_only=None):
+    service = context['?service']
+    data = None
+    if not parameter_name:
+        parameter_name = template_name
+    # add special symbol to avoid collisions with regular parameters
+    # and prevent it from overwriting '?service' context variable
+    parameter_name = '#' + parameter_name
+    if parameter_name in service.parameters:
+        data = service.parameters[parameter_name]
+    elif template_name in service.templates:
+        data = helpers.evaluate(service.templates[template_name], context)
+        service.parameters[parameter_name] = data
+    if not isinstance(data, dict):
+        return None
+    if not isinstance(data.get('?', {}).get('id'), helpers.ObjectID):
+        data.setdefault('?', {})['id'] = helpers.ObjectID()
+        if id_only is None:
+            id_only = False
+    elif id_only is None:
+        id_only = True
+
+    if id_only:
+        return data['?']['id']
+    else:
+        return data
+
+
 def register(context):
     context.register_function(_repeat, 'repeat')
     context.register_function(_generate_hostname, 'generateHostname')
     context.register_function(_name, 'name')
+    context.register_function(_ref, 'ref')
