@@ -1,15 +1,16 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Eunseop Shin <kairos9603@gmail.com>, 2016. #zanata
 # Ian Y. Choi <ianyrchoi@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev56\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev57\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-17 14:17+0000\n"
+"POT-Creation-Date: 2016-10-20 20:47+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-09-27 03:17+0000\n"
-"Last-Translator: Ian Y. Choi <ianyrchoi@gmail.com>\n"
+"PO-Revision-Date: 2016-10-20 11:23+0000\n"
+"Last-Translator: Eunseop Shin <kairos9603@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -86,6 +87,9 @@ msgstr "로드할 번들이 있는 외부 http/https URL입니다."
 msgid "An external http/https URL to load the package from."
 msgstr "로드할 패키지가 있는 외부 http/https URL입니다."
 
+msgid "App Catalog"
+msgstr "앱 카타로그"
+
 msgid "App Category:"
 msgstr "앱 카테고리:"
 
@@ -121,6 +125,9 @@ msgstr "뒤로"
 
 msgid "Browse"
 msgstr "탐색"
+
+msgid "Browse Local"
+msgstr "로컬 찾아보기"
 
 msgid "Bundle Name"
 msgstr "번들 이름"
@@ -245,6 +252,9 @@ msgstr "이미지의 제목을 생성하십시오."
 msgid "Created"
 msgstr "생성됨"
 
+msgid "Custom Type"
+msgstr "사용자정의 타입"
+
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
 "package dependencies)"
@@ -347,6 +357,9 @@ msgstr ""
 
 msgid "Enter a password"
 msgstr "암호 입력"
+
+msgid "Enter an image type supported by Murano."
+msgstr "Murano에서 지원하는 이미지 유형을 입력하십시오."
 
 msgid "Environment"
 msgstr "환경"
@@ -759,6 +772,13 @@ msgstr "이미지 선택"
 msgid "Select an image registered in Glance Image Services."
 msgstr "글랜스 이미지 서비스에 등록된 이미지를 선택하십시오."
 
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Murano에서 지원하는 이미지 유형을 선택하십시오. '사용자정의 타입'을 선택하여 "
+"직접 입력하세요."
+
 msgid "Select one or more categories for a package."
 msgstr "패키지의 카테고리를 하나 이상 선택하십시오."
 
@@ -1041,6 +1061,9 @@ msgstr[0] "환경 업데이트"
 
 msgid "Update Image"
 msgstr "이미지 업데이트"
+
+msgid "Update Metadata"
+msgstr "메타데이터 업데이트"
 
 msgid "Update This Environment"
 msgstr "이 환경을 업데이트합니다"
