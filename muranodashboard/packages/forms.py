@@ -255,7 +255,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
                         reason = error.get('message')
                 except ValueError:
                     # Let horizon operate with original exception
-                    raise exc_info[0], exc_info[1], exc_info[2]
+                    raise (exc_info[0], exc_info[1], exc_info[2])
 
             msg = _('Failed to modify the package. {0}').format(reason)
             LOG.exception(msg)
