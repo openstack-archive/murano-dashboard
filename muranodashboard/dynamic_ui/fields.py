@@ -214,6 +214,7 @@ class PasswordField(CharField):
                              % special_characters)
     has_clone = False
     original = True
+    attrs = {'data-type': 'password'}
     validate_password = django_validator.RegexValidator(
         password_re, _('The password must contain at least one letter, one   \
                                number and one special character'), 'invalid')
@@ -239,7 +240,8 @@ class PasswordField(CharField):
 
         kwargs.update({'label': label,
                        'error_messages': kwargs.get('error_messages', {}),
-                       'widget': forms.PasswordInput(render_value=True)})
+                       'widget': forms.PasswordInput(attrs=self.attrs,
+                                                     render_value=True)})
 
         validators = kwargs.get('validators')
         help_text = kwargs.get('help_text')
@@ -256,7 +258,8 @@ class PasswordField(CharField):
                 'invalid', self.validate_password.message)
             kwargs['min_length'] = kwargs.get('min_length', 7)
             kwargs['max_length'] = kwargs.get('max_length', 255)
-            kwargs['widget'] = self.PasswordInput(render_value=True)
+            kwargs['widget'] = self.PasswordInput(attrs=self.attrs,
+                                                  render_value=True)
         else:
             if not help_text:
                 # NOTE(kzaitsev) There are custom validators for password,
