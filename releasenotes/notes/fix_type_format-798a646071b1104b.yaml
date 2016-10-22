@@ -1,0 +1,4 @@
+---
+fixes:
+  - The issue with adding already deployed components to environment
+    via dropdown is fixed with applying changes for the new type format.

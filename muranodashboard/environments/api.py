@@ -302,7 +302,8 @@ def service_list_by_fqns(request, environment_id, fqns):
         return []
     services = services_list(request, environment_id)
     LOG.debug('Service::Instances::List')
-    return [service for service in services if service['?']['type'] in fqns]
+    return [service for service in services
+            if service['?']['type'].split('/')[0] in fqns]
 
 
 def service_create(request, environment_id, parameters):
