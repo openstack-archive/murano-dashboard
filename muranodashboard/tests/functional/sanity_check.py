@@ -1793,8 +1793,7 @@ class TestSuiteRepository(base.PackageTestCase):
 
         self._compose_app(pkg_name_parent, require={pkg_name_child: ''})
         self._compose_app(pkg_name_child,
-                          require={pkg_name_grand_child: '0.1'})
-        pkg_name_grand_child += '.0.1'
+                          require={pkg_name_grand_child: ''})
         self._compose_app(pkg_name_grand_child)
 
         self.navigate_to('Manage')
@@ -1869,8 +1868,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self._compose_app(pkg_name_single)
         self._compose_app(pkg_name_parent, require={pkg_name_child: ''})
         self._compose_app(pkg_name_child,
-                          require={pkg_name_grand_child: '0.1'})
-        pkg_name_grand_child += '.0.1'
+                          require={pkg_name_grand_child: ''})
         self._compose_app(pkg_name_grand_child)
 
         bundle_name = 'PackageWithPackages'
