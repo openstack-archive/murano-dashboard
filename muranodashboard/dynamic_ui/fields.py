@@ -194,7 +194,8 @@ class CustomPropertiesField(forms.Field):
     @classmethod
     def finalize_properties(cls, kwargs, form_name, service):
         props = {}
-        for key, value in kwargs.items():
+        kwargs_ = copy.copy(kwargs)
+        for key, value in kwargs_.items():
             if isinstance(value, RawProperty):
                 props[key] = value.finalize(form_name, service)
                 del kwargs[key]
