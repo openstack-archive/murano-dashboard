@@ -13,7 +13,7 @@
 #    under the License.
 
 import re
-import types
+import six
 
 import yaql
 from yaql.language import exceptions as yaql_exc
@@ -45,7 +45,7 @@ class YaqlExpression(object):
 
     @staticmethod
     def match(expr):
-        if not isinstance(expr, types.StringTypes):
+        if not isinstance(expr, six.string_types):
             return False
         if re.match('^[\s\w\d.:]*$', expr):
             return False

@@ -13,7 +13,6 @@
 #    under the License.
 
 import testtools
-import unittest
 
 from muranodashboard.dynamic_ui import yaql_expression
 
@@ -38,7 +37,6 @@ class TestYaqlExpression(testtools.TestCase):
         self.assertEqual("$foo", self.yaql_expr.expression())
         self.assertEqual("test", self.str_expr.expression())
 
-    @unittest.skip('Skipping until bug #1636639 resolved.')
     def test_match(self):
         self.assertFalse(self.str_expr.match(12345))
         self.assertFalse(self.str_expr.match(self.str_expr._expression))
