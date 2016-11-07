@@ -13,7 +13,7 @@
       under the License.
 */
 
-// In some cases successfull update events can stack up in case we have lots of apps in an env.
+// In some cases successful update events can stack up in case we have lots of apps in an env.
 // This might lead to a situation when lots of reloads are scheduled simultaneously.
 // The following variable forces reload to be called only once.
 var reloadCalled = false;
