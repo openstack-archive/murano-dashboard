@@ -415,9 +415,10 @@ class UpdateName(tables.UpdateAction):
             mc = api_utils.muranoclient(request)
             mc.environments.update(datum.id, name=new_cell_value)
         except exc.HTTPConflict:
-            message = _("This name is already taken.")
+            message = _("Couldn't update environment. Reason: This name is "
+                        "already taken.")
             messages.warning(request, message)
-            LOG.warning(_("Couldn't update environment. Reason: ") + message)
+            LOG.warning(message)
 
             # FIXME(kzaitsev): There is a bug in horizon and inline error
             # icons are missing. This means, that if we return 400 here, by
