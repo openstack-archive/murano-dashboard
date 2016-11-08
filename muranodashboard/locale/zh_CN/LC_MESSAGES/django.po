@@ -4,9 +4,9 @@
 # sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev56\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-17 14:17+0000\n"
+"POT-Creation-Date: 2016-11-07 23:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -206,9 +206,6 @@ msgid ""
 msgstr ""
 "无法找到应用，需要以下字段。\n"
 "Tried:{fqns}"
-
-msgid "Couldn't update environment. Reason: "
-msgstr "无法更新环境，原因是："
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "无法更新创建包 {0} 参数错误: {1}"
@@ -856,9 +853,6 @@ msgid ""
 "This action cannot be undone. Any resources created by this environment will "
 "have to be released manually."
 msgstr "这个动作不能撤消。这个环境创建的所有资源需要手动释放。"
-
-msgid "This name is already taken."
-msgstr "这个名字已经被使用"
 
 msgid "Time Finished"
 msgstr "计时结束"

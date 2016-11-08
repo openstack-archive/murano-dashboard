@@ -2,9 +2,9 @@
 # Stanislav Ulrych <stanislav.ulrych@ultimum.io>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev56\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-17 14:17+0000\n"
+"POT-Creation-Date: 2016-11-07 23:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -201,9 +201,6 @@ msgstr "Potvrdit heslo"
 
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "Nelze načíst aktuální stav pro prostředí {0}"
-
-msgid "Couldn't update environment. Reason: "
-msgstr "Nelze aktualizovat prostředí. Důvod:"
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "Nebylo možné aktualizovat parametry balíčku {0}. Chyba: {1} "
@@ -838,9 +835,6 @@ msgid ""
 msgstr ""
 "Toto nelze vrátit zpět.  Veškeré zdroje vytvořené tímto prostředím budou "
 "muset být uvolněny ručně."
-
-msgid "This name is already taken."
-msgstr "Název již je používán."
 
 msgid "Time Finished"
 msgstr "Čas ukončení"

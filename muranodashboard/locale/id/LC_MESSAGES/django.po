@@ -1,13 +1,13 @@
 # suhartono <cloudsuhartono@gmail.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev56\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-10-17 14:17+0000\n"
+"POT-Creation-Date: 2016-11-07 23:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-10-13 09:34+0000\n"
+"PO-Revision-Date: 2016-11-08 06:45+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -89,6 +89,9 @@ msgstr "URL http/https eksternal untuk memuat bundel dari."
 msgid "An external http/https URL to load the package from."
 msgstr "URLhttp/https eksternal untuk memuat paket dari."
 
+msgid "App Catalog"
+msgstr "App Catalog (katalog aplikasi)"
+
 msgid "App Category:"
 msgstr "App Category:"
 
@@ -124,6 +127,9 @@ msgstr "Back (kembali)"
 
 msgid "Browse"
 msgstr "Browse (melihat-lihat)"
+
+msgid "Browse Local"
+msgstr "Browse Local (browse lokal)"
 
 msgid "Bundle Name"
 msgstr "Bundle Name (nama bundle)"
@@ -226,8 +232,8 @@ msgstr ""
 "Tidak bisa menginisialisasi glance v1 client, karena itu tidak bisa membuat "
 "publik image berikut: {0}"
 
-msgid "Couldn't update environment. Reason: "
-msgstr "Tidak bisa memperbarui lingkungan. Alasan:"
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr "Tidak bisa memperbarui lingkungan. Alasan: Nama ini sudah diambil."
 
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "Tidak dapat memperbarui paket {0} parameter. Kesalahan: {1}"
@@ -249,6 +255,9 @@ msgstr "Buat judul untuk image."
 
 msgid "Created"
 msgstr "Created"
+
+msgid "Custom Type"
+msgstr "Custom Type (tipe kustom)"
 
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
@@ -355,6 +364,9 @@ msgstr ""
 msgid "Enter a password"
 msgstr "Masukan kata sandi"
 
+msgid "Enter an image type supported by Murano."
+msgstr "Masukkan tipe image yang didukung oleh Murano."
+
 msgid "Environment"
 msgstr "Environment (lingkungan)"
 
@@ -380,6 +392,9 @@ msgstr "Lingkungan dengan nama yang ditentukan sudah ada"
 
 msgid "Environments"
 msgstr "Environments (lingkungan)"
+
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "Kesalahan test_error_message terjadi pada saat menginstal paket bar"
 
 msgid "Error {0} occurred while installing images for {1}"
 msgstr "Kesalahan {0} terjadi ketika menginstal image untuk {1}"
@@ -424,6 +439,9 @@ msgid ""
 msgstr ""
 "Simbol pertama harus huruf latin atau garis bawah. Simbol berikutnya dapat "
 "huruf latin, angka, garis bawah, tanda, angka tanda atau tanda dolar"
+
+msgid "Foo"
+msgstr "Foo (contoh)"
 
 msgid "Fully qualified package name."
 msgstr "Nama paket berkualifikasi lengkap."
@@ -655,6 +673,9 @@ msgstr ""
 msgid "Package creation failed.Reason: {0}"
 msgstr "Pembuatan paket failed.Reason: {0}"
 
+msgid "Package foo uploaded"
+msgstr "Paket foo diunggah"
+
 msgid "Package modified."
 msgstr "Paket dimodifikasi."
 
@@ -769,6 +790,13 @@ msgstr "Pilih image"
 
 msgid "Select an image registered in Glance Image Services."
 msgstr "Pilih image yang terdaftar di layanan Glance Image."
+
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Pilih tipe image yang didukung oleh Murano. Pilih 'Custom type' untuk "
+"memasukkan tipe secara manual."
 
 msgid "Select one or more categories for a package."
 msgstr "Pilih satu atau lebih kategori untuk paket."
@@ -897,9 +925,6 @@ msgid ""
 msgstr ""
 "Tindakan ini tidak bisa dibatalkan. Sumber daya yang diciptakan oleh "
 "lingkungan ini harus dirilis secara manual."
-
-msgid "This name is already taken."
-msgstr "Nama ini sudah diambil."
 
 msgid "Time Finished"
 msgstr "Waktu selesai"
@@ -1054,6 +1079,9 @@ msgstr[0] "Update Environment"
 
 msgid "Update Image"
 msgstr "Perbarui image"
+
+msgid "Update Metadata"
+msgstr "Update Metadata (perbarui metadata)"
 
 msgid "Update This Environment"
 msgstr "Perbarui lingkungan ini"
