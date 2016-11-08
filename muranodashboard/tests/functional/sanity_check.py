@@ -2114,8 +2114,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self._compose_app(pkg_name_parent_one,
                           require={pkg_name_child_one: ''})
         self._compose_app(pkg_name_child_one,
-                          require={pkg_name_grand_child: '0.1'})
-        pkg_name_grand_child += '.0.1'
+                          require={pkg_name_grand_child: ''})
         self._compose_app(pkg_name_grand_child)
         self._compose_app(pkg_name_parent_two,
                           require={pkg_name_child_two: ''})
