@@ -1,0 +1,848 @@
+# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# Gérald LONLAS <g.lonlas@gmail.com>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev103\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-11-08 13:10+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-11-08 10:31+0000\n"
+"Last-Translator: Gérald LONLAS <g.lonlas@gmail.com>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+msgid "-"
+msgstr "-"
+
+msgid "80 characters max."
+msgstr "80 caractères max."
+
+msgid "A local zip file to upload"
+msgstr "Fichier Zip local à envoyer"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Abandonner l'environnement"
+msgstr[1] "Abandonner les environnements"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Environnement abandonné"
+msgstr[1] "Environnements abandonnés"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Add Application"
+msgstr "Ajouter une application"
+
+msgid "Add Application Category"
+msgstr "Ajouter une catégorie d'application."
+
+msgid "Add Category"
+msgstr "Ajouter une catégorie"
+
+msgid "Add Component"
+msgstr "Ajout d'un composant"
+
+msgid "Add Murano Metadata"
+msgstr "Ajouter des métadonnées Murano"
+
+msgid "Add New"
+msgstr "Ajouter un nouveau"
+
+msgid "Add new category to the application catalog."
+msgstr "Ajouter une nouvelle catégorie au catalogue de l'application"
+
+msgid "Add to Env"
+msgstr "Ajouter à l'Env"
+
+msgid "Adding application to an environment failed."
+msgstr "Échec de l'ajout de l'application à l'environnement."
+
+msgid "All"
+msgstr "Tout"
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "Une URL externe HTTP/HTTPS à partir de laquelle charger le bundle."
+
+msgid "An external http/https URL to load the package from."
+msgstr "Une URL externe HTTP/HTTPS à partir de laquelle charger le paquet."
+
+msgid "App Catalog"
+msgstr "Catalogue d'application"
+
+msgid "App Category:"
+msgstr "Catégorie de l'app :"
+
+msgid "App category"
+msgstr "Catégorie de l'app"
+
+msgid "Application Categories"
+msgstr "Catégories d'application."
+
+msgid "Application Category"
+msgstr "Catégorie de l'application"
+
+msgid "Application Details"
+msgstr "Détails de l'application"
+
+msgid "Application Package"
+msgstr "Package d'application"
+
+msgid "Application&nbsp;Components"
+msgstr "Composants&nbsp;d'applications"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Browse"
+msgstr "Parcourir"
+
+msgid "Browse Local"
+msgstr "Parcourir le dossier local"
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "La création du bundle a échoué. Raison : {0}"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Categories"
+msgstr "Catégories"
+
+msgid "Category Name"
+msgstr "Nom de la catégorie"
+
+msgid "Category {0} created."
+msgstr "Catégorie {0} créée."
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "Vérifiez la configuration de Keystone du service murano-api."
+
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "Choisir une archive Zip pour l'envoi dans le catalogue."
+
+msgid "Choose a name for the environment"
+msgstr "Choisir un nom pour cet environnement"
+
+msgid "Click to create new environment"
+msgstr "Cliquer pour créer un nouvel environnement"
+
+msgid "Completed with warnings"
+msgstr "Terminé avec avertissements"
+
+msgid "Component"
+msgstr "Composant"
+
+msgid "Component Details"
+msgstr "Détails du composant"
+
+msgid "Component List"
+msgstr "Liste des composants"
+
+msgid "Component Logs"
+msgstr "Journaux du composant"
+
+msgid "Components"
+msgstr "Composants "
+
+msgid "Configuration"
+msgstr "Configuration"
+
+msgid "Configure Application"
+msgstr "Configurer l'application"
+
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "Impossible de mettre à jour les paramètres du paquet {0}. Erreur : {1}"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "Create Env"
+msgstr "Créer un Env"
+
+msgid "Create Environment"
+msgstr "Créer un environnement"
+
+msgid "Create New"
+msgstr "Créer un nouveau"
+
+msgid "Create a title for an image."
+msgstr "Créer un titre pour une image"
+
+msgid "Created"
+msgstr "Créé"
+
+msgid "Custom Type"
+msgstr "Type personnalisée"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Supprimer la catégorie."
+msgstr[1] "Supprimer les catégories."
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Supprimer un composant"
+msgstr[1] "Supprimer les composants"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Supprimer l'environnement"
+msgstr[1] "Supprimer les environnements"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Supprimer les Metadata"
+msgstr[1] "Supprimer les Metadata"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Supprimer le package"
+msgstr[1] "Supprimer les packages"
+
+msgid "Delete failure"
+msgstr "Échec de la suppression"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Catégorie supprimée."
+msgstr[1] "Catégories supprimées."
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Metadata en cours de suppression"
+msgstr[1] "Metadata en cours de suppression"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Supprimer le package"
+msgstr[1] "Supprimer les packages"
+
+msgid "Deleting"
+msgstr "Suppression en cours"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Déployer l'environnement"
+msgstr[1] "Déployer les environnements"
+
+msgid "Deploy This Environment"
+msgstr "Déployer cet environnement"
+
+msgid "Deploy failure"
+msgstr "Échec du déploiement"
+
+msgid "Deploy started"
+msgstr "Déploiement commencé"
+
+msgid "Deployed Components"
+msgstr "Composants déployés"
+
+msgid "Deploying"
+msgstr "En cours de déploiement"
+
+msgid "Deployment Details"
+msgstr "Détail des déploiements"
+
+msgid "Deployment History"
+msgstr "Historique du déploiement"
+
+msgid "Deployment Logs"
+msgstr "Journaux de déploiement"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "Déploiement avec l'ID %s n'existe plus"
+
+msgid "Deployments"
+msgstr "Déploiements"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid "Download Package"
+msgstr "Télécharger le paquet"
+
+msgid "Drop Components here"
+msgstr "Déposer les composants ici"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr ""
+"Entrer un mot de passe complexe comprenant au moins une lettre, "
+"un                                  nombre et un caractère spécial"
+
+msgid "Enter a password"
+msgstr "Entrez un mot de passe"
+
+msgid "Environment"
+msgstr "Environnement"
+
+msgid "Environment Deployments"
+msgstr "Environnement des déploiements "
+
+msgid "Environment Name"
+msgstr "Nom de l'environnement"
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "Environnement avec l'ID %s n'existe plus"
+
+msgid "Environments"
+msgstr "Environnements"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed"
+msgstr "Échec"
+
+msgid "Failed to create environment"
+msgstr "Échec de la création de l'environnement "
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Filter"
+msgstr "Filtrer"
+
+msgid "Find in a selected category"
+msgstr "Trouvé dans la catégorie sélectionnée"
+
+msgid "Foo"
+msgstr "Foo"
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Aller à <b> <a href=%(pkg_def_url)s>Paquets</a> </b>, cliquez sur 'Importer "
+"un paquet' et sélectionnez <i>Dépôt</i> en tant que <i>source de paquet</i>."
+
+msgid "Heat Orchestration stack name"
+msgstr "Nom de la pile d'orchestration Heat"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Nom de la pile d'orchestration Heat %(forloop.counter)s"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Image Title"
+msgstr "Titre de l'image"
+
+msgid "Image Type"
+msgstr "Type d'image"
+
+msgid "Image successfully marked"
+msgstr "Image marquée avec succès"
+
+msgid "Images"
+msgstr "Images"
+
+msgid "Import Bundle"
+msgstr "Importer un Bundle"
+
+msgid "Import Package"
+msgstr "Importer un paquet"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "L'import du paquet {0} a échoué. Raison : {1}"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Instance name"
+msgstr "Nom de l'instance"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "Métadonnées non valides pour l'image : {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "Métadonnées d'image Murano non valides"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "Il est interdit d'envoyer un fichier plus grand que {0} Mo."
+
+msgid "KeyWord"
+msgstr "Mot clé"
+
+msgid "Last operation"
+msgstr "Dernière opération"
+
+msgid "Latest Deployment Log"
+msgstr "Dernier journal de déploiement"
+
+msgid "License"
+msgstr "Licence"
+
+msgid "Logs"
+msgstr "Journaux"
+
+msgid "Manage"
+msgstr "Gérer"
+
+msgid "Manage Components"
+msgstr "Gérer les composants"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "Fichier manifeste"
+
+msgid "Mark Image"
+msgstr "Marquer l'image"
+
+msgid "Marked Images"
+msgstr "Images marquées"
+
+msgid "Modify Package"
+msgstr "Modifier le paquet"
+
+msgid "Modifying package failed"
+msgstr "La modification du paquet a échoué."
+
+msgid "NO ENVIRONMENTS"
+msgstr "PAS D'ENVIRONNEMENT"
+
+msgid "Name"
+msgstr "Nom"
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "Réseau de  '%s'"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Next Page"
+msgstr "Page suivante"
+
+msgid "No availability zones available"
+msgstr "Pas de zones de disponibilité disponible"
+
+msgid "No categories available"
+msgstr "Pas de catégorie disponible"
+
+msgid "No components"
+msgstr "Aucun composant"
+
+msgid "No images available"
+msgstr "Aucune image disponible"
+
+msgid "No keypair"
+msgstr "Pas de paire de clés"
+
+msgid "No license"
+msgstr "Aucune de licence"
+
+msgid "No recent activity to report at this time."
+msgstr "Aucune activité récente à reporter pour le moment"
+
+msgid "No requirements"
+msgstr "Non requis"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "Not in domain"
+msgstr "Pas dans le domaine"
+
+msgid "Note"
+msgstr "Note"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"Le Réseau OpenStack (Neutron) n'est pas disponible dans l'environnement "
+"courant. Les paramètres réseau personnalisés ne peuvent pas être appliqués"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "Opération interdite par le serveur murano-api."
+
+msgid "Optional"
+msgstr "Optionnel"
+
+msgid "Overview"
+msgstr "Vue d'ensemble"
+
+msgid "Package Count"
+msgstr "Nom du package"
+
+msgid "Package Name"
+msgstr "Nom du paquet"
+
+msgid "Package Source"
+msgstr "Source du paquet"
+
+msgid "Package Tags"
+msgstr "Etiquettes du paquet"
+
+msgid "Package URL"
+msgstr "URL du paquet"
+
+msgid "Package Version"
+msgstr "Version du paquet"
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "La création du paquet a échoué. Raison : {0}"
+
+msgid "Package foo uploaded"
+msgstr "Paquet foo envoyé"
+
+msgid "Package modified."
+msgstr "Package modifié."
+
+msgid "Package parameters successfully updated."
+msgstr "Les paramètres du paquet a été mis à jour avec succès"
+
+msgid "Package version"
+msgstr "Version du paquet"
+
+msgid "Package with id {0} is not found"
+msgstr "Le paquet avec l'id {0} n'a pas été trouvé"
+
+msgid "Package {0} already registered."
+msgstr "Paquet{0} déjà enregistré."
+
+msgid "Package {0} upload failed. {1}"
+msgstr "L'envoi du paquet {0} a échoué. {1}"
+
+msgid "Package {0} uploaded"
+msgstr "Paquet {0} envoyé"
+
+msgid "Packages"
+msgstr "Paquets"
+
+msgid "Packages should contain:"
+msgstr "Les paquets doivent contenir :"
+
+msgid "Please confirm your password"
+msgstr "Merci de confirmer votre mot de passe"
+
+msgid "Previous Page"
+msgstr "Page précédente"
+
+msgid "Public"
+msgstr "Publique"
+
+msgid "Quick Deploy"
+msgstr "Déploiement rapide"
+
+msgid "Ready"
+msgstr "Prêt"
+
+msgid "Ready to configure"
+msgstr "Prêt à configurer"
+
+msgid "Ready to deploy"
+msgstr "Prêt à déployer"
+
+msgid "Recent Activity"
+msgstr "Activité récente"
+
+msgid "Repository"
+msgstr "Dépot"
+
+msgid "Requested object is not found on murano server."
+msgstr "L'objet demandé n'a pas été trouvé sur le serveur Murano."
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "L'opération demandée rentre en conflit avec un objet existant."
+
+msgid "Requirements"
+msgstr "Requirements"
+
+msgid "Retype your password"
+msgstr "Entrez à nouveau votre mot de passe"
+
+msgid "Running"
+msgstr "En fonctionnement"
+
+msgid "Running with errors"
+msgstr "Exécution avec erreurs"
+
+msgid "Running with warnings"
+msgstr "Exécution avec avertissements"
+
+msgid "Select Application"
+msgstr "Sélectionner l'application"
+
+msgid "Select Image"
+msgstr "Sélectionner une image "
+
+msgid "Select an image registered in Glance Image Services."
+msgstr "Sélectionner une image enregistrée dans les services d'image Glance."
+
+msgid "Select one or more categories for a package."
+msgstr "Sélectionner une ou plusieurs catégories pour le paquet"
+
+msgid "Show Details"
+msgstr "Afficher les détails"
+
+msgid "Something went wrong during package downloading"
+msgstr "Quelque chose s'est mal passé pendant le téléchargement du paquet"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr ""
+"Désolé, vous ne pouvez ajouter d'application maintenant. L'environnement est "
+"en cours de déploiement."
+
+msgid "Sorry, you can't delete service right now"
+msgstr "Désolé, vous ne pouvez pas supprimer le service maintenant"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "Le titre spécifié est déjà utilisé. Veuillez en choisir un autre."
+
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "La suppression du composant a débutée"
+msgstr[1] "La suppression des composants a débutée"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "La suppression de l'environnement a débutée"
+msgstr[1] "La suppression des environnements a débutée"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Le déploiement de l'environnement a débutée"
+msgstr[1] "Le déploiement des environnements a débutée"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Step {0}"
+msgstr "Étape {0}"
+
+msgid "Successful"
+msgstr "Succès"
+
+msgid "Tags"
+msgstr "Etiquettes"
+
+msgid "Tenant Name"
+msgstr "Nom du titulaire"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "Succès de l'ajout de l'application '{0}' à l'environnement."
+
+msgid "The environment name field cannot be empty."
+msgstr "Le champ du nom de l'environnement ne peut pas être vide."
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr ""
+"Le mot de passe doit contenir au moins une lettre, "
+"un                                  nombre et un caractère spécial"
+
+msgid "The request data is not acceptable by the server"
+msgstr "Les données de la requête ne sont pas acceptées par le serveur"
+
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr ""
+"Il n'y a aucun application dans le catalogue. Vous pouvez importer votre app "
+"depuis"
+
+msgid "There are no applications matching your criteria."
+msgstr "Il n'y a aucune application que correspond avec vos critères"
+
+msgid "There was an error communicating with server"
+msgstr "Erreur lors de la communication avec le serveur."
+
+msgid "There was an error initialising this field."
+msgstr "Une erreur s'est produite à l'initialisation de ce champ."
+
+msgid "Time Finished"
+msgstr "Terminé"
+
+msgid "Time Started"
+msgstr "Démarré"
+
+msgid "Time updated"
+msgstr "Heure mise à jour"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Activer"
+msgstr[1] "Activer"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Publier"
+msgstr[1] "Publier"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Activer"
+msgstr[1] "Activer"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Publier"
+msgstr[1] "Publier"
+
+msgid "Topology"
+msgstr "Topologie"
+
+msgid "Type"
+msgstr "Type"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "Dossier de définition de l'UI"
+
+msgid "UNKNOWN"
+msgstr "INCONNU"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "Impossible d'abandonner un environnement {0} à cause de : {1}"
+
+msgid "Unable to communicate to glare-api server."
+msgstr "Impossible de communiquer avec le serveur glare-api. "
+
+msgid "Unable to communicate to murano-api server."
+msgstr "Impossible de communiquer avec le serveur murano-api. "
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "Impossible de créer l'environnement {0} à cause de : {1}"
+
+msgid "Unable to delete category"
+msgstr "Impossible de supprimer la catégorie"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "Impossible de supprimer l'environnement {0} à cause de : {1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "Impossible de supprimer le paquet dans le serveur murano-api"
+
+msgid "Unable to deploy. Try again later"
+msgstr "Impossible de déployer. Veuillez réessayer plus tard."
+
+msgid "Unable to download package."
+msgstr "Impossible de télécharger le paquet."
+
+msgid "Unable to get list of categories"
+msgstr "Impossible d'obtenir la liste des catégories"
+
+msgid "Unable to mark image"
+msgstr "Impossible de marquer l'image"
+
+msgid "Unable to modify package"
+msgstr "Impossible de modifier le paquet"
+
+msgid "Unable to remove metadata"
+msgstr "Impossible de supprimer les métadonnées."
+
+msgid "Unable to remove package."
+msgstr "Impossible de supprimer le paquet."
+
+msgid "Unable to retrieve  availability zones."
+msgstr "Impossible de récupérer les zones de disponibilité."
+
+msgid "Unable to retrieve details for service"
+msgstr "Impossible de récupérer les détails du service"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "Impossible de récupérer la liste des déploiements."
+
+msgid "Unable to retrieve list of images"
+msgstr "Impossible de récupérer la liste des images."
+
+msgid "Unable to retrieve package details."
+msgstr "Impossible de récupérer les détails du paquet."
+
+msgid "Unable to retrieve project list."
+msgstr "Impossible de récupérer la liste des projets."
+
+msgid "Unable to retrieve public images."
+msgstr "Impossible de récupérer les images publiques."
+
+msgid "Unavailable"
+msgstr "Indisponible"
+
+msgid "Unknown"
+msgstr "Inconnu"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Mettre à jour l'environnement"
+msgstr[1] "Mettre à jour les environnements"
+
+msgid "Update Image"
+msgstr "Mettre à jour une image"
+
+msgid "Update Metadata"
+msgstr "Mettre à jour les métadonnées"
+
+msgid "Update This Environment"
+msgstr "Mettre à jour cet environnement"
+
+msgid "Updated"
+msgstr "Mis à jour"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Environnement mis à jour"
+msgstr[1] "Environnements mis à jour"
+
+msgid "Uploading package failed. {0}"
+msgstr "L'envoi du paquet a échoué. {0}"
+
+msgid "Validation Error occurred"
+msgstr "Une erreur de validation s'est produite"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "You are not allowed to delete this package"
+msgstr "Vous n'êtes pas autorisé à supprimer ce paquet"
+
+msgid "You are not allowed to perform this operation"
+msgstr "Vous n'êtes pas autorisé à executer cette opération"
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} ne sont pas identique"
