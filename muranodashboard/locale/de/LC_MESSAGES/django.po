@@ -1,13 +1,13 @@
 # Robert Simai <robert.simai@suse.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev106\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-11-07 23:03+0000\n"
+"POT-Creation-Date: 2016-11-09 10:52+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-10-18 10:42+0000\n"
+"PO-Revision-Date: 2016-11-09 10:49+0000\n"
 "Last-Translator: Robert Simai <robert.simai@suse.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -235,6 +235,11 @@ msgstr ""
 "Der Glace v1 Klient konnte nicht initialisiert werden. Daher können die "
 "folgenden Abbilder nicht auf öffentlich gesetzt werden: '{0}'"
 
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr ""
+"Umgebung konnte nicht aktualisiert werden. Grund: der Name wird bereits "
+"verwendet."
+
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "Konnte Parameter des Paketes {0} nicht aktualisieren. Fehler: {1}"
 
@@ -401,6 +406,9 @@ msgstr "Die Umgebung mit dem angegebenen Namen existiert bereits"
 msgid "Environments"
 msgstr "Umgebungen"
 
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "Fehler test_error_message bei der Installation des Paketes bar"
+
 msgid "Error {0} occurred while installing images for {1}"
 msgstr "Fehler {0} aufgetreten beim Installieren der Abbilder für {1}"
 
@@ -446,6 +454,9 @@ msgstr ""
 "sein. Darauffolgende Zeichen dürfen lateinische oder numerische Zeichen "
 "sein, sowie Unterstrich, das at-Symbol, das Nummernzeichen oder das "
 "Dollarzeichen."
+
+msgid "Foo"
+msgstr "Foo"
 
 msgid "Fully qualified package name."
 msgstr "Vollständig qualifizierter Paketname."
@@ -676,6 +687,9 @@ msgstr ""
 
 msgid "Package creation failed.Reason: {0}"
 msgstr "Paketerstellung fehlgeschlagen. Grund: {0}"
+
+msgid "Package foo uploaded"
+msgstr "Paket foo hochgeladen"
 
 msgid "Package modified."
 msgstr "Paket modifiziert"
