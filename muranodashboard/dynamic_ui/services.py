@@ -40,9 +40,6 @@ LOG.info('Using cache directory located at {dir}'.format(
     dir=consts.CACHE_DIR))
 
 
-_apps = {}
-
-
 class Service(object):
     """Murano Service representation object
 
@@ -59,7 +56,7 @@ class Service(object):
     stored at local file-system cache .
     """
     def __init__(self, cleaned_data, version, fqn, forms=None, templates=None,
-                 application=None, **kwargs):
+                 application=None, parameters=None, **kwargs):
         self.cleaned_data = cleaned_data
         self.templates = templates or {}
         self.spec_version = str(version)
@@ -73,6 +70,14 @@ class Service(object):
 
         self.context = legacy.create_context()
         yaql_functions.register(self.context)
+
+        self.parameters = {}
+        for k, v in six.iteritems(parameters or {}):
+            if not k or not k[0].isalpha():
+                continue
+            v = helpers.evaluate(v, self.context)
+            self.parameters[k] = v
+            self.context[k] = v
 
         self.forms = []
         for key, value in six.iteritems(kwargs):
@@ -132,8 +137,7 @@ class Service(object):
         if data:
             self.update_cleaned_data(data, form_name=form_name)
         data = self.cleaned_data
-        value = data and expr.evaluate(data=data, context=self.context)
-        return data != {}, value
+        return expr.evaluate(data=data, context=self.context)
 
     def update_cleaned_data(self, data, form=None, form_name=None):
         form_name = form_name or form.__class__.__name__
@@ -159,16 +163,7 @@ def import_app(request, app_id):
     version.check_version(app_version)
     service = dict(
         (helpers.decamelize(k), v) for (k, v) in six.iteritems(ui_desc))
-
-    global _apps  # In-memory caching of dynamic UI forms
-    if app_id in _apps:
-        LOG.debug('Using in-memory forms for app {0}'.format(fqn))
-        app = _apps[app_id]
-        app.set_data(app_data)
-    else:
-        LOG.debug('Creating new forms for app {0}'.format(fqn))
-        app = _apps[app_id] = Service(app_data, app_version, fqn, **service)
-    return app
+    return Service(app_data, app_version, fqn, **service)
 
 
 def condition_getter(request, kwargs):

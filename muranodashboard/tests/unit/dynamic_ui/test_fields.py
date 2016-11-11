@@ -329,26 +329,39 @@ class TestFields(testtools.TestCase):
 class TestRawProperty(testtools.TestCase):
 
     def test_finalize(self):
+        class Control(object):
+            def __init__(self):
+                self.value = None
+
+            @property
+            def prop(self):
+                return self.value
+
+            @prop.setter
+            def prop(self, value):
+                self.value = value
+
+            @prop.deleter
+            def prop(self):
+                delattr(self, 'value')
+
         mock_service = mock.Mock()
-        mock_service.get_data.side_effect = [
-            (True, 'foo_value'), (False, None)
-        ]
-        mock_field = mock.MagicMock()
-        mock_field.__dict__['foo_key'] = 'foo_dict_value'
+        mock_service.get_data.side_effect = ['foo_value']
 
-        raw_property = fields.RawProperty('foo_key', 'foo_spec')
-        props = raw_property.finalize('foo_form_name', mock_service)
+        raw_property = fields.RawProperty('prop', 'foo_spec')
+        props = raw_property.finalize(
+            'foo_form_name', mock_service, Control)
 
-        result = props.fget(mock_field)
+        ctl = Control()
+
+        result = props.fget(ctl)
         self.assertEqual('foo_value', result)
-        result = props.fget(mock_field)
-        self.assertEqual('foo_dict_value', result)
 
-        props.fset(mock_field, 'bar_value')
-        self.assertEqual('bar_value', mock_field.__dict__['foo_key'])
+        props.fset(ctl, 'bar_value')
+        self.assertEqual('bar_value', ctl.prop)
 
-        props.fdel(mock_field)
-        self.assertNotIn('foo_key', mock_field.__dict__)
+        props.fdel(ctl)
+        self.assertNotIn('prop', ctl.__dict__)
 
 
 class TestCustomPropertiesField(testtools.TestCase):

@@ -13,7 +13,6 @@
 #    under the License.
 
 from collections import defaultdict
-import copy
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -62,19 +61,6 @@ TYPES_KWARGS = {
 
 
 def _collect_fields(field_specs, form_name, service):
-    def careful_deepcopy(x):
-        """Careful handling of deepcopy object with recursive.
-
-           There is a recursive reference in YAQL expression
-           (since 1.0 version) and standard deepcopy can't handle this.
-        """
-        original_validators = x.pop('validators', None)
-
-        result = copy.deepcopy(x)
-        if original_validators:
-            result['validators'] = original_validators
-        return result
-
     def process_widget(cls, kwargs):
         if isinstance(cls, tuple):
             cls, _w = cls
@@ -140,7 +126,7 @@ def _collect_fields(field_specs, form_name, service):
 
         return name, cls(**kwargs)
 
-    return [make_field(careful_deepcopy(_spec)) for _spec in field_specs]
+    return [make_field(_spec) for _spec in field_specs]
 
 
 class DynamicFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
