@@ -12,14 +12,18 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import copy
 from django import http
 import mock
 
 from muranodashboard.api.rest import environments
 
-from openstack_dashboard.api.rest import utils as rest_utils
 from openstack_dashboard.test import helpers
+
+PARAM_MAPPING = {
+    'None': None,
+    'True': True,
+    'False': False
+}
 
 
 @mock.patch.object(environments, 'api')
@@ -30,7 +34,7 @@ class TestComponentsMetadataAPI(helpers.APITestCase):
         super(TestComponentsMetadataAPI, self).setUp()
 
         self.request = mock.Mock(body='{"foo": "bar"}', DATA={"foo"})
-        self.request.GET = copy.copy(rest_utils.PARAM_MAPPING)
+        self.request.GET = dict(PARAM_MAPPING)
         self.components_metadata = environments.ComponentsMetadata()
 
         self.addCleanup(mock.patch.stopall)
@@ -88,7 +92,7 @@ class TestEnvironmentsMetadataApi(helpers.APITestCase):
         super(TestEnvironmentsMetadataApi, self).setUp()
 
         self.request = mock.Mock(body='{"foo": "bar"}', DATA={"foo"})
-        self.request.GET = copy.copy(rest_utils.PARAM_MAPPING)
+        self.request.GET = dict(PARAM_MAPPING)
         self.envs_metadata = environments.EnvironmentsMetadata()
 
         self.addCleanup(mock.patch.stopall)
