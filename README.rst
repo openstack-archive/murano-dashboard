@@ -16,10 +16,12 @@ with all other OpenStack resources.
 
 For developer purposes, please symlink the following OpenStack Dashboard plugin
 files:
-* muranodashboard/local/enabled/_50_murano.py into
-  horizon/openstack_dashboard/local/enabled/_50_murano.py
+* muranodashboard/local/enabled/*.py into
+  horizon/openstack_dashboard/local/enabled/
 * muranodashboard/local/local_settings.d/_50_murano.py into
   horizon/openstack_dashboard/local/local_settings.d/_50_murano.py
+* muranodashboard/conf/murano_policy.json into
+  horizon/openstack_dashboard/conf/
 
 re-compress static assets and restart Horizon web-server as usual.
 
