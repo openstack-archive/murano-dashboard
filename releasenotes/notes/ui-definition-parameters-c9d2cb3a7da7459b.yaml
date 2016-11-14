@@ -10,6 +10,19 @@ features:
     Parameters are evaluated once before form render whereas Templates are
     evaluated on each access.
   - >
+    It is possible to specify static action (MuranoPL method) that is going to
+    be called before form is rendered. This allows MuranoPL class to provide
+    parameter values to the form. Because parameters can be used as initial
+    control values this also allows to have dynamic content in the form.
+    Parameters source method can be specified in ``ParametersSource`` attribute
+    of UI definition markup: ``ParametersSource: com.namespace.MyClass.myMethod``.
+    If class name is not specified dashboard will try to infer it from the
+    ``Application`` section or the package FQN.
+    If specified, static action must be present in one of the classes in the
+    same package that was used to obtain UI definition file. The method
+    must return a dictionary which will be combined with Parameters that are
+    already present in the file.
+  - >
     ``choice`` field  type now can accept list of choices in a form of
     dictionary. I.e. in addition to [[key1, value1], [key2, value2]] one can
     provide {key1: value1, key2: value2}
