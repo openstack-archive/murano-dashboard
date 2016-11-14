@@ -126,7 +126,6 @@ class TestService(helpers.APITestCase):
         self.assertIsInstance(attributes, dict)
         self.assertEqual(expected['?']['type'], attributes['?']['type'])
         self.assertEqual(expected['?']['name'], attributes['?']['name'])
-        self.assertEqual(cleaned_data, service.context['$'])
         self.assertEqual('foobar', service.application['?']['name'])
 
     def test_get_and_set_cleaned_data(self):

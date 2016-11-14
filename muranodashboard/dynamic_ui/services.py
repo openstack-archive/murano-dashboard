@@ -70,6 +70,7 @@ class Service(object):
             self.application = application
 
         self.context = legacy.create_context()
+        self.context['?service'] = self
         yaql_functions.register(self.context)
 
         params = parameters or {}
@@ -123,15 +124,16 @@ class Service(object):
                                                                  [])
 
     def extract_attributes(self):
-        self.context['$'] = self.cleaned_data
+        context = self.context.create_child_context()
+        context['$'] = self.cleaned_data
         for name, template in six.iteritems(self.templates):
-            self.context[name] = template
+            context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
                 >= semantic_version.Version.coerce('2.2'):
             management_form = catalog_forms.WF_MANAGEMENT_NAME
-            name = self.context['$'][management_form]['application_name']
+            name = self.cleaned_data[management_form]['application_name']
             self.application['?']['name'] = name
-        attributes = helpers.evaluate(self.application, self.context)
+        attributes = helpers.evaluate(self.application, context)
         return attributes
 
     def get_data(self, form_name, expr, data=None):

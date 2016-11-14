@@ -24,6 +24,11 @@ from django.core import validators
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
 
 
+class ObjectID(object):
+    def __init__(self):
+        self.object_id = str(uuid.uuid4())
+
+
 def is_localizable(keys):
     return set(keys).intersection(_LOCALIZABLE_KEYS)
 
@@ -101,9 +106,12 @@ def evaluate(value, context):
 
 def insert_hidden_ids(application):
     def wrap(k, v):
-        if k == '?':
+        if k == '?' and isinstance(v, dict) and not isinstance(
+                v.get('id'), ObjectID):
             v['id'] = str(uuid.uuid4())
             return k, v
+        elif isinstance(v, ObjectID):
+            return k, v.object_id
         else:
             return rec(k), rec(v)
 

@@ -9,6 +9,7 @@ features:
     expressions. The difference between Templates and Parameters is that
     Parameters are evaluated once before form render whereas Templates are
     evaluated on each access.
+
   - >
     It is possible to specify static action (MuranoPL method) that is going to
     be called before form is rendered. This allows MuranoPL class to provide
@@ -22,10 +23,23 @@ features:
     same package that was used to obtain UI definition file. The method
     must return a dictionary which will be combined with Parameters that are
     already present in the file.
+
+  - >
+    ``ref(templateName [, parameterName] [, idOnly])`` YAQL function was added
+    to UI definition DSL. This function evaluates template ``templateName`` and
+    fixes the result in parameters under ``parameterName`` key (or
+    ``templateName`` if the second parameter was omitted). Then it generates
+    object ID and places it into ``?/id`` field. On the first use of
+    ``parameterName`` or if ``idOnly`` is ``false`` the function will return
+    the whole object structure. On subsequent calls or if ``idOnly`` is
+    ``true`` it will return the ID that was generated upon the first call.
+    Thus the function brings ability to reference single object several times.
+
   - >
     ``choice`` field  type now can accept list of choices in a form of
-    dictionary. I.e. in addition to [[key1, value1], [key2, value2]] one can
-    provide {key1: value1, key2: value2}
+    dictionary. I.e. in addition to ``[[key1, value1], [key2, value2]]`` one
+    can provide ``{key1: value1, key2: value2}``
+
   - >
     UI definition version was bumped to ``2.4``. If application is going to
     use Parameters it should indicate it by setting the version in UI file.
