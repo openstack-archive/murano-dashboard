@@ -45,12 +45,12 @@ class IndexView(tables.DataTableView):
             environments = api.environments_list(self.request)
         except exc.CommunicationError:
             exceptions.handle(self.request,
-                              'Could not connect to Murano API \
-                              Service, check connection details')
+                              'Could not connect to Murano API '
+                              'Service, check connection details')
         except exc.HTTPInternalServerError:
             exceptions.handle(self.request,
-                              'Murano API Service is not responding. \
-                              Try again later')
+                              'Murano API Service is not responding. '
+                              'Try again later')
         except exc.HTTPUnauthorized:
             exceptions.handle(self.request, ignore=True, escalate=True)
 
@@ -69,11 +69,11 @@ class EnvironmentDetails(tabs.TabbedTableView):
             self.environment_id = self.kwargs['environment_id']
             env = api.environment_get(self.request, self.environment_id)
             context['environment_name'] = env.name
-
         except Exception:
             msg = _("Sorry, this environment doesn't exist anymore")
             redirect = self.get_redirect_url()
             exceptions.handle(self.request, msg, redirect=redirect)
+            return context
         context['tenant_id'] = self.request.session['token'].tenant['id']
         context["url"] = self.get_redirect_url()
         table = env_tables.EnvironmentsTable(self.request)
@@ -94,6 +94,7 @@ class EnvironmentDetails(tabs.TabbedTableView):
 
     def get_tabs(self, request, *args, **kwargs):
         environment_id = self.kwargs['environment_id']
+        deployments = []
         try:
             deployments = api.deployments_list(self.request,
                                                environment_id)
