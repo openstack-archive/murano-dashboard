@@ -320,12 +320,12 @@ class FlavorChoiceField(ChoiceField):
 
     @with_request
     def update(self, request, **kwargs):
-        self.choices = []
+        choices = []
         flavors = nova.novaclient(request).flavors.list()
 
         # If no requirements are present, return all the flavors.
         if not hasattr(self, 'requirements'):
-            self.choices = [(flavor.name, flavor.name) for flavor in flavors]
+            choices = [(flavor.name, flavor.name) for flavor in flavors]
         else:
             for flavor in flavors:
                 # If a flavor doesn't meet a minimum requirement,
@@ -346,7 +346,10 @@ class FlavorChoiceField(ChoiceField):
                 if 'max_memory_mb' in self.requirements:
                     if flavor.ram > self.requirements['max_memory_mb']:
                         continue
-                self.choices.append((flavor.name, flavor.name))
+                choices.append((flavor.name, flavor.name))
+
+        choices.sort(key=lambda e: e[1])
+        self.choices = choices
         # Search through selected flavors
         for flavor_name, flavor_name in self.choices:
             if 'medium' in flavor_name:
@@ -359,7 +362,9 @@ class KeyPairChoiceField(DynamicChoiceField):
     @with_request
     def update(self, request, **kwargs):
         self.choices = [('', _('No keypair'))]
-        for keypair in nova.novaclient(request).keypairs.list():
+        for keypair in sorted(
+                nova.novaclient(request).keypairs.list(),
+                key=lambda e: e.name):
             self.choices.append((keypair.name, keypair.name))
 
 
@@ -418,7 +423,8 @@ class ImageChoiceField(ChoiceField):
                     continue
             image_map[image.id] = title
 
-        for id_, title in sorted(six.iteritems(image_map), key=lambda e: e[1]):
+        for id_, title in sorted(six.iteritems(image_map),
+                                 key=lambda e: e[1].title):
             image_choices.append((id_, title))
         if image_choices:
             image_choices.insert(0, ("", _("Select Image")))
@@ -488,6 +494,7 @@ class AZoneChoiceField(ChoiceField):
         if not az_choices:
             az_choices.insert(0, ("", _("No availability zones available")))
 
+        az_choices.sort(key=lambda e: e[1])
         self.choices = az_choices
 
 

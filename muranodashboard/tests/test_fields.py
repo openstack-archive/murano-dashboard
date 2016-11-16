@@ -47,11 +47,11 @@ class TestFlavorField(helpers.APITestCase):
         f = fields.FlavorChoiceField()
         initial_request = {}
         f.update(initial_request, self.request)
-        self.assertEqual(
-            [('small', 'small'),
-             ('medium', 'medium'),
-             ('large', 'large')],
-            f.choices)
+        self.assertEqual([
+            ('large', 'large'),
+            ('medium', 'medium'),
+            ('small', 'small')
+        ], f.choices)
 
     def test_multiple_filter(self):
         """Check that 2 flavors are returned."""
@@ -62,7 +62,7 @@ class TestFlavorField(helpers.APITestCase):
         f = fields.FlavorChoiceField(requirements={'min_vcpus': 2})
         initial_request = {}
         f.update(initial_request, self.request)
-        self.assertEqual([('medium', 'medium'), ('large', 'large')], f.choices)
+        self.assertEqual([('large', 'large'), ('medium', 'medium')], f.choices)
 
     def test_single_filter(self):
         """Check that one flavor is returned."""

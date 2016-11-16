@@ -507,7 +507,7 @@ class TestFlavorChoiceField(testtools.TestCase):
             self.tiny_flavor, self.small_flavor, self.medium_flavor
         ]
         expected_choices = [
-            ('m1.small', 'm1.small'), ('m1.medium', 'm1.medium')
+            ('m1.medium', 'm1.medium'), ('m1.small', 'm1.small')
         ]
         valid_requirements = [
             ('vcpus', 2), ('disk', 101), ('ram', 501)
@@ -539,8 +539,9 @@ class TestFlavorChoiceField(testtools.TestCase):
         del self.flavor_choice_field.requirements
 
         expected_choices = [
-            ('m1.tiny', 'm1.tiny'), ('m1.small', 'm1.small'),
-            ('m1.medium', 'm1.medium')
+            ('m1.medium', 'm1.medium'),
+            ('m1.small', 'm1.small'),
+            ('m1.tiny', 'm1.tiny')
         ]
 
         self.flavor_choice_field.update(self.request)
@@ -663,7 +664,7 @@ class TestAZoneChoiceField(testtools.TestCase):
         a_zone_choice_field.choices = []
 
         expected_choices = [
-            ("foo_zone", "foo_zone"), ("bar_zone", "bar_zone")
+            ("bar_zone", "bar_zone"), ("foo_zone", "foo_zone")
         ]
         a_zone_choice_field.update(request)
         self.assertEqual(expected_choices, a_zone_choice_field.choices)
