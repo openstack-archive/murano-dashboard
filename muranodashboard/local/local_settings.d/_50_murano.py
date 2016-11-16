@@ -18,14 +18,23 @@ DISPLAY_MURANO_REPO_URL = 'http://apps.openstack.org/#tab=murano-apps'
 # Specify a maximum number of limit packages.
 # PACKAGES_LIMIT = 100
 
+# Make sure horizon has config the DATABASES, If horizon config use horizon's
+# DATABASES, if not, set it by murano.
+try:
+    from openstack_dashboard.settings import DATABASES
+    DATABASES_CONFIG = DATABASES.has_key('default')
+except ImportError:
+    DATABASES_CONFIG = False
+
 # Set default session backend from browser cookies to database to
 # avoid issues with forms during creating applications.
-DATABASES = {
-    'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': 'murano-dashboard.sqlite',
+if not DATABASES_CONFIG:
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'murano-dashboard.sqlite',
+        }
     }
-}
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 try:
