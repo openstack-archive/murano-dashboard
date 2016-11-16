@@ -41,15 +41,16 @@ class OverviewTab(tabs.Tab):
         :param request:
         :return:
         """
-        def find_stack(name):
-            stacks, has_more, has_prev = heat_api.stacks_list(request)
+        def find_stack(name, **kwargs):
+            stacks, has_more, has_prev = heat_api.stacks_list(
+                request, sort_dir='asc', **kwargs)
             for stack in stacks:
                 if name in stack.stack_name:
                     stack_data = {'id': stack.id,
                                   'name': stack.stack_name}
                     return stack_data
             if has_more:
-                find_stack()
+                return find_stack(name, marker=stacks[-1].id)
             return {}
 
         def get_instance_and_stack(instance_data, request):
@@ -110,7 +111,7 @@ class OverviewTab(tabs.Tab):
                     detail_info['Stack'] = stack
 
         if hasattr(service_data,
-                   'instances') and service_data['instance'] is not None:
+                   'instances') and service_data['instances'] is not None:
                 instances_for_template = []
                 stacks_for_template = []
                 for instance in service_data['instances']:
