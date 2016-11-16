@@ -319,7 +319,8 @@ class TestImportPackageWizard(helpers.APITestCase):
     @mock.patch.object(views, 'exceptions')
     @mock.patch.object(views, 'glance')
     @mock.patch.object(views, 'reverse')
-    def test_done(self, mock_reverse, mock_glance, mock_exc):
+    @mock.patch.object(views, 'api')
+    def test_done(self, mock_api, mock_reverse, mock_glance, mock_exc):
         mock_storage = mock.MagicMock()
         mock_storage.get_step_data().__getitem__.return_value =\
             mock.Mock(id='test_package_id')
@@ -333,6 +334,16 @@ class TestImportPackageWizard(helpers.APITestCase):
 
         self.import_pkg_wizard.done({})
 
+        expected_api_mock_calls = [
+            mock.call('test_dep_pkg_id',
+                      {'enabled': False, 'is_public': True}),
+            mock.call('test_package_id',
+                      {'enabled': False, 'is_public': True,
+                       'tags': ['foo', 'bar', 'baz', 'qux']}),
+        ]
+
+        mock_api.muranoclient().packages.update.assert_has_calls(
+            expected_api_mock_calls)
         mock_reverse.assert_called_once_with(
             'horizon:app-catalog:packages:index')
         mock_glance.glanceclient().images.update.assert_called_once_with(
@@ -340,6 +351,7 @@ class TestImportPackageWizard(helpers.APITestCase):
         mock_storage.get_step_data.assert_any_call('upload')
         mock_storage.get_step_data().get.assert_any_call('dependencies', [])
         mock_storage.get_step_data().get.assert_any_call('images', [])
+        mock_exc.handle.assert_not_called()
 
     @mock.patch.object(views, 'reverse')
     @mock.patch.object(views, 'glance')
