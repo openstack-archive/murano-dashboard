@@ -79,16 +79,15 @@ class Session(object):
     def get_or_create_or_delete(request, environment_id):
         """Get an open session id
 
-        Gets id from session in open state for specified environment,
-        if state is deployed - this session will be deleted and new
-        would be created. If there are no any sessions new would be created.
-        Returns if of chosen or created session.
+        Gets id from session in open state for specified environment.
+        If state is deployed, then the session is deleted and a new one
+        is created. If there are no sessions, then a new one is created.
+        Returns id of chosen or created session.
 
         :param request:
         :param environment_id:
-        :return: Session Id
+        :return: Session id
         """
-
         sessions = request.session.get('sessions', {})
         client = api.muranoclient(request)
 
@@ -98,7 +97,7 @@ class Session(object):
                 session_data = client.sessions.get(environment_id, id)
             except exc.HTTPForbidden:
                 del sessions[environment_id]
-                LOG.debug("The environment is being deployed by other user."
+                LOG.debug("The environment is being deployed by other user. "
                           "Creating a new session "
                           "for the environment {0}".format(environment_id))
                 return create_session(request, environment_id)
@@ -113,8 +112,8 @@ class Session(object):
         else:
             LOG.debug("Creating a new session")
             return create_session(request, environment_id)
-        LOG.debug("Found active session "
-                  "for the environment {0}".format(environment_id))
+        LOG.debug("Found active session for the environment {0}"
+                  .format(environment_id))
         return id
 
     @staticmethod
@@ -278,7 +277,7 @@ def services_list(request, environment_id):
         return u'%s...' % msg[:to] if len(msg) > to else msg
 
     services = []
-    # need to create new session to see services deployed be other user
+    # need to create new session to see services deployed by other user
     session_id = Session.get(request, environment_id)
 
     get_environment = api.muranoclient(request).environments.get
@@ -341,8 +340,8 @@ def service_list_by_fqns(request, environment_id, fqns):
 
 
 def service_create(request, environment_id, parameters):
-    # we should be able to delete session
-    # if we what add new services to this environment
+    # We should be able to delete session if we want to add new services to
+    # this environment.
     session_id = Session.get_or_create_or_delete(request, environment_id)
     LOG.debug('Service::Create {0}'.format(parameters['?']['type']))
     return api.muranoclient(request).services.post(environment_id,
