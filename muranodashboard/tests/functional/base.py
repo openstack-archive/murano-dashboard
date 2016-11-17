@@ -482,7 +482,7 @@ class ApplicationTestCase(ImageTestCase):
                 consts.DeleteComponent)
         btn.click()
         el = self.wait_element_is_clickable(by.By.LINK_TEXT,
-                                            'Delete Component')
+                                            'Delete Component', sec=30)
         el.click()
         self.wait_for_alert_message()
 
