@@ -1234,7 +1234,7 @@ class TestPackageDefinitionsView(helpers.APITestCase):
         packages = self.pkg_definitions_view.get_data()
 
         self.assertEqual([mock_package], packages)
-        self.assertEqual(None, mock_package.tenant_name)
+        self.assertIsNone(mock_package.tenant_name)
         self.assertTrue(self.pkg_definitions_view.has_more_data)
         mock_exc.handle.assert_called_once_with(
             self.mock_request, "Unable to retrieve project list.")
