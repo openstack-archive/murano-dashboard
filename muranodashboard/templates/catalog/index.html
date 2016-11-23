@@ -119,9 +119,8 @@
                 <a href="{{ display_repo_url }}" target="_blank"> {{ display_repo_url }}</a>.{% endblocktrans %}
                 <br><br>
                 {% blocktrans trimmed %}Go to
-                <b>
-                    <a href={{ pkg_def_url }}>Packages</a>
-                </b>, click 'Import Package' and select <i>Repository</i> as <i>Package Source</i>.
+                <b><a href={{ pkg_def_url }}>Packages</a></b>, 
+                click 'Import Package' and select <i>Repository</i> as <i>Package Source</i>.
                 {% endblocktrans %}
             {% else %}
                 {% trans "There are no applications matching your criteria." %}
