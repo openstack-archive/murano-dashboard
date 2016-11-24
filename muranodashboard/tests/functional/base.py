@@ -260,7 +260,6 @@ class UITestCase(BaseDeps):
             by.By.XPATH, getattr(consts, menu))
         if 'collapsed' in el.get_attribute('class'):
             el.click()
-        self.wait_for_sidebar_is_loaded()
 
     def select_from_list(self, list_name, value, sec=10):
         locator = (by.By.XPATH,
@@ -368,7 +367,7 @@ class UITestCase(BaseDeps):
     def wait_for_sidebar_is_loaded(self, sec=10):
         ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(
-                (by.By.CSS_SELECTOR, "div#sidebar li.active")))
+                (by.By.CSS_SELECTOR, "nav#sidebar a.active")))
         time.sleep(0.5)
 
 
