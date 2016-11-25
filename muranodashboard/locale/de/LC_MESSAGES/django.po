@@ -1,13 +1,13 @@
 # Robert Simai <robert.simai@suse.com>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev132\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev145\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-11-17 20:05+0000\n"
+"POT-Creation-Date: 2016-11-24 15:30+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-11-17 02:12+0000\n"
+"PO-Revision-Date: 2016-11-22 09:12+0000\n"
 "Last-Translator: Robert Simai <robert.simai@suse.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -708,6 +708,9 @@ msgstr "Paketparameter erfolgreich aktualisiert."
 
 msgid "Package version"
 msgstr "Paketversion"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "Paket mit ID foo_package wurde nicht gefunden"
 
 msgid "Package with id {0} is not found"
 msgstr "Paket mit ID {0} wurde nicht gefunden"

@@ -1,0 +1,84 @@
+# Stanislav Ulrych <stanislav.ulrych@ultimum.io>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev145\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2016-11-24 15:30+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-11-22 08:55+0000\n"
+"Last-Translator: Stanislav Ulrych <stanislav.ulrych@ultimum.io>\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"X-Generator: Zanata 3.7.3\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+
+msgid " 1 capital letter"
+msgstr "1 velké písmeno"
+
+msgid " 1 digit"
+msgstr "1 číslice"
+
+msgid " 1 non-capital letter"
+msgstr "1 malé písméno"
+
+msgid " 1 special character"
+msgstr "1 speciální charakter"
+
+msgid " 7 characters"
+msgstr "7 znaků"
+
+msgid "An error occurred. Please try again later."
+msgstr "Vyskytla se chyba. Prosím zkuste to znovu později."
+
+msgid "Cancel"
+msgstr "Zrušit"
+
+msgid "Create"
+msgstr "Vytvořit"
+
+msgid "Loading"
+msgstr "Načítání"
+
+msgid "New"
+msgstr "Nový"
+
+msgid "Passwords do not match"
+msgstr "Hesla se neshodují."
+
+msgid "Show less"
+msgstr "Zobrazit méně"
+
+msgid "Show more"
+msgstr "Zobrazit více"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "Při odesílání formuláře nastal problém. Zkuste to prosím znovu."
+
+msgid "Unable to edit component metadata."
+msgstr "Nelze upravit metadata komponenty."
+
+msgid "Unable to edit environment metadata."
+msgstr "Nelze upravit metadata prostředí."
+
+msgid "Unable to retrieve component metadata."
+msgstr "Nelze získat metadata komponenty."
+
+msgid "Unable to retrieve environment metadata."
+msgstr "Nelze získat metadata prostředí."
+
+msgid "Unable to retrieve the packages."
+msgstr "Nelze získat balíčky."
+
+msgid "Unable to run action."
+msgstr "Nelze provést akci."
+
+msgid "Waiting for a result"
+msgstr "Čekání na výsledek"
+
+msgid "Working"
+msgstr "Zpracovávání"
+
+msgid "Your password should have at least"
+msgstr "Vaše heslo by mělo mít nejméně"

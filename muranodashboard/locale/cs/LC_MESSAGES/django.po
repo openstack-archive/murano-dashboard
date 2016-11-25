@@ -2,13 +2,13 @@
 # Stanislav Ulrych <stanislav.ulrych@ultimum.io>, 2016. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev145\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-11-07 23:03+0000\n"
+"POT-Creation-Date: 2016-11-24 15:30+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-06-22 11:41+0000\n"
+"PO-Revision-Date: 2016-11-22 08:53+0000\n"
 "Last-Translator: Stanislav Ulrych <stanislav.ulrych@ultimum.io>\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
@@ -92,6 +92,9 @@ msgstr "Externí http/https URL, z které nahrát bundle."
 msgid "An external http/https URL to load the package from."
 msgstr "Externí http/https URL, z které nahrát balíček."
 
+msgid "App Catalog"
+msgstr "Katalog aplikací"
+
 msgid "App Category:"
 msgstr "Aplikační kategorie:"
 
@@ -127,6 +130,9 @@ msgstr "Zpět"
 
 msgid "Browse"
 msgstr "Prohlížet"
+
+msgid "Browse Local"
+msgstr "Procházet lokální"
 
 msgid "Bundle Name"
 msgstr "Název bundle"
@@ -175,6 +181,9 @@ msgstr "Složka definic tříd"
 msgid "Click to create new environment"
 msgstr "Klikněte pro vytvoření nového prostředí"
 
+msgid "Completed with warnings"
+msgstr "Dokončeno s varováním"
+
 msgid "Component"
 msgstr "Kompomenta"
 
@@ -202,6 +211,31 @@ msgstr "Potvrdit heslo"
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "Nelze načíst aktuální stav pro prostředí {0}"
 
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Nelze nalézt žádné aplikace, vyžadovány pro toto pole.\n"
+"Vyzkoušeno: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not download images "
+"for '{0}' package. You may need to download them manually from these "
+"locations: {1}"
+msgstr ""
+"Nelze inicializovat klienta glance v1, proto nebylo možné stáhnout obrazy "
+"pro balíček '{0}'. Můžete je stáhnout manuálně z následujícího umístění: {1}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Nelze inicializovat klienta glance v1, proto nebylo možné zveřejnit "
+"následující obrazy: {0}"
+
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr "Nelze aktualizovat prostředí. Důvod: Název již je používán."
+
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "Nebylo možné aktualizovat parametry balíčku {0}. Chyba: {1} "
 
@@ -222,6 +256,9 @@ msgstr "Vytvořit název pro obraz."
 
 msgid "Created"
 msgstr "Vytvořeno"
+
+msgid "Custom Type"
+msgstr "Vlastní typ"
 
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
@@ -260,6 +297,9 @@ msgstr[0] "Smazat balíček"
 msgstr[1] "Smazat balíčky"
 msgstr[2] "Smazat balíčky"
 
+msgid "Delete failure"
+msgstr "Mazáni selhalo"
+
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] "Kategorie smazána"
@@ -278,6 +318,9 @@ msgstr[0] "Balíček smazán"
 msgstr[1] "Balíčky smazány"
 msgstr[2] "Balíčky smazány"
 
+msgid "Deleting"
+msgstr "Mazání"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "Nasadit prostředí"
@@ -287,11 +330,17 @@ msgstr[2] "Nasadit prostředí"
 msgid "Deploy This Environment"
 msgstr "Nasadit toto prostředí"
 
+msgid "Deploy failure"
+msgstr "Nasazení selhalo"
+
 msgid "Deploy started"
 msgstr "Nasazení zahájeno"
 
 msgid "Deployed Components"
 msgstr "Komponenty nasazeny"
+
+msgid "Deploying"
+msgstr "Nasazování"
 
 msgid "Deployment Details"
 msgstr "Podrobnosti nasazení"
@@ -305,6 +354,9 @@ msgstr "Logy nasazení"
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr "Nasazení s id %s již neexistuje"
+
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "Nasazení s id foo_deployment_id již neexistuje"
 
 msgid "Deployments"
 msgstr "Nasazení"
@@ -334,6 +386,9 @@ msgstr ""
 msgid "Enter a password"
 msgstr "Zadat heslo"
 
+msgid "Enter an image type supported by Murano."
+msgstr "Zvolte typ obrazu, který je podporovaný v Murano."
+
 msgid "Environment"
 msgstr "Prostředí"
 
@@ -359,6 +414,9 @@ msgstr "Prostředí s daným jménem už existuje"
 msgid "Environments"
 msgstr "Prostředí"
 
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "Při instalaci balíčku bar nastala chyba test_error_message"
+
 msgid "Error {0} occurred while installing images for {1}"
 msgstr "Chyba {0} nastala při instalaci obrazů pro {1}"
 
@@ -377,6 +435,9 @@ msgstr "Složka plánů provedení"
 
 msgid "FQN"
 msgstr "FQN"
+
+msgid "Failed"
+msgstr "Selhalo"
 
 msgid "Failed to create environment"
 msgstr "Nelze vytvořit prostředí"
@@ -399,6 +460,9 @@ msgid ""
 msgstr ""
 "První symbol by mělo být písmeno nebo podtržítko. Následné symboly mohou být "
 "písmeno, číslo, podtržítko, zavináč a dolar"
+
+msgid "Foo"
+msgstr "Foo"
 
 msgid "Fully qualified package name."
 msgstr "Plně kvalifikovaný název balíčku."
@@ -628,6 +692,9 @@ msgstr ""
 msgid "Package creation failed.Reason: {0}"
 msgstr "Vytváření balíčku selhalo. Důvod:  {0}"
 
+msgid "Package foo uploaded"
+msgstr "Balíček foo nahrán"
+
 msgid "Package modified."
 msgstr "Balíček změněn."
 
@@ -642,6 +709,9 @@ msgstr "Parametry balíčku úspěšně aktualizovány."
 
 msgid "Package version"
 msgstr "Verze balíčku"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "Balíček s id foo_package_id nenalezen"
 
 msgid "Package with id {0} is not found"
 msgstr "Balíček s id {0} nenalezen"
@@ -697,6 +767,15 @@ msgstr "Veřejné"
 msgid "Quick Deploy"
 msgstr "Rychlé nasazení"
 
+msgid "Ready"
+msgstr "Připraven"
+
+msgid "Ready to configure"
+msgstr "Připraveno ke konfiguraci"
+
+msgid "Ready to deploy"
+msgstr "Připraven k nasazení"
+
 msgid "Recent Activity"
 msgstr "Poslední aktivita"
 
@@ -715,6 +794,15 @@ msgstr "Požadavky"
 msgid "Retype your password"
 msgstr "Přepište své heslo"
 
+msgid "Running"
+msgstr "Běží"
+
+msgid "Running with errors"
+msgstr "Beží s chybami"
+
+msgid "Running with warnings"
+msgstr "Běží s varováním"
+
 msgid "Select Application"
 msgstr "Vyberte aplikaci"
 
@@ -723,6 +811,13 @@ msgstr "Vyberte obraz"
 
 msgid "Select an image registered in Glance Image Services."
 msgstr "Vyberte obraz registrovaný v Glance Image Services."
+
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Zvolte typ obrazu, který je podporovaný v Murano. Zvolte 'Vlastní typ' k "
+"zadání vlastního typu."
 
 msgid "Select one or more categories for a package."
 msgstr "Vybrat jednu či více kategorií pro balíček."
@@ -777,6 +872,9 @@ msgstr "Stav"
 msgid "Step {0}"
 msgstr "Krok {0}"
 
+msgid "Successful"
+msgstr "Úspěšně"
+
 msgid "Tags"
 msgstr "Tagy"
 
@@ -826,8 +924,22 @@ msgstr "Požadovaná data nejsou přijatelná serverem"
 msgid "There are no applications in the catalog. You can import apps from"
 msgstr "V katalogu nejsou žádné aplikace. Aplikace můžete importovat z"
 
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"V katalogu nejsou žádné aplikace. Aplikace můžete importovat z <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+
 msgid "There are no applications matching your criteria."
 msgstr "Žádné dostupné aplikace odpovídající vašim kritériím."
+
+msgid "There was an error communicating with server"
+msgstr "Při komunikaci se serverem nastala chyba."
+
+msgid "There was an error initialising this field."
+msgstr "Při inicializaci tohoto pole nastala chyba."
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -908,11 +1020,21 @@ msgstr "URL"
 msgid "Unable to abandon an environment {0} due to: {1}"
 msgstr "Prostředí {0} nelze opustit kvůli: {1}"
 
+msgid "Unable to communicate to glare-api server."
+msgstr "Nelze komunikovat s glare-api serverem."
+
 msgid "Unable to communicate to murano-api server."
 msgstr "Nelze komunikovat s murano-api serverem."
 
 msgid "Unable to create environment {0} due to: {1}"
 msgstr "Nelze vytvořit prostředí {0} kvůli: {1}"
+
+msgid ""
+"Unable to create v1 glance client. Marking images from murano-dashboard will "
+"be unavailable."
+msgstr ""
+"Nelze vytvořit klienta glance v1. Vytváření obrazů z murano-dashboard nebude "
+"možné."
 
 msgid "Unable to delete category"
 msgstr "Nelze smazat kategorii"
@@ -975,6 +1097,9 @@ msgstr "Nelze získat veřejné obrazy."
 msgid "Unavailable"
 msgstr "Nedostupné"
 
+msgid "Unknown"
+msgstr "Neznámé"
+
 msgid "Update"
 msgstr "Aktualizovat"
 
@@ -986,6 +1111,9 @@ msgstr[2] "Nasadit prostředí"
 
 msgid "Update Image"
 msgstr "Aktualizovat obraz"
+
+msgid "Update Metadata"
+msgstr "Aktualizovat metadata"
 
 msgid "Update This Environment"
 msgstr "Aktualizovat toto prostředí"
