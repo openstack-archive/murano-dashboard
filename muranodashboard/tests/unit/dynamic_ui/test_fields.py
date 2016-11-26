@@ -447,13 +447,13 @@ class TestPasswordField(testtools.TestCase):
         test_memo = {}
         result = self.password_field.__deepcopy__(test_memo)
         self.assertIsInstance(result, fields.PasswordField)
-        self.assertTrue(len(test_memo.keys()) > 0)
+        self.assertGreater(len(test_memo.keys()), 0)
 
         self.password_field.error_messages = ['foo_error', 'bar_error']
         test_memo = {}
         result = self.password_field.__deepcopy__(test_memo)
         self.assertIsInstance(result, fields.PasswordField)
-        self.assertTrue(len(test_memo.keys()) > 0)
+        self.assertGreater(len(test_memo.keys()), 0)
         self.assertEqual(['foo_error', 'bar_error'], result.error_messages)
 
     def test_clone_field(self):
