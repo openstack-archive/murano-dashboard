@@ -25,7 +25,16 @@ from muranodashboard.environments import consts
 
 
 def get_app_image(request, app_fqdn, status=None):
-    package = pkg_cli.app_by_fqn(request, app_fqdn)
+    if '@' in app_fqdn:
+        class_fqn, package_fqn = app_fqdn.split('@')
+        if '/' in class_fqn:
+            class_fqn, version = class_fqn.split('/')
+        else:
+            version = None
+    else:
+        package_fqn = app_fqdn
+        version = None
+    package = pkg_cli.app_by_fqn(request, package_fqn, version=version)
     if status in [
        consts.STATUS_ID_DEPLOY_FAILURE,
        consts.STATUS_ID_DELETE_FAILURE,
