@@ -141,6 +141,14 @@ def _create_ext_network_node(name):
     return node
 
 
+def _convert_lists(node_data):
+    for key, value in six.iteritems(node_data):
+        if isinstance(value, list) and all(
+                map(lambda s: not isinstance(s, (dict, list)), value)):
+            new_value = ', '.join(str(v) for v in value)
+            node_data[key] = new_value
+
+
 def _split_seq_by_predicate(seq, predicate):
     holds, not_holds = [], []
     for elt in seq:
@@ -193,6 +201,7 @@ def render_d3_data(request, environment):
     def rec(node_data, node_key, parent_node=None):
         if not isinstance(node_data, dict):
             return
+        _convert_lists(node_data)
         node_type = node_data.get('?', {}).get('type')
         node_id = node_data.get('?', {}).get('id')
         atomics, containers = _split_seq_by_predicate(

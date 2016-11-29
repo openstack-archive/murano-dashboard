@@ -1,0 +1,4 @@
+---
+fixes:
+  - VM IP addresses are now properly displayed in the environment topology
+    viewer.
