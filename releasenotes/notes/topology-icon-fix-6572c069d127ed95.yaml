@@ -1,0 +1,4 @@
+---
+fixes:
+  - Topology viewer now properly displays icons of the deployed applications.
+
