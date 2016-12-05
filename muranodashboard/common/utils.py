@@ -114,7 +114,7 @@ class CustomUnpickler(object):
         unpickler = pickle.Unpickler(file)
         unpickler.persistent_load = self.persistent_load
         self.load = unpickler.load
-        self.noload = unpickler.noload
+        self.noload = getattr(unpickler, 'noload', None)
 
     def persistent_load(self, obj_id):
         if obj_id == 'filtered:YaqlEngine':
