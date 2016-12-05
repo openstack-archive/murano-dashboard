@@ -25,4 +25,4 @@ django-compressor>=2.0 # MIT
 django-openstack-auth>=2.4.0 # Apache-2.0
 
 # js lint tests
-nodeenv>=0.9.4 # BSD License  # BSD
+nodeenv>=0.9.4 # BSD
