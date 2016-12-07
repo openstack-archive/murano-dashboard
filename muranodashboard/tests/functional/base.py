@@ -308,8 +308,9 @@ class UITestCase(BaseDeps):
         self.driver.find_element_by_id(consts.ConfirmCreateEnvironment).click()
         self.wait_for_alert_message()
 
-    def delete_environment(self, env_name):
-        self.select_action_for_environment(env_name, 'delete')
+    def delete_environment(self, env_name, from_detail_view=False):
+        if not from_detail_view:
+            self.select_action_for_environment(env_name, 'delete')
         self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
         self.wait_for_alert_message()
 
@@ -353,6 +354,15 @@ class UITestCase(BaseDeps):
         ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(locator))
 
+    def wait_for_alert_message_to_disappear(self, sec=10):
+        # The alert message pops up directly over the delete environment
+        # button, causing click issues. So we must wait for the alert message
+        # to completely disappear before clicking the button.
+        locator = (by.By.CSS_SELECTOR, 'div.alert-success')
+        logger.debug("Waiting for a success message to disappear")
+        ui.WebDriverWait(self.driver, sec).until(
+            EC.invisibility_of_element_located(locator))
+
     def wait_for_error_message(self, sec=20):
         locator = (by.By.CSS_SELECTOR, 'div.alert-danger > p')
         logger.debug("Waiting for an error message")
@@ -363,6 +373,10 @@ class UITestCase(BaseDeps):
     def wait_element_is_clickable(self, method, element, sec=10):
         return ui.WebDriverWait(self.driver, sec).until(
             EC.element_to_be_clickable((method, element)))
+
+    def wait_element_is_visible(self, method, element, sec=10):
+        return ui.WebDriverWait(self.driver, sec).until(
+            EC.visibility_of_element_located((method, element)))
 
     def wait_for_sidebar_is_loaded(self, sec=10):
         ui.WebDriverWait(self.driver, sec).until(

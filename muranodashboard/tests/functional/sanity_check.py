@@ -183,6 +183,28 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         delete_environment_btn = c.DeleteEnvironment
         self.check_element_on_page(by.By.XPATH, delete_environment_btn)
 
+    def test_delete_environment_from_detail_view(self):
+        """Test delete environment from detail view.
+
+        Scenario:
+            1. Create environment.
+            2. Go to the environment detail page.
+            3. Explicitly wait for alert message to disappear, because it
+               hovers directly over Delete Environment Button.
+            4. Check that the environment was deleted.
+        """
+        env_name = str(uuid.uuid4())
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.create_environment(env_name)
+        self.wait_for_alert_message_to_disappear()
+        self.wait_element_is_clickable(by.By.XPATH, c.DeleteEnvironment)\
+            .click()
+        self.wait_element_is_visible(by.By.CSS_SELECTOR, '.modal-dialog')
+        self.delete_environment(env_name, from_detail_view=True)
+        self.go_to_submenu('Environments')
+        self.check_element_not_on_page(by.By.LINK_TEXT, env_name)
+
     def test_new_environment_sort(self):
         """Test check that environment during creation is not sorted
 
