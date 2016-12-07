@@ -12,6 +12,7 @@
 
 import multiprocessing
 import os
+import re
 import shutil
 import SimpleHTTPServer
 import SocketServer
@@ -426,6 +427,118 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.check_element_on_page(by.By.XPATH,
                                    c.EnvStatus.format('quick-env-1',
                                                       'Ready'))
+
+    def test_latest_deployment_log(self):
+        """Test latest deployment log for a deployed environment.
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Go to environment detail page.
+            4. Check that 'Latest Deployment Tab' is present.
+            5. Check the logs for the expected output.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.driver.find_element(by.By.LINK_TEXT, 'quick-env-1').click()
+        self.check_element_not_on_page(by.By.XPATH, c.DeploymentHistoryLogTab)
+        self.check_element_on_page(by.By.ID, c.DeployEnvironment)
+        self.driver.find_element_by_id(c.DeployEnvironment).click()
+        self.check_element_on_page(
+            by.By.XPATH, c.EnvStatus.format('TestApp', 'Ready'))
+        self.check_element_on_page(by.By.XPATH, c.DeploymentHistoryLogTab)
+        self.driver.find_element_by_xpath(c.DeploymentHistoryLogTab).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeploymentHistoryLogs)
+
+        # It might be possible for the log lines to be out of order, so remove
+        # all non-alphabet and non-spaces from each line then sort them to
+        # guarantee following assertions always pass.
+        logs = self.driver.find_elements_by_css_selector(
+            c.DeploymentHistoryLogs)
+        text_only_logs = list(
+            map(lambda log: re.sub('[^a-zA-Z ]+', '', log.text), logs)
+        )
+        text_only_logs.sort()
+
+        self.assertEqual(3, len(text_only_logs))
+        self.assertIn('Action deploy is scheduled', text_only_logs[0])
+        self.assertIn('Deployment finished', text_only_logs[1])
+        self.assertIn('Follow the white rabbit', text_only_logs[2])
+
+    def test_latest_deployment_log_multiple_deployments(self):
+        """Test latest deployment log for environment after two deployments.
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Go to environment detail page.
+            4. Check that 'Latest Deployment Tab' is present.
+            5. Check the logs for the expected output.
+            6. Add another app to the environment.
+            7. Update the environment.
+            8. Check that 'Latest Deployment Tab' is present.
+            9. Check the logs for the expected output. Should differ from the
+               first deployment.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.driver.find_element(by.By.LINK_TEXT, 'quick-env-1').click()
+        self.check_element_not_on_page(by.By.XPATH, c.DeploymentHistoryLogTab)
+        self.check_element_on_page(by.By.ID, c.DeployEnvironment)
+        self.driver.find_element_by_id(c.DeployEnvironment).click()
+        self.check_element_on_page(
+            by.By.XPATH, c.EnvStatus.format('TestApp', 'Ready'))
+        self.check_element_on_page(by.By.XPATH, c.DeploymentHistoryLogTab)
+        self.driver.find_element_by_xpath(c.DeploymentHistoryLogTab).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeploymentHistoryLogs)
+
+        logs = self.driver.find_elements_by_css_selector(
+            c.DeploymentHistoryLogs)
+        text_only_logs = list(
+            map(lambda log: re.sub('[^a-zA-Z ]+', '', log.text), logs)
+        )
+        text_only_logs.sort()
+
+        self.assertEqual(3, len(text_only_logs))
+        self.assertIn('Action deploy is scheduled', text_only_logs[0])
+        self.assertIn('Deployment finished', text_only_logs[1])
+        self.assertIn('Follow the white rabbit', text_only_logs[2])
+
+        # Click on the Components Tab because add_app_to_env will check for
+        # specific elements under that tab when env_id != None.
+        self.driver.find_element_by_xpath(c.EnvComponentsTab).click()
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.add_app_to_env(self.mockapp_id, 'TestApp1',
+                            self.get_element_id('quick-env-1'))
+        self.check_element_on_page(by.By.ID, c.DeployEnvironment)
+        self.driver.find_element_by_id(c.DeployEnvironment).click()
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready'),
+                                   sec=90)
+        self.driver.find_element(by.By.LINK_TEXT, 'quick-env-1').click()
+        self.check_element_on_page(by.By.XPATH, c.DeploymentHistoryLogTab)
+        self.driver.find_element_by_xpath(c.DeploymentHistoryLogTab).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DeploymentHistoryLogs)
+
+        logs = self.driver.find_elements_by_css_selector(
+            c.DeploymentHistoryLogs)
+        text_only_logs = list(
+            map(lambda log: re.sub('[^a-zA-Z ]+', '', log.text), logs)
+        )
+        text_only_logs.sort()
+
+        self.assertEqual(4, len(text_only_logs))
+        self.assertIn('Action deploy is scheduled', text_only_logs[0])
+        self.assertIn('Deployment finished', text_only_logs[1])
+        self.assertIn('Follow the white rabbit', text_only_logs[2])
+        self.assertIn('Follow the white rabbit', text_only_logs[3])
 
 
 class TestSuiteImage(base.ImageTestCase):

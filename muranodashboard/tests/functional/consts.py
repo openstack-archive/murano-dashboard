@@ -73,6 +73,12 @@ PrevBtn = "//tfoot//tr//td//a[contains(@href,'prev_marker')]"
 DeleteComponent = ".btn[id^='services__row_'][id$='__action_delete']"
 DetailDropdownBtn = "form.detail-actions-form a.dropdown-toggle"
 DetailDropdownMenu = "ul.dropdown-menu"
+DeploymentHistoryLogTab = "//ul[contains(@id, 'environment_details')]//"\
+                          "a[contains(text(), 'Latest Deployment Log')]"
+EnvComponentsTab = "//ul[contains(@id, 'environment_details')]//"\
+                   "a[contains(text(), 'Components')]"
+DeploymentHistoryLogs = "div#environment_details__env_logs div.reports.logs "\
+                        "div.report-info"
 
 # Panels
 AppCatalog = "//*[@id='main_content']/nav//a[contains(text(), 'App Catalog')]"  # noqa
