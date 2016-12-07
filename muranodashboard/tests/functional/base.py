@@ -374,10 +374,6 @@ class UITestCase(BaseDeps):
         return ui.WebDriverWait(self.driver, sec).until(
             EC.element_to_be_clickable((method, element)))
 
-    def wait_element_is_visible(self, method, element, sec=10):
-        return ui.WebDriverWait(self.driver, sec).until(
-            EC.visibility_of_element_located((method, element)))
-
     def wait_for_sidebar_is_loaded(self, sec=10):
         ui.WebDriverWait(self.driver, sec).until(
             EC.presence_of_element_located(
