@@ -95,17 +95,20 @@ class TestOverviewTab(testtools.TestCase):
                     {
                         'status': 'bar_status_id',
                         'id': 'bar_service_data_id',
-                        'name': 'instance-name'
+                        'name': 'instance-name',
+                        'openstackId': 'bar_instance_id'
                     },
                     {
                         'status': 'baz_status_id',
                         'id': 'baz_service_data_id',
-                        'name': 'instance-name'
+                        'name': 'instance-name',
+                        'openstackId': 'baz_instance_id'
                     }
                 ]
             elif args[0] == 'instance':
                 return {
-                    'name': 'instance-name'
+                    'name': 'instance-name',
+                    'openstackId': 'instance_id'
                 }
             elif args[0] == '?':
                 return {
@@ -182,7 +185,8 @@ class TestOverviewTab(testtools.TestCase):
         def service_data_side_effect(*args, **kwargs):
             if args[0] == 'instance':
                 return {
-                    'name': 'instance-name'
+                    'name': 'instance-name',
+                    'openstackId': 'instance_id'
                 }
             elif args[0] == '?':
                 return {
