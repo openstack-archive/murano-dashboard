@@ -443,9 +443,9 @@ class ImageTestCase(PackageBase):
                                              size=0,
                                              is_public=True,
                                              properties=property)
-        except Exception as e:
+        except Exception:
             logger.error("Unable to create or update image in Glance")
-            raise e
+            raise
         return image
 
     def select_and_click_element(self, element):
