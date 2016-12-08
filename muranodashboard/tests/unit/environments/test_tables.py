@@ -750,7 +750,7 @@ class TestServicesTable(testtools.TestCase):
         actions = services_table.get_row_actions(mock_datum)
         custom_actions = []
 
-        self.assertTrue(len(actions) > 0)
+        self.assertGreater(len(actions), 0)
         for action in actions:
             if action.__class__.__name__ == 'CustomAction':
                 custom_actions.append(action)
