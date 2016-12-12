@@ -46,15 +46,17 @@ class ImageException(Exception):
 
 
 def upload_app_package(client, app_name, data, hot=False,
-                       package_dir=consts.PackageDir):
+                       package_dir=consts.PackageDir, **manifest_kwargs):
     try:
         if not hot:
             manifest = os.path.join(package_dir, 'manifest.yaml')
-            archive = compose_package(app_name, manifest, package_dir)
+            archive = compose_package(app_name, manifest, package_dir,
+                                      **manifest_kwargs)
         else:
             manifest = os.path.join(consts.HotPackageDir, 'manifest.yaml')
             archive = compose_package(app_name, manifest,
-                                      consts.HotPackageDir, hot=True)
+                                      consts.HotPackageDir, hot=True,
+                                      **manifest_kwargs)
         package = client.packages.create(data, {app_name: open(archive, 'rb')})
         return package.id
     finally:
@@ -63,7 +65,7 @@ def upload_app_package(client, app_name, data, hot=False,
 
 
 def compose_package(app_name, manifest, package_dir,
-                    require=None, archive_dir=None, hot=False):
+                    require=None, archive_dir=None, hot=False, **kwargs):
     """Composes a murano package
 
     Composes package `app_name` with `manifest` file as a template for the
@@ -84,6 +86,8 @@ def compose_package(app_name, manifest, package_dir,
             mfest_copy['Classes'] = {fqn: 'mock_muranopl.yaml'}
         if require:
             mfest_copy['Require'] = require
+        if kwargs:
+            mfest_copy.update(kwargs)
         f.write(yaml.dump(mfest_copy, default_flow_style=False))
 
     name = app_name + '.zip'
