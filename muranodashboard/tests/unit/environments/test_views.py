@@ -101,6 +101,7 @@ class TestEnvironmentDetails(testtools.TestCase):
 
         mock_env = mock.Mock()
         mock_env.configure_mock(name='foo_env')
+        mock_env.id = 'foo_env_id'
         mock_deployment = mock.Mock(id='foo_deployment')
         mock_reverse_lazy.return_value = 'foo_redirect_url'
 

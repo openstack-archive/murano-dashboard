@@ -12,6 +12,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
+
 from django.core.urlresolvers import reverse
 from django import http as django_http
 from django import shortcuts
@@ -447,10 +449,10 @@ class UpdateEnvMetadata(tables.LinkAction):
         super(UpdateEnvMetadata, self).__init__(attrs, **kwargs)
 
     def get_link_url(self, environment):
-        target = {
-            'environment': str(environment.id),
-            'session': str(self.session_id),
-        }
+        target = json.dumps({
+            'environment': environment.id,
+            'session': self.session_id
+        })
         self.attrs['ng-click'] = (
             "modal.openMetadataModal('muranoenv', %s, true)" % target)
         return "javascript:void(0);"
@@ -460,8 +462,9 @@ class UpdateEnvMetadata(tables.LinkAction):
                                           consts.STATUS_ID_DELETING)
 
     def update(self, request, datum):
-        env_id = self.table.kwargs.get('environment_id')
-        self.session_id = api.Session.get_if_available(request, env_id)
+        if datum:
+            env_id = datum.id
+            self.session_id = api.Session.get_if_available(request, env_id)
 
 
 class EnvironmentsTable(tables.DataTable):
@@ -531,11 +534,11 @@ class UpdateMetadata(tables.LinkAction):
     def get_link_url(self, service):
         env_id = self.table.kwargs.get('environment_id')
         comp_id = service['?']['id']
-        target = {
-            'environment': str(env_id),
-            'component': str(comp_id),
-            'session': str(self.session_id),
-        }
+        target = json.dumps({
+            'environment': env_id,
+            'component': comp_id,
+            'session': self.session_id,
+        })
         self.attrs['ng-click'] = (
             "modal.openMetadataModal('muranoapp', %s, true)" % target)
         return "javascript:void(0);"
