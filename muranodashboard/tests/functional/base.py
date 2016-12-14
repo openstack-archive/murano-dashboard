@@ -24,6 +24,7 @@ from glanceclient import client as gclient
 from keystoneauth1.identity import v3
 from keystoneauth1 import session as ks_session
 from keystoneclient.v3 import client as ks_client
+from muranoclient.common import exceptions as muranoclient_exc
 from muranoclient.glance import client as glare_client
 import muranoclient.v1.client as mclient
 from oslo_log import handlers
@@ -242,7 +243,12 @@ class UITestCase(BaseDeps):
         return path.split('__')[-1]
 
     def select_and_click_action_for_app(self, action, app):
-        self.driver.find_element_by_xpath(
+        self.check_element_on_page(
+            by.By.XPATH,
+            "//*[@href='{0}/app-catalog/catalog/{1}/{2}']".format(
+                self.url_prefix, action, app))
+        self.wait_element_is_clickable(
+            by.By.XPATH,
             "//*[@href='{0}/app-catalog/catalog/{1}/{2}']".format(
                 self.url_prefix, action, app)).click()
 
@@ -277,8 +283,8 @@ class UITestCase(BaseDeps):
         except exc.TimeoutException:
             self.fail("Element {0} is not preset on the page".format(value))
 
-    def check_element_not_on_page(self, method, value):
-        self.driver.implicitly_wait(3)
+    def check_element_not_on_page(self, method, value, sec=3):
+        self.driver.implicitly_wait(sec)
         present = True
         try:
             self.driver.find_element(method, value)
@@ -392,32 +398,39 @@ class PackageBase(UITestCase):
     @classmethod
     def setUpClass(cls):
         super(PackageBase, cls).setUpClass()
-        cls.mockapp_id = utils.upload_app_package(
-            cls.murano_client,
+        cls.packages = []
+        cls.mockapp_id = cls.upload_package(
             "MockApp",
             {"categories": ["Web"], "tags": ["tag"]})
-        cls.postgre_id = utils.upload_app_package(
-            cls.murano_client,
+        cls.postgre_id = cls.upload_package(
             "PostgreSQL",
             {"categories": ["Databases"], "tags": ["tag"]})
-        cls.hot_app_id = utils.upload_app_package(
-            cls.murano_client,
+        cls.hot_app_id = cls.upload_package(
             "HotExample",
             {"tags": ["hot"]}, hot=True)
-        cls.deployingapp_id = utils.upload_app_package(
-            cls.murano_client,
+        cls.deployingapp_id = cls.upload_package(
             "DeployingApp",
             {"categories": ["Web"], "tags": ["tag"]},
             hot=False,
             package_dir=consts.DeployingPackageDir)
 
     @classmethod
+    def upload_package(cls, name, data, **kwargs):
+        package = utils.upload_app_package(cls.murano_client, name, data,
+                                           **kwargs)
+        cls.packages.append(package)
+        return package
+
+    @classmethod
     def tearDownClass(cls):
         super(PackageBase, cls).tearDownClass()
-        cls.murano_client.packages.delete(cls.mockapp_id)
-        cls.murano_client.packages.delete(cls.postgre_id)
-        cls.murano_client.packages.delete(cls.hot_app_id)
-        cls.murano_client.packages.delete(cls.deployingapp_id)
+        # In case dynamically created packages are deleted at test level,
+        # ignore not found errors below.
+        for package in cls.packages:
+            try:
+                cls.murano_client.packages.delete(package)
+            except muranoclient_exc.HTTPNotFound:
+                pass
 
 
 class ImageTestCase(PackageBase):
