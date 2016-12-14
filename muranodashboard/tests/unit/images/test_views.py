@@ -28,7 +28,6 @@ class TestMarkedImagesView(testtools.TestCase):
         super(TestMarkedImagesView, self).setUp()
 
         mock_request = mock.Mock(horizon={'async_messages': []})
-        mock_request.session = {'horizon_pagesize': 2}
         self.images_view = views.MarkedImagesView(request=mock_request)
         self.images_view._prev = False
         self.images_view._more = False
@@ -37,6 +36,10 @@ class TestMarkedImagesView(testtools.TestCase):
                          self.images_view.table_class)
         self.assertEqual('images/index.html', self.images_view.template_name)
         self.assertEqual('Marked Images', self.images_view.page_title)
+
+        mock_horizon_utils = mock.patch.object(views, 'utils').start()
+        mock_horizon_utils.get_page_size.return_value = 2
+        self.addCleanup(mock.patch.stopall)
 
     def _get_mock_image(self, prefix):
         image_info = {}

@@ -168,7 +168,6 @@ class TestDetailServiceView(testtools.TestCase):
             'environment_id': 'foo_env_id'
         }
         self.mock_request = mock.Mock(GET={})
-        self.mock_request.session = {'horizon_pagesize': 123}
         self.mock_request.user.service_catalog = None
         self.mock_request.is_ajax.return_value = True
         self.mock_request.horizon = {

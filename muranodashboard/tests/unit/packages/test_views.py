@@ -1126,7 +1126,7 @@ class TestPackageDefinitionsView(helpers.APITestCase):
         mock_token.__getitem__.return_value = 'foo_token_id'
         self.mock_request = mock.MagicMock(
             name='mock_request', GET={'sort_dir': 'asc'},
-            session={'horizon_pagesize': '123', 'token': mock_token})
+            session={'token': mock_token})
 
         self.pkg_definitions_view.request = self.mock_request
         self.original_get_filters = self.pkg_definitions_view.get_filters
@@ -1140,6 +1140,8 @@ class TestPackageDefinitionsView(helpers.APITestCase):
         self.assertFalse(self.pkg_definitions_view.has_more_data(None))
         self.assertFalse(self.pkg_definitions_view.has_prev_data(None))
 
+        mock_horizon_utils = mock.patch.object(views, 'utils').start()
+        mock_horizon_utils.get_page_size.return_value = 123
         self.addCleanup(mock.patch.stopall)
 
     @mock.patch.object(views, 'pkg_api')

@@ -29,7 +29,6 @@ class TestCategoriesView(testtools.TestCase):
         self.categories_view._more = False
 
         mock_request = mock.Mock()
-        mock_request.session = {'horizon_pagesize': 2}
         self.categories_view.request = mock_request
 
         self.assertEqual(tables.CategoriesTable,
@@ -38,6 +37,10 @@ class TestCategoriesView(testtools.TestCase):
                          self.categories_view.template_name)
         self.assertEqual('Application Categories',
                          self.categories_view.page_title)
+
+        mock_horizon_utils = mock.patch.object(views, 'utils').start()
+        mock_horizon_utils.get_page_size.return_value = 2
+        self.addCleanup(mock.patch.stopall)
 
     def test_has_prev_data(self):
         self.assertFalse(self.categories_view.has_prev_data(None))
