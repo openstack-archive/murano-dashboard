@@ -572,11 +572,11 @@ class TestUpdateEnvMetadata(testtools.TestCase):
     def test_update(self, mock_api):
         mock_api.Session.get_if_available.return_value = 'foo_session_id'
         update_env_meta_data = tables.UpdateEnvMetadata()
-        update_env_meta_data.table = mock.Mock()
-        update_env_meta_data.table.kwargs = {'environment_id': 'foo_env_id'}
+        datum = mock.Mock()
+        datum.id = 'foo_env_id'
         update_env_meta_data.session_id = None
 
-        update_env_meta_data.update(None, None)
+        update_env_meta_data.update(None, datum)
         self.assertEqual('foo_session_id', update_env_meta_data.session_id)
         mock_api.Session.get_if_available.assert_called_once_with(
             None, 'foo_env_id')
@@ -743,10 +743,13 @@ class TestServicesTable(testtools.TestCase):
         mock_reverse.return_value = 'test_url'
 
         mock_get_env_attrs.return_value = (consts.STATUS_ID_READY, None)
+        mock_api.Session.get_if_available.return_value = 'session_id'
         services_table = tables.ServicesTable(None)
         services_table.kwargs = {'environment_id': 'foo_env_id'}
 
         mock_datum = mock.MagicMock()
+        service = {'?': {'id': 'comp_id'}}
+        mock_datum.__getitem__.side_effect = lambda key: service[key]
         actions = services_table.get_row_actions(mock_datum)
         custom_actions = []
 
