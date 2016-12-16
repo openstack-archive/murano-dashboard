@@ -720,23 +720,106 @@ class TestSuiteApplications(base.ApplicationTestCase):
         self.delete_component()
         self.check_element_not_on_page(by.By.LINK_TEXT, 'TestA')
 
-    def test_check_search_option(self):
+    def test_filter_by_name(self):
         """Test checks that 'Search' option is operable.
 
         Scenario:
             1. Navigate to 'Catalog > Browse' panel
-            2. Set search criterion in the search field(e.g 'PostgreSQL')
+            2. Set search criterion in the search field (e.g 'PostgreSQL')
             3. Click on 'Filter' and check result
         """
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
         self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', 'PostgreSQL')
-        self.driver.find_element_by_id('apps__action_filter').click()
-
+        with self.wait_for_page_reload():
+            self.driver.find_element_by_id('apps__action_filter').click()
         self.check_element_on_page(by.By.XPATH,
                                    c.App.format('PostgreSQL'))
         self.check_element_not_on_page(by.By.XPATH,
+                                       c.App.format('DeployingApp'))
+        self.check_element_not_on_page(by.By.XPATH,
+                                       c.App.format('HotExample'))
+        self.check_element_not_on_page(by.By.XPATH,
                                        c.App.format('MockApp'))
+
+    def test_filter_by_tag(self):
+        """Test filtering by tag.
+
+        Test checks ability to filter applications by tag in Catalog page.
+
+        Scenario:
+            1. Navigate to 'Catalog' > 'Browse' panel
+            2. For each tag in ``apps_by_tag.keys()``:
+                a. Set search criterion in search field to current tag.
+                b. Click on 'Filter' and verify that expected applications are
+                   shown and unexpected applications are not shown.
+        """
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
+
+        apps_by_tag = {
+            'tag': ['DeployingApp', 'MockApp', 'PostgreSQL'],
+            'hot': ['HotExample']
+        }
+        all_apps = ['DeployingApp', 'HotExample', 'MockApp', 'PostgreSQL']
+
+        for tag, name_list in apps_by_tag.items():
+            self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', tag)
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_id('apps__action_filter').click()
+            for name in name_list:
+                self.check_element_on_page(by.By.XPATH,
+                                           c.App.format(name))
+            for name in set(all_apps) - set(name_list):
+                self.check_element_not_on_page(by.By.XPATH,
+                                               c.App.format(name))
+
+    def test_filter_by_description(self):
+        """Test filtering by description.
+
+        Test checks ability to filter applications by description in Catalog
+        page. Before beginning scenario, the test creates an app & package w/ a
+        randomly generated description (because otherwise all descriptions
+        would be identical).
+
+        Scenario:
+            1. Navigate to 'Catalog' > 'Browse' panel
+            2. For each description in ``apps_by_description.keys()``:
+                a. Set search criterion in search field to current description.
+                b. Click on 'Filter' and verify that expected applications are
+                   shown and unexpected applications are not shown.
+        """
+        app_name = self.gen_random_resource_name('app_name', 8)
+        description = self.gen_random_resource_name('description', 8)
+        metadata = {"categories": ["Web"], "tags": ["tag"]}
+        manifest_kwargs = {'Description': description}
+        pkg_id = utils.upload_app_package(self.murano_client, app_name,
+                                          metadata, **manifest_kwargs)
+
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
+
+        apps_by_description = {
+            'MockApp for webUI tests': ['DeployingApp', 'MockApp',
+                                        'PostgreSQL', 'HotExample'],
+            description: [app_name]
+        }
+        all_apps = ['DeployingApp', 'HotExample', 'MockApp', 'PostgreSQL',
+                    app_name]
+
+        for description, name_list in apps_by_description.items():
+            self.fill_field(by.By.CSS_SELECTOR, 'input.form-control',
+                            description)
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_id('apps__action_filter').click()
+            for name in name_list:
+                self.check_element_on_page(by.By.XPATH,
+                                           c.App.format(name))
+            for name in set(all_apps) - set(name_list):
+                self.check_element_not_on_page(by.By.XPATH,
+                                               c.App.format(name))
+
+        self.murano_client.packages.delete(pkg_id)
 
     def test_filter_by_category(self):
         """Test filtering by category

@@ -10,6 +10,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import contextlib
 import json
 import logging
 import os
@@ -379,6 +380,12 @@ class UITestCase(BaseDeps):
             EC.presence_of_element_located(
                 (by.By.CSS_SELECTOR, "nav#sidebar a.active")))
         time.sleep(0.5)
+
+    @contextlib.contextmanager
+    def wait_for_page_reload(self, sec=10):
+        old_page = self.driver.find_element_by_tag_name('html')
+        yield
+        ui.WebDriverWait(self, sec).until(EC.staleness_of(old_page))
 
 
 class PackageBase(UITestCase):
