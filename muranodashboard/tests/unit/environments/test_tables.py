@@ -732,10 +732,12 @@ class TestServicesTable(testtools.TestCase):
         self.assertEqual([], services_table.get_categories_list())
         mock_catalog_views.get_categories_list.assert_called_once_with(None)
 
+    @mock.patch('horizon.tables.actions.LinkAction.get_link_url')
     @mock.patch.object(tables, '_get_environment_status_and_version')
     @mock.patch.object(tables, 'reverse')
     @mock.patch.object(tables, 'api')
-    def test_get_row_actions(self, mock_api, mock_reverse, mock_get_env_attrs):
+    def test_get_row_actions(
+            self, mock_api, mock_reverse, mock_get_env_attrs, _):
         mock_api.extract_actions_list.return_value = [
             {'name': 'foo_bar', 'title': 'Foo Bar', 'id': 'foo_id'},
             {'name': 'baz_qux', 'title': 'Baz Qux', 'id': 'baz_id'}
