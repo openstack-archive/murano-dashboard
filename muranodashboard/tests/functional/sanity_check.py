@@ -200,10 +200,52 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.wait_for_alert_message_to_disappear()
         self.wait_element_is_clickable(by.By.XPATH, c.DeleteEnvironment)\
             .click()
-        self.wait_element_is_visible(by.By.CSS_SELECTOR, '.modal-dialog')
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.ModalDialog)
         self.delete_environment(env_name, from_detail_view=True)
         self.go_to_submenu('Environments')
         self.check_element_not_on_page(by.By.LINK_TEXT, env_name)
+
+    def test_abandon_environment_from_detail_view(self):
+        """Test abandon environment from detail view.
+
+        Scenario:
+            1. Create environment.
+            2. Add app to environment.
+            3. Go to the Applications > Environments page.
+            4. Select checkbox corresponding to environment under test.
+            5. Click 'Deploy Environments' button.
+            6. Click on the environment link to go to detail view.
+            7. Click the drop-down button.
+            8. Click the 'Abandon Environment' button.
+            9. Click the confirmation button in the modal.
+            10. Check that the environment is no longer present in table view.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.Status.format('Ready to deploy'))
+        self.driver.find_element(
+            by.By.XPATH,
+            c.EnvCheckbox.format('quick-env-1')).click()
+        self.driver.find_element(by.By.CSS_SELECTOR, c.DeployEnvironments)\
+            .click()
+        self.wait_for_alert_message()
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'),
+                                   sec=90)
+        self.driver.find_element(by.By.LINK_TEXT, 'quick-env-1').click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DetailDropdownBtn)
+        self.driver.find_element_by_css_selector(c.DetailDropdownBtn)\
+            .click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.DetailDropdownMenu)
+        self.driver.find_element(by.By.XPATH, c.AbandonEnvironment).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR, c.ModalDialog)
+        self.driver.find_element(by.By.XPATH, c.ConfirmAbandon).click()
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-1')
 
     def test_new_environment_sort(self):
         """Test check that environment during creation is not sorted

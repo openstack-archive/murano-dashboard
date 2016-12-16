@@ -61,6 +61,7 @@ DeployEnvironments = ".btn#environments__action_deploy"
 DeployEnvironmentsDisabled = ".btn#environments__action_deploy[disabled]"
 DeleteEnvironments = ".btn#environments__action_delete"
 DeleteEnvironmentsDisabled = ".btn#environments__action_delete[disabled]"
+AbandonEnvironment = "//button[contains(text(), 'Abandon Environment')]"
 AbandonEnvironments = ".btn#environments__action_abandon"
 AbandonEnvironmentsDisabled = ".btn#environments__action_abandon[disabled]"
 ConfirmCreateEnvironment = 'confirm_create_env'
@@ -70,10 +71,14 @@ DeleteCategory = "//tr[td[contains(text(), '{0}')]]//button[contains(@id, 'actio
 NextBtn = "//tfoot//tr//td//a[contains(@href,'?marker')]"
 PrevBtn = "//tfoot//tr//td//a[contains(@href,'prev_marker')]"
 DeleteComponent = ".btn[id^='services__row_'][id$='__action_delete']"
+DetailDropdownBtn = "form.detail-actions-form a.dropdown-toggle"
+DetailDropdownMenu = "ul.dropdown-menu"
 
-# Panel's
-
+# Panels
 AppCatalog = "//*[@id='main_content']/nav//a[contains(text(), 'App Catalog')]"  # noqa
 Browse = AppCatalog + "/following::a[contains(text(), 'Browse')]"
 Manage = AppCatalog + "/following::a[contains(text(), 'Manage')]"
 Applications = AppCatalog + "/following::a[contains(text(), 'Applications')]"  # noqa
+
+# Modals
+ModalDialog = ".modal-dialog"
