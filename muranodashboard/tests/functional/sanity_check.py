@@ -774,6 +774,9 @@ class TestSuiteApplications(base.ApplicationTestCase):
                 self.check_element_not_on_page(by.By.XPATH,
                                                c.App.format(name))
 
+    @unittest.skipIf(utils.glare_enabled(),
+                     "Filtering apps by description doesn't work with GLARE; "
+                     "this test should be fixed with bug #1616856.")
     def test_filter_by_description(self):
         """Test filtering by description.
 
