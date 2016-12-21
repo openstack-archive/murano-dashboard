@@ -350,11 +350,18 @@ class FlavorChoiceField(ChoiceField):
 
         choices.sort(key=lambda e: e[1])
         self.choices = choices
-        # Search through selected flavors
-        for flavor_name, flavor_name in self.choices:
-            if 'medium' in flavor_name:
-                self.initial = flavor_name
-                break
+        if kwargs.get('form'):
+            kwargs_form_flavor = kwargs["form"].fields.get('flavor')
+        else:
+            kwargs_form_flavor = None
+        if kwargs_form_flavor:
+            self.initial = kwargs["form"]["flavor"].value()
+        else:
+            # Search through selected flavors
+            for flavor_name, flavor_name in self.choices:
+                if 'medium' in flavor_name:
+                    self.initial = flavor_name
+                    break
 
 
 class KeyPairChoiceField(DynamicChoiceField):
