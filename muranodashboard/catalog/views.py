@@ -246,7 +246,12 @@ def quick_deploy(request, app_id):
 
 
 def get_image(request, app_id):
-    content = pkg_api.get_app_logo(request, app_id)
+    try:
+        content = pkg_api.get_app_logo(request, app_id)
+    except (AttributeError, exc.HTTPNotFound):
+        message = _("Can not get logo for {0}.").format(app_id)
+        LOG.warning(message)
+        content = None
     if content:
         return http.HttpResponse(content=content, content_type='image/png')
     else:
@@ -255,7 +260,12 @@ def get_image(request, app_id):
 
 
 def get_supplier_image(request, app_id):
-    content = pkg_api.get_app_supplier_logo(request, app_id)
+    try:
+        content = pkg_api.get_app_supplier_logo(request, app_id)
+    except (AttributeError, exc.HTTPNotFound):
+        message = _("Can not get supplier logo for {0}.").format(app_id)
+        LOG.warning(message)
+        content = None
     if content:
         return http.HttpResponse(content=content, content_type='image/png')
     else:
