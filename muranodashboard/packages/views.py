@@ -573,7 +573,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             kwargs.update({'request': self.request})
         if step == 'modify':
             package = self.storage.get_step_data('upload').get('package')
-            kwargs.update({'package': package})
+            kwargs.update({'package': package, 'request': self.request})
         return kwargs
 
 

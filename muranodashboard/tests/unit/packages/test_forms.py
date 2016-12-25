@@ -114,7 +114,9 @@ class TestUpdatePackageForm(helpers.APITestCase):
             tags=['bar', 'baz', 'qux'], is_public=False,
             enabled=True, description='quux')
         mock_package.configure_mock(name='foo')
-        kwargs = {'package': mock_package}
+        fake_response = {'status_code': 200}
+        self.mock_request = mock.MagicMock(return_value=fake_response, META=[])
+        kwargs = {'request': self.mock_request, 'package': mock_package}
         self.update_pkg_form = forms.UpdatePackageForm(**kwargs)
 
     def test_set_initial(self):

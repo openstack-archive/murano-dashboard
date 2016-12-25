@@ -815,7 +815,8 @@ class TestImportPackageWizard(helpers.APITestCase):
         mock_storage.get_step_data().get.return_value = 'test_package'
         self.import_pkg_wizard.storage = mock_storage
         kwargs = self.import_pkg_wizard.get_form_kwargs('modify')
-        self.assertEqual({'package': 'test_package'}, kwargs)
+        self.assertEqual({'request': self.mock_request,
+                          'package': 'test_package'}, kwargs)
 
 
 class TestImportBundleWizard(helpers.APITestCase):

@@ -2328,9 +2328,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
 
-    @unittest.skipIf(utils.glare_enabled(),
-                     "This test fails with GLARE, shoud be fixed as part of "
-                     "bug #1618266")
+    @unittest.skip("This follow-up patch will unskip this test.")
     def test_sharing_app_without_permission(self):
         """Tests sharing Murano App without permission
 

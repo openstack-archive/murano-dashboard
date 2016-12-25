@@ -22,6 +22,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages
+from openstack_dashboard import policy
 from oslo_log import log as logging
 
 from muranoclient.common import exceptions as exc
@@ -176,20 +177,27 @@ class PackageParamsMixin(forms.Form):
                                   widget=forms.Textarea,
                                   required=False)
 
-    def set_initial(self, package):
+    def set_initial(self, request, package):
         self.fields['name'].initial = package.name
         self.fields['tags'].initial = ', '.join(package.tags)
         self.fields['is_public'].initial = package.is_public
         self.fields['enabled'].initial = package.enabled
         self.fields['description'].initial = package.description
 
+        if not policy.check((("murano", "publicize_package"),), request):
+            self.fields['is_public'].widget = forms.CheckboxInput(
+                attrs={'readonly': 'readonly', 'disabled': 'disabled'})
+            self.fields['is_public'].help_text = _(
+                'You are not allowed to make packages public.')
+
 
 class UpdatePackageForm(PackageParamsMixin):
     def __init__(self, *args, **kwargs):
         package = kwargs.pop('package')
+        request = kwargs.pop('request')
         super(UpdatePackageForm, self).__init__(*args, **kwargs)
 
-        self.set_initial(package)
+        self.set_initial(request, package)
 
 
 class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
@@ -197,7 +205,7 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
         super(ModifyPackageForm, self).__init__(request, *args, **kwargs)
 
         package = kwargs['initial']['package']
-        self.set_initial(package)
+        self.set_initial(request, package)
 
         if package.type == 'Application':
             self.fields['categories'] = forms.MultipleChoiceField(
