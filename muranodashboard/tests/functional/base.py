@@ -15,7 +15,6 @@ import json
 import logging
 import os
 import six.moves.urllib.parse as urlparse
-import sys
 import testtools
 import time
 import uuid
@@ -43,19 +42,8 @@ logger = log.getLogger(__name__).logger
 logger.level = logging.DEBUG
 logger.addHandler(handlers.ColorHandler())
 
-if sys.version_info >= (2, 7):
-    class BaseDeps(testtools.TestCase):
-        pass
-else:
-    # Define asserts for python26
-    import unittest2
 
-    class BaseDeps(testtools.TestCase,
-                   unittest2.TestCase):
-        pass
-
-
-class UITestCase(BaseDeps):
+class UITestCase(testtools.TestCase):
     @classmethod
     def setUpClass(cls):
         auth = v3.Password(user_domain_name='Default',
