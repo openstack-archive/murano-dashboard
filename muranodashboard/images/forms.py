@@ -27,6 +27,9 @@ LOG = logging.getLogger(__name__)
 
 
 def filter_murano_images(images, request=None):
+    # filter out the snapshot image type
+    images = filter(
+        lambda x: x.properties.get("image_type", '') != 'snapshot', images)
     marked_images = []
     for image in images:
         metadata = image.properties.get('murano_image_info')
@@ -91,6 +94,10 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         # filter out the image format aki and ari
         images = filter(
             lambda x: x.container_format not in ('aki', 'ari'), images)
+
+        # filter out the snapshot image type
+        images = filter(
+            lambda x: x.properties.get("image_type", '') != 'snapshot', images)
 
         self.fields['image'].choices = [(i.id, i.name) for i in images]
         self.fields['existing_titles'].initial = \

@@ -115,6 +115,9 @@ def get_murano_images(request):
         LOG.error("Error to request image list from glance ")
         exceptions.handle(request, _("Unable to retrieve public images."))
     murano_images = []
+    # filter out the snapshot image type
+    images = filter(
+        lambda x: x.properties.get("image_type", '') != 'snapshot', images)
     for image in images:
         murano_property = image.properties.get('murano_image_info')
         if murano_property:
