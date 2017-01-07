@@ -158,6 +158,8 @@ FIELD_ARGS_TO_ESCAPE = ['help_text', 'initial', 'description', 'label']
 
 
 class CustomPropertiesField(forms.Field):
+    js_validation = False
+
     def __init__(self, description=None, description_title=None,
                  *args, **kwargs):
         self.description = description
@@ -169,20 +171,45 @@ class CustomPropertiesField(forms.Field):
                 kwargs[arg] = html.escape(force_text(kwargs[arg]))
 
         validators = []
+        validators_js = []
         for validator in kwargs.get('validators', []):
             if hasattr(validator, '__call__'):  # single regexpValidator
                 validators.append(validator)
-            else:  # mixed list of regexpValidator-s and YAQL validators
+                if hasattr(validator, 'regex'):
+                    regex_message = ''
+                    error_messages = kwargs.get('error_messages', {})
+                    if hasattr(validator, 'code') and \
+                       validator.code in error_messages:
+                        regex_message = force_text(
+                            error_messages[validator.code]
+                        )
+                    validators_js. \
+                        append({'regex': force_text(validator.regex.pattern),
+                                'message': regex_message})
+            else:  # mixed list of regexpValidator and YAQL validators
                 expr = validator.get('expr')
                 regex_validator = get_regex_validator(expr)
+                regex_message = validator.get('message', '')
                 if regex_validator:
                     validators.append(wrap_regex_validator(
-                        regex_validator, validator.get('message', '')))
+                        regex_validator, regex_message))
                 elif isinstance(expr, RawProperty):
                     validators.append(validator)
+                if hasattr(regex_validator, 'regex'):
+                    validators_js.\
+                        append({'regex': regex_validator.regex.pattern,
+                                'message': regex_message})
         kwargs['validators'] = validators
+        if validators_js:
+            self.js_validation = json.dumps(validators_js)
 
         super(CustomPropertiesField, self).__init__(*args, **kwargs)
+
+    def widget_attrs(self, widget):
+        attrs = super(CustomPropertiesField, self).widget_attrs(widget)
+        if self.js_validation:
+            attrs['data-validators'] = self.js_validation
+        return attrs
 
     def clean(self, value):
         """Skip all validators if field is disabled."""
@@ -237,10 +264,6 @@ class PasswordField(CharField):
                 raise forms.ValidationError(_(u"{0}{1} don't match").format(
                     self.label, defaultfilters.pluralize(2)))
 
-    class PasswordInput(forms.PasswordInput):
-        class Media(object):
-            js = ('muranodashboard/js/passwordfield.js',)
-
     def __init__(self, label, *args, **kwargs):
         self.confirm_input = kwargs.pop('confirm_input', True)
 
@@ -264,8 +287,8 @@ class PasswordField(CharField):
                 'invalid', self.validate_password.message)
             kwargs['min_length'] = kwargs.get('min_length', 7)
             kwargs['max_length'] = kwargs.get('max_length', 255)
-            kwargs['widget'] = self.PasswordInput(attrs=self.attrs,
-                                                  render_value=True)
+            kwargs['widget'] = forms.PasswordInput(attrs=self.attrs,
+                                                   render_value=True)
         else:
             if not help_text:
                 # NOTE(kzaitsev) There are custom validators for password,

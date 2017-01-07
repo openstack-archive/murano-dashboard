@@ -901,6 +901,12 @@ class TestSuiteFields(base.FieldsTestCase):
         field_id = self.mockapp_id + "_0-domain"
 
         self.fill_field(by.By.ID, field_id, value='a')
+        self.check_js_error_message_is_present(
+            "Only letters, numbers and dashes in the middle are "
+            "allowed. Period characters are allowed only when they "
+            "are used to delimit the components of domain style "
+            "names. Single-level domain is not "
+            "appropriate. Subdomains are not allowed.")
         self.check_error_message_is_present(
             'Ensure this value has at least 2 characters (it has 1).')
         self.fill_field(by.By.ID, field_id, value='aa')
@@ -908,37 +914,57 @@ class TestSuiteFields(base.FieldsTestCase):
             'Ensure this value has at least 2 characters (it has 1).')
 
         self.fill_field(by.By.ID, field_id, value='@ct!v3')
+        self.check_js_error_message_is_present(
+            'Only letters, numbers and dashes in the middle are allowed.')
         self.check_error_message_is_present(
             'Only letters, numbers and dashes in the middle are allowed.')
 
         self.fill_field(by.By.ID, field_id, value='active.com')
+        self.check_js_error_message_is_absent(
+            'Only letters, numbers and dashes in the middle are allowed.')
         self.check_error_message_is_absent(
             'Only letters, numbers and dashes in the middle are allowed.')
 
         self.fill_field(by.By.ID, field_id, value='domain')
+        self.check_js_error_message_is_present(
+            'Single-level domain is not appropriate.')
         self.check_error_message_is_present(
             'Single-level domain is not appropriate.')
 
         self.fill_field(by.By.ID, field_id, value='domain.com')
+        self.check_js_error_message_is_absent(
+            'Single-level domain is not appropriate.')
         self.check_error_message_is_absent(
             'Single-level domain is not appropriate.')
 
         self.fill_field(by.By.ID, field_id,
                         value='morethan15symbols.beforedot')
+        self.check_js_error_message_is_present(
+            'NetBIOS name cannot be shorter than'
+            ' 1 symbol and longer than 15 symbols.')
         self.check_error_message_is_present(
             'NetBIOS name cannot be shorter than'
             ' 1 symbol and longer than 15 symbols.')
         self.fill_field(by.By.ID, field_id, value='lessthan15.beforedot')
+        self.check_js_error_message_is_absent(
+            'NetBIOS name cannot be shorter than'
+            ' 1 symbol and longer than 15 symbols.')
         self.check_error_message_is_absent(
             'NetBIOS name cannot be shorter than'
             ' 1 symbol and longer than 15 symbols.')
 
         self.fill_field(by.By.ID, field_id, value='.domain.local')
+        self.check_js_error_message_is_present(
+            'Period characters are allowed only when '
+            'they are used to delimit the components of domain style names')
         self.check_error_message_is_present(
             'Period characters are allowed only when '
             'they are used to delimit the components of domain style names')
 
         self.fill_field(by.By.ID, field_id, value='domain.local')
+        self.check_js_error_message_is_absent(
+            'Period characters are allowed only when '
+            'they are used to delimit the components of domain style names')
         self.check_error_message_is_absent(
             'Period characters are allowed only when '
             'they are used to delimit the components of domain style names')
@@ -962,6 +988,8 @@ class TestSuiteFields(base.FieldsTestCase):
             'Ensure this value has at least 2 characters (it has 1).')
 
         self.fill_field(by.By.NAME, '0-name', value='@pp')
+        self.check_js_error_message_is_present(
+            'Just letters, numbers, underscores and hyphens are allowed.')
         self.check_error_message_is_present(
             'Just letters, numbers, underscores and hyphens are allowed.')
 
@@ -1016,12 +1044,16 @@ class TestSuiteFields(base.FieldsTestCase):
 
         self.fill_field(by.By.NAME, "0-name", "name")
         self.fill_field(by.By.NAME, '0-adminPassword', value='123456')
+        self.check_js_error_message_is_present(
+            'The password must contain at least one letter')
         self.check_error_message_is_present(
             'The password must contain at least one letter')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         self.fill_field(by.By.NAME, "0-adminPassword-clone", value='P@ssw0rd')
+        self.check_js_error_message_is_present('Passwords do not match')
         self.check_error_message_is_absent('Passwords do not match')
         self.fill_field(by.By.NAME, '0-adminPassword', value='P@ssw0rd')
+        self.check_js_error_message_is_absent('Passwords do not match')
         self.driver.find_element_by_xpath(c.ButtonSubmit).click()
         self.wait_element_is_clickable(by.By.XPATH, c.ButtonSubmit)
 

@@ -1,0 +1,11 @@
+---
+
+features:
+  - |
+    If a UI definition of the murano-applications has regex validation
+    for input field then before generating html an additional attribute
+    called 'data-validations' will be added to the form. This attribute
+    has an array of objects. These objects have regex patterns and error
+    messages. When filling a Murano-Applications form input fields will be
+    validated by js script.
+

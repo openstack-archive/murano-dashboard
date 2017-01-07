@@ -40,7 +40,8 @@ ADD_JS_FILES = [
     'muranodashboard/js/mixed-mode.js',
     'muranodashboard/js/passwordfield.js',
     'muranodashboard/js/submit-disabled.js',
-    'muranodashboard/js/support_placeholder.js'
+    'muranodashboard/js/support_placeholder.js',
+    'muranodashboard/js/validators.js'
 ]
 
 FEATURE = True

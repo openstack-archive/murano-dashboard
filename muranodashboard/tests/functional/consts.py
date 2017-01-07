@@ -36,6 +36,7 @@ EnvStatus = "//tr[contains(@data-display, '{0}')]/td[contains(text(), '{1}')]"
 CellStatus = "//td[contains(@class, 'status_{0}')]"
 Row = "//tr[contains(@id, 'services__row__{0}')]"
 ErrorMessage = '//span[contains(@class, "help-block") and contains(text(), "{0}")]'  # noqa
+JsErrorMessage = '//div[contains(@class, "alert-danger") and contains(text(), "{0}")]'  # noqa
 EnvAppsCategory = "//div[contains(@class, 'draggable_app')]//div[contains(text(), '{0}')]"  # noqa
 PackageCategory = "//select[@name='add_category-categories']/option[text()='{0}']"  # noqa
 DatabaseCategory = "select[name='add_category-categories'] > option[value='Databases']"  # noqa
