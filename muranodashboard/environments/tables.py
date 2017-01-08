@@ -17,6 +17,7 @@ import json
 from django.core.urlresolvers import reverse
 from django import http as django_http
 from django import shortcuts
+from django import template
 from django.template import defaultfilters
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
@@ -108,6 +109,19 @@ class CreateEnvironment(tables.LinkAction):
             exceptions.handle(request, msg, redirect=redirect)
 
 
+class DeploymentHistory(tables.LinkAction):
+    name = 'DeploymentHistory'
+    verbose_name = _('Deployment History')
+    url = 'horizon:app-catalog:environments:deployment_history'
+    classes = ('deployment-history')
+    redirect_url = "horizon:app-catalog:environments:index"
+    icon = 'history'
+    policy_rules = (("murano", "list_deployments_all_environments"),)
+
+    def allowed(self, request, datum):
+        return True
+
+
 class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
     redirect_url = "horizon:app-catalog:environments:index"
     policy_rules = (("murano", "delete_environment"),)
@@ -154,6 +168,10 @@ class AbandonEnvironment(tables.DeleteAction):
     name = 'abandon'
     redirect_url = "horizon:app-catalog:environments:index"
     policy_rules = (("murano", "delete_environment"),)
+
+    def __init__(self, **kwargs):
+        super(AbandonEnvironment, self).__init__(**kwargs)
+        self.icon = 'stop'
 
     @staticmethod
     def action_present(count):
@@ -504,7 +522,8 @@ class EnvironmentsTable(tables.DataTable):
         status_columns = ['status']
         no_data_message = _('NO ENVIRONMENTS')
         table_actions = (CreateEnvironment, DeployEnvironment,
-                         DeleteEnvironment, AbandonEnvironment)
+                         DeleteEnvironment, AbandonEnvironment,
+                         DeploymentHistory)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        DeleteEnvironment, AbandonEnvironment,
                        UpdateEnvMetadata)
@@ -692,3 +711,45 @@ class EnvConfigTable(tables.DataTable):
     class Meta(object):
         name = 'environment_configuration'
         verbose_name = _('Deployed Components')
+
+
+def get_deployment_history_reports(deployment):
+    template_name = 'deployments/_cell_reports.html'
+    context = {
+        "reports": deployment.reports,
+    }
+    return template.loader.render_to_string(template_name, context)
+
+
+def get_deployment_history_services(deployment):
+    template_name = 'deployments/_cell_services.html'
+    services = {}
+    for service in deployment.description['services']:
+        service_type = service['?']['type']
+        if service_type.find('/') != -1:
+            service_type = service_type[:service_type.find('/')]
+        services[service['name']] = service_type
+    context = {
+        "services": services,
+    }
+    return template.loader.render_to_string(template_name, context)
+
+
+class DeploymentHistoryTable(tables.DataTable):
+    environment_name = tables.WrappingColumn(
+        lambda d: d.description['name'],
+        verbose_name=_('Environment'))
+    logs = tables.Column(get_deployment_history_reports,
+                         verbose_name=_('Logs (Created, Message)'))
+    services = tables.Column(get_deployment_history_services,
+                             verbose_name=_('Services (Name, Type)'))
+    status = tables.Column(
+        'state',
+        verbose_name=_('Status'),
+        status=True,
+        display_choices=consts.DEPLOYMENT_STATUS_DISPLAY_CHOICES)
+
+    class Meta(object):
+        name = 'deployment_history'
+        verbose_name = _('Deployment History')
+        row_actions = (ShowDeploymentDetails,)

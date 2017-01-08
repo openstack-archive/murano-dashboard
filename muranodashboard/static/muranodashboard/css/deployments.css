@@ -1,0 +1,8 @@
+table.deployment_history_cell {
+    margin: 0 auto;
+}
+
+table.deployment_history_cell td, table.deployment_history_cell th {
+    border-top: none !important;
+    padding-bottom: 2px !important;
+}

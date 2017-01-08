@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    A new button, called "Deployment History", has been added to the
+    Environments > Applications view. When clicked, the deployment history view
+    is loaded, which shows deployments for all environments for the current
+    project (tenant).

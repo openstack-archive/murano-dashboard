@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load static %}
+{% load compress %}
+
+{% block css %}
+  {% compress css %}
+    <link rel="stylesheet" href="{% static 'muranodashboard/css/deployments.css' %}">
+  {% endcompress %}
+{% endblock %}
+
+{% block main %}
+<table class="{% block table_css_classes %}table deployment_history_cell{% endblock %}">
+<thead></thead>
+<tbody>
+{% for report in reports %}
+    <tr>
+        <td>{{report.created | parse_isotime}} &mdash; {{report.text | linebreaksbr | urlize}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}
