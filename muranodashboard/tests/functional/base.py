@@ -263,7 +263,7 @@ class UITestCase(testtools.TestCase):
             ui.WebDriverWait(self.driver, sec).until(
                 EC.presence_of_element_located((method, value)))
         except exc.TimeoutException:
-            self.fail("Element {0} is not preset on the page".format(value))
+            self.fail("Element {0} is not present on the page".format(value))
 
     def check_element_not_on_page(self, method, value):
         self.driver.implicitly_wait(3)
@@ -272,7 +272,7 @@ class UITestCase(testtools.TestCase):
             self.driver.find_element(method, value)
         except (exc.NoSuchElementException, exc.ElementNotVisibleException):
             present = False
-        self.assertFalse(present, u"Element {0} is preset on the page"
+        self.assertFalse(present, u"Element {0} is present on the page"
                                   " while it should't".format(value))
         self.driver.implicitly_wait(30)
 
@@ -282,7 +282,7 @@ class UITestCase(testtools.TestCase):
             ui.WebDriverWait(self.driver, sec).until(
                 EC.presence_of_element_located(locator))
         except exc.TimeoutException:
-            self.fail("Alert is not preset on the page")
+            self.fail("Alert is not present on the page")
 
         self.assertIn(message, self.driver.find_element(*locator).text)
 
@@ -415,13 +415,15 @@ class ImageTestCase(PackageBase):
         glance_endpoint = cls.service_catalog.url_for(service_type='image')
         cls.glance = gclient.Client('1', endpoint=glance_endpoint,
                                     session=cls.keystone_client.session)
+        cls.images = []
         cls.image_title = 'New Image ' + str(time.time())
         cls.image = cls.upload_image(cls.image_title)
 
     @classmethod
     def tearDownClass(cls):
         super(ImageTestCase, cls).tearDownClass()
-        cls.glance.images.delete(cls.image.id)
+        for image in cls.images:
+            cls.glance.images.delete(image.id)
 
     @classmethod
     def upload_image(cls, title):
@@ -437,6 +439,7 @@ class ImageTestCase(PackageBase):
         except Exception:
             logger.error("Unable to create or update image in Glance")
             raise
+        cls.images.append(image)
         return image
 
     def select_and_click_element(self, element):

@@ -764,11 +764,76 @@ class TestSuiteImage(base.ImageTestCase):
         self.go_to_submenu('Images')
         self.driver.find_element_by_xpath(
             c.DeleteImageMeta.format(self.image_title)).click()
-        self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        with self.wait_for_page_reload():
+            self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH,
                                        c.TestImage.format(self.image_title))
-
         self.repair_image()
+
+    def test_delete_multiple_images(self):
+        """Test ability to delete multiple images.
+
+        Scenario:
+            1. Create 3 randomly named images.
+            2. Navigate to Images page.
+            3. For each randomly created image:
+               a. Select current image and click on "Delete Metadata". Each
+                  image is deleted separately.
+            4. Re-create 3 randomly named images.
+            5. Refresh page.
+            6. Select topmost checkbox and click on "Delete Metadata". All
+               images are deleted together.
+            7. For each randomly created image:
+               a. Check that the current image was deleted.
+            8. Check that ``self.image_title`` was also deleted.
+        """
+        default_image_title = self.image_title
+        image_titles = []
+        for i in range(3):
+            image_title = self.gen_random_resource_name('image')
+            image_titles.append(image_title)
+            self.upload_image(image_title)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Images')
+
+        # Check each checkbox in the table and delete each image one by one.
+        for image_title in image_titles:
+            self.wait_element_is_clickable(
+                by.By.XPATH, c.DeleteImageMeta.format(image_title)).click()
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+            self.wait_for_alert_message()
+            self.check_element_not_on_page(
+                by.By.XPATH, c.TestImage.format(image_title))
+        self.check_element_on_page(
+            by.By.XPATH, c.TestImage.format(default_image_title))
+
+        # Re-create 3 randomly named images.
+        image_titles = []
+        for i in range(3):
+            image_title = self.gen_random_resource_name('image')
+            image_titles.append(image_title)
+            self.upload_image(image_title)
+
+        # Check the topmost checkbox, then delete all images at the same time.
+        self.go_to_submenu('Images')
+        self.wait_element_is_clickable(by.By.CSS_SELECTOR,
+                                       'label[for="ui-id-1"]').click()
+        self.wait_element_is_clickable(by.By.ID,
+                                       'marked_images__action_delete').click()
+        with self.wait_for_page_reload():
+            self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.wait_for_alert_message()
+
+        for image_title in image_titles:
+            self.check_element_not_on_page(
+                by.By.XPATH, c.TestImage.format(image_title))
+        self.check_element_not_on_page(
+            by.By.XPATH, c.TestImage.format(default_image_title))
+
+        self.repair_image()  # Restore the class-level image that was deleted.
 
 
 class TestSuiteFields(base.FieldsTestCase):
