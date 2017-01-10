@@ -22,6 +22,7 @@ DeployingPackageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 CategorySelector = "//a[contains(text(), '{0}')][contains(@class, 'dropdown-toggle')]"  # noqa
 EnvAppsCategorySelector = "//*[contains(@id, 'envAppsCategoryBtn')]"
 App = "//div[contains(@class, 'app-list')]//h4[contains(text(), '{0}')]"
+Component = "//div[contains(@id, apps_carousel)]//div[contains(text(), '{0}')]"
 MockAppDescr = "//div[h4[contains(text(), 'MockApp')]]/p"
 AppPackages = u"//tr[@data-display='{0}']"
 AppDetail = "//dl[dt[contains(text(), 'Name')]]/dd"

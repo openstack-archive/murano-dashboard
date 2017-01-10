@@ -23,6 +23,7 @@ import uuid
 import zipfile
 
 from selenium.webdriver.common import by
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import ui
 
 from muranodashboard.tests.functional import base
@@ -539,6 +540,180 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.assertIn('Deployment finished', text_only_logs[1])
         self.assertIn('Follow the white rabbit', text_only_logs[2])
         self.assertIn('Follow the white rabbit', text_only_logs[3])
+
+    def test_filter_component_by_name(self):
+        """Test filtering components by name.
+
+        Test checks ability to filter components by name in Environment Details
+        page.
+
+        Scenario:
+            1. Create 4 packages with random names (rather than using default
+               packages, because MockApp is the name of a package, but all
+               package descriptions contain 'MockApp', complicating testing).
+            2. Navigate to 'Applications' > 'Environments' panel
+            3. For each name in ``apps_by_name``:
+                a. Set search criterion in search field to current name.
+                b. Hit Enter key and verify that expected components are shown
+                   and unexpected components are not shown.
+        """
+        packages = []
+        apps_by_name = []
+        field_name = '#envAppsFilter > input.form-control'
+        for i in range(4):
+            app_name = self.gen_random_resource_name('app_name', 8)
+            description = self.gen_random_resource_name('description', 8)
+            metadata = {"categories": ["Web"], "tags": ["tag"]}
+            manifest_kwargs = {'Description': description}
+            pkg_id = utils.upload_app_package(self.murano_client, app_name,
+                                              metadata, **manifest_kwargs)
+            apps_by_name.append(app_name)
+            packages.append(pkg_id)
+
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        env_name = self.gen_random_resource_name('env', 9)
+        self.create_environment(env_name)
+
+        for app_name in apps_by_name:
+            self.fill_field(by.By.CSS_SELECTOR, field_name, app_name)
+            self.driver.find_element_by_css_selector(field_name).send_keys(
+                Keys.ENTER)
+            self.check_element_on_page(by.By.XPATH,
+                                       c.Component.format(app_name))
+            for app_name in set(apps_by_name) - set([app_name]):
+                self.check_element_not_on_page(by.By.XPATH,
+                                               c.Component.format(app_name))
+
+        for pkg_id in packages:
+            self.murano_client.packages.delete(pkg_id)
+
+    def test_filter_component_by_description(self):
+        """Test filtering components by description.
+
+        Test checks ability to filter components by description in Environment
+        Details page.
+
+        Scenario:
+            1. Create 4 packages with random descriptions (rather than using
+               default applications, because they all contain the same
+               description).
+            2. Navigate to 'Applications' > 'Environments' panel
+            3. For each description in ``apps_by_description.keys()``:
+                a. Set search criterion in search field to current description.
+                b. Hit Enter key and verify that expected components are shown
+                   and unexpected components are not shown.
+        """
+        packages = []
+        apps_by_description = {}
+        field_name = '#envAppsFilter > input.form-control'
+        for i in range(4):
+            app_name = self.gen_random_resource_name('app_name', 8)
+            description = self.gen_random_resource_name('description', 8)
+            metadata = {"categories": ["Web"], "tags": ["tag"]}
+            manifest_kwargs = {'Description': description}
+            pkg_id = utils.upload_app_package(self.murano_client, app_name,
+                                              metadata, **manifest_kwargs)
+            apps_by_description[app_name] = description
+            packages.append(pkg_id)
+
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        env_name = self.gen_random_resource_name('env', 9)
+        self.create_environment(env_name)
+
+        for app_name, app_description in apps_by_description.items():
+            self.fill_field(by.By.CSS_SELECTOR, field_name, app_description)
+            self.driver.find_element_by_css_selector(field_name).send_keys(
+                Keys.ENTER)
+            self.check_element_on_page(by.By.XPATH,
+                                       c.Component.format(app_name))
+            other_apps = set(apps_by_description.keys()) -\
+                set([app_description])
+            for app_name in other_apps:
+                self.check_element_not_on_page(
+                    by.By.XPATH, c.Component.format(app_description))
+
+        for pkg_id in packages:
+            self.murano_client.packages.delete(pkg_id)
+
+    def test_filter_component_by_tag(self):
+        """Test filtering components by tag.
+
+        Test checks ability to filter components by tag in Environment Details
+        page.
+
+        Scenario:
+            1. Navigate to 'Applications' > 'Environments' panel
+            2. For each tag in ``apps_by_tag.keys()``:
+                a. Set search criterion in search field to current tag.
+                b. Hit Enter key and verify that expected components are shown
+                   and unexpected components are not shown.
+        """
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        env_name = self.gen_random_resource_name('env', 9)
+        self.create_environment(env_name)
+
+        apps_by_tag = {
+            'tag': ['DeployingApp', 'MockApp', 'PostgreSQL'],
+            'hot': ['HotExample']
+        }
+        all_apps = ['DeployingApp', 'HotExample', 'MockApp', 'PostgreSQL']
+        field_name = '#envAppsFilter > input.form-control'
+
+        for tag, name_list in apps_by_tag.items():
+            self.fill_field(by.By.CSS_SELECTOR, field_name, tag)
+            self.driver.find_element_by_css_selector(field_name).send_keys(
+                Keys.ENTER)
+            for name in name_list:
+                self.check_element_on_page(by.By.XPATH,
+                                           c.Component.format(name))
+            for name in set(all_apps) - set(name_list):
+                self.check_element_not_on_page(by.By.XPATH,
+                                               c.Component.format(name))
+
+    def test_filter_component_by_tag_overflowing_carousel(self):
+        """Test that filtering components that overflow carousel are present.
+
+        When multiple results are returned, they extend past the carousel's
+        main view. Check that results that extend beyond the main view exist.
+
+        Scenario:
+            1. Create 15 packages with random names but with the same tag (so
+               that all 15 packages are returned when filtering by tag).
+            2. Navigate to 'Applications' > 'Environments' panel.
+            3. Filter by the tag.
+            4. For each app in ``apps_by_name``:
+                a. Verify that all created packages are shown, even those that
+                   extend beyond carousel's view.
+        """
+        packages = []
+        apps_by_name = []
+        field_name = '#envAppsFilter > input.form-control'
+        tag = 'foo_tag'
+        for i in range(15):
+            app_name = self.gen_random_resource_name('app_name', 8)
+            metadata = {"categories": ["Web"], "tags": [tag]}
+            pkg_id = utils.upload_app_package(self.murano_client, app_name,
+                                              metadata)
+            apps_by_name.append(app_name)
+            packages.append(pkg_id)
+
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        env_name = self.gen_random_resource_name('env', 9)
+        self.create_environment(env_name)
+
+        self.fill_field(by.By.CSS_SELECTOR, field_name, tag)
+        self.driver.find_element_by_css_selector(field_name).send_keys(
+            Keys.ENTER)
+        for app_name in apps_by_name:
+            self.check_element_on_page(by.By.XPATH,
+                                       c.Component.format(app_name))
+
+        for pkg_id in packages:
+            self.murano_client.packages.delete(pkg_id)
 
 
 class TestSuiteImage(base.ImageTestCase):
