@@ -554,6 +554,31 @@ class ApplicationTestCase(ImageTestCase):
         else:
             self.wait_for_alert_message()
 
+    def execute_action_from_table_view(self, env_name, table_action):
+        """Executes an action like Deploy or Delete from the table view.
+
+        Does not handle clicking on the confirmation modal that may appear.
+
+        Scenario:
+            1. Checks for the table drop-down button and then clicks it.
+            2. Checks for the table drop-down menu to appear.
+            3. Checks for the ``table_action`` button and then clicks it.
+        """
+        self.check_element_on_page(
+            by.By.XPATH, consts.TableDropdownBtn.format(env_name))
+        dropdown_btn = self.driver.find_element(
+            by.By.XPATH, consts.TableDropdownBtn.format(env_name))
+        dropdown_btn.click()
+        self.check_element_on_page(by.By.XPATH,
+                                   consts.TableDropdownMenu.format(env_name))
+        self.check_element_on_page(
+            by.By.XPATH, consts.TableDropdownAction.format(env_name,
+                                                           table_action))
+        action_btn = self.driver.find_element(
+            by.By.XPATH, consts.TableDropdownAction.format(env_name,
+                                                           table_action))
+        action_btn.click()
+
 
 class PackageTestCase(ApplicationTestCase):
     @classmethod
