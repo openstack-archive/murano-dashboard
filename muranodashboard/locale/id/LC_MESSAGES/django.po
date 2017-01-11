@@ -1,13 +1,14 @@
 # suhartono <cloudsuhartono@gmail.com>, 2016. #zanata
+# suhartono <cloudsuhartono@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev100\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev213\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2016-11-07 23:03+0000\n"
+"POT-Creation-Date: 2017-01-10 14:47+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-11-08 06:45+0000\n"
+"PO-Revision-Date: 2017-01-10 01:24+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -336,6 +337,9 @@ msgstr "Deployment Logs (jejak rekam pengerahan)"
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr "Pengerahan dengan id %s tidak ada lagi"
 
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "Pengerahan dengan id foo_deployment_id tidak ada lagi "
+
 msgid "Deployments"
 msgstr "Deployments (pengerahan)"
 
@@ -453,6 +457,14 @@ msgid ""
 msgstr ""
 "Buka <b> <a href=%(pkg_def_url)s>Packages</a> </b>, klik 'Import Package' "
 "dan pilih <i>Repository</i> sebagai <i>Package Source</i>."
+
+#, python-format
+msgid ""
+"Go to <b><a href=%(pkg_def_url)s>Packages</a></b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Buka <b><a href=%(pkg_def_url)s>Packages</a></b>, klik 'Import Package' dan "
+"pilih  <i>Repository</i> sebagai <i>Package Source</i>."
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "URL HTTP/HTTPS dari file bundel."
@@ -690,6 +702,9 @@ msgstr "Parameter paket berhasil diperbarui."
 
 msgid "Package version"
 msgstr "Versi paket"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "Paket dengan id foo_package_id tidak ditemukan"
 
 msgid "Package with id {0} is not found"
 msgstr "Paket dengan id {0} tidak ditemukan"
