@@ -1728,17 +1728,34 @@ class TestSuitePackages(base.PackageTestCase):
                           c.TagInDetails).text)
 
     def test_download_package(self):
-        """Test check ability to download package from repository
+        """Test check ability to download package from repository.
 
         Scenario:
-            1. Navigate to 'Packages' page
-            2. Select PostgreSQL package and click on "More>Download Package"
+            1. Navigate to 'Packages' page.
+            2. Select PostgreSQL package and click on "More>Download Package".
+            3. Wait for the package to download.
+            4. Open the archive and check that the files match the expected
+               list of files.
         """
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
         self.select_action_for_package(self.postgre_id, 'download_package')
+
+        time.sleep(3)  # Wait for file to download.
+
+        downloaded_archive_file = 'postgresql.zip'
+        expected_file_list = ['Classes/mock_muranopl.yaml', 'manifest.yaml',
+                              'UI/mock_ui.yaml']
+
+        if os.path.isfile(downloaded_archive_file):
+            zf = zipfile.ZipFile(downloaded_archive_file, 'r')
+            self.assertEqual(sorted(expected_file_list), sorted(zf.namelist()))
+            os.remove(downloaded_archive_file)  # Clean up.
+        else:
+            self.fail('Failed to download {0}.'.format(
+                      downloaded_archive_file))
 
     def test_check_toggle_enabled_package(self):
         """Test check ability to make package active or inactive

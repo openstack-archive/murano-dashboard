@@ -76,7 +76,16 @@ class UITestCase(testtools.TestCase):
     def setUp(self):
         super(UITestCase, self).setUp()
 
-        self.driver = webdriver.Firefox()
+        # Enables zip files to be automatically saved to disk, without opening
+        # a browser dialog.
+        fp = webdriver.FirefoxProfile()
+        fp.set_preference("browser.download.folderList", 2)
+        fp.set_preference("browser.download.manager.showWhenStarting", False)
+        fp.set_preference("browser.download.dir", os.getcwd())
+        fp.set_preference("browser.helperApps.neverAsk.saveToDisk",
+                          "application/octet-stream")
+
+        self.driver = webdriver.Firefox(firefox_profile=fp)
         self.addCleanup(self.driver.quit)
         self.driver.maximize_window()
         self.driver.get(cfg.common.horizon_url + '/app-catalog/environments')
