@@ -47,6 +47,12 @@ NewEnvRow = "table#environments thead tr.new_env"
 TableSorterByName = "table#environments thead th.tablesorter-header[data-column='1']"  # noqa
 ServiceDetail = "//dd[contains(text(), '{0}')]"
 ServiceType = "//table[@id='services']//tbody//tr//td[2][contains(text(), '{0}')]"  # noqa
+TableDropdownBtn = "//tr[contains(@data-display, '{0}')]//a[contains(@class, "\
+                   "'dropdown-toggle')]"
+TableDropdownMenu = "//tr[contains(@data-display, '{0}')]//div[contains("\
+                    "@class, 'open')]"
+TableDropdownAction = "//tr[contains(@data-display, '{0}')]//button[contains("\
+                      "text(), '{1}')]"
 
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"

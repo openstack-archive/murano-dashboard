@@ -715,6 +715,65 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         for pkg_id in packages:
             self.murano_client.packages.delete(pkg_id)
 
+    def test_deploy_env_from_table_view(self):
+        """Test that deploy environment works from the table view.
+
+        Scenario:
+            1. Create environment.
+            2. Add one app to the environment.
+            3. Deploy the environment from the table view.
+            4. Log out.
+            5. Log in.
+            6. Check that the environment status is 'Ready'.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.execute_action_from_table_view('quick-env-1',
+                                            'Deploy Environment')
+        self.log_out()
+        self.log_in()
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'))
+
+    def test_abandon_env_from_table_view(self):
+        """Test that abandon environment works from the table view.
+
+        Scenario:
+            1. Create environment.
+            2. Add one app to the environment.
+            3. Deploy the environment from the table view.
+            4. Log out.
+            5. Log in.
+            6. Go to the Applications > Environments page.
+            7. Abandon the environment from the table view.
+            8. Click the confirmation in the modal.
+            9. Check that the environment is no longer present on the page.
+        """
+        self.add_app_to_env(self.mockapp_id)
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.execute_action_from_table_view('quick-env-1',
+                                            'Deploy Environment')
+        self.log_out()
+        self.log_in()
+        self.navigate_to('Applications')
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.XPATH,
+                                   c.EnvStatus.format('quick-env-1',
+                                                      'Ready'))
+        self.execute_action_from_table_view('quick-env-1',
+                                            'Abandon Environment')
+        self.check_element_on_page(by.By.XPATH, c.ConfirmAbandon)
+        self.driver.find_element(by.By.XPATH, c.ConfirmAbandon).click()
+        self.wait_for_alert_message()
+        self.check_element_not_on_page(by.By.LINK_TEXT, 'quick-env-1')
+
 
 class TestSuiteImage(base.ImageTestCase):
     def test_mark_image(self):
