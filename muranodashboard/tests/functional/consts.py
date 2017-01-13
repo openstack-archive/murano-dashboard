@@ -97,6 +97,7 @@ AppCatalog = "//*[@id='main_content']/nav//a[contains(text(), 'App Catalog')]"  
 Browse = AppCatalog + "/following::a[contains(text(), 'Browse')]"
 Manage = AppCatalog + "/following::a[contains(text(), 'Manage')]"
 Applications = AppCatalog + "/following::a[contains(text(), 'Applications')]"  # noqa
+AlertInfo = "//*[contains(@class, 'alert-info')][contains(text(), '{0}')]"
 
 # Modals
 ModalDialog = ".modal-dialog"
