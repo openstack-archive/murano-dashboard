@@ -2257,6 +2257,141 @@ class TestSuitePackages(base.PackageTestCase):
         self.log_in()
         self.delete_user(new_user['name'])
 
+    def test_filter_package_by_name(self):
+        """Test filtering by name.
+
+        Test checks ability to filter packages by name in Packages page.
+
+        Scenario:
+            1. Navigate to 'Manage' > 'Packages' panel.
+            2. Set the search type to 'Name'.
+            3. For each name in ``packages_by_name``:
+                a. Set search criterion in search field to current name.
+                b. Click on 'Filter' and verify that expected packages are
+                   shown and unexpected packages are not shown.
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        packages_by_name = ['DeployingApp', 'HotExample', 'MockApp',
+                            'PostgreSQL']
+        if not utils.glare_enabled():
+            packages_by_name.extend(
+                ['Application Development Library', 'Core library'])
+
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('name')).click()
+
+        for package_name in packages_by_name:
+            self.fill_field(by.By.CSS_SELECTOR, c.PackageFilterInput,
+                            package_name)
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_id(c.PackageFilterBtn).click()
+            self.check_element_on_page(by.By.PARTIAL_LINK_TEXT,
+                                       package_name)
+            for other_package in set(packages_by_name) - set([package_name]):
+                self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
+                                               other_package, sec=0.1)
+
+    def test_filter_package_by_type(self):
+        """Test filtering by type.
+
+        Test checks ability to filter packages by type in Packages page.
+
+        Scenario:
+            1. Navigate to 'Manage' > 'Packages' panel.
+            2. Set the search type to 'Type'.
+            3. For each type in ``packages_by_type.keys()``:
+                a. Set search criterion in search field to current type.
+                b. Click on 'Filter' and verify that expected packages are
+                   shown and unexpected packages are not shown.
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        all_packages = ['Application Development Library', 'Core library',
+                        'DeployingApp', 'HotExample', 'MockApp', 'PostgreSQL']
+        packages_by_type = {
+            'Library': ['Application Development Library', 'Core library'],
+            'Application': ['DeployingApp', 'HotExample', 'MockApp',
+                            'PostgreSQL']
+        }
+
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('type')).click()
+
+        for package_type, package_list in packages_by_type.items():
+            self.fill_field(by.By.CSS_SELECTOR, c.PackageFilterInput,
+                            package_type)
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_id(c.PackageFilterBtn).click()
+            for package_name in package_list:
+                self.check_element_on_page(by.By.PARTIAL_LINK_TEXT,
+                                           package_name)
+            for other_package in set(all_packages) - set(package_list):
+                self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
+                                               other_package, sec=0.1)
+
+    @unittest.skipIf(utils.glare_enabled(),
+                     "Filtering apps by description doesn't work with GLARE; "
+                     "this test should be fixed with bug #1616856.")
+    def test_filter_package_by_keyword(self):
+        """Test filtering by keyword.
+
+        Test checks ability to filter packages by keyword in Packages page.
+
+        Scenario:
+            1. Upload 4 randomly named packages, with random descriptions
+               and tags, where each tested keyword is
+               `pkg_description`,`pkg_tag`.
+            2. Navigate to 'Manage' > 'Packages' panel.
+            3. Set the search type to 'KeyWord'.
+            4. For each keyword in ``packages_by_keyword.keys()``:
+                a. Set search criterion in search field to current keyword.
+                b. Click on 'Filter' and verify that expected packages are
+                   shown and unexpected packages are not shown.
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        package_names = []
+        package_ids = []
+        packages_by_keyword = {}
+        for i in range(4):
+            pkg_name = self.gen_random_resource_name('package')
+            pkg_description = self.gen_random_resource_name('description', 8)
+            pkg_tag = self.gen_random_resource_name('tag', 8)
+            pkg_data = {
+                'description': pkg_description,
+                'tags': [pkg_tag]
+            }
+            packages_by_keyword[pkg_description + "," + pkg_tag] = pkg_name
+            package_names.append(pkg_name)
+            package_id = self.upload_package(pkg_name, pkg_data)
+            package_ids.append(package_id)
+            self.addCleanup(self.murano_client.packages.delete, package_id)
+
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('search'))\
+            .click()
+
+        for keyword, package_name in packages_by_keyword.items():
+            self.fill_field(by.By.CSS_SELECTOR, c.PackageFilterInput,
+                            keyword)
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_id(c.PackageFilterBtn).click()
+            self.check_element_on_page(by.By.PARTIAL_LINK_TEXT,
+                                       package_name)
+            for other_package in set(package_names) - set([package_name]):
+                self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
+                                               other_package, sec=0.1)
+
 
 class TestSuiteRepository(base.PackageTestCase):
     _apps_to_delete = set()
