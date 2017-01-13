@@ -213,7 +213,7 @@ class UITestCase(testtools.TestCase):
             by.By.XPATH, "//ul[contains(@class, 'navbar-right')]")
         user_menu.find_element(
             by.By.XPATH, ".//span[@class='user-name']").click()
-        user_menu.find_element(by.By.LINK_TEXT, 'Sign Out').click()
+        user_menu.find_element(by.By.PARTIAL_LINK_TEXT, 'Sign Out').click()
 
     def fill_field(self, by_find, field, value):
         self.driver.find_element(by=by_find, value=field).clear()

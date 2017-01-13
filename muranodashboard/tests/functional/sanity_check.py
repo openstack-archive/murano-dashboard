@@ -22,6 +22,7 @@ import unittest
 import uuid
 import zipfile
 
+from selenium.common import exceptions
 from selenium.webdriver.common import by
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import ui
@@ -2233,7 +2234,7 @@ class TestSuitePackages(base.PackageTestCase):
             "//tr[contains(@data-display, 'Web')]/td[2]").text)
 
         database_pkg_count = int(self.driver.find_element_by_xpath(
-            "//tr[contains(@data-display, 'Database')]/td[2]").text)
+            "//tr[contains(@data-display, 'Databases')]/td[2]").text)
 
         # relogin as test user
         self.log_out()
@@ -2248,13 +2249,13 @@ class TestSuitePackages(base.PackageTestCase):
         sel.deselect_all()
         sel.select_by_value('Web')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.addCleanup(self.murano_client.packages.update, self.postgre_id,
+                        {"categories": ["Databases"]}, operation='replace')
 
         self.wait_for_alert_message()
 
         self.log_out()
-
-        # log in as admin user
-        self.log_in(cfg.common.user, cfg.common.password)
+        self.log_in()
 
         # check packages count for categories
         self.navigate_to('Manage')
@@ -2299,6 +2300,9 @@ class TestSuitePackages(base.PackageTestCase):
         sel.deselect_all()
         sel.select_by_value('Databases')
         self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.addCleanup(self.murano_client.packages.update, self.mockapp_id,
+                        {"categories": ["Web"]}, operation='replace')
+
         self.wait_for_alert_message()
 
         self.driver.find_element_by_link_text('MockApp').click()
@@ -2619,6 +2623,126 @@ class TestSuitePackages(base.PackageTestCase):
                 self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
             self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
                                            package['name'], sec=0.1)
+
+    @unittest.skipIf(utils.glare_enabled(),
+                     "GLARE backend doesn't expose category package count")
+    def test_correct_number_of_packages_per_category_in_catalog(self):
+        """Tests correct number of packages per category in catalog view.
+
+        Scenario:
+            1) Dynamically create one randomly named package per category in
+               ``default_categories``.
+            2) Navigate to Browse > Browse Local page.
+            3) Check that all packages appear under 'All' category.
+            4) For each category in ``default_categories``:
+               a) Click on the category dropdown selector.
+               b) Scroll down to the current category.
+               c) Check that the category link has the correct package count.
+               d) Click on the category link.
+               e) Check that the correct packages are present on page and
+                  that other packages are not present.
+        """
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        # The list of default categories that appears in Browse>Browse Local.
+        # Each category is associated with a count: a count of n indicates a
+        # category which appears in the dropdown as "Category (n)".
+        default_categories = [
+            ('Application Servers', 1),
+            ('Big Data', 1),
+            ('Databases', 2),
+            ('Key-Value Storage', 1),
+            ('Load Balancers', 1),
+            ('Message Queue', 1),
+            ('Microsoft Services', 1),
+            ('SAP', 1),
+            ('Web', 3)
+        ]
+
+        packages_by_cat = {
+            'All': ['DeployingApp', 'MockApp', 'HotExample', 'PostgreSQL'],
+            'Databases': ['PostgreSQL'],
+            'Web': ['DeployingApp', 'MockApp']
+        }
+
+        for category in default_categories:
+            pkg_name = self.gen_random_resource_name('package', 8)
+            packages_by_cat.setdefault(category[0], []).append(pkg_name)
+            packages_by_cat['All'].append(pkg_name)
+            pkg_data = {"categories": [category[0]]}
+            package_id = self.upload_package(pkg_name, pkg_data)
+            self.addCleanup(self.murano_client.packages.delete, package_id)
+
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
+
+        category_link_name = 'All'
+        next_page_link = '//a[text()="Next Page"]'
+        category_link = '//a[contains(text(), "{0}")]'
+        package_title = '//div[contains(@class, "description")]' \
+            '/h4[contains(text(), "{0}")]'
+
+        # Check that the correct number of packages are present for 'All'.
+        all_packages = []
+        next_btn = self.driver.find_element_by_xpath(next_page_link)
+
+        # Only look for the next button for up to 3 seconds.
+        self.driver.implicitly_wait(3)
+        while next_btn.is_displayed:
+            package_titles = self.driver.find_elements_by_css_selector(
+                'div.description > h4')
+            all_packages.extend([p.text for p in package_titles])
+            # The last page will not contain the next button; ignore the error.
+            try:
+                next_btn = self.driver.find_element_by_xpath(next_page_link)
+            except exceptions.NoSuchElementException:
+                next_btn.is_displayed = False
+            else:
+                with self.wait_for_page_reload():
+                    next_btn.click()
+        # Reset implicitly wait to default time.
+        self.driver.implicitly_wait(30)
+
+        self.assertEqual(sorted(packages_by_cat['All']), sorted(all_packages))
+
+        # Check that the correct number of packages are present per category.
+        for pos, category in enumerate(default_categories):
+            category, package_count = category
+
+            self.check_element_on_page(by.By.XPATH, c.CategorySelector.format(
+                category_link_name))
+            el = self.driver.find_element_by_xpath(
+                c.CategorySelector.format(category_link_name))
+            el.click()
+            el.send_keys(Keys.DOWN)  # Scroll onto the dropdown.
+
+            cat_link = category_link.format(category)
+
+            self.check_element_on_page(by.By.XPATH, cat_link)
+            el = self.driver.find_element_by_xpath(cat_link)
+
+            self.assertIn('({0})'.format(package_count), el.text)
+
+            for i in range(pos):
+                el.send_keys(Keys.DOWN)  # Scroll down far enough to see el.
+            with self.wait_for_page_reload():
+                el.click()
+
+            for cat, packages in packages_by_cat.items():
+                if cat == 'All':
+                    continue
+                if cat == category:
+                    for package in packages:
+                        self.check_element_on_page(
+                            by.By.XPATH, package_title.format(package))
+                else:
+                    for package in packages:
+                        self.check_element_not_on_page(
+                            by.By.XPATH, package_title.format(package),
+                            sec=0.1)
+
+            category_link_name = category
 
 
 class TestSuiteRepository(base.PackageTestCase):
@@ -3146,7 +3270,7 @@ class TestSuitePackageCategory(base.PackageTestCase):
         self.murano_client.categories.delete(self.category_id)
 
     @unittest.skipIf(utils.glare_enabled(),
-                     "GLARE backend doesn't expose category count")
+                     "GLARE backend doesn't expose category package count")
     def test_add_delete_category_for_package(self):
         """Test package importing with new category and changing the category.
 
