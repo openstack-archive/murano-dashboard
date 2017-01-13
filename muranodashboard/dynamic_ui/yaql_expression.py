@@ -21,8 +21,8 @@ from yaql.language import exceptions as yaql_exc
 
 def _set_up_yaql():
     legacy_engine_options = {
-        'yaql.limitIterators': 100,
-        'yaql.memoryQuota': 20000
+        'yaql.limitIterators': 10000,
+        'yaql.memoryQuota': 1000000
     }
     return yaql.YaqlFactory().create(options=legacy_engine_options)
 
