@@ -437,22 +437,19 @@ class ImageTestCase(PackageBase):
         glance_endpoint = cls.service_catalog.url_for(service_type='image')
         cls.glance = gclient.Client('1', endpoint=glance_endpoint,
                                     session=cls.keystone_client.session)
-        cls.images = []
         cls.image_title = 'New Image ' + str(time.time())
         cls.image = cls.upload_image(cls.image_title)
 
     @classmethod
     def tearDownClass(cls):
         super(ImageTestCase, cls).tearDownClass()
-        for image in cls.images:
-            cls.glance.images.delete(image.id)
+        cls.glance.images.delete(cls.image.id)
 
     @classmethod
     def upload_image(cls, title):
         try:
             property = {'murano_image_info': json.dumps({'title': title,
                                                          'type': 'linux'})}
-
             image = cls.glance.images.create(name='TestImage',
                                              disk_format='qcow2',
                                              size=0,
@@ -461,7 +458,6 @@ class ImageTestCase(PackageBase):
         except Exception:
             logger.error("Unable to create or update image in Glance")
             raise
-        cls.images.append(image)
         return image
 
     def select_and_click_element(self, element):

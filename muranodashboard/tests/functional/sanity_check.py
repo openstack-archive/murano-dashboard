@@ -26,6 +26,7 @@ from selenium.webdriver.common import by
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import ui
 
+from muranoclient.common import exceptions as muranoclient_exc
 from muranodashboard.tests.functional import base
 from muranodashboard.tests.functional.config import config as cfg
 from muranodashboard.tests.functional import consts as c
@@ -569,6 +570,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                               metadata, **manifest_kwargs)
             apps_by_name.append(app_name)
             packages.append(pkg_id)
+            self.addCleanup(self.murano_client.packages.delete, pkg_id)
 
         self.navigate_to('Applications')
         self.go_to_submenu('Environments')
@@ -584,9 +586,6 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             for app_name in set(apps_by_name) - set([app_name]):
                 self.check_element_not_on_page(by.By.XPATH,
                                                c.Component.format(app_name))
-
-        for pkg_id in packages:
-            self.murano_client.packages.delete(pkg_id)
 
     def test_filter_component_by_description(self):
         """Test filtering components by description.
@@ -616,6 +615,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                               metadata, **manifest_kwargs)
             apps_by_description[app_name] = description
             packages.append(pkg_id)
+            self.addCleanup(self.murano_client.packages.delete, pkg_id)
 
         self.navigate_to('Applications')
         self.go_to_submenu('Environments')
@@ -633,9 +633,6 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
             for app_name in other_apps:
                 self.check_element_not_on_page(
                     by.By.XPATH, c.Component.format(app_description))
-
-        for pkg_id in packages:
-            self.murano_client.packages.delete(pkg_id)
 
     def test_filter_component_by_tag(self):
         """Test filtering components by tag.
@@ -699,6 +696,7 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
                                               metadata)
             apps_by_name.append(app_name)
             packages.append(pkg_id)
+            self.addCleanup(self.murano_client.packages.delete, pkg_id)
 
         self.navigate_to('Applications')
         self.go_to_submenu('Environments')
@@ -711,9 +709,6 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         for app_name in apps_by_name:
             self.check_element_on_page(by.By.XPATH,
                                        c.Component.format(app_name))
-
-        for pkg_id in packages:
-            self.murano_client.packages.delete(pkg_id)
 
     def test_deploy_env_from_table_view(self):
         """Test that deploy environment works from the table view.
@@ -847,12 +842,19 @@ class TestSuiteImage(base.ImageTestCase):
                a. Check that the current image was deleted.
             8. Check that ``self.image_title`` was also deleted.
         """
+        def _try_delete_image(image_id):
+            try:
+                self.glance.images.delete(image_id)
+            except muranoclient_exc.HTTPNotFound:
+                pass
+
         default_image_title = self.image_title
         image_titles = []
         for i in range(3):
             image_title = self.gen_random_resource_name('image')
             image_titles.append(image_title)
-            self.upload_image(image_title)
+            image = self.upload_image(image_title)
+            self.addCleanup(_try_delete_image, image.id)
 
         self.navigate_to('Manage')
         self.go_to_submenu('Images')
@@ -863,7 +865,6 @@ class TestSuiteImage(base.ImageTestCase):
                 by.By.XPATH, c.DeleteImageMeta.format(image_title)).click()
             with self.wait_for_page_reload():
                 self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-            self.wait_for_alert_message()
             self.check_element_not_on_page(
                 by.By.XPATH, c.TestImage.format(image_title))
         self.check_element_on_page(
@@ -874,17 +875,18 @@ class TestSuiteImage(base.ImageTestCase):
         for i in range(3):
             image_title = self.gen_random_resource_name('image')
             image_titles.append(image_title)
-            self.upload_image(image_title)
+            image = self.upload_image(image_title)
+            self.addCleanup(_try_delete_image, image.id)
+
+        self.go_to_submenu('Images')
 
         # Check the topmost checkbox, then delete all images at the same time.
-        self.go_to_submenu('Images')
         self.wait_element_is_clickable(by.By.CSS_SELECTOR,
                                        'label[for="ui-id-1"]').click()
         self.wait_element_is_clickable(by.By.ID,
                                        'marked_images__action_delete').click()
         with self.wait_for_page_reload():
             self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-        self.wait_for_alert_message()
 
         for image_title in image_titles:
             self.check_element_not_on_page(
