@@ -4,13 +4,13 @@
 # Ian Y. Choi <ianyrchoi@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev213\n"
+"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev228\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2017-01-10 14:47+0000\n"
+"POT-Creation-Date: 2017-01-17 16:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-01-10 12:48+0000\n"
+"PO-Revision-Date: 2017-01-17 03:57+0000\n"
 "Last-Translator: Ian Y. Choi <ianyrchoi@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
@@ -329,6 +329,9 @@ msgstr "배포 로그"
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr "ID가 %s인 배포가 더 이상 존재하지 않음"
 
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "foo_deployment_id id에 해당하는 배포가 더 이상 존재하지 않습니다"
+
 msgid "Deployments"
 msgstr "배포"
 
@@ -383,6 +386,9 @@ msgstr "지정된 이름의 환경이 이미 있음"
 
 msgid "Environments"
 msgstr "환경"
+
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "패키지 바를 설치하는 도중 test_error_message 오류가 발생하였습니다"
 
 msgid "Error {0} occurred while installing images for {1}"
 msgstr "{1}의 이미지를 설치하는 동안 {0} 오류가 발생함"
@@ -676,6 +682,9 @@ msgstr "패키지 매개 변수가 성공적으로 업데이트되었습니다."
 
 msgid "Package version"
 msgstr "패키지 버전"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "foo_package_id id에 해당하는 패키지를 찾을 수 없습니다"
 
 msgid "Package with id {0} is not found"
 msgstr "ID가 {0}인 패키지가 없음"
