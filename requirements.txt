@@ -6,7 +6,6 @@ pbr>=1.8 # Apache-2.0
 beautifulsoup4 # MIT
 Django<1.9,>=1.8 # BSD
 django-formtools # BSD
-iso8601>=0.1.11 # MIT
 six>=1.9.0 # MIT
 python-muranoclient>=0.8.2 # Apache-2.0
 PyYAML>=3.10.0 # MIT
