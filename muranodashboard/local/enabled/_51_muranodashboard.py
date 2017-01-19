@@ -28,10 +28,19 @@ ADD_JS_FILES = [
     'muranodashboard/js/upload_form.js',
     'muranodashboard/js/import_bundle_form.js',
     'muranodashboard/js/more-less.js',
-
     'app/murano/murano.service.js',
-    'app/murano/murano.module.js'
-
+    'app/murano/murano.module.js',
+    'muranodashboard/js/add-select.js',
+    'muranodashboard/js/draggable-components.js',
+    'muranodashboard/js/environments-in-place.js',
+    'muranodashboard/js/external-ad.js',
+    'muranodashboard/js/horizon.muranotopology.js',
+    'muranodashboard/js/murano.tables.js',
+    'muranodashboard/js/load-modals.js',
+    'muranodashboard/js/mixed-mode.js',
+    'muranodashboard/js/passwordfield.js',
+    'muranodashboard/js/submit-disabled.js',
+    'muranodashboard/js/support_placeholder.js'
 ]
 
 FEATURE = True
