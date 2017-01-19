@@ -1845,7 +1845,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
         # 'Quick Deploy' button contains id of the application.
-        # So it is possible to definitely determinate is it in catalog or not.
+        # So, it's possible to definitely check whether it's in catalog or not.
         btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
                      "".format(self.url_prefix, self.postgre_id))
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
@@ -1864,8 +1864,73 @@ class TestSuitePackages(base.PackageTestCase):
         self.go_to_submenu('Browse Local')
         self.check_element_on_page(by.By.XPATH, btn_xpath)
 
+    def test_check_toggle_enabled_multiple_packages(self):
+        """Test check ability to make multiple packages active or inactive.
+
+        Scenario:
+            1. For each package in `package_ids`:
+               a. Navigate to 'Manage>Packages' page.
+               b. Toggle it inactive via "More>Toggle Active".
+               c. Check that the package is inactive.
+               d. Switch to the 'Browse' page.
+               e. Check that the application is not available on the page.
+            2. Now that all packages are inactive, check that alert message
+               "There are no applications in the catalog" is present on page.
+            3. For each package in `package_ids`:
+               a. Navigate to 'Manage>Packages' page.
+               b. Toggle it active via "More>Toggle Active".
+               c. Check that the package is active.
+               d. Switch to the 'Browse' page.
+               e. Check that the application is not available on the page.
+            4. Check that the previous alert message is gone.
+        """
+        package_ids = [self.hot_app_id, self.mockapp_id, self.postgre_id,
+                       self.deployingapp_id]
+
+        for package_id in package_ids:
+            self.navigate_to('Manage')
+            self.go_to_submenu('Packages')
+
+            self.select_action_for_package(package_id, 'more')
+            with self.wait_for_page_reload():
+                self.select_action_for_package(package_id, 'toggle_enabled')
+
+            self.wait_for_alert_message()
+            self.check_package_parameter_by_id(package_id, 'Active', 'False')
+
+            self.navigate_to('Browse')
+            self.go_to_submenu('Browse Local')
+            quick_deploy_btn = (
+                "//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
+                .format(self.url_prefix, package_id))
+            self.check_element_not_on_page(by.By.XPATH, quick_deploy_btn)
+
+        self.check_element_on_page(by.By.XPATH, c.AlertInfo.format(
+            'There are no applications in the catalog.'))
+
+        for package_id in package_ids:
+            self.navigate_to('Manage')
+            self.go_to_submenu('Packages')
+
+            self.select_action_for_package(package_id, 'more')
+            with self.wait_for_page_reload():
+                self.select_action_for_package(package_id, 'toggle_enabled')
+
+            self.wait_for_alert_message()
+            self.check_package_parameter_by_id(package_id, 'Active', 'True')
+
+            self.navigate_to('Browse')
+            self.go_to_submenu('Browse Local')
+            quick_deploy_btn = (
+                "//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
+                .format(self.url_prefix, package_id))
+            self.check_element_on_page(by.By.XPATH, quick_deploy_btn)
+
+        self.check_element_not_on_page(by.By.XPATH, c.AlertInfo.format(
+            'There are no applications in the catalog.'), sec=0.1)
+
     def test_check_toggle_public_package(self):
-        """Test check ability to make package active or inactive
+        """Test check ability to make package public or non-public.
 
         Scenario:
             1. Create new project but keep default project active
@@ -1876,7 +1941,7 @@ class TestSuitePackages(base.PackageTestCase):
                available in the catalog
             6. Switch back to default project
             7. Select the same package and inactivate it "More>Toggle Public"
-            8. Check that package is unpublic
+            8. Check that package is not public
             9. Switch to the new project and check that the application
                is not available in the catalog
         """
@@ -1884,6 +1949,7 @@ class TestSuitePackages(base.PackageTestCase):
         new_project = str(uuid.uuid4())[::4]
         project_id = self.create_project(new_project)
         self.add_user_to_project(project_id, self.auth_ref.user_id)
+
         # Generally the new project will appear in the dropdown menu only after
         # page refresh. But in this case refresh is not necessary.
 
@@ -1902,7 +1968,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
         # 'Quick Deploy' button contains id of the application.
-        # So it is possible to definitely determine is it in catalog or not.
+        # So it is possible to definitely determine if it is in catalog or not.
         btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
                      "".format(self.url_prefix, self.postgre_id))
 
@@ -1919,11 +1985,90 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Public', 'False')
 
-        # Check that application now is not available in other porject.
+        # Check that application now is not available in other project.
         self.switch_to_project(new_project)
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
+
+    def test_check_toggle_public_multiple_packages(self):
+        """Test check ability to make multiple packages public or non-public.
+
+        Scenario:
+            1. Navigate to 'Manage>Packages' page.
+            2. For each package in `package_ids`:
+               a. Toggle it public via "More>Toggle Public".
+               b. Check that the package is public.
+            3. Switch to the new project and check that each application is
+               available in the catalog and that each application has the
+               public ribbon over its icon.
+            4. Switch back to default project.
+            5. For each package in `package_ids`:
+               a. Toggle it non-public via "More>Toggle Public".
+               b. Check that the package is not public.
+            6. Switch to the new project and check that each application is
+               not available in the catalog and that the "no applications"
+               alert message appears in the catalog.
+        """
+        default_project = self.auth_ref.project_name
+        new_project = self.gen_random_resource_name('project', 8)
+        project_id = self.create_project(new_project)
+        self.add_user_to_project(project_id, self.auth_ref.user_id)
+        package_ids = [self.hot_app_id, self.mockapp_id, self.postgre_id,
+                       self.deployingapp_id]
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        for package_id in package_ids:
+            self.select_action_for_package(package_id, 'more')
+            with self.wait_for_page_reload():
+                self.select_action_for_package(package_id,
+                                               'toggle_public_enabled')
+            self.wait_for_alert_message()
+            self.check_package_parameter_by_id(package_id, 'Public', 'True')
+
+        self.switch_to_project(new_project)
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
+
+        self.check_element_on_page(by.By.CSS_SELECTOR, 'img.ribbon')
+        ribbons = self.driver.find_elements_by_css_selector('img.ribbon')
+        self.assertEqual(4, len(ribbons))
+        for ribbon in ribbons:
+            self.assertTrue(ribbon.get_attribute('src').endswith('shared.png'))
+
+        for package_id in package_ids:
+            quick_deploy_btn = (
+                "//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
+                .format(self.url_prefix, package_id))
+            self.check_element_on_page(by.By.XPATH, quick_deploy_btn)
+
+        self.switch_to_project(default_project)
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        for package_id in package_ids:
+            self.select_action_for_package(package_id, 'more')
+            with self.wait_for_page_reload():
+                self.select_action_for_package(package_id,
+                                               'toggle_public_enabled')
+            self.wait_for_alert_message()
+            self.check_package_parameter_by_id(package_id, 'Public', 'False')
+
+        self.switch_to_project(new_project)
+        self.navigate_to('Browse')
+        self.go_to_submenu('Browse Local')
+
+        self.check_element_on_page(by.By.XPATH, c.AlertInfo.format(
+            'There are no applications in the catalog.'))
+
+        for package_id in package_ids:
+            quick_deploy_btn = (
+                "//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
+                .format(self.url_prefix, package_id))
+            self.check_element_not_on_page(by.By.XPATH, quick_deploy_btn,
+                                           sec=0.1)
 
     def test_modify_description(self):
         """Test check ability to change description of the package
@@ -2393,6 +2538,86 @@ class TestSuitePackages(base.PackageTestCase):
             for other_package in set(package_names) - set([package_name]):
                 self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
                                                other_package, sec=0.1)
+
+    def test_delete_package(self):
+        """Test delete package.
+
+        Test checks ability to delete package successfully.
+
+        Scenario:
+            1. Upload randomly named package.
+            2. Navigate to 'Manage' > 'Packages' panel.
+            3. Delete the dynamically created package and afterward check
+               that the package is no longer present on the page.
+        """
+        def _try_delete_package(pkg_id):
+            try:
+                self.murano_client.packages.delete(pkg_id)
+            except muranoclient_exc.HTTPNotFound:
+                pass
+
+        pkg_name = self.gen_random_resource_name('package')
+        pkg_description = self.gen_random_resource_name('description', 8)
+        pkg_tag = self.gen_random_resource_name('tag', 8)
+        pkg_data = {
+            'description': pkg_description,
+            'tags': [pkg_tag]
+        }
+        pkg_id = utils.upload_app_package(self.murano_client, pkg_name,
+                                          pkg_data)
+        self.addCleanup(_try_delete_package, pkg_id)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        self.select_action_for_package(pkg_id, 'more')
+        self.select_action_for_package(pkg_id, 'delete_package')
+        with self.wait_for_page_reload():
+            self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+        self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
+                                       pkg_name, sec=0.1)
+
+    def test_delete_multiple_packages(self):
+        """Test delete multipe packages.
+
+        Test checks ability to delete multiple packages successfully.
+
+        Scenario:
+            1. Upload 3 randomly named packages.
+            2. Navigate to 'Manage' > 'Packages' panel.
+            3. Delete each dynamically created package and afterward check
+               that the package is no longer present on the page.
+        """
+        def _try_delete_package(pkg_id):
+            try:
+                self.murano_client.packages.delete(pkg_id)
+            except muranoclient_exc.HTTPNotFound:
+                pass
+
+        packages = []
+        for i in range(3):
+            pkg_name = self.gen_random_resource_name('package')
+            pkg_description = self.gen_random_resource_name('description', 8)
+            pkg_tag = self.gen_random_resource_name('tag', 8)
+            pkg_data = {
+                'description': pkg_description,
+                'tags': [pkg_tag]
+            }
+            pkg_id = utils.upload_app_package(self.murano_client, pkg_name,
+                                              pkg_data)
+            packages.append({'name': pkg_name, 'id': pkg_id})
+            self.addCleanup(_try_delete_package, pkg_id)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+
+        for package in packages:
+            self.select_action_for_package(package['id'], 'more')
+            self.select_action_for_package(package['id'], 'delete_package')
+            with self.wait_for_page_reload():
+                self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
+            self.check_element_not_on_page(by.By.PARTIAL_LINK_TEXT,
+                                           package['name'], sec=0.1)
 
 
 class TestSuiteRepository(base.PackageTestCase):
