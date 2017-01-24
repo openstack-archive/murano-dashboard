@@ -791,8 +791,6 @@ class TestSuiteImage(base.ImageTestCase):
         self.select_and_click_element('Mark Image')
         self.check_element_on_page(by.By.XPATH, c.TestImage.format(new_title))
 
-        self.repair_image()
-
     def test_check_image_info(self):
         """Test check ability to view image details
 
@@ -823,7 +821,6 @@ class TestSuiteImage(base.ImageTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH,
                                        c.TestImage.format(self.image_title))
-        self.repair_image()
 
     def test_delete_multiple_images(self):
         """Test ability to delete multiple images.
@@ -893,8 +890,6 @@ class TestSuiteImage(base.ImageTestCase):
                 by.By.XPATH, c.TestImage.format(image_title))
         self.check_element_not_on_page(
             by.By.XPATH, c.TestImage.format(default_image_title))
-
-        self.repair_image()  # Restore the class-level image that was deleted.
 
 
 class TestSuiteFields(base.FieldsTestCase):

@@ -437,13 +437,15 @@ class ImageTestCase(PackageBase):
         glance_endpoint = cls.service_catalog.url_for(service_type='image')
         cls.glance = gclient.Client('1', endpoint=glance_endpoint,
                                     session=cls.keystone_client.session)
-        cls.image_title = 'New Image ' + str(time.time())
-        cls.image = cls.upload_image(cls.image_title)
 
-    @classmethod
-    def tearDownClass(cls):
-        super(ImageTestCase, cls).tearDownClass()
-        cls.glance.images.delete(cls.image.id)
+    def setUp(self):
+        super(ImageTestCase, self).setUp()
+        self.image_title = self.gen_random_resource_name('test-image', 15)
+        self.image = self.upload_image(self.image_title)
+
+    def tearDown(self):
+        super(ImageTestCase, self).tearDown()
+        self.glance.images.delete(self.image.id)
 
     @classmethod
     def upload_image(cls, title):
@@ -463,16 +465,6 @@ class ImageTestCase(PackageBase):
     def select_and_click_element(self, element):
         self.driver.find_element_by_xpath(
             ".//*[@value = '{0}']".format(element)).click()
-
-    def repair_image(self):
-        self.driver.find_element_by_id(
-            'marked_images__action_mark_image').click()
-        self.select_from_list('image', self.image.id)
-        self.fill_field(by.By.ID, 'id_title', self.image_title)
-        self.select_from_list('type', 'linux')
-        self.select_and_click_element('Mark Image')
-        self.check_element_on_page(by.By.XPATH,
-                                   consts.TestImage.format(self.image_title))
 
 
 class FieldsTestCase(PackageBase):
