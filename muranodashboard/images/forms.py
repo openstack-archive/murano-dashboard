@@ -38,9 +38,9 @@ def filter_murano_images(images, request=None):
                 LOG.warning(msg)
                 if request:
                     exceptions.handle(request, msg)
-            else:
-                image.title = metadata.get('title', 'No Title')
-                image.type = metadata.get('type', 'No Type')
+                metadata = {}
+            image.title = metadata.get('title', 'No Title')
+            image.type = metadata.get('type', 'No Type')
 
             marked_images.append(image)
     return marked_images
