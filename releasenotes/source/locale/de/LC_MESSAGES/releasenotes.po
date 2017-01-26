@@ -1,13 +1,14 @@
 # Robert Simai <robert.simai@suse.com>, 2016. #zanata
+# Robert Simai <robert.simai@suse.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: Murano Dashboard Release Notes 3.0.0\n"
+"Project-Id-Version: Murano Dashboard Release Notes 3.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-19 17:17+0000\n"
+"POT-Creation-Date: 2017-01-26 01:27+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-12-27 07:39+0000\n"
+"PO-Revision-Date: 2017-01-23 12:51+0000\n"
 "Last-Translator: Robert Simai <robert.simai@suse.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -52,9 +53,6 @@ msgstr "3.0.0.0b3"
 
 msgid "3.0.0.0rc1"
 msgstr "3.0.0.0rc1"
-
-msgid "3.0.0.0rc1-142"
-msgstr "3.0.0.0rc1-142"
 
 msgid ""
 "Add details page for packages, The details page will show more info to user, "
@@ -143,6 +141,9 @@ msgstr ""
 "endeten, nicht überprüft.  Um jetzt zu bestimmen, ob ein Standard-"
 "Passwortvalidator dem Feld hinzugefügt wird, prüft das Dashboard nur noch "
 "den Feldtyp selbst, anstelle von Feldtyp und der Endung der Feld-ID."
+
+msgid "Flavor field will show the initial value by default."
+msgstr "Das Varianten-Feld zeigt als Standard den Initialwert."
 
 msgid ""
 "Improved the performance of the :guilabel:`Recent Activity` panel on the :"
