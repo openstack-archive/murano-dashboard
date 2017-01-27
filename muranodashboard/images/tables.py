@@ -18,6 +18,7 @@ from django.utils.translation import ungettext_lazy
 from horizon import exceptions
 from horizon import tables
 from openstack_dashboard.api import glance
+from openstack_dashboard import policy
 
 from muranodashboard.common import utils as md_utils
 
@@ -28,12 +29,12 @@ class MarkImage(tables.LinkAction):
     url = "horizon:app-catalog:images:mark_image"
     classes = ("ajax-modal",)
     icon = "plus"
-
-    def allowed(self, request, image):
-        return request.user.is_superuser
+    policy_rules = (("murano", "mark_image"),)
 
 
-class RemoveImageMetadata(tables.DeleteAction):
+class RemoveImageMetadata(policy.PolicyTargetMixin, tables.DeleteAction):
+    policy_rules = (("murano", "remove_image_metadata"),)
+
     @staticmethod
     def action_present(count):
         return ungettext_lazy(
@@ -58,9 +59,6 @@ class RemoveImageMetadata(tables.DeleteAction):
             exceptions.handle(request, _('Unable to remove metadata'),
                               redirect=reverse(
                                   'horizon:app-catalog:images:index'))
-
-    def allowed(self, request, image):
-        return request.user.is_superuser
 
 
 class MarkedImagesTable(tables.DataTable):
