@@ -491,12 +491,12 @@ class ApplicationTestCase(ImageTestCase):
     def delete_component(self, component_name=None):
         if component_name:
             component_id = self.get_element_id(component_name)
-            btn = self.driver.find_element_by_id(
-                'services__row_{0}__action_delete'.format(
+            btn = self.wait_element_is_clickable(
+                by.By.ID, 'services__row_{0}__action_delete'.format(
                     component_id))
         else:
-            btn = self.driver.find_element_by_css_selector(
-                consts.DeleteComponent)
+            btn = self.wait_element_is_clickable(by.By.CSS_SELECTOR,
+                                                 consts.DeleteComponent)
         btn.click()
         el = self.wait_element_is_clickable(by.By.LINK_TEXT,
                                             'Delete Component', sec=30)
@@ -552,13 +552,17 @@ class ApplicationTestCase(ImageTestCase):
         self.select_and_click_action_for_app(action, app)
         field_id = "{0}_0-name".format(app_id)
         self.fill_field(by.By.ID, field_id, value=app_name)
-        self.driver.find_element_by_xpath(consts.ButtonSubmit).click()
-        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.wait_element_is_clickable(by.By.XPATH,
+                                       consts.ButtonSubmit).click()
+        self.wait_element_is_clickable(by.By.XPATH,
+                                       consts.InputSubmit).click()
         self.select_from_list('osImage', self.image.id)
 
-        self.driver.find_element_by_xpath(consts.InputSubmit).click()
+        self.wait_element_is_clickable(by.By.XPATH,
+                                       consts.InputSubmit).click()
         if env_id:
-            self.driver.find_element_by_xpath(consts.InputSubmit).click()
+            self.wait_element_is_clickable(by.By.XPATH,
+                                           consts.InputSubmit).click()
             self.wait_element_is_clickable(by.By.ID, consts.AddComponent)
             self.check_element_on_page(by.By.LINK_TEXT, app_name)
         else:

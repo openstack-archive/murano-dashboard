@@ -414,6 +414,9 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         env_id = self.get_element_id('quick-env-1')
         self.add_app_to_env(self.mockapp_id, 'TestApp1', env_id)
         self.driver.find_element_by_id('services__action_deploy_env').click()
+        self.go_to_submenu('Environments')
+        self.check_element_on_page(by.By.LINK_TEXT, 'quick-env-1')
+        self.driver.find_element(by.By.LINK_TEXT, 'quick-env-1').click()
         self.check_element_on_page(by.By.XPATH,
                                    c.Status.format('Ready'),
                                    sec=90)
