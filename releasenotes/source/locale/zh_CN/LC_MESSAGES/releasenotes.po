@@ -2,18 +2,19 @@
 # sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
 # Wu Han <wu.han@h3c.com>, 2017. #zanata
 # liujunpeng <liujunpeng@inspur.com>, 2017. #zanata
+# sunanchen <KF.sunanchen@h3c.com>, 2017. #zanata
 # vuuv <froms2008@gmail.com>, 2017. #zanata
 # zzxwill <zzxwill@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: Murano Dashboard Release Notes 3.1.1\n"
+"Project-Id-Version: Murano Dashboard Release Notes 3.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-09 17:38+0000\n"
+"POT-Creation-Date: 2017-02-16 11:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-02-11 09:20+0000\n"
-"Last-Translator: zzxwill <zzxwill@gmail.com>\n"
+"PO-Revision-Date: 2017-02-18 08:51+0000\n"
+"Last-Translator: sunanchen <KF.sunanchen@h3c.com>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.7.3\n"
@@ -232,6 +233,9 @@ msgstr ""
 
 msgid "Newton Series Release Notes"
 msgstr "Newton版本发布说明"
+
+msgid "Ocata Series Release Notes"
+msgstr "Ocata版本发布说明"
 
 msgid "Other Notes"
 msgstr "其他说明"

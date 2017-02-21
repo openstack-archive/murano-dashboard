@@ -2,13 +2,13 @@
 # suhartono <cloudsuhartono@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: Murano Dashboard Release Notes 3.1.1\n"
+"Project-Id-Version: Murano Dashboard Release Notes 3.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-30 14:11+0000\n"
+"POT-Creation-Date: 2017-02-16 11:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-01-31 03:45+0000\n"
+"PO-Revision-Date: 2017-02-20 11:53+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -257,6 +257,9 @@ msgstr ""
 
 msgid "Newton Series Release Notes"
 msgstr "Catatan rilis Newton Series"
+
+msgid "Ocata Series Release Notes"
+msgstr "Catatan rilis seri Ocata"
 
 msgid "Other Notes"
 msgstr "Catatan lainnya"

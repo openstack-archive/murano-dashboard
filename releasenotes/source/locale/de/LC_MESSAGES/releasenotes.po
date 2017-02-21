@@ -2,13 +2,13 @@
 # Robert Simai <robert.simai@suse.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: Murano Dashboard Release Notes 3.1.1\n"
+"Project-Id-Version: Murano Dashboard Release Notes 3.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-06 21:15+0000\n"
+"POT-Creation-Date: 2017-02-16 11:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-02-07 11:30+0000\n"
+"PO-Revision-Date: 2017-02-16 02:27+0000\n"
 "Last-Translator: Robert Simai <robert.simai@suse.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -258,6 +258,9 @@ msgstr ""
 
 msgid "Newton Series Release Notes"
 msgstr "Newton Serie Releasenotes"
+
+msgid "Ocata Series Release Notes"
+msgstr "Ocata Serie Releasenotes"
 
 msgid "Other Notes"
 msgstr "Andere Notizen"
