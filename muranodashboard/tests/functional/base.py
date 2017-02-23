@@ -440,7 +440,7 @@ class ImageTestCase(PackageBase):
 
     def setUp(self):
         super(ImageTestCase, self).setUp()
-        self.image_title = self.gen_random_resource_name('test-image', 15)
+        self.image_title = self.gen_random_resource_name('default-image', 15)
         self.image = self.upload_image(self.image_title)
 
     def tearDown(self):

@@ -825,8 +825,8 @@ class TestSuiteImage(base.ImageTestCase):
         self.check_element_not_on_page(by.By.XPATH,
                                        c.TestImage.format(self.image_title))
 
-    def test_delete_multiple_images(self):
-        """Test ability to delete multiple images.
+    def test_delete_multiple_images_one_by_one(self):
+        """Test ability to delete multiple images one by one.
 
         Scenario:
             1. Create 3 randomly named images.
@@ -834,13 +834,6 @@ class TestSuiteImage(base.ImageTestCase):
             3. For each randomly created image:
                a. Select current image and click on "Delete Metadata". Each
                   image is deleted separately.
-            4. Re-create 3 randomly named images.
-            5. Refresh page.
-            6. Select topmost checkbox and click on "Delete Metadata". All
-               images are deleted together.
-            7. For each randomly created image:
-               a. Check that the current image was deleted.
-            8. Check that ``self.image_title`` was also deleted.
         """
         def _try_delete_image(image_id):
             try:
@@ -868,30 +861,6 @@ class TestSuiteImage(base.ImageTestCase):
             self.check_element_not_on_page(
                 by.By.XPATH, c.TestImage.format(image_title))
         self.check_element_on_page(
-            by.By.XPATH, c.TestImage.format(default_image_title))
-
-        # Re-create 3 randomly named images.
-        image_titles = []
-        for i in range(3):
-            image_title = self.gen_random_resource_name('image')
-            image_titles.append(image_title)
-            image = self.upload_image(image_title)
-            self.addCleanup(_try_delete_image, image.id)
-
-        self.go_to_submenu('Images')
-
-        # Check the topmost checkbox, then delete all images at the same time.
-        self.wait_element_is_clickable(by.By.CSS_SELECTOR,
-                                       'label[for="ui-id-1"]').click()
-        self.wait_element_is_clickable(by.By.ID,
-                                       'marked_images__action_delete').click()
-        with self.wait_for_page_reload():
-            self.driver.find_element_by_xpath(c.ConfirmDeletion).click()
-
-        for image_title in image_titles:
-            self.check_element_not_on_page(
-                by.By.XPATH, c.TestImage.format(image_title))
-        self.check_element_not_on_page(
             by.By.XPATH, c.TestImage.format(default_image_title))
 
 
