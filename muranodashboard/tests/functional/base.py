@@ -93,16 +93,10 @@ class UITestCase(testtools.TestCase):
         self.driver.implicitly_wait(30)
         self.addOnException(self.take_screenshot)
         self.log_in()
-        self.projects_to_delete = []
         self.switch_to_project(cfg.common.tenant)
 
     def tearDown(self):
         super(UITestCase, self).tearDown()
-
-        self.switch_to_project(cfg.common.tenant)
-
-        for project_id in self.projects_to_delete:
-            self.keystone_client.projects.delete(project_id)
 
         for env in self.murano_client.environments.list():
             self.remove_environment(env.id)
@@ -162,13 +156,6 @@ class UITestCase(testtools.TestCase):
                      in self.keystone_client.projects.list()
                      if tenant.name == name]
         return tenant_id[0]
-
-    def create_project(self, name):
-        project = self.keystone_client.projects.create(
-            name=name, domain="default", description="For Test Purposes",
-            enabled=True)
-        self.projects_to_delete.append(project.id)
-        return project.id
 
     def add_user_to_project(self, project_id, user_id, user_role=None):
         if not user_role:

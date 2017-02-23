@@ -1931,40 +1931,41 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to make package public or non-public.
 
         Scenario:
-            1. Create new project but keep default project active
+            1. Add default user to alternative project called 'service'
             2. Navigate to 'Packages' page
             3. Select some package and make it active "More>Toggle Public"
             4. Check that package is public
-            5. Switch to the new project and check that the application is
+            5. Switch to the alt project and check that the application is
                available in the catalog
             6. Switch back to default project
             7. Select the same package and inactivate it "More>Toggle Public"
             8. Check that package is not public
-            9. Switch to the new project and check that the application
+            9. Switch to the alt project and check that the application
                is not available in the catalog
         """
-        default_project = self.auth_ref.project_name
-        new_project = str(uuid.uuid4())[::4]
-        project_id = self.create_project(new_project)
-        self.add_user_to_project(project_id, self.auth_ref.user_id)
+        default_project_name = self.auth_ref.project_name
+        service_project_name = 'service'
+        service_prj_id = self.get_tenantid_by_name(service_project_name)
+        self.add_user_to_project(service_prj_id, self.auth_ref.user_id)
 
         # Generally the new project will appear in the dropdown menu only after
         # page refresh. But in this case refresh is not necessary.
-
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
-        self.select_action_for_package(self.postgre_id,
-                                       'toggle_public_enabled')
+        with self.wait_for_page_reload():
+            self.select_action_for_package(self.postgre_id,
+                                           'toggle_public_enabled')
 
         self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Public', 'True')
 
         # Check that application is available in other project.
-        self.switch_to_project(new_project)
+        self.switch_to_project(service_project_name)
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
+
         # 'Quick Deploy' button contains id of the application.
         # So it is possible to definitely determine if it is in catalog or not.
         btn_xpath = ("//*[@href='{0}/app-catalog/catalog/quick-add/{1}']"
@@ -1972,19 +1973,20 @@ class TestSuitePackages(base.PackageTestCase):
 
         self.check_element_on_page(by.By.XPATH, btn_xpath)
 
-        self.switch_to_project(default_project)
+        self.switch_to_project(default_project_name)
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
 
         self.select_action_for_package(self.postgre_id, 'more')
-        self.select_action_for_package(self.postgre_id,
-                                       'toggle_public_enabled')
+        with self.wait_for_page_reload():
+            self.select_action_for_package(self.postgre_id,
+                                           'toggle_public_enabled')
 
         self.wait_for_alert_message()
         self.check_package_parameter_by_id(self.postgre_id, 'Public', 'False')
 
         # Check that application now is not available in other project.
-        self.switch_to_project(new_project)
+        self.switch_to_project(service_project_name)
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
         self.check_element_not_on_page(by.By.XPATH, btn_xpath)
@@ -1993,25 +1995,26 @@ class TestSuitePackages(base.PackageTestCase):
         """Test check ability to make multiple packages public or non-public.
 
         Scenario:
-            1. Navigate to 'Manage>Packages' page.
-            2. For each package in `package_ids`:
+            1. Add default user to alternative project called 'service'.
+            2. Navigate to 'Manage>Packages' page.
+            3. For each package in `package_ids`:
                a. Toggle it public via "More>Toggle Public".
                b. Check that the package is public.
-            3. Switch to the new project and check that each application is
+            4. Switch to the alt project and check that each application is
                available in the catalog and that each application has the
                public ribbon over its icon.
-            4. Switch back to default project.
-            5. For each package in `package_ids`:
+            5. Switch back to default project.
+            6. For each package in `package_ids`:
                a. Toggle it non-public via "More>Toggle Public".
                b. Check that the package is not public.
-            6. Switch to the new project and check that each application is
+            7. Switch to the alt project and check that each application is
                not available in the catalog and that the "no applications"
                alert message appears in the catalog.
         """
-        default_project = self.auth_ref.project_name
-        new_project = self.gen_random_resource_name('project', 8)
-        project_id = self.create_project(new_project)
-        self.add_user_to_project(project_id, self.auth_ref.user_id)
+        default_project_name = self.auth_ref.project_name
+        service_project_name = 'service'
+        service_prj_id = self.get_tenantid_by_name(service_project_name)
+        self.add_user_to_project(service_prj_id, self.auth_ref.user_id)
         package_ids = [self.hot_app_id, self.mockapp_id, self.postgre_id,
                        self.deployingapp_id]
 
@@ -2026,7 +2029,7 @@ class TestSuitePackages(base.PackageTestCase):
             self.wait_for_alert_message()
             self.check_package_parameter_by_id(package_id, 'Public', 'True')
 
-        self.switch_to_project(new_project)
+        self.switch_to_project(service_project_name)
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
 
@@ -2042,7 +2045,7 @@ class TestSuitePackages(base.PackageTestCase):
                 .format(self.url_prefix, package_id))
             self.check_element_on_page(by.By.XPATH, quick_deploy_btn)
 
-        self.switch_to_project(default_project)
+        self.switch_to_project(default_project_name)
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
 
@@ -2054,7 +2057,7 @@ class TestSuitePackages(base.PackageTestCase):
             self.wait_for_alert_message()
             self.check_package_parameter_by_id(package_id, 'Public', 'False')
 
-        self.switch_to_project(new_project)
+        self.switch_to_project(service_project_name)
         self.navigate_to('Browse')
         self.go_to_submenu('Browse Local')
 
