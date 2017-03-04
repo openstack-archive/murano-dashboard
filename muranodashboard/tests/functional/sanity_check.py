@@ -2328,7 +2328,6 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_for_alert_message()
         self.check_element_not_on_page(by.By.XPATH, delete_new_category_btn)
 
-    @unittest.skip("This follow-up patch will unskip this test.")
     def test_sharing_app_without_permission(self):
         """Tests sharing Murano App without permission
 
@@ -2340,9 +2339,9 @@ class TestSuitePackages(base.PackageTestCase):
                 Enabled: Yes
             3) Login to Horizon as an 'Test_service_user';
             4) Catalog -> Manage -> Packages: Import Package
-                Set public Off, Active On
-            5) Try to modify created package and set Public = On.
-                Error: You are not allowed to perform this operation
+                check the public checkbox is disabled
+            5) Try to modify created package and check the
+                public checkbox is disabled.
             6) Delete new package
         """
         service_prj_name = 'service'
@@ -2369,11 +2368,12 @@ class TestSuitePackages(base.PackageTestCase):
             "input[name='upload-package']")
         el.send_keys(self.archive)
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        # Public = OFF; Active = ON.
         public_checkbox = self.driver.find_element_by_id('id_modify-is_public')
         active_checkbox = self.driver.find_element_by_id('id_modify-enabled')
-        if public_checkbox.is_selected():
-            public_checkbox.click()
+
+        # check the Public checkbox is disabled
+        self.assertTrue(public_checkbox.get_attribute("disabled"))
+
         if not active_checkbox.is_selected():
             active_checkbox.click()
         self.driver.find_element_by_xpath(c.InputSubmit).click()
@@ -2382,18 +2382,18 @@ class TestSuitePackages(base.PackageTestCase):
         self.check_element_on_page(
             by.By.XPATH, c.AppPackages.format(self.archive_name))
 
-        # Modify Package to set Public = ON
         package = self.driver.find_element_by_xpath(
             c.AppPackages.format(self.archive_name))
         pkg_id = package.get_attribute("data-object-id")
         self.select_action_for_package(pkg_id, 'modify_package')
 
-        label = self.driver.find_element_by_css_selector(
-            "label[for=id_is_public]")
-        label.click()
+        is_public_checkbox = self.driver.find_element_by_id('id_is_public')
+
+        # check the Public checkbox is disabled
+        self.assertTrue(is_public_checkbox.get_attribute("disabled"))
+
         self.driver.find_element_by_xpath(c.InputSubmit).click()
-        # Expecting Error
-        self.wait_for_error_message()
+        self.wait_for_alert_message()
 
         # Clean up
         self.select_action_for_package(pkg_id, 'more')
