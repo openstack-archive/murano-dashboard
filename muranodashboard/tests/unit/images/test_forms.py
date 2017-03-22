@@ -23,14 +23,14 @@ from muranodashboard.images import forms
 class TestImagesForms(testtools.TestCase):
     def setUp(self):
         super(TestImagesForms, self).setUp()
-        metadata = {'murano_image_info': '{"title": "title", "type": "type"}'}
-        self.mock_img = mock.MagicMock(id=12, properties=metadata)
+        metadata = '{"title": "title", "type": "type"}'
+        self.mock_img = mock.MagicMock(id=12, murano_image_info=metadata)
         self.mock_request = mock.MagicMock()
 
     @mock.patch.object(forms, 'LOG')
     def test_filter_murano_images(self, mock_log):
         mock_blank_img = \
-            mock.MagicMock(id=13, properties={"murano_image_info": "info"})
+            mock.MagicMock(id=13, murano_image_info="info")
         images = [mock_blank_img]
         msg = _('Invalid metadata for image: {0}').format(images[0].id)
         self.assertEqual(images,

@@ -71,40 +71,16 @@ def is_app(wizard):
 
 
 def _ensure_images(name, package, request, step_data=None):
-    try:
-        glance_client = glance.glanceclient(
-            request, version='1')
-    except Exception:
-        glance_client = None
+    glance_client = glance.glanceclient(
+        request, version='2')
 
     base_url = packages_consts.MURANO_REPO_URL
     image_specs = package.images()
-    if not glance_client and len(image_specs):
-        # NOTE(kzaitsev): no glance_client. Probably v1 client
-        # is not available. Add warning, to let user know that
-        # we were unable to load images automagically
-        # since v2 does not have copy_from
-        download_urls = []
-        for image_spec in image_specs:
-            download_url = muranoclient_utils.to_url(
-                image_spec.get("Url", image_spec['Name']),
-                base_url=base_url,
-                path='images/',
-            )
-            download_urls.append(download_url)
-        msg = _("Couldn't initialise glance v1 client, "
-                "therefore could not download images for "
-                "'{0}' package. You may need to download them "
-                "manually from these locations: {1}").format(
-                    name, ' '.join(download_urls))
-        messages.error(request, msg)
-        LOG.error(msg)
-        return
 
     try:
         imgs = muranoclient_utils.ensure_images(
             glance_client=glance_client,
-            image_specs=package.images(),
+            image_specs=image_specs,
             base_url=base_url)
         for img in imgs:
             msg = _("Trying to add {0} image to glance. "

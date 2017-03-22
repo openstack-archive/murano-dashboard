@@ -86,55 +86,6 @@ class TestPackageView(helpers.APITestCase):
         mock_wizard.storage.get_step_data.return_value = mock_step_data
         self.assertFalse(views.is_app(mock_wizard))
 
-    @mock.patch.object(views, 'LOG')
-    @mock.patch.object(views, 'messages')
-    @mock.patch.object(views, 'muranoclient_utils')
-    @mock.patch.object(views, 'glance')
-    def test_ensure_image_except_glance_exception(
-            self, mock_glance, mock_murano_utils, mock_messages, mock_log):
-        mock_glance.glanceclient.side_effect = Exception
-        mock_package = mock.Mock()
-        mock_package.images.return_value = [
-            {'Url': 'foo_url', 'Name': 'foo_image_spec'},
-            {'Url': 'bar_url', 'Name': 'bar_image_spec'}
-        ]
-        mock_murano_utils.to_url.side_effect = [
-            'foo_url', 'bar_url'
-        ]
-        expected_error = "Couldn't initialise glance v1 client, therefore "\
-                         "could not download images for 'foo' package. You "\
-                         "may need to download them manually from these "\
-                         "locations: foo_url bar_url"
-
-        views._ensure_images('foo', mock_package, self.mock_request)
-
-        for url in ('foo_url', 'bar_url'):
-            mock_murano_utils.to_url.assert_any_call(
-                url, base_url=packages_consts.MURANO_REPO_URL, path='images/')
-        mock_messages.error.assert_called_once_with(
-            self.mock_request, expected_error)
-        mock_log.error.assert_called_once_with(expected_error)
-
-    @mock.patch.object(views, 'LOG')
-    @mock.patch.object(views, 'messages')
-    @mock.patch.object(views, 'muranoclient_utils')
-    @mock.patch.object(views, 'glance')
-    def test_ensure_image_except_exception(
-            self, mock_glance, mock_murano_utils, mock_messages, mock_log):
-        mock_glance.glanceclient.side_effect = Exception
-        mock_murano_utils.ensure_images.side_effect =\
-            Exception('test_exception')
-        mock_package = mock.Mock()
-        mock_package.images.return_value = []
-        expected_error = "Error test_exception occurred while installing "\
-                         "images for foo"
-
-        views._ensure_images('foo', mock_package, self.mock_request)
-
-        mock_messages.error.assert_called_once_with(self.mock_request,
-                                                    expected_error)
-        mock_log.exception.assert_called_once_with(expected_error)
-
 
 class TestDetailView(helpers.APITestCase):
 

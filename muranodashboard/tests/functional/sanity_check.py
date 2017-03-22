@@ -1440,9 +1440,12 @@ class TestSuiteApplications(base.ApplicationTestCase):
                                    c.Status.format('Ready'),
                                    sec=90)
 
-        self.driver.find_element_by_link_text('Deployment History').click()
-        self.driver.find_element_by_link_text('Show Details').click()
-        self.driver.find_element_by_link_text('Logs').click()
+        self.wait_element_is_clickable(
+            by.By.PARTIAL_LINK_TEXT, 'Deployment History').click()
+        self.wait_element_is_clickable(
+            by.By.PARTIAL_LINK_TEXT, 'Show Details').click()
+        self.wait_element_is_clickable(
+            by.By.PARTIAL_LINK_TEXT, 'Logs').click()
 
         self.assertIn('Follow the white rabbit',
                       self.driver.find_element_by_class_name('logs').text)

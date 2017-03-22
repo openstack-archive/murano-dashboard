@@ -129,9 +129,9 @@ class TestFields(testtools.TestCase):
     @mock.patch.object(fields, 'glance')
     def test_get_murano_images(self, mock_glance):
         foo_image = mock.Mock(murano_property=None)
-        foo_image.properties = {"murano_image_info": '{"foo": "foo_val"}'}
+        foo_image.murano_image_info = '{"foo": "foo_val"}'
         bar_image = mock.Mock(murano_property=None)
-        bar_image.properties = {"murano_image_info": '{"bar": "bar_val"}'}
+        bar_image.murano_image_info = '{"bar": "bar_val"}'
         mock_glance.image_list_detailed.return_value = [
             [foo_image, bar_image], None
         ]
@@ -168,7 +168,7 @@ class TestFields(testtools.TestCase):
     def test_murano_images_except_value_error(self, mock_glance, mock_log,
                                               mock_messages):
         foo_image = mock.Mock(murano_property=None)
-        foo_image.properties = {"murano_image_info": "{'foo': 'foo_val'}"}
+        foo_image.murano_image_info = "{'foo': 'foo_val'}"
         mock_glance.image_list_detailed.return_value = [
             [foo_image], None
         ]

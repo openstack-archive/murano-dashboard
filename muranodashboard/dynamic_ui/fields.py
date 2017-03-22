@@ -119,7 +119,9 @@ def get_murano_images(request):
     images = filter(
         lambda x: x.properties.get("image_type", '') != 'snapshot', images)
     for image in images:
-        murano_property = image.properties.get('murano_image_info')
+        # Additional properties, whose value is always a string data type, are
+        # only included in the response if they have a value.
+        murano_property = getattr(image, 'murano_image_info', None)
         if murano_property:
             try:
                 murano_metadata = json.loads(murano_property)

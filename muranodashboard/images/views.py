@@ -62,20 +62,10 @@ class MarkedImagesView(horizon_tables.DataTableView):
         self._prev = False
         self._more = False
 
-        # TODO(kzaitsev) add v2 client support for marking images
-        try:
-            glance_v1_client = glance.glanceclient(self.request, "1")
-        except Exception:
-            # Horizon seems to raise ImportError which doesn't look
-            # specific enough. Let's catch any exceptions.
-            msg = _('Unable to create v1 glance client. Marking images '
-                    'from murano-dashboard will be unavailable.')
-            uri = reverse('horizon:app-catalog:catalog:index')
-
-            exceptions.handle(self.request, msg, redirect=uri)
+        glance_v2_client = glance.glanceclient(self.request, "2")
 
         try:
-            images_iter = glance_v1_client.images.list(
+            images_iter = glance_v2_client.images.list(
                 **kwargs)
         except Exception:
             msg = _('Unable to retrieve list of images')

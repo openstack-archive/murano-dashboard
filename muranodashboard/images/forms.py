@@ -32,7 +32,9 @@ def filter_murano_images(images, request=None):
         lambda x: x.properties.get("image_type", '') != 'snapshot', images)
     marked_images = []
     for image in images:
-        metadata = image.properties.get('murano_image_info')
+        # Additional properties, whose value is always a string data type, are
+        # only included in the response if they have a value.
+        metadata = getattr(image, 'murano_image_info', None)
         if metadata:
             try:
                 metadata = json.loads(metadata)

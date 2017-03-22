@@ -14,6 +14,7 @@ import contextlib
 import json
 import logging
 import os
+import six
 import six.moves.urllib.parse as urlparse
 import testtools
 import time
@@ -216,6 +217,8 @@ class UITestCase(testtools.TestCase):
         user_menu.find_element(by.By.PARTIAL_LINK_TEXT, 'Sign Out').click()
 
     def fill_field(self, by_find, field, value):
+        self.check_element_on_page(by_find, field)
+        self.wait_element_is_clickable(by_find, field)
         self.driver.find_element(by=by_find, value=field).clear()
         self.driver.find_element(by=by_find, value=field).send_keys(value)
 
@@ -426,7 +429,7 @@ class ImageTestCase(PackageBase):
     def setUpClass(cls):
         super(ImageTestCase, cls).setUpClass()
         glance_endpoint = cls.service_catalog.url_for(service_type='image')
-        cls.glance = gclient.Client('1', endpoint=glance_endpoint,
+        cls.glance = gclient.Client('2', endpoint=glance_endpoint,
                                     session=cls.keystone_client.session)
 
     def setUp(self):
@@ -441,13 +444,14 @@ class ImageTestCase(PackageBase):
     @classmethod
     def upload_image(cls, title):
         try:
-            property = {'murano_image_info': json.dumps({'title': title,
-                                                         'type': 'linux'})}
+            murano_property = json.dumps({'title': title, 'type': 'linux'})
             image = cls.glance.images.create(name='TestImage',
                                              disk_format='qcow2',
-                                             size=0,
-                                             is_public=True,
-                                             properties=property)
+                                             container_format='bare',
+                                             is_public='True',
+                                             murano_image_info=murano_property)
+            image_data = six.BytesIO(None)
+            cls.glance.images.upload(image['id'], image_data)
         except Exception:
             logger.error("Unable to create or update image in Glance")
             raise
@@ -566,14 +570,26 @@ class ApplicationTestCase(ImageTestCase):
                                        consts.InputSubmit).click()
         self.select_from_list('osImage', self.image.id)
 
-        self.wait_element_is_clickable(by.By.XPATH,
-                                       consts.InputSubmit).click()
         if env_id:
-            self.wait_element_is_clickable(by.By.XPATH,
-                                           consts.InputSubmit).click()
+            # If another app is added, then env_id is passed in. In this case,
+            # the 'Next' followed by 'Create' must be clicked.
+            self.check_element_on_page(by.By.CSS_SELECTOR,
+                                       consts.NextWizardSubmit)
+            self.wait_element_is_clickable(
+                by.By.CSS_SELECTOR, consts.NextWizardSubmit).click()
+            self.check_element_on_page(by.By.CSS_SELECTOR,
+                                       consts.CreateWizardSubmit)
+            self.wait_element_is_clickable(
+                by.By.CSS_SELECTOR, consts.CreateWizardSubmit).click()
+
             self.wait_element_is_clickable(by.By.ID, consts.AddComponent)
             self.check_element_on_page(by.By.LINK_TEXT, app_name)
         else:
+            # Otherwise, only 'Create' needs to be clicked.
+            self.check_element_on_page(by.By.CSS_SELECTOR,
+                                       consts.CreateWizardSubmit)
+            self.wait_element_is_clickable(
+                by.By.CSS_SELECTOR, consts.CreateWizardSubmit).click()
             self.wait_for_alert_message()
 
     def execute_action_from_table_view(self, env_name, table_action):

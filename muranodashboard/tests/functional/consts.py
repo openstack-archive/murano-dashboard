@@ -58,6 +58,8 @@ TableDropdownAction = "//tr[contains(@data-display, '{0}')]//button[contains("\
 # Buttons
 ButtonSubmit = ".//*[@name='wizard_goto_step'][2]"
 InputSubmit = "//input[@type='submit']"
+NextWizardSubmit = 'div.modal-footer input[value="Next"]'
+CreateWizardSubmit = 'div.modal-footer input[value="Create"]'
 ConfirmDeletion = "//div[@class='modal-footer']//a[contains(text(), 'Delete')]"  # noqa
 ConfirmAbandon = "//div[@class='modal-footer']//a[contains(text(), 'Abandon')]"  # noqa
 UploadPackage = 'packages__action_upload_package'

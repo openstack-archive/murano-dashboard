@@ -48,8 +48,7 @@ class TestMarkedImagesView(testtools.TestCase):
                 "title": "{0}_title".format(prefix),
                 "type": "{0}_type".format(prefix)
             }
-        mock_image = mock.Mock(
-            properties={'murano_image_info': json.dumps(image_info)})
+        mock_image = mock.Mock(**{'murano_image_info': json.dumps(image_info)})
         return mock_image
 
     def test_has_prev_data(self):
@@ -89,7 +88,7 @@ class TestMarkedImagesView(testtools.TestCase):
         self.images_view.request.GET.get.assert_called_once_with(
             tables.MarkedImagesTable._meta.prev_pagination_param, None)
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "1")
+            self.images_view.request, "2")
 
     @mock.patch.object(views, 'glance', autospec=True)
     def test_get_data_with_desc_sort_dir(self, mock_glance):
@@ -122,7 +121,7 @@ class TestMarkedImagesView(testtools.TestCase):
             mock.call(tables.MarkedImagesTable._meta.pagination_param, None)
         ])
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "1")
+            self.images_view.request, "2")
 
     @mock.patch.object(views, 'glance', autospec=True)
     def test_get_data_with_more_results(self, mock_glance):
@@ -158,23 +157,7 @@ class TestMarkedImagesView(testtools.TestCase):
         self.images_view.request.GET.get.assert_called_once_with(
             tables.MarkedImagesTable._meta.prev_pagination_param, None)
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "1")
-
-    @mock.patch.object(views, 'reverse', autospec=True)
-    @mock.patch.object(views, 'glance', autospec=True)
-    def test_get_data_except_glance_exception(self, mock_glance, mock_reverse):
-        """Test that glance.glanceclient exception is handled."""
-        mock_glance.glanceclient.side_effect = Exception()
-        mock_reverse.return_value = 'foo_reverse_url'
-        self.images_view.request.GET.get.return_value = None
-
-        e = self.assertRaises(exceptions.Http302, self.images_view.get_data)
-        self.assertEqual('foo_reverse_url', e.location)
-
-        mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "1")
-        mock_reverse.assert_called_once_with(
-            'horizon:app-catalog:catalog:index')
+            self.images_view.request, "2")
 
     @mock.patch.object(views, 'reverse', autospec=True)
     @mock.patch.object(views, 'glance', autospec=True)
@@ -191,6 +174,6 @@ class TestMarkedImagesView(testtools.TestCase):
         self.assertEqual('foo_reverse_url', e.location)
 
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "1")
+            self.images_view.request, "2")
         mock_reverse.assert_called_once_with(
             'horizon:app-catalog:catalog:index')
