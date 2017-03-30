@@ -2780,16 +2780,16 @@ class TestSuiteRepository(base.PackageTestCase):
         with zipfile.ZipFile(zip_name, 'w') as archive:
             archive.write(file_name)
 
-    def _make_big_zip_pkg(self, name, size):
+    def _make_zip_pkg(self, name, size):
         file_name = os.path.join(self.serve_dir, 'apps', 'images.lst')
         self._compose_app(name)
 
-        # create file with size 10 mb
+        # Create file with size 10 MB
         with open(file_name, 'wb') as f:
             f.seek(size - 1)
             f.write('\0')
 
-        # add created file to archive
+        # Add created file to archive (the archive already has files).
         zip_name = os.path.join(self.serve_dir, 'apps', name + '.zip')
         with zipfile.ZipFile(zip_name, 'a') as archive:
             archive.write(file_name)
@@ -2960,6 +2960,44 @@ class TestSuiteRepository(base.PackageTestCase):
             self.check_element_on_page(
                 by.By.XPATH, c.AppPackages.format(pkg_name))
 
+    def test_import_file_regular_zip_file(self):
+        """Import regular zip archive.
+
+        Scenario:
+            1. Log in Horizon with admin credentials.
+            2. Navigate to 'Packages' page.
+            3. Click 'Import Package' and select 'File' as a package source.
+            4. Choose very big zip file.
+            5. Click on 'Next' button.
+            6. Check that the package is successfully added and check that it
+               exists in the packages table.
+        """
+        pkg_name = self.gen_random_resource_name('pkg')
+        self._make_zip_pkg(name=pkg_name, size=1)
+
+        self.navigate_to('Manage')
+        self.go_to_submenu('Packages')
+        self.driver.find_element_by_id(c.UploadPackage).click()
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
+
+        el = self.driver.find_element_by_css_selector(
+            "input[name='upload-repo_name']")
+        el.send_keys("{0}".format(pkg_name))
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        # Wait for successful upload message to appear.
+        self.wait_for_alert_message()
+
+        # Click next, then create.
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+        self.driver.find_element_by_xpath(c.InputSubmit).click()
+
+        self.check_element_on_page(
+            by.By.XPATH, c.AppPackages.format(pkg_name))
+
     def test_import_package_by_invalid_url(self):
         """Negative test when package is imported by invalid url."""
         pkg_name = self.gen_random_resource_name('pkg')
@@ -3059,6 +3097,7 @@ class TestSuiteRepository(base.PackageTestCase):
 
     def test_import_invalid_zip_file(self):
         """"Negative test import zip file which is not a murano package."""
+
         # At first create dummy package with zip file replaced by text one
         pkg_name = self.gen_random_resource_name('pkg')
         self._compose_app(pkg_name)
@@ -3098,8 +3137,7 @@ class TestSuiteRepository(base.PackageTestCase):
                 5 MB is displayed
         """
         pkg_name = self.gen_random_resource_name('pkg')
-        self._make_big_zip_pkg(name=pkg_name,
-                               size=10 * 1024 * 1024)
+        self._make_zip_pkg(name=pkg_name, size=10 * 1024 * 1024)
 
         # import package and choose big zip file for it
         self.navigate_to('Manage')
@@ -3116,7 +3154,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self.driver.find_element_by_xpath(c.InputSubmit).click()
 
         # check that error message appeared
-        error_message = ("Error: 400 Bad Request Uploading file is too "
+        error_message = ("Error: 400 Bad Request: Uploading file is too "
                          "large. The limit is 5 Mb")
         self.check_alert_message(error_message)
 
@@ -3138,8 +3176,7 @@ class TestSuiteRepository(base.PackageTestCase):
                 5 MB is displayed
         """
         pkg_name = self.gen_random_resource_name('pkg')
-        self._make_big_zip_pkg(name=pkg_name,
-                               size=10 * 1024 * 1024)
+        self._make_zip_pkg(name=pkg_name, size=10 * 1024 * 1024)
 
         # import package and choose big zip file for it
         self.navigate_to('Manage')
