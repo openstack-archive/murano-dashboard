@@ -53,8 +53,7 @@ TYPES.update({
     'floatingip': fields.FloatingIpBooleanField
 })
 
-# From Horizon project/instances/workflow/create_instance
-KEYPAIR_IMPORT_URL = "horizon:project:access_and_security:keypairs:import"
+KEYPAIR_IMPORT_URL = "horizon:project:key_pairs:import"
 TYPES_KWARGS = {
     'keypair': {'add_item_link': KEYPAIR_IMPORT_URL}
 }
