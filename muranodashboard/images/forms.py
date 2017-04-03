@@ -54,13 +54,15 @@ class MarkImageForm(horizon_forms.SelfHandlingForm):
         'custom': "Custom type"
     }
 
-    image = forms.ChoiceField(label=_('Image'))
+    image = forms.ChoiceField(
+        label=_('Image'),
+        widget=horizon_forms.ThemableSelectWidget())
     title = forms.CharField(max_length="255", label=_("Title"))
     type = forms.ChoiceField(
         label=_("Type"),
         choices=_metadata.items(),
         initial='custom',
-        widget=forms.Select(attrs={
+        widget=horizon_forms.ThemableSelectWidget(attrs={
             'class': 'switchable',
             'data-slug': 'type'}))
     custom_type = forms.CharField(
