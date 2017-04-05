@@ -328,10 +328,12 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
             if isinstance(choices, dict):
                 choices = list(choices.items())
             kwargs['choices'] = choices
+        kwargs['widget'] = hz_forms.ThemableSelectWidget()
         super(ChoiceField, self).__init__(**kwargs)
 
 
-class DynamicChoiceField(hz_forms.DynamicChoiceField, CustomPropertiesField):
+class DynamicChoiceField(hz_forms.ThemableDynamicChoiceField,
+                         CustomPropertiesField):
     pass
 
 
@@ -421,8 +423,9 @@ def _disable_non_ready(data):
 
 
 class ImageChoiceField(ChoiceField):
-    widget = hz_forms.SelectWidget(transform=_get_title,
-                                   transform_html_attrs=_disable_non_ready)
+    widget = hz_forms.ThemableSelectWidget(
+        transform=_get_title,
+        transform_html_attrs=_disable_non_ready)
 
     def __init__(self, *args, **kwargs):
         self.image_type = kwargs.pop('image_type', None)

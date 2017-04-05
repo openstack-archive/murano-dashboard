@@ -89,9 +89,10 @@ DeploymentHistoryLogs = "div#environment_details__env_logs div.reports.logs "\
                         "div.report-info"
 PackageFilterDropdownBtn = 'div.table_search > div.themable-select.dropdown >'\
                            ' button'
-PackageFilterTypeBtn = "a[data-select-value='{0}']"
 PackageFilterInput = 'input[name="packages__filter_packages__q"]'
 PackageFilterBtn = "packages__action_filter_packages"
+ThemableSelect = 'label[for$="{0}"] ~ div div button.dropdown-toggle'
+ThemableOption = "a[data-select-value='{0}']"
 
 # Panels
 AppCatalog = "//*[@id='main_content']/nav//a[contains(text(), 'App Catalog')]"  # noqa

@@ -52,7 +52,7 @@ class ImportBundleForm(forms.Form):
     import_type = forms.ChoiceField(
         label=_("Package Bundle Source"),
         choices=IMPORT_BUNDLE_TYPE_CHOICES,
-        widget=forms.Select(attrs={
+        widget=horizon_forms.ThemableSelectWidget(attrs={
             'class': 'switchable',
             'data-slug': 'source'}))
     url = PackageURLField(
@@ -88,7 +88,7 @@ class ImportPackageForm(forms.Form):
     import_type = forms.ChoiceField(
         label=_("Package Source"),
         choices=IMPORT_TYPE_CHOICES,
-        widget=forms.Select(attrs={
+        widget=horizon_forms.ThemableSelectWidget(attrs={
             'class': 'switchable',
             'data-slug': 'source'}))
     url = PackageURLField(

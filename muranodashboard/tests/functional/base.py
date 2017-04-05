@@ -253,12 +253,16 @@ class UITestCase(testtools.TestCase):
             el.click()
 
     def select_from_list(self, list_name, value, sec=10):
-        locator = (by.By.XPATH,
-                   "//select[contains(@name, '{0}')]"
-                   "/option[@value='{1}']".format(list_name, value))
-        el = ui.WebDriverWait(self.driver, sec).until(
-            EC.presence_of_element_located(locator))
-        el.click()
+        self.check_element_on_page(by.By.CSS_SELECTOR,
+                                   consts.ThemableSelect.format(list_name))
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR, consts.ThemableSelect.format(
+                list_name)).click()
+        self.check_element_on_page(by.By.CSS_SELECTOR,
+                                   consts.ThemableOption.format(value))
+        self.wait_element_is_clickable(
+            by.By.CSS_SELECTOR,
+            consts.ThemableOption.format(value)).click()
 
     def check_element_on_page(self, method, value, sec=10):
         try:
