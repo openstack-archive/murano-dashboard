@@ -29,6 +29,7 @@ from horizon import exceptions
 from horizon import forms as hz_forms
 from horizon import messages
 from openstack_dashboard.api import glance
+from openstack_dashboard.api import network
 from openstack_dashboard.api import nova
 from oslo_log import log as logging
 from oslo_log import versionutils
@@ -390,7 +391,7 @@ class FlavorChoiceField(ChoiceField):
 
 
 class KeyPairChoiceField(DynamicChoiceField):
-    " This widget allows to select keypair for VMs "
+    """This widget allows to select keypair for VMs"""
     @with_request
     def update(self, request, **kwargs):
         self.choices = [('', _('No keypair'))]
@@ -398,6 +399,20 @@ class KeyPairChoiceField(DynamicChoiceField):
                 nova.novaclient(request).keypairs.list(),
                 key=lambda e: e.name):
             self.choices.append((keypair.name, keypair.name))
+
+
+class SecurityGroupChoiceField(DynamicChoiceField):
+    """This widget allows to select a security group for VMs"""
+    @with_request
+    def update(self, request, **kwargs):
+        self.choices = [('', _('Application default security group'))]
+        # TODO(pbourke): remove sorted when supported natively in Horizon
+        # (https://bugs.launchpad.net/horizon/+bug/1692972)
+        for secgroup in sorted(
+                network.security_group_list(request),
+                key=lambda e: e.name_or_id):
+            if not secgroup.name_or_id.startswith('murano--'):
+                self.choices.append((secgroup.name_or_id, secgroup.name_or_id))
 
 
 # NOTE(kzaitsev): for transform to work correctly on horizon SelectWidget
