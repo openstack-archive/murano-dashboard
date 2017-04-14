@@ -40,11 +40,10 @@ class TestImagesForms(testtools.TestCase):
         images = [self.mock_img]
         self.assertEqual(images, forms.filter_murano_images(images))
 
-        snapshot_meta = {'image_type': u'snapshot',
-                         'murano_image_info': '{"title": "title",\
-                                                "type": "type"}'}
-        mock_snapshot_img = \
-            mock.MagicMock(id=14, properties=snapshot_meta)
+        murano_meta = '{"title": "title", "type": "type"}'
+
+        mock_snapshot_img = mock.MagicMock(
+            id=14, murano_image_info=murano_meta, image_type='snapshot')
         images = [mock_snapshot_img]
         self.assertEqual([],
                          forms.filter_murano_images(images, self.mock_request))

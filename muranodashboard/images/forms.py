@@ -29,7 +29,7 @@ LOG = logging.getLogger(__name__)
 def filter_murano_images(images, request=None):
     # filter out the snapshot image type
     images = filter(
-        lambda x: x.properties.get("image_type", '') != 'snapshot', images)
+        lambda x: getattr(x, 'image_type', None) != 'snapshot', list(images))
     marked_images = []
     for image in images:
         # Additional properties, whose value is always a string data type, are
