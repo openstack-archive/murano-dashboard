@@ -2,17 +2,17 @@
 # suhartono <cloudsuhartono@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 3.0.0.0rc2.dev213\n"
+"Project-Id-Version: murano-dashboard 3.2.1.dev33\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2017-01-10 14:47+0000\n"
+"POT-Creation-Date: 2017-04-13 09:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-01-10 01:24+0000\n"
+"PO-Revision-Date: 2017-04-17 11:13+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
-"X-Generator: Zanata 3.7.3\n"
+"X-Generator: Zanata 3.9.6\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 msgid "-"
@@ -91,7 +91,7 @@ msgid "An external http/https URL to load the package from."
 msgstr "URLhttp/https eksternal untuk memuat paket dari."
 
 msgid "App Catalog"
-msgstr "App Catalog (katalog aplikasi)"
+msgstr "App Catalog"
 
 msgid "App Category:"
 msgstr "App Category:"
@@ -151,6 +151,12 @@ msgstr "Bundel berhasil diimpor."
 
 msgid "Bundle's full name."
 msgstr "Nama lengkap bundel ini."
+
+msgid "Can not get logo for {0}."
+msgstr "Can not get logo for {0}."
+
+msgid "Can not get supplier logo for {0}."
+msgstr "Can not get supplier logo for {0}."
 
 msgid "Cancel"
 msgstr "Cancel (membatalkan)"
@@ -550,7 +556,7 @@ msgid "Latest Deployment Log"
 msgstr "Latest Deployment Log (catatan pengerahan terbaru)"
 
 msgid "License"
-msgstr "License (zin)"
+msgstr "License"
 
 msgid "Logs"
 msgstr "Logs (catatan)"
@@ -1128,6 +1134,9 @@ msgstr "Anda tidak diperbolehkan untuk mengubah sifat dari paket"
 
 msgid "You are not allowed to delete this package"
 msgstr "Anda tidak diizinkan untuk menghapus paket ini"
+
+msgid "You are not allowed to make packages public."
+msgstr "You are not allowed to make packages public."
 
 msgid "You are not allowed to perform this operation"
 msgstr "Anda tidak diizinkan untuk melakukan operasi ini"
