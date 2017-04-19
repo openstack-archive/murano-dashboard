@@ -324,6 +324,19 @@ class IntegerField(forms.IntegerField, CustomPropertiesField):
     pass
 
 
+def _get_title(data):
+    if isinstance(data, Choice):
+        return data.title
+    return data
+
+
+def _disable_non_ready(data):
+    if getattr(data, 'enabled', True):
+        return {}
+    else:
+        return {'disabled': 'disabled'}
+
+
 class ChoiceField(forms.ChoiceField, CustomPropertiesField):
     def __init__(self, **kwargs):
         choices = kwargs.get('choices') or getattr(self, 'choices', None)
@@ -331,7 +344,7 @@ class ChoiceField(forms.ChoiceField, CustomPropertiesField):
             if isinstance(choices, dict):
                 choices = list(choices.items())
             kwargs['choices'] = choices
-        kwargs['widget'] = hz_forms.ThemableSelectWidget()
+        kwargs['widget'] = hz_forms.ThemableSelectWidget(transform=_get_title)
         super(ChoiceField, self).__init__(**kwargs)
 
 
@@ -410,19 +423,6 @@ class Choice(object):
     def __init__(self, title, enabled):
         self.title = title
         self.enabled = enabled
-
-
-def _get_title(data):
-    if isinstance(data, Choice):
-        return data.title
-    return data
-
-
-def _disable_non_ready(data):
-    if getattr(data, 'enabled', True):
-        return {}
-    else:
-        return {'disabled': 'disabled'}
 
 
 class ImageChoiceField(ChoiceField):
