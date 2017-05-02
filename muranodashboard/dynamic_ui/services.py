@@ -255,7 +255,7 @@ def get_app_forms(request, kwargs):
         return _get_form_name(i, form, _('Step {0}'))
 
     step_names = [get_form_name(*pair) for pair in enumerate(app.forms)]
-    return zip(step_names, app.forms)
+    return list(zip(step_names, app.forms))
 
 
 def service_type_from_id(service_id):
