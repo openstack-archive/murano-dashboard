@@ -342,8 +342,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
 
     def done(self, form_list, **kwargs):
         app_name = self.storage.extra_data['app'].name
-
-        service = form_list[0].service
+        service = tuple(form_list)[0].service
         attributes = service.extract_attributes()
         attributes = helpers.insert_hidden_ids(attributes)
 

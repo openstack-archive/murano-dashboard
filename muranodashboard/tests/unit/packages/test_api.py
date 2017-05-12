@@ -13,14 +13,28 @@
 # under the License.
 
 import mock
+from six import PY3
 
 from muranoclient.v1 import client
 from muranodashboard.api import packages
 from openstack_dashboard.test import helpers
 
 
-class TestPackagesAPI(helpers.APITestCase):
+def mock_next(obj, attr, value):
+    if PY3:
+        setattr(obj.__next__, attr, value)
+    else:
+        setattr(obj.next, attr, value)
 
+
+class MagicIterMock(mock.MagicMock):
+    if PY3:
+        __next__ = mock.Mock(return_value=None)
+    else:
+        next = mock.Mock(return_value=None)
+
+
+class TestPackagesAPI(helpers.APITestCase):
     def setUp(self):
         super(TestPackagesAPI, self).setUp()
 
@@ -84,8 +98,12 @@ class TestPackagesAPI(helpers.APITestCase):
             inherits='test_fqn')
 
     def test_app_by_fqn(self):
-        self.mock_client = mock.Mock(spec=client)
-        self.mock_client.packages.filter().next.return_value = self.packages[0]
+        self.mock_client = MagicIterMock(spec=client)
+        mock_next(
+            self.mock_client.packages.filter(),
+            'return_value',
+            self.packages[0]
+        )
         packages.api.muranoclient.return_value = self.mock_client
         self.mock_client.reset_mock()
 
@@ -98,8 +116,12 @@ class TestPackagesAPI(helpers.APITestCase):
             fqn='test_fqn', catalog=True, version='1.0')
 
     def test_app_by_fqn_except_stop_iteration(self):
-        self.mock_client = mock.Mock(spec=client)
-        self.mock_client.packages.filter().next.side_effect = StopIteration
+        self.mock_client = MagicIterMock(spec=client)
+        mock_next(
+            self.mock_client.packages.filter(),
+            'side_effect',
+            StopIteration
+        )
         packages.api.muranoclient.return_value = self.mock_client
         self.mock_client.reset_mock()
 
@@ -145,7 +167,7 @@ class TestPackagesAPI(helpers.APITestCase):
                 return_value=None)
     @mock.patch('muranodashboard.common.cache._save_to_file')
     def test_get_app_supplier_logo(self, *args):
-        mock_get_supplier_logo = packages.api.muranoclient().packages.\
+        mock_get_supplier_logo = packages.api.muranoclient().packages. \
             get_supplier_logo
         mock_get_supplier_logo.return_value = 'foo_app_supplier_logo'
 

@@ -69,7 +69,7 @@ def app_by_fqn(request, fqn, catalog=True, version=None):
         kwargs['version'] = version
     apps = api.muranoclient(request).packages.filter(**kwargs)
     try:
-        return apps.next()
+        return next(apps)
     except StopIteration:
         return None
 
