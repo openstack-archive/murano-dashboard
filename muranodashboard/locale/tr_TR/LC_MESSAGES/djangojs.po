@@ -1,0 +1,85 @@
+# işbaran akçayır <isbaran@gmail.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 4.0.0.0b2.dev13\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2017-05-18 16:05+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-05-22 02:38+0000\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Turkish (Turkey)\n"
+"Language: tr-TR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Zanata 3.9.6\n"
+"X-POOTLE-MTIME: 1495463858.000000\n"
+
+msgid " 1 capital letter"
+msgstr " 1 büyük harf"
+
+msgid " 1 digit"
+msgstr " 1 sayı"
+
+msgid " 1 non-capital letter"
+msgstr " 1 büyük olmayan harf"
+
+msgid " 1 special character"
+msgstr " 1 özel karakter"
+
+msgid " 7 characters"
+msgstr " 7 karakter"
+
+msgid "An error occurred. Please try again later."
+msgstr "Bir hata oluştu. Lütfen sonra tekrar deneyin."
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Create"
+msgstr "Oluştur"
+
+msgid "Loading"
+msgstr "Yükleniyor"
+
+msgid "New"
+msgstr "Yeni"
+
+msgid "Passwords do not match"
+msgstr "Parolalar eşleşmiyor"
+
+msgid "Show less"
+msgstr "Daha az göster"
+
+msgid "Show more"
+msgstr "Daha fazla göster"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "Formu göndermede bir hata oluştu. Lütfen tekrar deneyin."
+
+msgid "Unable to edit component metadata."
+msgstr "Bileşen metaverisi düzenlenemedi."
+
+msgid "Unable to edit environment metadata."
+msgstr "Çevre metaverisi alınamadı."
+
+msgid "Unable to retrieve component metadata."
+msgstr "Bileşen metaverisi alınamadı."
+
+msgid "Unable to retrieve environment metadata."
+msgstr "Çevre metaverisi alınamadı."
+
+msgid "Unable to retrieve the packages."
+msgstr "Paketler alınamadı."
+
+msgid "Unable to run action."
+msgstr "Eylem çalıştırılamadı."
+
+msgid "Waiting for a result"
+msgstr "Bir sonuç bekleniyor"
+
+msgid "Working"
+msgstr "Çalışıyor"
+
+msgid "Your password should have at least"
+msgstr "Parolanız en az şunlara sahip olmalı"

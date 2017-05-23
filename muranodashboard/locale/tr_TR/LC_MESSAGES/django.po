@@ -1,0 +1,1142 @@
+# işbaran akçayır <isbaran@gmail.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 4.0.0.0b2.dev13\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2017-05-18 16:05+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-05-22 09:00+0000\n"
+"Last-Translator: işbaran akçayır <isbaran@gmail.com>\n"
+"Language-Team: Turkish (Turkey)\n"
+"Language: tr-TR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Zanata 3.9.6\n"
+"X-POOTLE-MTIME: 1495486491.000000\n"
+
+msgid "-"
+msgstr "-"
+
+msgid "80 characters max."
+msgstr "Azami 80 karakter"
+
+msgid "A local zip file to upload"
+msgstr "Yüklenecek yerel zip dosyası"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Ortamı Terk Et"
+msgstr[1] "Ortamları Terk Et"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Ortam Terk Edildi"
+msgstr[1] "Ortamlar Terk Edildi"
+
+msgid "Active"
+msgstr "Etkin"
+
+msgid "Add"
+msgstr "Ekle"
+
+msgid "Add Application"
+msgstr "Uygulama Ekle"
+
+msgid "Add Application Category"
+msgstr "Uygulama Kategorisi Ekle"
+
+msgid "Add Category"
+msgstr "Kategori Ekle"
+
+msgid "Add Component"
+msgstr "Bileşen Ekle"
+
+msgid "Add Murano Metadata"
+msgstr "Murano Metaverisi Ekle"
+
+msgid "Add New"
+msgstr "Yeni Ekle"
+
+msgid "Add new category to the application catalog."
+msgstr "Uygulama kataloğuna yeni kategori ekle."
+
+msgid "Add to Env"
+msgstr "Ortama Ekle"
+
+msgid "Adding application to an environment failed."
+msgstr "Uygulamanın bir ortama eklenmesi başarısız."
+
+msgid "All"
+msgstr "Hepsi"
+
+msgid "Allows adding additional information about a package."
+msgstr "Bir paket hakkında ek bilgi eklemeye izin verir."
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr ""
+"Bir paketi katalogdan gizlemeye izin verir. (Paket bağımlılıkları için de "
+"geçerlidir)"
+
+msgid ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+msgstr ""
+"Ortam, benzer durumlarda çalışmak üzere bir araya gelen uygulamalar "
+"koleksiyonudur."
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "Paket yığınının yükleneceği harici http/https URL."
+
+msgid "An external http/https URL to load the package from."
+msgstr "Paketin yükleneceği harici bir http/https URL."
+
+msgid "App Catalog"
+msgstr "Uygulama Kataloğu"
+
+msgid "App Category:"
+msgstr "Uygulama Kategorisi:"
+
+msgid "App category"
+msgstr "Uygulama kategorisi"
+
+msgid "Application Categories"
+msgstr "Uygulama Kategorileri"
+
+msgid "Application Category"
+msgstr "Uygulama Kategorisi"
+
+msgid "Application Details"
+msgstr "Uygulama Ayrıntıları"
+
+msgid "Application Package"
+msgstr "Uygulama Paketi"
+
+msgid "Application&nbsp;Components"
+msgstr "Uygulama&nbsp;Bileşenler"
+
+msgid "Applications"
+msgstr "Uygulamalar"
+
+msgid "Author"
+msgstr "Yazar"
+
+msgid "Auto"
+msgstr "Oto"
+
+msgid "Back"
+msgstr "Geri"
+
+msgid "Browse"
+msgstr "Gözat"
+
+msgid "Browse Local"
+msgstr "Yerele Gözat"
+
+msgid "Bundle Name"
+msgstr "Paket Yığın İsmi"
+
+msgid "Bundle URL"
+msgstr "Paket Yığını URL'si"
+
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr "Paket yığını oluşurma başarısız. Sebep: Yığın ismi depodan bulunamadı."
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "Paket yığını oluşturma başarısız.Sebep: {0}"
+
+msgid "Bundle successfully imported."
+msgstr "Paket yığını başarıyla içe aktarıldı."
+
+msgid "Bundle's full name."
+msgstr "Paket yığınının tam ismi."
+
+msgid "Can not get logo for {0}."
+msgstr "{0} için amblem alınamadı."
+
+msgid "Can not get supplier logo for {0}."
+msgstr "{0} için sağlayıcı amblemi alınamıyor."
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Categories"
+msgstr "Kategoriler"
+
+msgid "Category Name"
+msgstr "Kategori İsmi"
+
+msgid "Category {0} created."
+msgstr "Kategori {0} oluşturuldu."
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "Murano-api sunucusunun Keystone yapılandırmasını kontrol edin."
+
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "Kataloğa yüklenecek Zip arşivi seçin."
+
+msgid "Choose a name for the environment"
+msgstr "Ortam için bir isim seçin"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "Sınıf tanımlamaları dizini"
+
+msgid "Click to create new environment"
+msgstr "Yeni ortam oluşturmak için tıklayın"
+
+msgid "Completed with warnings"
+msgstr "Uyarılarla tamamlandı"
+
+msgid "Component"
+msgstr "Bileşen"
+
+msgid "Component Details"
+msgstr "Bileşen Ayrıntıları"
+
+msgid "Component List"
+msgstr "Bileşen Listesi"
+
+msgid "Component Logs"
+msgstr "Bileşen Sistem Günlüğü"
+
+msgid "Components"
+msgstr "Bileşenler"
+
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+msgid "Configure Application"
+msgstr "Uygulamayı Yapılandır"
+
+msgid "Confirm password"
+msgstr "Parolayı onayla"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "{0} ortamı için en son durum alınamadı"
+
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Bu alan için gerekli bir uygulama bulunamadı.\n"
+"Denenen: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Glance v1 istemcisi başlatılamadı, yani şu imajlar açık hale getirilemiyor: "
+"{0}"
+
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr "Ortam güncellenemedi. Sebep: Bu isim alınmış."
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "{0} paketi parametreleri güncellenemedi. Hata: {1}"
+
+msgid "Create"
+msgstr "Oluştur"
+
+msgid "Create Env"
+msgstr "Ortam Oluştur"
+
+msgid "Create Environment"
+msgstr "Ortam Oluştur"
+
+msgid "Create New"
+msgstr "Yeni Oluştur"
+
+msgid "Create a title for an image."
+msgstr "İmaj için bir başlık oluştur."
+
+msgid "Created"
+msgstr "Oluşturuldu"
+
+msgid "Custom Type"
+msgstr "Özel Tür"
+
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr ""
+"Bir paketin diğer kiracılarca kullanılıp kullanılmayacağını tanımlar. (Paket "
+"bağımlılıkları için de geçerlidir)"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Kategoriyi Sil"
+msgstr[1] "Kategorileri Sil"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Bileşeni Sil"
+msgstr[1] "Bileşenleri Sil"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Ortamı Sil"
+msgstr[1] "Ortamları Sil"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Metaveriyi Sil"
+msgstr[1] "Metaveriyi Sil"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Paketi Sil"
+msgstr[1] "Paketleri Sil"
+
+msgid "Delete failure"
+msgstr "Silme başarısız"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Kategori Silindi"
+msgstr[1] "Kategoriler Silindi"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Metaveri Silindi"
+msgstr[1] "Metaveri Silindi"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Paket Silindi"
+msgstr[1] "Paketler Silindi"
+
+msgid "Deleting"
+msgstr "Siliniyor"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Ortamı Yerleştir"
+msgstr[1] "Ortamları Yerleştir"
+
+msgid "Deploy This Environment"
+msgstr "Bu Ortamı Uygula"
+
+msgid "Deploy failure"
+msgstr "Yerleşim başarısız"
+
+msgid "Deploy started"
+msgstr "Yerleştirme başlatıldı"
+
+msgid "Deployed Components"
+msgstr "Yerleştirilen Bileşenler"
+
+msgid "Deploying"
+msgstr "Yerleştiriliyor"
+
+msgid "Deployment Details"
+msgstr "Yerleştirme Ayrıntıları"
+
+msgid "Deployment History"
+msgstr "Yerleştirme Geçmişi"
+
+msgid "Deployment Logs"
+msgstr "Yerleştirme Günlükleri"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "%s kimlikli yerleştirme artık mevcut değil"
+
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "foo_deployment_id kimliğine sahip yerleşim artık mevcut değil"
+
+msgid "Deployments"
+msgstr "Yerleştirmeler"
+
+msgid "Description"
+msgstr "Açıklama"
+
+msgid "Details"
+msgstr "Ayrıntılar"
+
+msgid "Download Package"
+msgstr "Paket İndir"
+
+msgid "Drop Components here"
+msgstr "Bileşenleri buraya bırak"
+
+msgid "Enabled"
+msgstr "Etkin"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr ""
+"En az bir harf, bir sayı ve bir özel karakter içeren karmaşık bir parola "
+"girin"
+
+msgid "Enter a password"
+msgstr "Bir parola girin"
+
+msgid "Enter an image type supported by Murano."
+msgstr "Murano tarafından desteklenen bir imaj türü girin."
+
+msgid "Environment"
+msgstr "Ortam"
+
+msgid "Environment Default Network"
+msgstr "Ortam Öntanımlı Ağı"
+
+msgid "Environment Deployments"
+msgstr "Ortam Yerleştirmeleri"
+
+msgid "Environment Name"
+msgstr "Ortam İsmi"
+
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr "Ortam ismi en az bir boşluk dışı sembol içermeli."
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "%s kimlikli ortam artık mevcut değil"
+
+msgid "Environment with specified name already exists"
+msgstr "Belirtilen isimde ortam zaten mevcut"
+
+msgid "Environments"
+msgstr "Ortamlar"
+
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "Bar paketi yüklenirken test_error_message hatası oluştu"
+
+msgid "Error {0} occurred while installing images for {1}"
+msgstr "{1} için imajlar yüklenirken {0} hatası oluştu"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "{1} paketi yüklenirken {0} hatası oluştu"
+
+msgid "Error {0} occurred while parsing package {1}"
+msgstr "Paket {1} ayrıştırılırken {0} hatası oluştu"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "İmaj {1}, {2} açık hale getirilirken hata {0} oluştu"
+
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "Çalıştırma planları dizini"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed"
+msgstr "Başarısız"
+
+msgid "Failed to create environment"
+msgstr "Ortam oluşturma başarısız"
+
+msgid "Failed to modify the package. {0}"
+msgstr "Paket değiştirme başarısız. {0}"
+
+msgid "File"
+msgstr "Dosya"
+
+msgid "Filter"
+msgstr "Süzgeç"
+
+msgid "Find in a selected category"
+msgstr "Seçili kategoride bul"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"İlk sembol latin harf veya alt çizgi olmalı. Takip eden semboller latin "
+"harf, sayı, alt çizgi, @ işareti, sayı işareti veya dolar işareti olabilir"
+
+msgid "Foo"
+msgstr "Foo"
+
+msgid "Fully qualified package name."
+msgstr "Tam donanımlı paket ismi."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"<b> <a href=%(pkg_def_url)s>Paketlere</a> </b> gidin, 'Paket İçe Aktar'a "
+"tıklayın ve <i>Paket Kaynağı</i> olarak <i>Depo</i> seçin."
+
+#, python-format
+msgid ""
+"Go to <b><a href=%(pkg_def_url)s>Packages</a></b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"<b><a href=%(pkg_def_url)s>Paketlere</a></b> gidin, 'Paket İçe Aktar'a "
+"tıklayın ve <i>Paket Kaynağı</i> olarak <i>Depo</i> seçin."
+
+msgid "HTTP/HTTPS URL of the bundle file."
+msgstr "Paket yığın dosyasının HTTP/HTTPS URL'si."
+
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "Paket dosyasının HTTP/HTTPS URL'si."
+
+msgid "Heat Orchestration stack name"
+msgstr "Heat Orkestrasyon yığın ismi"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat Orkestrasyon yığın%(forloop.counter)s ismi"
+
+msgid "ID"
+msgstr "ID"
+
+msgid ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from murano repository."
+msgstr ""
+"Paketler başka paketlere ve/veya belirli glance imajlarına bağımlıysa, "
+"bunlar da murano deposundan yüklenecektir."
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"Paket başka paketlere ve/veya belirli glance imajlarına bağımlıysa, bunlar "
+"da beraberinde murano deposundan yüklenecek."
+
+msgid "Image"
+msgstr "İmaj"
+
+msgid "Image Title"
+msgstr "İmaj Başlığı"
+
+msgid "Image Type"
+msgstr "İmaj Türü"
+
+msgid "Image successfully marked"
+msgstr "İmaj başarıyla işaretlendi"
+
+msgid "Images"
+msgstr "İmajlar"
+
+msgid "Import Bundle"
+msgstr "Paket Yığınını İçe Aktar"
+
+msgid "Import Package"
+msgstr "Paketi İçe Aktar"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "{0} paketinin içe aktarımı başarısız. Sebep: {1}"
+
+msgid "Info"
+msgstr "Bilgi"
+
+msgid "Instance name"
+msgstr "Sunucu ismi"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "Sunucu%(forloop.counter)s ismi"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "İmaj için geçersiz metaveri: {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "Geçersiz murano imaj metaverisi"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "'murano_nets' seçeneği geçersiz değere sahip"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "{0} MB'dan büyük dosyaların yüklenmesine izin verilmiyor."
+
+msgid "KeyWord"
+msgstr "AnahtarKelime"
+
+msgid "Last operation"
+msgstr "Son işlem"
+
+msgid "Latest Deployment Log"
+msgstr "Son Yerleştirme Günlük Kaydı"
+
+msgid "License"
+msgstr "Lisans"
+
+msgid "Logs"
+msgstr "Günlük Kayıtları"
+
+msgid "Manage"
+msgstr "Yönet"
+
+msgid "Manage Components"
+msgstr "Bileşenleri Yönet"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "Manifesto dosyası"
+
+msgid "Mark Image"
+msgstr "İmajı İşaretle"
+
+msgid ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+msgstr ""
+"Seçili imaja eklenmek üzere Murano'ya özel metaverisi olan bir imaj işaretle."
+
+msgid "Marked Images"
+msgstr "İşaretli İmajlar"
+
+msgid "Modify Package"
+msgstr "Paketi Değiştir"
+
+msgid "Modifying package failed"
+msgstr "Paket değiştirme başarısız"
+
+msgid "NO ENVIRONMENTS"
+msgstr "ORTAM YOK"
+
+msgid "Name"
+msgstr "İsim"
+
+msgid "Name of the bundle."
+msgstr "Paket yığını ismi."
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "'%s' Ağı"
+
+msgid "Next"
+msgstr "Sonraki"
+
+msgid "Next Page"
+msgstr "Sonraki Sayfa"
+
+msgid "No availability zones available"
+msgstr "Kullanılabilir kullanılırlık bölgesi yok"
+
+msgid "No categories available"
+msgstr "Kullanılabilir kategori yok"
+
+msgid "No components"
+msgstr "Bileşen yok"
+
+msgid "No images available"
+msgstr "Kullanılabilir imaj yok"
+
+msgid "No keypair"
+msgstr "Anahtar çifti yok"
+
+msgid "No license"
+msgstr "Lisans yok"
+
+msgid "No recent activity to report at this time."
+msgstr "Şu an raporlanacak yakın tarihli etkinlik yok."
+
+msgid "No requirements"
+msgstr "Gereksinim yok"
+
+msgid "None"
+msgstr "Hiçbiri"
+
+msgid "Not in domain"
+msgstr "Alanda değil"
+
+msgid "Note"
+msgstr "Not"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"OpenStack Ağı (Neutron) mevcut ortamda kullanılabilir değil. Özel Ağ "
+"Ayarları uygulanamıyor"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "Murano-api sunucu işleme izin vermiyor."
+
+msgid "Optional"
+msgstr "İsteğe bağlı"
+
+msgid "Overview"
+msgstr "Genel Görünüm"
+
+msgid "Package Bundle Source"
+msgstr "Paket Yığını Kaynağı"
+
+msgid "Package Count"
+msgstr "Paket Sayısı"
+
+msgid "Package Details"
+msgstr "Paket Ayrıntıları"
+
+msgid "Package Name"
+msgstr "Paket İsmi"
+
+msgid "Package Source"
+msgstr "Paket Kaynağı"
+
+msgid "Package Tags"
+msgstr "Paket Etiketleri"
+
+msgid "Package URL"
+msgstr "Paket URL'si"
+
+msgid "Package Version"
+msgstr "Paket Sürümü"
+
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr "Paket oluşturma başarısız. Sebep: Depodan Paket ismi bulunamıyor."
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "Paket oluşturma başarısız. Sebep: {0}"
+
+msgid "Package foo uploaded"
+msgstr "Paket foo yüklendi"
+
+msgid "Package modified."
+msgstr "Paket değiştirildi."
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "Depodaki paket ismi, genellikle tam donanımlı bir isim"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "Aynı isimde Paket veya Sınıf zaten açık yapılmış"
+
+msgid "Package parameters successfully updated."
+msgstr "Paket parametreleri başarıyla güncellendi."
+
+msgid "Package version"
+msgstr "Paket sürümü"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "foo_package_id kimliğine sahip paket bulunamadı"
+
+msgid "Package with id {0} is not found"
+msgstr "{0} kimliğine sahip paket bulunamadı"
+
+msgid "Package with specified name already exists"
+msgstr "Belirtilen isimde paket zaten mevcut"
+
+msgid "Package {0} already registered."
+msgstr "Paket {0} zaten kaydedilmiş."
+
+msgid "Package {0} upload failed. {1}"
+msgstr "Paket {0} yüklemesi başarısız. {1}"
+
+msgid "Package {0} uploaded"
+msgstr "Paket {0} yüklendi"
+
+msgid "Packages"
+msgstr "Paketler"
+
+msgid "Packages should contain:"
+msgstr "Paketler şunları içermeli:"
+
+msgid "Please confirm your password"
+msgstr "Lütfen parolanızı onaylayın"
+
+msgid "Please supply a bundle name"
+msgstr "Lütfen bir paket yığını ismi sağlayın"
+
+msgid "Please supply a bundle url"
+msgstr "Lütfen bir paket yığını url'si sağlayın"
+
+msgid "Please supply a package file"
+msgstr "Lütfen bir paket dosyası sağlayın"
+
+msgid "Please supply a package name"
+msgstr "Lütfen bir paket ismi sağlayın"
+
+msgid "Please supply a package url"
+msgstr "Lütfen bir paket url'si sağlayın"
+
+msgid "Previous Page"
+msgstr "Önceki Sayfa"
+
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "Paketle ilişkili, virgülle ayrılmış kelimelerin listesini verin"
+
+msgid "Provide desired name for a new category"
+msgstr "Yeni bir kategori için istediğiniz ismi girin"
+
+msgid "Public"
+msgstr "Açık"
+
+msgid "Quick Deploy"
+msgstr "Hızlı Yerleşim"
+
+msgid "Ready"
+msgstr "Hazır"
+
+msgid "Ready to configure"
+msgstr "Yapılandırmaya hazır"
+
+msgid "Ready to deploy"
+msgstr "Yerleşime hazır"
+
+msgid "Recent Activity"
+msgstr "Son Etkinlik"
+
+msgid "Repository"
+msgstr "Depo"
+
+msgid "Requested object is not found on murano server."
+msgstr "İstenen nesne murano sunucuda bulunamadı."
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "İstenen işlem var olan bir nesne ile çakışıyor."
+
+msgid "Requirements"
+msgstr "Gereksinimler"
+
+msgid "Retype your password"
+msgstr "Parolanızı tekrar girin"
+
+msgid "Running"
+msgstr "Çalışıyor"
+
+msgid "Running with errors"
+msgstr "Hatalarla çalışıyor"
+
+msgid "Running with warnings"
+msgstr "Uyarılarla çalışıyor"
+
+msgid "Select Application"
+msgstr "Uygulama Seçin"
+
+msgid "Select Image"
+msgstr "İmaj seçin"
+
+msgid "Select an image registered in Glance Image Services."
+msgstr "Glance İmaj Servislerinde kayıtlı bir imaj seç."
+
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Murano tarafından desteklenen bir imaj türü seçin. Türü elle girmek için "
+"'Özel tür' seçin."
+
+msgid "Select one or more categories for a package."
+msgstr "Paket için bir ya da fazla kategori seçin."
+
+msgid "Set up for identifying a package."
+msgstr "Paketi tanımlamak için ayarla."
+
+msgid "Show Details"
+msgstr "Ayrıntıları Göster"
+
+msgid "Something went wrong during package downloading"
+msgstr "Paket indirirken bir şeyler yanlış gitti"
+
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "Üzgünüm, bu ortam artık mevcut değil"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr "Üzgünüm, şu an uygulama ekleyemezsiniz. Ortam açılıyor."
+
+msgid "Sorry, you can't delete service right now"
+msgstr "Üzgünüm, şu an servis silemezsiniz"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "Belirtilen başlık kullanımda. Lütfen başka bir tane seçin."
+
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr "Bir kategori belirtmek katalogdaki uygulamaları süzmeyi kolaylaştırır"
+
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Bileşen Silinmesi Başlatıldı"
+msgstr[1] "Bileşenlerin Silinmesi Başlatıldı"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Ortam Silme Başlatıldı"
+msgstr[1] "Ortamların Silinmesi Başlatıldı"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Ortamın yerleştirilmesi başlatıldı"
+msgstr[1] "Ortamların yerleştirilmesi başlatıldı"
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "Step {0}"
+msgstr "Adım {0}"
+
+msgid "Successful"
+msgstr "Başarılı"
+
+msgid "Tags"
+msgstr "Etiketler"
+
+msgid "Tenant Name"
+msgstr "Kiracı İsmi"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "'{0}' uygulaması başarıyla ortama eklendi."
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"Bu ortamdaki uygulamaların sanal makineleri tek tek yapılandırılmazlarsa "
+"öntanımlı olarak bu ağa bağlanacaklar. 'Yeni Oluştur' seçmek, bu proje için "
+"öntanımlı Murano Yönlendirici için kullanılabilir olanlar arasından IP "
+"aralığı atanmış Alt Ağa sahip yeni bir Ağ oluşturur"
+
+#, python-format
+msgid ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"Bu paket yığını <a href=\"%(murano_repo_url)s\" target=\"_blank\">"
+"%(murano_repo_url)s</a> deposundan yüklenecek."
+
+msgid "The environment name field cannot be empty."
+msgstr "Ortam ismi alanı boş olamaz."
+
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"Paket <a href=\"%(murano_repo_url)s\" target=\"_blank\">%(murano_repo_url)s</"
+"a> deposundan içe aktarılacak."
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr "Parola en az bir harf, bir sayı ve bir özel karakter içermeli"
+
+msgid "The request data is not acceptable by the server"
+msgstr "İstek verisi sunucu tarafından kabul edilebilir değil"
+
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr "Katalogda uygulama yok. Uygulamaları şuradan içe aktarabilirsiniz"
+
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"Katalogda uygulama yok. <a href=\"%(display_repo_url)s\" target=\"_blank\"> "
+"%(display_repo_url)s</a> adresinden uygulamaları içe aktarabilirsiniz."
+
+msgid "There are no applications matching your criteria."
+msgstr "Kıstaslarınızla eşleşen uygulama yok."
+
+msgid "There was an error communicating with server"
+msgstr "Sunucu ile iletişimde bir hata oluştu"
+
+msgid "There was an error initialising this field."
+msgstr "Bu alanın ilklendirilmesinde bir hata oluştu."
+
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr ""
+"Bu eylem geri alınamaz. Bu ortam tarafından oluşturulan tüm kaynakların elle "
+"serbest bırakılması gerekecek."
+
+msgid "Time Finished"
+msgstr "Bitme Zamanı"
+
+msgid "Time Started"
+msgstr "Başlama Zamanı"
+
+msgid "Time updated"
+msgstr "Zaman güncellendi"
+
+msgid "Title"
+msgstr "Başlık"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Etkinliği Değiştir"
+msgstr[1] "Etkinliği Değiştir"
+
+msgid "Toggle Enabled"
+msgstr "Etkinliği Değiştir"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Açıklığı Değiştir"
+msgstr[1] "Açıklığı Değiştir"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Etkinlik Değiştirildi"
+msgstr[1] "Etkinlik Değiştirildi"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Açıklık Değiştirildi"
+msgstr[1] "Açıklık Değiştirildi"
+
+msgid "Topology"
+msgstr "Topoloji"
+
+msgid ""
+"Trying to add {0} image to glance. Image will be ready for deployment after "
+"successful upload"
+msgstr ""
+"{0} imajı glance'e eklenmeye çalışılıyor. İmaj başarıyla yüklendikten sonra "
+"yerleştirme için hazır olacak"
+
+msgid ""
+"Trying to add {0}, {1} image to glance. Image will be ready for deployment "
+"after successful upload"
+msgstr ""
+"{0}, {1} imajı glance'e eklenmeye çalışılıyor. İmaj başarıyla yüklendikten "
+"sonra yerleştirme için hazır olacak"
+
+msgid "Type"
+msgstr "Tür"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "UI tanımlamaları dizini"
+
+msgid "UNKNOWN"
+msgstr "BİLİNMEYEN"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "Bir ortam {0} terk edilemedi, sebep: {1}"
+
+msgid "Unable to communicate to glare-api server."
+msgstr "Glare-api sunucusu ile iletişim kurulamadı."
+
+msgid "Unable to communicate to murano-api server."
+msgstr "Murano-api sunucusu ile iletişim kurulamadı."
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "{0} ortamı oluşturulamadı, sebep: {1}"
+
+msgid "Unable to delete category"
+msgstr "Kategori silinemiyor"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "{0} ortamı şu sebepten silinemedi: {1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "Murano-api sunucusundaki paket silinemiyor"
+
+msgid "Unable to deploy. Try again later"
+msgstr "Dağıtım yapılamıyor. Daha sonra tekrar deneyin"
+
+msgid "Unable to download package."
+msgstr "Paket indirilemiyor."
+
+msgid "Unable to get list of categories"
+msgstr "Kategori listesi alınamıyor"
+
+msgid "Unable to mark image"
+msgstr "İmaj işaretlenemiyor"
+
+msgid "Unable to modify package"
+msgstr "Paket değiştirilemiyor"
+
+msgid "Unable to remove metadata"
+msgstr "Metaveri kaldırılamıyor"
+
+msgid "Unable to remove package."
+msgstr "Paket kaldırılamıyor."
+
+msgid "Unable to retrieve  availability zones."
+msgstr "Kullanılırlık bölgeleri alınamıyor."
+
+msgid "Unable to retrieve details for service"
+msgstr "Servis ayrıntıları alınamıyor"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "Yerleştirmelerin listesi alınamıyor"
+
+msgid "Unable to retrieve list of images"
+msgstr "İmaj listesi alınamadı"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr ""
+"Servis listesi alınamıyor. Bu ortam yerleştiriliyor ya da başka bir "
+"kullanıcı tarafından zaten yerleştirilmiş."
+
+msgid "Unable to retrieve package details."
+msgstr "Paket ayrıntıları alınamıyor."
+
+msgid "Unable to retrieve project list."
+msgstr "Proje listesi alınamadı."
+
+msgid "Unable to retrieve public images."
+msgstr "Açık imajlar alınamıyor."
+
+msgid "Unavailable"
+msgstr "Kullanılmaz"
+
+msgid "Unknown"
+msgstr "Bilinmeyen"
+
+msgid "Update"
+msgstr "Güncelle"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Ortamı Güncelle"
+msgstr[1] "Ortamları Güncelle"
+
+msgid "Update Image"
+msgstr "İmajı Güncelle"
+
+msgid "Update Metadata"
+msgstr "Metaveriyi Güncelle"
+
+msgid "Update This Environment"
+msgstr "Bu Ortamı Güncelle"
+
+msgid "Updated"
+msgstr "Güncellendi"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Ortam Güncellendi"
+msgstr[1] "Ortamlar Güncellendi"
+
+msgid "Uploading package failed. {0}"
+msgstr "Paketin yüklenmesi başarısız. {0}"
+
+msgid "Used for identifying and filtering packages."
+msgstr "Paketlerin tanınması ve süzülmesi için kullanılır."
+
+msgid "Validation Error occurred"
+msgstr "Doğrulama Hatası oluştu"
+
+msgid "Version"
+msgstr "Sürüm"
+
+msgid "Version of the package (optional)."
+msgstr "Paket sürümü (isteğe bağlı)."
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "Paketin bu özelliklerini değiştirme yetkiniz yok"
+
+msgid "You are not allowed to delete this package"
+msgstr "Bu paketi silme yetkiniz yok"
+
+msgid "You are not allowed to make packages public."
+msgstr "Paketleri açık hale getirme yetkiniz yok."
+
+msgid "You are not allowed to perform this operation"
+msgstr "Bu işlemi yapmaya izniniz yok"
+
+msgid ""
+"You'll have to configure each package installed from this bundle separately."
+msgstr ""
+"Bu paket yığınıyla kurulmuş her paketi ayrı ayrı yapılandırmanız gerekecek."
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} eşleşmiyor"
