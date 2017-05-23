@@ -576,6 +576,31 @@ class TestKeyPairChoiceField(testtools.TestCase):
                          sorted(key_pair_choice_field.choices))
 
 
+class TestSecurityGroupChoiceField(testtools.TestCase):
+
+    def setUp(self):
+        super(TestSecurityGroupChoiceField, self).setUp()
+        self.request = {'request': mock.Mock()}
+        self.addCleanup(mock.patch.stopall)
+
+    @mock.patch.object(fields, 'network')
+    def test_update(self, mock_network):
+        mock_network.security_group_list.return_value = [
+            mock.Mock(name_or_id='foo'),
+            mock.Mock(name_or_id='bar')
+        ]
+        security_group_choice_field = fields.SecurityGroupChoiceField()
+        security_group_choice_field.choices = []
+        security_group_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('Application default security group')),
+            ('foo', 'foo'), ('bar', 'bar')
+        ]
+        self.assertEqual(sorted(expected_choices),
+                         sorted(security_group_choice_field.choices))
+
+
 class TestImageChoiceField(testtools.TestCase):
 
     def setUp(self):
