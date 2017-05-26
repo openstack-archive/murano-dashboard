@@ -1,13 +1,13 @@
 # işbaran akçayır <isbaran@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 4.0.0.0b2.dev13\n"
+"Project-Id-Version: murano-dashboard 4.0.0.0b2.dev16\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2017-05-18 16:05+0000\n"
+"POT-Creation-Date: 2017-05-23 19:41+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-05-22 09:00+0000\n"
+"PO-Revision-Date: 2017-05-25 01:33+0000\n"
 "Last-Translator: işbaran akçayır <isbaran@gmail.com>\n"
 "Language-Team: Turkish (Turkey)\n"
 "Language: tr-TR\n"
@@ -112,6 +112,9 @@ msgstr "Uygulama Ayrıntıları"
 
 msgid "Application Package"
 msgstr "Uygulama Paketi"
+
+msgid "Application default security group"
+msgstr "Uygulama öntanımlı güvenlik grubu"
 
 msgid "Application&nbsp;Components"
 msgstr "Uygulama&nbsp;Bileşenler"
