@@ -389,6 +389,20 @@ def deployments_list(request, environment_id):
     return deployments
 
 
+def deployment_history(request):
+    LOG.debug('Deployment::History')
+    deployment_history = api.muranoclient(request).deployments.list(
+        None, all_environments=True)
+
+    for deployment in deployment_history:
+        reports = deployment_reports(request, deployment.environment_id,
+                                     deployment.id)
+        deployment.reports = reports
+
+    LOG.debug('Deployment::History {0}'.format(deployment_history))
+    return deployment_history
+
+
 def deployment_reports(request, environment_id, deployment_id):
     LOG.debug('Deployment::Reports::List')
     reports = api.muranoclient(request).deployments.reports(environment_id,

@@ -17,6 +17,8 @@ from django import http as django_http
 import mock
 import testtools
 
+from horizon import tables as hz_tables
+
 from muranoclient.common import exceptions as exc
 from muranodashboard.environments import consts
 from muranodashboard.environments import tables
@@ -830,3 +832,49 @@ class TestEnvConfigTable(testtools.TestCase):
         env_config_table = tables.EnvConfigTable(None)
         self.assertEqual('foo', env_config_table.get_object_id({
             '?': {'id': 'foo'}}))
+
+
+class TestDeploymentHistoryTable(testtools.TestCase):
+
+    def setUp(self):
+        super(TestDeploymentHistoryTable, self).setUp()
+
+        deployment_history_table = tables.DeploymentHistoryTable(
+            mock.Mock())
+        columns = deployment_history_table.columns
+
+        self.assertIsInstance(columns['environment_name'],
+                              hz_tables.WrappingColumn)
+        self.assertIsInstance(columns['logs'], hz_tables.Column)
+        self.assertIsInstance(columns['services'], hz_tables.Column)
+        self.assertIsInstance(columns['status'], hz_tables.Column)
+
+        self.assertEqual('Environment', str(columns['environment_name']))
+        self.assertEqual('Logs (Created, Message)', str(columns['logs']))
+        self.assertEqual('Services (Name, Type)', str(columns['services']))
+        self.assertEqual('Status', str(columns['status']))
+        self.assertTrue(columns['status'].status)
+        self.assertEqual(consts.DEPLOYMENT_STATUS_DISPLAY_CHOICES,
+                         columns['status'].display_choices)
+
+    @mock.patch.object(tables, 'template')
+    def test_get_deployment_history_services(self, mock_template):
+        mock_template.loader.render_to_string.return_value = \
+            mock.sentinel.rendered_template
+
+        test_description = {'services': [
+            {'name': 'foo_service', '?': {'type': 'foo/bar'}},
+            {'name': 'bar_service', '?': {'type': 'baz/qux'}}
+        ]}
+        mock_deployment = mock.Mock(description=test_description)
+
+        result = tables.get_deployment_history_services(mock_deployment)
+        self.assertEqual(mock.sentinel.rendered_template, result)
+
+        expected_services = {
+            'services': {
+                'bar_service': 'baz', 'foo_service': 'foo'
+            }
+        }
+        mock_template.loader.render_to_string.assert_called_once_with(
+            'deployments/_cell_services.html', expected_services)

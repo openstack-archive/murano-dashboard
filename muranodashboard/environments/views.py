@@ -190,6 +190,26 @@ class CreateEnvironmentView(views.ModalFormView):
         return reverse_lazy('horizon:app-catalog:environments:index')
 
 
+class DeploymentHistoryView(tables.DataTableView):
+    table_class = env_tables.DeploymentHistoryTable
+    template_name = 'environments/index.html'
+    page_title = _("Deployment History")
+
+    def get_data(self):
+        deployment_history = []
+        try:
+            deployment_history = api.deployment_history(self.request)
+        except exc.HTTPUnauthorized:
+            exceptions.handle(self.request)
+        except exc.HTTPForbidden:
+            redirect = reverse('horizon:app-catalog:environments:services',
+                               args=[self.environment_id])
+            exceptions.handle(self.request,
+                              _('Unable to retrieve deployment history.'),
+                              redirect=redirect)
+        return deployment_history
+
+
 class DeploymentDetailsView(tabs.TabbedTableView):
     tab_group_class = env_tabs.DeploymentDetailsTabs
     table_class = env_tables.EnvConfigTable

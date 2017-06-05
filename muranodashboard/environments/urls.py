@@ -37,6 +37,8 @@ urlpatterns = [
              views.ActionResultView.as_view(), name='action_result'),
     urls.url(r'^(?P<instance_id>[^/]+)/$',
              inst_view.DetailView.as_view(), name='detail'),
+    urls.url(r'^deployment_history$', views.DeploymentHistoryView.as_view(),
+             name='deployment_history'),
     urls.url(ENVIRONMENT_ID + r'/deployments/(?P<deployment_id>[^/]+)$',
              views.DeploymentDetailsView.as_view(), name='deployment_details'),
 ]

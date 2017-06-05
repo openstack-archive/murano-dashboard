@@ -566,3 +566,56 @@ class TestActionResultView(testtools.TestCase):
 
         mock_api_utils.muranoclient().actions.get_result.\
             assert_called_once_with('foo_env_id', 'foo_task_id')
+
+
+class TestDeploymentHistoryView(testtools.TestCase):
+
+    def setUp(self):
+        super(TestDeploymentHistoryView, self).setUp()
+        self.deployment_history_view = views.DeploymentHistoryView()
+
+        self.mock_request = mock.Mock()
+        self.deployment_history_view.request = self.mock_request
+        self.deployment_history_view.environment_id = mock.sentinel.env_id
+
+        self.assertEqual(env_tables.DeploymentHistoryTable,
+                         self.deployment_history_view.table_class)
+        self.assertEqual('environments/index.html',
+                         self.deployment_history_view.template_name)
+        self.assertEqual(_('Deployment History'),
+                         self.deployment_history_view.page_title)
+
+    @mock.patch.object(views, 'api', autospec=True)
+    def test_get_data(self, mock_env_api):
+        mock_env_api.deployment_history.return_value = \
+            [mock.sentinel.deployment_history]
+
+        result = self.deployment_history_view.get_data()
+        self.assertEqual([mock.sentinel.deployment_history], result)
+
+    @mock.patch.object(views, 'exceptions', autospec=True)
+    @mock.patch.object(views, 'api', autospec=True)
+    def test_get_data_except_http_unauthorized(self, mock_env_api,
+                                               mock_exceptions):
+        mock_env_api.deployment_history.side_effect = \
+            exc.HTTPUnauthorized
+
+        self.assertEqual([], self.deployment_history_view.get_data())
+        mock_exceptions.handle.assert_called_once_with(self.mock_request)
+
+    @mock.patch.object(views, 'exceptions', autospec=True)
+    @mock.patch.object(views, 'reverse', autospec=True)
+    @mock.patch.object(views, 'api', autospec=True)
+    def test_get_data_except_http_forbidden(self, mock_env_api, mock_reverse,
+                                            mock_exceptions):
+        mock_env_api.deployment_history.side_effect = \
+            exc.HTTPForbidden
+        mock_reverse.return_value = mock.sentinel.redirect_url
+
+        self.assertEqual([], self.deployment_history_view.get_data())
+        mock_reverse.assert_called_once_with(
+            'horizon:app-catalog:environments:services',
+            args=[mock.sentinel.env_id])
+        mock_exceptions.handle.assert_called_once_with(
+            self.mock_request, _('Unable to retrieve deployment history.'),
+            redirect=mock.sentinel.redirect_url)
