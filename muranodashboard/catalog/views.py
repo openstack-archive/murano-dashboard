@@ -121,7 +121,7 @@ def get_categories_list(request):
 @auth_dec.login_required
 def switch(request, environment_id,
            redirect_field_name=auth.REDIRECT_FIELD_NAME):
-    redirect_to = request.REQUEST.get(redirect_field_name, '')
+    redirect_to = request.GET.get(redirect_field_name, '')
     if not http_utils.is_safe_url(url=redirect_to, host=request.get_host()):
         redirect_to = settings.LOGIN_REDIRECT_URL
 
@@ -442,7 +442,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             app = mc.packages.get(app_id)
             self.storage.extra_data['app'] = app
 
-        wizard_id = self.request.REQUEST.get('wizard_id')
+        wizard_id = self.request.GET.get('wizard_id')
         if wizard_id is None:
             wizard_id = uuid.uuid4()
 

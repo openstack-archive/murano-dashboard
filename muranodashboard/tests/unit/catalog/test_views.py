@@ -113,7 +113,7 @@ class TestCatalogViews(testtools.TestCase):
     def test_switch(self, mock_http_utls, mock_get_available_environments,
                     mock_shortcuts):
         mock_http_utls.is_safe_url.return_value = True
-        self.mock_request.REQUEST = {'redirect': 'redirect_to_foo'}
+        self.mock_request.GET = {'redirect': 'redirect_to_foo'}
         mock_env = mock.Mock(id='foo_env_id')
         mock_get_available_environments.return_value = [mock_env]
         mock_shortcuts.redirect.return_value = 'foo_redirect'
@@ -377,7 +377,7 @@ class TestWizard(testtools.TestCase):
         app = mock.Mock(fully_qualified_name='foo_app_fqn')
         app.configure_mock(name='foo_app')
 
-        self.wizard.request.REQUEST = {}
+        self.wizard.request.GET = {}
         self.wizard.storage.extra_data.get.return_value = app
         self.wizard.steps = mock.Mock(index='foo_step_index')
         self.wizard.prefix = 'foo_prefix'
@@ -425,7 +425,7 @@ class TestWizard(testtools.TestCase):
         mock_utils.ensure_python_obj.return_value = None
         mock_env_api.environments_list.return_value = []
 
-        self.wizard.request.REQUEST = {'wizard_id': 'foo_wizard_id'}
+        self.wizard.request.GET = {'wizard_id': 'foo_wizard_id'}
         self.wizard.storage.extra_data = {}
         self.wizard.steps = mock.Mock(index='foo_step_index')
         self.wizard.prefix = 'foo_prefix'
