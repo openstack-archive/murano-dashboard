@@ -442,7 +442,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             app = mc.packages.get(app_id)
             self.storage.extra_data['app'] = app
 
-        wizard_id = self.request.GET.get('wizard_id')
+        wizard_id = self.request.POST.get('wizard_id')
         if wizard_id is None:
             wizard_id = uuid.uuid4()
 

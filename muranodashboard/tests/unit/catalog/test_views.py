@@ -378,6 +378,7 @@ class TestWizard(testtools.TestCase):
         app.configure_mock(name='foo_app')
 
         self.wizard.request.GET = {}
+        self.wizard.request.POST = {}
         self.wizard.storage.extra_data.get.return_value = app
         self.wizard.steps = mock.Mock(index='foo_step_index')
         self.wizard.prefix = 'foo_prefix'
@@ -425,7 +426,8 @@ class TestWizard(testtools.TestCase):
         mock_utils.ensure_python_obj.return_value = None
         mock_env_api.environments_list.return_value = []
 
-        self.wizard.request.GET = {'wizard_id': 'foo_wizard_id'}
+        self.wizard.request.GET = {}
+        self.wizard.request.POST = {'wizard_id': 'foo_wizard_id'}
         self.wizard.storage.extra_data = {}
         self.wizard.steps = mock.Mock(index='foo_step_index')
         self.wizard.prefix = 'foo_prefix'
