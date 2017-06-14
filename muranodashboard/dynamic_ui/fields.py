@@ -28,6 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms as hz_forms
 from horizon import messages
+from openstack_dashboard.api import cinder
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import network
 from openstack_dashboard.api import nova
@@ -549,6 +550,44 @@ class AZoneChoiceField(ChoiceField):
 
         az_choices.sort(key=lambda e: e[1])
         self.choices = az_choices
+
+
+class VolumeChoiceField(ChoiceField):
+    def __init__(self,
+                 include_snapshots=True,
+                 *args,
+                 **kwargs):
+        self.include_snapshots = include_snapshots
+        super(VolumeChoiceField, self).__init__(*args, **kwargs)
+
+    @with_request
+    def update(self, request, **kwargs):
+        """This widget allows selection of Volumes and Volume Snapshots"""
+        available = {'status': cinder.VOLUME_STATE_AVAILABLE}
+        try:
+            choices = [(volume.id, volume.name)
+                       for volume in cinder.volume_list(request,
+                       search_opts=available)]
+        except Exception:
+            choices = []
+            exceptions.handle(request,
+                              _("Unable to retrieve volume list."))
+
+        if self.include_snapshots:
+            try:
+                choices.extend((snap.id, snap.name)
+                               for snap in cinder.volume_snapshot_list(request,
+                               search_opts=available))
+            except Exception:
+                exceptions.handle(request,
+                                  _("Unable to retrieve snapshot list."))
+
+        if choices:
+            choices.sort(key=lambda e: e[1])
+            choices.insert(0, ("", _("Select volume")))
+        else:
+            choices.insert(0, ("", _("No volumes available")))
+        self.choices = choices
 
 
 class BooleanField(forms.BooleanField, CustomPropertiesField):

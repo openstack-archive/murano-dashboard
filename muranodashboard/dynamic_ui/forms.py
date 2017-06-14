@@ -51,7 +51,8 @@ TYPES.update({
     'text': (fields.CharField, forms.Textarea),
     'choice': fields.ChoiceField,
     'floatingip': fields.FloatingIpBooleanField,
-    'securitygroup': fields.SecurityGroupChoiceField
+    'securitygroup': fields.SecurityGroupChoiceField,
+    'volume': fields.VolumeChoiceField
 })
 
 KEYPAIR_IMPORT_URL = "horizon:project:key_pairs:import"

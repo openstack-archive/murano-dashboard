@@ -676,6 +676,126 @@ class TestNetworkChoiceField(testtools.TestCase):
                          self.network_choice_field.to_python(None))
 
 
+class TestVolumeChoiceField(testtools.TestCase):
+
+    def setUp(self):
+        super(TestVolumeChoiceField, self).setUp()
+        self.request = {'request': mock.Mock()}
+        self.addCleanup(mock.patch.stopall)
+
+    @mock.patch.object(fields, 'cinder')
+    def test_update(self, mock_cinder):
+        foo_vol = mock.Mock()
+        bar_snap = mock.Mock()
+        baz_snap = mock.Mock()
+        foo_vol.configure_mock(name='foo_vol', id='foo_id', status='available')
+        bar_snap.configure_mock(name='bar_snap', id='bar_id',
+                                status='available')
+        baz_snap.configure_mock(name='baz_snap', id='baz_id', status='error')
+        mock_cinder.volume_list.return_value = [foo_vol]
+        mock_cinder.volume_snapshot_list.return_value = [bar_snap]
+        volume_choice_field = fields.VolumeChoiceField(include_snapshots=True)
+        volume_choice_field.choices = []
+        volume_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('Select volume')), ('foo_id', 'foo_vol'),
+            ('bar_id', 'bar_snap')
+        ]
+
+        self.assertEqual(sorted(expected_choices),
+                         sorted(volume_choice_field.choices))
+
+    @mock.patch.object(fields, 'cinder')
+    def test_update_withoutsnapshot(self, mock_cinder):
+        foo_vol = mock.Mock()
+        bar_vol = mock.Mock()
+        baz_snap = mock.Mock()
+        foo_vol.configure_mock(name='foo_vol', id='foo_id', status='available')
+        bar_vol.configure_mock(name='bar_vol', id='bar_id', status='error')
+        baz_snap.configure_mock(name='baz_snap', id='baz_id',
+                                status='available')
+        mock_cinder.volume_list.return_value = [foo_vol]
+        mock_cinder.volume_snapshot_list.return_value = [baz_snap]
+        volume_choice_field = fields.VolumeChoiceField(include_snapshots=False)
+        volume_choice_field.choices = []
+        volume_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('Select volume')), ('foo_id', 'foo_vol')
+        ]
+
+        self.assertEqual(sorted(expected_choices),
+                         sorted(volume_choice_field.choices))
+
+    @mock.patch.object(fields, 'exceptions')
+    @mock.patch.object(fields, 'cinder')
+    def test_update_except_snapshot_list_exception(self, mock_cinder,
+                                                   mock_exceptions):
+        foo_vol = mock.Mock()
+        bar_vol = mock.Mock()
+        foo_vol.configure_mock(name='foo_vol', id='foo_id', status='available')
+        bar_vol.configure_mock(name='bar_vol', id='bar_id', status='error')
+        mock_cinder.volume_list.return_value = [foo_vol]
+        mock_cinder.volume_snapshot_list.side_effect = Exception
+        volume_choice_field = fields.VolumeChoiceField(include_snapshots=True)
+        volume_choice_field.choices = []
+        volume_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('Select volume')), ('foo_id', 'foo_vol')
+        ]
+
+        self.assertEqual(sorted(expected_choices),
+                         sorted(volume_choice_field.choices))
+        mock_exceptions.handle.assert_called_once_with(
+            self.request['request'], _('Unable to retrieve snapshot list.'))
+
+    @mock.patch.object(fields, 'exceptions')
+    @mock.patch.object(fields, 'cinder')
+    def test_update_except_volume_list_exception(self, mock_cinder,
+                                                 mock_exceptions):
+        bar_snap = mock.Mock()
+        baz_snap = mock.Mock()
+        bar_snap.configure_mock(name='bar_snap', id='bar_id',
+                                status='available')
+        baz_snap.configure_mock(name='baz_snap', id='baz_id', status='error')
+        mock_cinder.volume_list.side_effect = Exception
+        mock_cinder.volume_snapshot_list.return_value = [bar_snap]
+        volume_choice_field = fields.VolumeChoiceField(include_snapshots=True)
+        volume_choice_field.choices = []
+        volume_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('Select volume')), ('bar_id', 'bar_snap')
+        ]
+
+        self.assertEqual(expected_choices, volume_choice_field.choices)
+        mock_exceptions.handle.assert_called_once_with(
+            self.request['request'], _('Unable to retrieve volume list.'))
+
+    @mock.patch.object(fields, 'exceptions')
+    @mock.patch.object(fields, 'cinder')
+    def test_update_except_exception(self, mock_cinder, mock_exceptions):
+        mock_cinder.volume_list.side_effect = Exception
+        mock_cinder.volume_snapshot_list.side_effect = Exception
+        volume_choice_field = fields.VolumeChoiceField(include_snapshots=True)
+        volume_choice_field.choices = []
+        volume_choice_field.update(self.request)
+
+        expected_choices = [
+            ('', _('No volumes available'))
+        ]
+        expected_calls = [
+            mock.call(self.request['request'],
+                      _('Unable to retrieve volume list.')),
+            mock.call(self.request['request'],
+                      _('Unable to retrieve snapshot list.'))
+        ]
+        self.assertEqual(expected_choices, volume_choice_field.choices)
+        mock_exceptions.handle.assert_has_calls(expected_calls)
+
+
 class TestAZoneChoiceField(testtools.TestCase):
 
     @mock.patch.object(fields, 'nova')
