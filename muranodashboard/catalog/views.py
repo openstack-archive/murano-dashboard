@@ -19,6 +19,8 @@ import json
 import re
 import uuid
 
+from castellan.common import exception as castellan_exception
+
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
@@ -343,7 +345,14 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
     def done(self, form_list, **kwargs):
         app_name = self.storage.extra_data['app'].name
         service = tuple(form_list)[0].service
-        attributes = service.extract_attributes()
+        try:
+            attributes = service.extract_attributes()
+        except castellan_exception.KeyManagerError as e:
+            msg = _("This Application requires encryption, please contact "
+                    "your administrator to configure this.")
+            messages.error(self.request, msg)
+            LOG.exception(e)
+            raise
         attributes = helpers.insert_hidden_ids(attributes)
 
         storage = attributes.setdefault('?', {}).setdefault(

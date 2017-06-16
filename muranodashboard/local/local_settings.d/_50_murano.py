@@ -47,3 +47,15 @@ HORIZON_CONFIG['legacy_static_settings'] = LEGACY_STATIC_SETTINGS
 
 # from openstack_dashboard.settings import POLICY_FILES
 POLICY_FILES.update({'murano': 'murano_policy.json',})
+
+# Applications using the encryptData/decryptData yaql functions will require
+# the below to be configured
+#KEY_MANAGER = {
+#        'auth_url': 'http://192.168.5.254:5000/v3',
+#        'username': 'admin',
+#        'user_domain_name': 'default',
+#        'password': 'password',
+#        'project_name': 'admin',
+#        'project_domain_name': 'default'
+#}
+

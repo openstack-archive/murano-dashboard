@@ -16,6 +16,9 @@ import mock
 import re
 import testtools
 
+from castellan.common import exception as castellan_exception
+from castellan.common.objects import opaque_data
+
 from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import yaql_functions
 
@@ -89,3 +92,35 @@ class TestYAQLFunctions(testtools.TestCase):
         context = {'?service': mock_service}
         result = yaql_functions._ref(context, 'foo_template')
         self.assertIsNone(result)
+
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions.settings')
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions._oslo_context')
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions.key_manager')
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions.identity')
+    def test_encrypt_data(self, mock_identity, mock_keymanager,
+                          mock_oslo_context, _):
+        mock_service = mock.Mock(parameters={'#foo_template': 'foo_data'})
+        context = {'?service': mock_service}
+        secret_value = 'secret_password'
+        mock_auth_context = mock.MagicMock()
+        mock_oslo_context.RequestContext.return_value = mock_auth_context
+        yaql_functions._encrypt_data(context, secret_value)
+        mock_keymanager.API().store.assert_called_once_with(
+            mock_auth_context, opaque_data.OpaqueData(secret_value))
+
+    def test_encrypt_data_not_configured(self):
+        mock_service = mock.Mock(parameters={'#foo_template': 'foo_data'})
+        context = {'?service': mock_service}
+        self.assertRaises(castellan_exception.KeyManagerError,
+                          yaql_functions._encrypt_data, context,
+                          'secret_password')
+
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions.identity')
+    @mock.patch('muranodashboard.dynamic_ui.yaql_functions.settings')
+    def test_encrypt_data_badly_configured(self, mock_settings, _):
+        mock_service = mock.Mock(parameters={'#foo_template': 'foo_data'})
+        context = {'?service': mock_service}
+        mock_settings.KEY_MANAGER = {}
+        self.assertRaises(castellan_exception.KeyManagerError,
+                          yaql_functions._encrypt_data, context,
+                          'secret_password')

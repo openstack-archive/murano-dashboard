@@ -22,6 +22,22 @@ from yaql.language import yaqltypes
 from muranodashboard.catalog import forms as catalog_forms
 from muranodashboard.dynamic_ui import helpers
 
+from castellan.common import exception as castellan_exception
+from castellan.common.objects import opaque_data
+from castellan import key_manager
+from castellan import options
+
+from keystoneauth1 import identity
+from keystoneauth1 import session
+
+from django.conf import settings
+
+from oslo_config import cfg
+from oslo_context import context as _oslo_context
+from oslo_log import log as logging
+
+LOG = logging.getLogger(__name__)
+
 
 @specs.parameter('times', int)
 def _repeat(context, template, times):
@@ -102,8 +118,47 @@ def _ref(context, template_name, parameter_name=None, id_only=None):
         return data
 
 
+@specs.parameter('data', yaqltypes.String())
+def _encrypt_data(context, data):
+    try:
+        # TODO(pbourke): move auth construction into common area if it ends up
+        # been required in other areas
+        auth = identity.V3Password(
+            auth_url=settings.KEY_MANAGER['auth_url'],
+            username=settings.KEY_MANAGER['username'],
+            user_domain_name=settings.KEY_MANAGER['user_domain_name'],
+            password=settings.KEY_MANAGER['password'],
+            project_name=settings.KEY_MANAGER['project_name'],
+            project_domain_name=settings.KEY_MANAGER['project_domain_name']
+        )
+    except (KeyError, AttributeError) as e:
+        LOG.exception(e)
+        msg = ('Could not find valid key manager credentials in the '
+               'murano-dashboard config. encryptData yaql function not '
+               'available')
+        raise castellan_exception.KeyManagerError(message_arg=msg)
+    sess = session.Session(auth=auth)
+    auth_context = _oslo_context.RequestContext(
+        auth_token=auth.get_token(sess), tenant=auth.get_project_id(sess))
+    options.set_defaults(cfg.CONF,
+                         auth_endpoint=settings.KEY_MANAGER['auth_url'])
+
+    manager = key_manager.API()
+    try:
+        # TODO(pbourke): while we feel opaque data should cover the most common
+        # use case, we may want to add support for other secret types in the
+        # future (see https://goo.gl/tZhfqe)
+        stored_key_id = manager.store(auth_context,
+                                      opaque_data.OpaqueData(data))
+    except castellan_exception.KeyManagerError as e:
+        LOG.exception(e)
+        raise
+    return stored_key_id
+
+
 def register(context):
     context.register_function(_repeat, 'repeat')
     context.register_function(_generate_hostname, 'generateHostname')
     context.register_function(_name, 'name')
     context.register_function(_ref, 'ref')
+    context.register_function(_encrypt_data, 'encryptData')
