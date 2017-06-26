@@ -163,7 +163,14 @@ class TestModifyPackageView(helpers.APITestCase):
             self.assertEqual(val, result[key])
 
     def test_get_context_data(self):
-        mock_form = mock.Mock(initial={'package': mock.Mock(type='test_type')})
+        mock_form = mock.Mock(return_value=type(
+            'FakeForm', (object, ), {'initial': {
+                'package': type(
+                    'FakeFormInner', (object, ), {'type': 'test_type'}
+                )
+            }}
+        ))
+        self.modify_pkg_view.get_form = mock_form
         expected_context = {
             'app_id': 'foo',
             'type': 'test_type',
@@ -178,6 +185,7 @@ class TestModifyPackageView(helpers.APITestCase):
         for key, val in expected_context.items():
             self.assertIn(key, context)
             self.assertEqual(val, context[key])
+        self.modify_pkg_view.get_form.assert_called_once_with()
 
 
 class TestImportPackageWizard(helpers.APITestCase):
