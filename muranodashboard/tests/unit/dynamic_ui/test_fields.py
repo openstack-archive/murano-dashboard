@@ -583,9 +583,9 @@ class TestSecurityGroupChoiceField(testtools.TestCase):
         self.request = {'request': mock.Mock()}
         self.addCleanup(mock.patch.stopall)
 
-    @mock.patch.object(fields, 'network')
-    def test_update(self, mock_network):
-        mock_network.security_group_list.return_value = [
+    @mock.patch.object(fields, 'neutron')
+    def test_update(self, mock_neutron):
+        mock_neutron.security_group_list.return_value = [
             mock.Mock(name_or_id='foo'),
             mock.Mock(name_or_id='bar')
         ]
