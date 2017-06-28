@@ -40,10 +40,10 @@ class TestImportPackage(testtools.TestCase):
 
     @mock.patch.object(tables, 'api')
     def test_allowed(self, mock_api):
-        mock_api.muranoclient().packages.categories.return_value = ['foo_cat']
+        mock_api.muranoclient().categories.list.return_value = ['foo_cat']
         self.assertTrue(self.import_package.allowed(None, None))
 
-        mock_api.muranoclient().packages.categories.return_value = None
+        mock_api.muranoclient().categories.list.return_value = None
         self.assertFalse(self.import_package.allowed(None, None))
 
 

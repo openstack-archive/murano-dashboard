@@ -51,7 +51,8 @@ class ImportPackage(tables.LinkAction):
         _allowed = False
         with api.handled_exceptions(request):
             client = api.muranoclient(request)
-            _allowed = client.packages.categories() is not None
+            if client.categories.list():
+                _allowed = True
         return _allowed
 
 

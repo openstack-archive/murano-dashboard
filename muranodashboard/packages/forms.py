@@ -213,10 +213,10 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
                 choices=[('', 'No categories available')],
                 required=False)
             try:
-                categories = api.muranoclient(request).packages.categories()
+                categories = api.muranoclient(request).categories.list()
                 if categories:
-                    self.fields['categories'].choices = [(c, c)
-                                                         for c in categories]
+                    category_names = [(c.name, c.name) for c in categories]
+                    self.fields['categories'].choices = category_names
                 if package.categories:
                     self.fields['categories'].initial = dict(
                         (key, True) for key in package.categories)
@@ -285,10 +285,10 @@ class SelectCategories(forms.Form):
         super(SelectCategories, self).__init__(*args, **kwargs)
 
         try:
-            categories = api.muranoclient(request).packages.categories()
+            categories = api.muranoclient(request).categories.list()
             if categories:
-                self.fields['categories'].choices = [(c, c)
-                                                     for c in categories]
+                category_names = [(c.name, c.name) for c in categories]
+                self.fields['categories'].choices = category_names
         except (exc.HTTPException, Exception):
             msg = _('Unable to get list of categories')
             LOG.exception(msg)
