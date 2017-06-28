@@ -30,7 +30,7 @@ from horizon import forms as hz_forms
 from horizon import messages
 from openstack_dashboard.api import cinder
 from openstack_dashboard.api import glance
-from openstack_dashboard.api import network
+from openstack_dashboard.api import neutron
 from openstack_dashboard.api import nova
 from oslo_log import log as logging
 from oslo_log import versionutils
@@ -428,7 +428,7 @@ class SecurityGroupChoiceField(DynamicChoiceField):
         # TODO(pbourke): remove sorted when supported natively in Horizon
         # (https://bugs.launchpad.net/horizon/+bug/1692972)
         for secgroup in sorted(
-                network.security_group_list(request),
+                neutron.security_group_list(request),
                 key=lambda e: e.name_or_id):
             if not secgroup.name_or_id.startswith('murano--'):
                 self.choices.append((secgroup.name_or_id, secgroup.name_or_id))
