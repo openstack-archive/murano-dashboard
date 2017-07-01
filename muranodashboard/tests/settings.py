@@ -80,3 +80,5 @@ LOGGING = {
         }
     }
 }
+
+HORIZON_CONFIG.update({'plugins': 'muranodashboard'})
