@@ -149,6 +149,7 @@ h3.heading_switcher a.btn {
 
 .draggable_app .may_overflow {
   max-width: 85%;
+  white-space: normal;
 }
 
 @media (min-width: 1020px) {
