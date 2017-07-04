@@ -149,8 +149,12 @@ class TestModifyPackageForm(helpers.APITestCase):
         self.mock_request = mock.MagicMock(return_value=(fake_response))
 
         with mock.patch('muranodashboard.api.muranoclient') as mock_client:
-            mock_client().packages.categories.return_value =\
-                ['c3', 'c4']
+            mock_categories = []
+            for cname in ['c3', 'c4']:
+                mock_category = mock.Mock()
+                mock_category.configure_mock(name=cname)
+                mock_categories.append(mock_category)
+            mock_client().categories.list.return_value = mock_categories
             self.modify_pkg_form = forms.ModifyPackageForm(self.mock_request,
                                                            **self.kwargs)
 
@@ -170,7 +174,7 @@ class TestModifyPackageForm(helpers.APITestCase):
     @mock.patch('muranodashboard.api.muranoclient')
     def test_init_except_http_exception(self, mock_client, mock_reverse,
                                         mock_exceptions):
-        mock_client().packages.categories.side_effect = exc.HTTPException
+        mock_client().categories.list.side_effect = exc.HTTPException
         mock_reverse.return_value = 'test_redirect'
 
         self.modify_pkg_form = forms.ModifyPackageForm(self.mock_request,
@@ -265,8 +269,12 @@ class TestSelectCategories(helpers.APITestCase):
         self.kwargs = {'request': self.mock_request}
 
         with mock.patch('muranodashboard.api.muranoclient') as mock_client:
-            mock_client().packages.categories.return_value =\
-                ['c1', 'c2']
+            mock_categories = []
+            for cname in ['c1', 'c2']:
+                mock_category = mock.Mock()
+                mock_category.configure_mock(name=cname)
+                mock_categories.append(mock_category)
+            mock_client().categories.list.return_value = mock_categories
             self.select_categories_form = forms.SelectCategories(**self.kwargs)
 
     def test_init(self):
@@ -279,7 +287,7 @@ class TestSelectCategories(helpers.APITestCase):
     @mock.patch('muranodashboard.api.muranoclient')
     def test_init_except_http_exception(self, mock_client, mock_reverse,
                                         mock_exceptions):
-        mock_client().packages.categories.side_effect = exc.HTTPException
+        mock_client().categories.list.side_effect = exc.HTTPException
         mock_reverse.return_value = 'test_redirect'
 
         forms.SelectCategories(**self.kwargs)
