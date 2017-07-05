@@ -13,7 +13,6 @@
 #    under the License.
 
 from django.utils.translation import ugettext_lazy as _
-
 from oslo_log import log as logging
 import six
 
@@ -41,7 +40,7 @@ def get_status_messages_for_service(request, service_id, environment_id):
                 environment_id, deployment.id, service_id)
 
             for report in reports:
-                result += report.created.replace('T', ' ') + ' - ' + \
+                result += utils.adjust_datestr(request, report.created) + ' - ' + \
                     report.text + '\n'
     return result
 
@@ -416,7 +415,7 @@ def get_deployment_start(request, environment_id, deployment_id):
     LOG.debug('Get deployment start time')
     for deployment in deployments:
         if deployment.id == deployment_id:
-            return deployment.started.replace('T', ' ')
+            return utils.adjust_datestr(request, deployment.started)
     return None
 
 

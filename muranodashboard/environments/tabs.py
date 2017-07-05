@@ -25,6 +25,7 @@ from openstack_dashboard.api import nova as nova_api
 from openstack_dashboard import policy
 
 from muranoclient.common import exceptions as exc
+from muranodashboard.common import utils
 from muranodashboard.environments import api
 from muranodashboard.environments import consts
 from muranodashboard.environments import tables
@@ -151,7 +152,7 @@ class EnvLogsTab(tabs.Tab):
     def get_context_data(self, request):
         reports = self.tab_group.kwargs['logs']
         for report in reports:
-            report.created = report.created.replace('T', ' ')
+            report.created = utils.adjust_datestr(request, report.created)
         return {"reports": reports}
 
 

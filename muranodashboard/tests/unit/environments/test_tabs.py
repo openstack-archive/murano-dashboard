@@ -65,6 +65,7 @@ class TestOverviewTab(testtools.TestCase):
             )
         ]
         mock_request = mock.Mock()
+        mock_request.session = {'django_timezone': 'UTC'}
 
         expected_service = {
             'service': collections.OrderedDict([
@@ -265,29 +266,33 @@ class TestEnvLogsTab(testtools.TestCase):
         self.assertFalse(self.env_logs_tab.preload)
 
     def test_get_context_data(self):
-        mock_report = mock.Mock(created='T12:34')
+        mock_report = mock.Mock(created='1970-01-01T12:34:00')
         self.env_logs_tab.tab_group = mock.Mock()
         self.env_logs_tab.tab_group.kwargs = {
             'logs': [mock_report]
         }
+        mock_request = mock.MagicMock()
+        mock_request.session = {'django_timezone': 'UTC'}
 
-        reports = self.env_logs_tab.get_context_data(None)
+        reports = self.env_logs_tab.get_context_data(mock_request)
 
-        mock_report.created = ' 12:34'
+        mock_report.created = '1970-01-01 12:34:00'
         self.assertEqual({'reports': [mock_report]}, reports)
 
 
 class TestLatestLogTab(testtools.TestCase):
 
     def test_allowed(self):
-        latest_logs_tab = tabs.LatestLogsTab(None)
-        latest_logs_tab.tab_group = mock.Mock()
-        mock_report = mock.Mock(created='T12:34')
-        latest_logs_tab.tab_group.kwargs = {'logs': [mock_report]}
+        mock_request = mock.MagicMock()
+        mock_request.session = {'django_timezone': 'UTC'}
+        mock_report = mock.Mock(created='1970-01-01T12:34:00')
+        tab_group = mock.Mock()
+        tab_group.kwargs = {'logs': [mock_report]}
+        latest_logs_tab = tabs.LatestLogsTab(tab_group, request=mock_request)
 
         self.assertEqual(_('Latest Deployment Log'), latest_logs_tab.name)
-        mock_report.created = ' 12:34'
-        self.assertEqual([mock_report], latest_logs_tab.allowed(None))
+        mock_report.created = '1970-01-01 12:34:00'
+        self.assertEqual([mock_report], latest_logs_tab.allowed(mock_request))
 
 
 class TestEnvConfigTab(testtools.TestCase):
@@ -514,8 +519,11 @@ class TestEnvironmentDetailsTabs(testtools.TestCase):
             '{"environment": {"status": "foo_status"}}'
 
         mock_request = mock.Mock(GET={})
+        mock_request.session = {'django_timezone': 'UTC'}
+        mock_logs = mock.Mock(created='1970-01-01T12:34:00')
+        mock_logs.created = '1970-01-01 12:34:00'
         env_details_tabs = tabs.EnvironmentDetailsTabs(
-            mock_request, environment_id='foo_env_id', logs=[mock.Mock()])
+            mock_request, environment_id='foo_env_id', logs=[mock_logs])
 
         self.assertEqual('environment_details', env_details_tabs.slug)
         self.assertEqual(

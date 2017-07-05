@@ -19,7 +19,9 @@ except ImportError:
 import bs4
 import string
 
+import iso8601
 from muranodashboard.dynamic_ui import yaql_expression
+import pytz
 import six
 import yaql
 
@@ -45,6 +47,12 @@ def parse_api_error(api_error_html):
 def ensure_python_obj(obj):
     mappings = {'True': True, 'False': False, 'None': None}
     return mappings.get(obj, obj)
+
+
+def adjust_datestr(request, datestr):
+    tz = pytz.timezone(request.session.get('django_timezone'))
+    dt = iso8601.parse_date(datestr).astimezone(tz)
+    return dt.strftime('%Y-%m-%d %H:%M:%S')
 
 
 class Bunch(object):
