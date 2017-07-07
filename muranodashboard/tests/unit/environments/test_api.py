@@ -28,6 +28,7 @@ class TestEnvironmentsAPI(helpers.APITestCase):
 
         self.mock_client = mock.Mock(spec=client)
         self.mock_request = mock.MagicMock()
+        self.mock_request.session = {'django_timezone': 'UTC'}
         self.env_id = 'foo_env_id'
         self.session_id = 'foo_session_id'
         self.service_id = 'foo_service_id'
@@ -43,12 +44,14 @@ class TestEnvironmentsAPI(helpers.APITestCase):
             mock.Mock(id='foo_deployment_id'),
             mock.Mock(id='bar_deployment_id')
         ]
+
         mock_client.deployments.reports.side_effect = [
-            [mock.Mock(text='foo_text', created='T01:23')],
-            [mock.Mock(text='bar_text', created='T03:45')],
+            [mock.Mock(text='foo_text', created='1970-01-01T12:23:00')],
+            [mock.Mock(text='bar_text', created='1970-01-01T15:45:00')],
         ]
 
-        expected_result = '\n 01:23 - foo_text\n 03:45 - bar_text\n'
+        expected_result = '\n1970-01-01 12:23:00 - foo_text\n' \
+                          '1970-01-01 15:45:00 - bar_text\n'
         expected_reports_mock_calls = [
             mock.call('foo_env_id', 'bar_deployment_id', 'foo_service_id'),
             mock.call('foo_env_id', 'foo_deployment_id', 'foo_service_id')
@@ -188,11 +191,11 @@ class TestEnvironmentsAPI(helpers.APITestCase):
         self.assertIsNone(result)
 
         mock_client.deployments.list.return_value = [
-            mock.Mock(id='foo_deployment_id', started='T12:34')
+            mock.Mock(id='foo_deployment_id', started='1970-01-01T12:34:00')
         ]
         result = env_api.get_deployment_start(self.mock_request, self.env_id,
                                               self.deployment_id)
-        self.assertEqual(' 12:34', result)
+        self.assertEqual('1970-01-01 12:34:00', result)
         mock_client.deployments.list.assert_has_calls([
             mock.call('foo_env_id'), mock.call('foo_env_id')
         ])
