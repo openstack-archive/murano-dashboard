@@ -2,8 +2,8 @@
 Team and repository tags
 ========================
 
-.. image:: http://governance.openstack.org/badges/murano-dashboard.svg
-    :target: http://governance.openstack.org/reference/tags/index.html
+.. image:: https://governance.openstack.org/badges/murano-dashboard.svg
+    :target: https://governance.openstack.org/reference/tags/index.html
 
 .. Change things from this point on
 
@@ -37,8 +37,8 @@ re-compress static assets and restart Horizon web-server as usual.
 Project Resources
 -----------------
 
-* `Murano at Launchpad <http://launchpad.net/murano>`_
+* `Murano at Launchpad <https://launchpad.net/murano>`_
 * `Wiki <https://wiki.openstack.org/wiki/Murano>`_
 * `Code Review <https://review.openstack.org/>`_
 * `Sources <https://wiki.openstack.org/wiki/Murano/SourceCode>`_
-* `Documentation <http://docs.openstack.org/developer/murano/>`_
+* `Documentation <https://docs.openstack.org/developer/murano/>`_
