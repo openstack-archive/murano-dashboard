@@ -45,7 +45,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.coverage',
               'sphinx.ext.ifconfig',
-              'sphinx.ext.graphviz']
+              'sphinx.ext.graphviz',
+              'openstackdocstheme']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -65,7 +66,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Dashboard'
-copyright = u'2013, Mirantis, Inc'
+copyright = u'OpenStack Foundation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -128,7 +129,15 @@ man_pages = []
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
 html_theme_path = ["."]
-html_theme = '_theme'
+html_theme = 'openstackdocs'
+
+# openstackdocstheme options
+repository_name = 'openstack/murano-dashboard'
+bug_project = 'murano'
+bug_tag = ''
+
+# Must set this variable to include year, month, day, hours, and minutes.
+html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
