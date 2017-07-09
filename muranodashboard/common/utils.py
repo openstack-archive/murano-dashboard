@@ -25,6 +25,8 @@ import pytz
 import six
 import yaql
 
+from horizon.utils import functions as utils
+
 # WrappingColumn is only available in N-horizon
 # This make murano-dashboard compatible with Mitaka-horizon
 try:
@@ -50,7 +52,7 @@ def ensure_python_obj(obj):
 
 
 def adjust_datestr(request, datestr):
-    tz = pytz.timezone(request.session.get('django_timezone'))
+    tz = pytz.timezone(utils.get_timezone(request))
     dt = iso8601.parse_date(datestr).astimezone(tz)
     return dt.strftime('%Y-%m-%d %H:%M:%S')
 
