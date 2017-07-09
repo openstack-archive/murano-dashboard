@@ -728,7 +728,7 @@ def get_deployment_history_services(deployment):
         service_type = service['?']['type']
         if service_type.find('/') != -1:
             service_type = service_type[:service_type.find('/')]
-        services[service['name']] = service_type
+        services[service.get('name', service['?']['name'])] = service_type
     context = {
         "services": services,
     }
