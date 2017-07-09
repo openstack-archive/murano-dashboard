@@ -204,7 +204,7 @@ class TestDetailServiceView(testtools.TestCase):
             'environment_name': 'foo_env_name',
             'custom_breadcrumb': [
                 ('foo_env_name', 'foo_reverse_url'),
-                (_('Applications'),),
+                (_('Applications'), None)
             ]
         }
 

@@ -134,7 +134,7 @@ class DetailServiceView(tabs.TabbedTableView):
             (context["environment_name"],
              reverse("horizon:app-catalog:environments:services",
                      args=[self.environment_id])),
-            (_('Applications'),), ]
+            (_('Applications'), None)]
         context["custom_breadcrumb"] = breadcrumb
         return context
 
