@@ -521,9 +521,10 @@ class EnvironmentsTable(tables.DataTable):
         row_class = UpdateEnvironmentRow
         status_columns = ['status']
         no_data_message = _('NO ENVIRONMENTS')
+        table_actions_menu = (AbandonEnvironment,
+                              DeploymentHistory)
         table_actions = (CreateEnvironment, DeployEnvironment,
-                         DeleteEnvironment, AbandonEnvironment,
-                         DeploymentHistory)
+                         DeleteEnvironment)
         row_actions = (ShowEnvironmentServices, DeployEnvironment,
                        DeleteEnvironment, AbandonEnvironment,
                        UpdateEnvMetadata)
