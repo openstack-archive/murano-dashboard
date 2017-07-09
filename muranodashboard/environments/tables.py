@@ -747,6 +747,7 @@ class DeploymentHistoryTable(tables.DataTable):
         'state',
         verbose_name=_('Status'),
         status=True,
+        status_choices=consts.DEPLOYMENT_STATUS_CHOICES,
         display_choices=consts.DEPLOYMENT_STATUS_DISPLAY_CHOICES)
 
     class Meta(object):
