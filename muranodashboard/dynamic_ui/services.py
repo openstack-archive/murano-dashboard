@@ -126,6 +126,8 @@ class Service(object):
     def extract_attributes(self):
         context = self.context.create_child_context()
         context['$'] = self.cleaned_data
+        context['$forms'] = self.cleaned_data
+
         for name, template in six.iteritems(self.templates):
             context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
