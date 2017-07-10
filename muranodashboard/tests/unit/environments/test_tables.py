@@ -863,8 +863,10 @@ class TestDeploymentHistoryTable(testtools.TestCase):
             mock.sentinel.rendered_template
 
         test_description = {'services': [
-            {'name': 'foo_service', '?': {'type': 'foo/bar'}},
-            {'name': 'bar_service', '?': {'type': 'baz/qux'}}
+            {'name': 'foo_service', '?': {'type': 'foo/bar',
+                                          'name': 'foo_service'}},
+            {'name': 'bar_service', '?': {'type': 'baz/qux',
+                                          'name': 'bar_service'}}
         ]}
         mock_deployment = mock.Mock(description=test_description)
 
