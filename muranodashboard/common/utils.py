@@ -36,7 +36,7 @@ except ImportError:
 
 
 def parse_api_error(api_error_html):
-    error_html = bs4.BeautifulSoup(api_error_html)
+    error_html = bs4.BeautifulSoup(api_error_html, "html.parser")
     body = error_html.find('body')
     if (not body or not body.text):
         return None
