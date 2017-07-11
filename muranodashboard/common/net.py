@@ -16,8 +16,11 @@
 import re
 import uuid
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
+from neutronclient.common import exceptions as exc
+from openstack_dashboard.api import keystone
 from openstack_dashboard.api import neutron
 from oslo_log import log as logging
 
@@ -33,6 +36,24 @@ NEUTRON_NET_HELP = _("The VMs of the applications in this environment will "
                      "of this project")
 NN_HELP = _("OpenStack Networking (Neutron) is not available in current "
             "environment. Custom Network Settings cannot be applied")
+
+
+def get_project_assigned_network(request):
+    tenant_id = request.user.tenant_id
+
+    tenant = keystone.tenant_get(request, tenant_id)
+    network_name = getattr(settings, 'FIXED_MURANO_NETWORK', 'murano_network')
+    tenant_network_id = getattr(tenant, network_name, None)
+    if not tenant_network_id:
+        LOG.warning(("murano_network property is not "
+                     "defined for project '%s'") % tenant_id)
+        return []
+
+    try:
+        tenant_network = neutron.network_get(request, tenant_network_id)
+        return [((tenant_network.id, None), tenant_network.name_or_id)]
+    except exc.NeutronClientException:
+        return []
 
 
 def get_available_networks(request, include_subnets=True,

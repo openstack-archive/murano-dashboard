@@ -1,0 +1,18 @@
+---
+fixes:
+  - |
+    Introduce a fixed network mode for environments. Specifically,
+    when this mode is activated, in the environment creation dialog
+    user is no longer prompted for a network and instead a network
+    previously assigned to the current project is used.
+
+    Network is assigned to project using project metadata key (custom) with network ID as the value.
+    Specify this metadata key in Horizon config to be able to use it
+
+    This behavior is disabled by default and could be enabled by adding:
+
+    USE_FIXED_NETWORK = yes
+    FIXED_MURANO_NETWORK = murano_network
+
+    to the Horizon configuration.
+
