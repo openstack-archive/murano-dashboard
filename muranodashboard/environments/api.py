@@ -13,6 +13,7 @@
 #    under the License.
 
 from django.utils.translation import ugettext_lazy as _
+from horizon import exceptions
 from oslo_log import log as logging
 import six
 
@@ -24,6 +25,9 @@ from muranodashboard.environments import consts
 from muranodashboard.environments import topology
 
 
+KEY_ERROR_TEMPLATE = _(
+    "Error fetching the environment. The page may be rendered incorrectly. "
+    "Reason: %s")
 LOG = logging.getLogger(__name__)
 
 
@@ -179,13 +183,23 @@ def _update_env(env, request):
     deployments = deployments_list(request, env.id)
     if deployments:
         latest_deployment = deployments[0]
-        deployed_services = {service['?']['id'] for service in
-                             latest_deployment.description['services']}
+        try:
+            deployed_services = {service['?']['id'] for service in
+                                 latest_deployment.description['services']}
+        except KeyError as e:
+            deployed_services = set()
+            exceptions.handle_recoverable(
+                request, KEY_ERROR_TEMPLATE % e.message)
     else:
         deployed_services = set()
 
     if env.services:
-        current_services = {service['?']['id'] for service in env.services}
+        try:
+            current_services = {service['?']['id'] for service in env.services}
+        except KeyError as e:
+            current_services = set()
+            exceptions.handle_recoverable(
+                request, KEY_ERROR_TEMPLATE % e.message)
     else:
         current_services = set()
 
@@ -291,7 +305,12 @@ def services_list(request, environment_id):
 
     for service_item in environment.services or []:
         service_data = service_item
-        service_id = service_data['?']['id']
+        try:
+            service_id = service_data['?']['id']
+        except KeyError as e:
+            exceptions.handle_recoverable(
+                request, KEY_ERROR_TEMPLATE % e.message)
+            continue
 
         if service_id in reports and reports[service_id]:
             last_operation = strip(reports[service_id].text)
@@ -312,7 +331,12 @@ def services_list(request, environment_id):
             service_data['name'] = service_data['?']['name']
         if (consts.DASHBOARD_ATTRS_KEY not in service_data['?'] or
                 not service_data['?'][consts.DASHBOARD_ATTRS_KEY].get('name')):
-            fqn = service_data['?']['type']
+            try:
+                fqn = service_data['?']['type']
+            except KeyError as e:
+                exceptions.handle_recoverable(
+                    request, KEY_ERROR_TEMPLATE % e.message)
+                continue
             version = None
             if '/' in fqn:
                 version, fqn = fqn.split('/')[1].split('@')
@@ -334,8 +358,14 @@ def service_list_by_fqns(request, environment_id, fqns):
         return []
     services = services_list(request, environment_id)
     LOG.debug('Service::Instances::List')
-    return [service for service in services
-            if service['?']['type'].split('/')[0] in fqns]
+    try:
+        services = [service for service in services
+                    if service['?']['type'].split('/')[0] in fqns]
+    except KeyError as e:
+        services = []
+        exceptions.handle_recoverable(request, KEY_ERROR_TEMPLATE % e.message)
+
+    return services
 
 
 def service_create(request, environment_id, parameters):
@@ -360,9 +390,13 @@ def service_delete(request, environment_id, service_id):
 def service_get(request, environment_id, service_id):
     services = services_list(request, environment_id)
     LOG.debug("Return service detail for a specified id")
-    for service in services:
-        if service['?']['id'] == service_id:
-            return service
+    try:
+        for service in services:
+            if service['?']['id'] == service_id:
+                return service
+    except KeyError as e:
+        exceptions.handle_recoverable(request, KEY_ERROR_TEMPLATE % e.message)
+    return None
 
 
 def extract_actions_list(service):
