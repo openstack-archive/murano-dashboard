@@ -174,9 +174,10 @@ class CreateEnvironmentView(views.ModalFormView):
     submit_url = reverse_lazy(
         'horizon:app-catalog:environments:create_environment')
 
-    def get_form(self, form_class):
+    def get_form(self, **kwargs):
         if 'next' in self.request.GET:
             self.request.session['next_url'] = self.request.GET['next']
+        form_class = kwargs.get('form_class', self.get_form_class())
         return super(CreateEnvironmentView, self).get_form(form_class)
 
     def get_success_url(self):

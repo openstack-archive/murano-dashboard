@@ -271,7 +271,7 @@ class TestCreateEnvironmentView(testtools.TestCase):
     @mock.patch('muranodashboard.environments.forms.net')
     def test_get_form(self, mock_net):
         mock_net.get_available_networks.return_value = None
-        form = self.create_env_view.get_form(self.create_env_view.form_class)
+        form = self.create_env_view.get_form()
 
         self.assertIsInstance(form, env_forms.CreateEnvironmentForm)
         self.assertEqual('next_foo_url',
