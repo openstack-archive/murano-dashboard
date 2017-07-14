@@ -2,13 +2,13 @@
 # suhartono <cloudsuhartono@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 4.0.0.0b3.dev4\n"
+"Project-Id-Version: murano-dashboard 4.0.0.0b3.dev45\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2017-06-10 02:57+0000\n"
+"POT-Creation-Date: 2017-07-13 20:57+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-06-09 03:49+0000\n"
+"PO-Revision-Date: 2017-07-13 11:45+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -401,6 +401,12 @@ msgstr "Lingkungan dengan nama yang ditentukan sudah ada"
 msgid "Environments"
 msgstr "Environments (lingkungan)"
 
+#, python-format
+msgid ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+msgstr "Kesalahan mengambil environment Halaman itu mungkin salah. Reason: %s"
+
 msgid "Error test_error_message occurred while installing package bar"
 msgstr "Kesalahan test_error_message terjadi pada saat menginstal paket bar"
 
@@ -634,6 +640,9 @@ msgstr "Tidak ada aktivitas terbaru melaporkan saat ini."
 msgid "No requirements"
 msgstr "Tidak ada persyaratan"
 
+msgid "No volumes available"
+msgstr "Tidak ada volume yang tersedia"
+
 msgid "None"
 msgstr "None (tak satupun)"
 
@@ -827,6 +836,9 @@ msgstr ""
 
 msgid "Select one or more categories for a package."
 msgstr "Pilih satu atau lebih kategori untuk paket."
+
+msgid "Select volume"
+msgstr "Pilih volume"
 
 msgid "Services (Name, Type)"
 msgstr "Services (Name, Type)"
@@ -1089,6 +1101,12 @@ msgstr "Tidak dapat mengambil daftar proyek."
 
 msgid "Unable to retrieve public images."
 msgstr "Tidak dapat mengambil image publik."
+
+msgid "Unable to retrieve snapshot list."
+msgstr "Tidak dapat mengambil daftar snapshot."
+
+msgid "Unable to retrieve volume list."
+msgstr "Tidak dapat mengambil daftar volume."
 
 msgid "Unavailable"
 msgstr "Unavailable (tidak tersedia)"
