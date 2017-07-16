@@ -13,6 +13,7 @@
 #    under the License.
 import ast
 
+from django.conf import settings
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
@@ -39,14 +40,30 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
 
     def __init__(self, request, *args, **kwargs):
         super(CreateEnvironmentForm, self).__init__(request, *args, **kwargs)
-        net_choices = net.get_available_networks(request,
-                                                 murano_networks='translate')
-        if net_choices is None:  # NovaNetwork case
-            net_choices = [((None, None), _('Unavailable'))]
-            help_text = net.NN_HELP
+        env_fixed_network = getattr(settings, 'USE_FIXED_NETWORK', False)
+        if env_fixed_network:
+            net_choices = net.get_project_assigned_network(request)
+            help_text = None
+            if not net_choices:
+                msg = _("Default network is either not specified for "
+                        "this project, or specified incorrectly, "
+                        "please contact administrator.")
+                messages.error(request, msg)
+                raise exceptions.ConfigurationError(msg)
+            else:
+                self.fields['net_config'].required = False
+                self.fields['net_config'].widget.attrs['readonly'] = True
         else:
-            net_choices.insert(0, ((None, None), _('Create New')))
-            help_text = net.NEUTRON_NET_HELP
+            net_choices = net.get_available_networks(
+                request,
+                murano_networks='translate')
+
+            if net_choices is None:  # NovaNetwork case
+                net_choices = [((None, None), _('Unavailable'))]
+                help_text = net.NN_HELP
+            else:
+                net_choices.insert(0, ((None, None), _('Create New')))
+                help_text = net.NEUTRON_NET_HELP
         self.fields['net_config'].choices = net_choices
         self.fields['net_config'].help_text = help_text
 
