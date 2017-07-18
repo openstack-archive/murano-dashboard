@@ -56,8 +56,7 @@ def get_project_assigned_network(request):
         return []
 
 
-def get_available_networks(request, include_subnets=True,
-                           filter=None, murano_networks=None):
+def get_available_networks(request, filter=None, murano_networks=None):
     if murano_networks:
         env_names = [e.name for e in env_api.environments_list(request)]
 
@@ -94,21 +93,20 @@ def get_available_networks(request, include_subnets=True,
             else:
                 netname = _("Network of '%s'") % env
 
-        if include_subnets:
-            for subnet in net.subnets:
-                if not netname:
-                    full_name = (
-                        "%(net)s: %(cidr)s %(subnet)s" %
-                        dict(net=net.name_or_id,
-                             cidr=subnet.cidr,
-                             subnet=subnet.name_or_id))
+        for subnet in net.subnets:
+            if not netname:
+                full_name = (
+                    "%(net)s: %(cidr)s %(subnet)s" %
+                    dict(net=net.name_or_id,
+                         cidr=subnet.cidr,
+                         subnet=subnet.name_or_id))
 
-                network_choices.append(
-                    ((net.id, subnet.id), netname or full_name))
+            network_choices.append(
+                ((net.id, subnet.id), netname or full_name))
 
-        else:
-            netname = netname or net.name_or_id
-            network_choices.append(((net.id, None), netname))
+        netname = _("%s: random subnet") % (
+            netname or net.name_or_id)
+        network_choices.append(((net.id, None), netname))
     return network_choices
 
 

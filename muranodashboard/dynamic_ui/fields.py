@@ -490,7 +490,6 @@ class ImageChoiceField(ChoiceField):
 
 class NetworkChoiceField(ChoiceField):
     def __init__(self,
-                 include_subnets=True,
                  filter=None,
                  murano_networks=None,
                  allow_auto=True,
@@ -501,7 +500,6 @@ class NetworkChoiceField(ChoiceField):
             if murano_networks.lower() not in ["exclude", "translate"]:
                 raise ValueError(_("Invalid value of 'murano_nets' option"))
         self.murano_networks = murano_networks
-        self.include_subnets = include_subnets
         self.allow_auto = allow_auto
         super(NetworkChoiceField, self).__init__(*args,
                                                  **kwargs)
@@ -514,7 +512,6 @@ class NetworkChoiceField(ChoiceField):
         rendered
         """
         network_choices = net.get_available_networks(request,
-                                                     self.include_subnets,
                                                      self.filter,
                                                      self.murano_networks)
         if self.allow_auto:
