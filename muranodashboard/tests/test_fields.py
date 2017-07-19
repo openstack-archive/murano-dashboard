@@ -24,19 +24,20 @@ class TestFlavorField(helpers.APITestCase):
         super(TestFlavorField, self).setUp()
 
         class FlavorFlave(object):
-            def __init__(self, name, vcpus, disk, ram):
+            def __init__(self, id, name, vcpus, disk, ram):
                 self.name = name
                 self.vcpus = vcpus
                 self.disk = disk
                 self.ram = ram
+                self.id = id
 
         novaclient = self.stub_novaclient()
         novaclient.flavors = self.mox.CreateMockAnything()
         # Set up the Flavor list
         novaclient.flavors.list().MultipleTimes().AndReturn(
-            [FlavorFlave('small', vcpus=1, disk=50, ram=1000),
-             FlavorFlave('medium', vcpus=2, disk=100, ram=2000),
-             FlavorFlave('large', vcpus=3, disk=750, ram=4000)])
+            [FlavorFlave('id1', 'small', vcpus=1, disk=50, ram=1000),
+             FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
+             FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)])
 
     def test_no_filter(self):
         """Check that all flavors are returned."""
@@ -48,9 +49,9 @@ class TestFlavorField(helpers.APITestCase):
         initial_request = {}
         f.update(initial_request, self.request)
         self.assertEqual([
-            ('large', 'large'),
-            ('medium', 'medium'),
-            ('small', 'small')
+            ('id3', 'large'),
+            ('id2', 'medium'),
+            ('id1', 'small')
         ], f.choices)
 
     def test_multiple_filter(self):
@@ -60,9 +61,8 @@ class TestFlavorField(helpers.APITestCase):
 
         # Fake a requirement for 2 CPUs, should return medium and large
         f = fields.FlavorChoiceField(requirements={'min_vcpus': 2})
-        initial_request = {}
-        f.update(initial_request, self.request)
-        self.assertEqual([('large', 'large'), ('medium', 'medium')], f.choices)
+        f.update({}, self.request)
+        self.assertEqual([('id3', 'large'), ('id2', 'medium')], f.choices)
 
     def test_single_filter(self):
         """Check that one flavor is returned."""
@@ -73,7 +73,7 @@ class TestFlavorField(helpers.APITestCase):
             requirements={'min_vcpus': 2, 'min_disk': 200})
         initial_request = {}
         f.update(initial_request, self.request)
-        self.assertEqual([('large', 'large')], f.choices)
+        self.assertEqual([('id3', 'large')], f.choices)
 
     def test_no_matches_filter(self):
         """Check that no flavors are returned."""

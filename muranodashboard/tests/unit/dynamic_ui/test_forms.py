@@ -181,10 +181,10 @@ class TestServiceConfigurationForm(testtools.TestCase):
         # below, rather than `{'foo': 'bar', 'baz': 'qux'}` because
         # `cleaned_data[name] = value` in clean() appears to also change the
         # dict that was passed in to mock objects in previous lines of code.
-        foo_field.postclean.assert_called_once_with(self.form, mock.ANY)
+        foo_field.postclean.assert_called_once_with(self.form, 'foo', mock.ANY)
         password_field.compare.assert_called_once_with('password', mock.ANY)
         mock_log.debug.assert_called_once_with(
-            "Update cleaned data in postclean method")
+            "Update 'foo' data in postclean method")
         self.form.service.update_cleaned_data.assert_called_with(
             mock.ANY, form=self.form)
 

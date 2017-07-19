@@ -39,6 +39,7 @@ from yaql import legacy
 
 from muranodashboard.api import packages as pkg_api
 from muranodashboard.common import net
+from muranodashboard.dynamic_ui import helpers
 from muranodashboard.environments import api as env_api
 
 
@@ -106,13 +107,14 @@ def wrap_regex_validator(validator, message):
     return _validator
 
 
-def get_murano_images(request):
+def get_murano_images(request, region=None):
     images = []
     try:
         # https://bugs.launchpad.net/murano/+bug/1339261 - glance
         # client version change alters the API. Other tuple values
         # are _more and _prev (in recent glance client)
-        images = glance.image_list_detailed(request)[0]
+        with helpers.current_region(request, region):
+            images = glance.image_list_detailed(request)[0]
     except Exception:
         LOG.error("Error to request image list from glance ")
         exceptions.handle(request, _("Unable to retrieve public images."))
@@ -355,20 +357,31 @@ class DynamicChoiceField(hz_forms.DynamicChoiceField, CustomPropertiesField):
     pass
 
 
+class FlavorWidget(widgets.Select):
+    def __init__(self, *args, **kwargs):
+        super(FlavorWidget, self).__init__(*args, **kwargs)
+        self.attrs['class'] = self.attrs.get('class', '') + ' flavor'
+        self.attrs['id'] = 'id_flavor'
+
+
 class FlavorChoiceField(ChoiceField):
+    widget = FlavorWidget
+
     def __init__(self, *args, **kwargs):
         if 'requirements' in kwargs:
             self.requirements = kwargs.pop('requirements')
         super(FlavorChoiceField, self).__init__(*args, **kwargs)
 
     @with_request
-    def update(self, request, **kwargs):
+    def update(self, request, form=None, **kwargs):
         choices = []
-        flavors = nova.novaclient(request).flavors.list()
+        with helpers.current_region(request,
+                                    getattr(form, 'region', None)):
+            flavors = nova.novaclient(request).flavors.list()
 
         # If no requirements are present, return all the flavors.
         if not hasattr(self, 'requirements'):
-            choices = [(flavor.name, flavor.name) for flavor in flavors]
+            choices = [(flavor.id, flavor.name) for flavor in flavors]
         else:
             for flavor in flavors:
                 # If a flavor doesn't meet a minimum requirement,
@@ -389,7 +402,7 @@ class FlavorChoiceField(ChoiceField):
                 if 'max_memory_mb' in self.requirements:
                     if flavor.ram > self.requirements['max_memory_mb']:
                         continue
-                choices.append((flavor.name, flavor.name))
+                choices.append((flavor.id, flavor.name))
 
         choices.sort(key=lambda e: e[1])
         self.choices = choices
@@ -401,20 +414,27 @@ class FlavorChoiceField(ChoiceField):
             self.initial = kwargs["form"]["flavor"].value()
         else:
             # Search through selected flavors
-            for flavor_name, flavor_name in self.choices:
+            for flavor_id, flavor_name in self.choices:
                 if 'medium' in flavor_name:
-                    self.initial = flavor_name
+                    self.initial = flavor_id
                     break
+
+    def clean(self, value):
+        for flavor_id, flavor_name in self.choices:
+            if flavor_id == value:
+                return flavor_name
+        return value
 
 
 class KeyPairChoiceField(DynamicChoiceField):
     """This widget allows to select keypair for VMs"""
     @with_request
-    def update(self, request, **kwargs):
+    def update(self, request, form=None, **kwargs):
         self.choices = [('', _('No keypair'))]
-        for keypair in sorted(
-                nova.novaclient(request).keypairs.list(),
-                key=lambda e: e.name):
+        with helpers.current_region(request,
+                                    getattr(form, 'region', None)):
+            keypairs = nova.novaclient(request).keypairs.list()
+        for keypair in sorted(keypairs, key=lambda e: e.name):
             self.choices.append((keypair.name, keypair.name))
 
 
@@ -450,9 +470,10 @@ class ImageChoiceField(ChoiceField):
         super(ImageChoiceField, self).__init__(*args, **kwargs)
 
     @with_request
-    def update(self, request, **kwargs):
+    def update(self, request, form=None, **kwargs):
         image_map, image_choices = {}, []
-        murano_images = get_murano_images(request)
+        murano_images = get_murano_images(
+            request, getattr(form, 'region', None))
         for image in murano_images:
             murano_data = image.murano_property
             title = murano_data.get('title', image.name)
@@ -528,10 +549,12 @@ class NetworkChoiceField(ChoiceField):
 
 class AZoneChoiceField(ChoiceField):
     @with_request
-    def update(self, request, **kwargs):
+    def update(self, request, form=None, **kwargs):
         try:
-            availability_zones = nova.novaclient(
-                request).availability_zones.list(detailed=False)
+            with helpers.current_region(request,
+                                        getattr(form, 'region', None)):
+                availability_zones = nova.novaclient(
+                    request).availability_zones.list(detailed=False)
         except Exception:
             availability_zones = []
             exceptions.handle(request,

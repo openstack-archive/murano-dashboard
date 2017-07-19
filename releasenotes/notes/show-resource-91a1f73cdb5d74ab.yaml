@@ -1,0 +1,6 @@
+---
+
+features:
+  - |
+    Show resource usages in the description section right under the Flavor field
+    title (as quota usages + predicted increment progress bar).

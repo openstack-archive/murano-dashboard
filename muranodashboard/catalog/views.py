@@ -44,6 +44,9 @@ from horizon.forms import views
 from horizon import messages
 from horizon import tabs
 from horizon import views as generic_views
+from novaclient import exceptions as nova_exceptions
+from openstack_dashboard.api import nova
+from openstack_dashboard.usage import quotas
 from oslo_log import log as logging
 import six
 
@@ -358,6 +361,8 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
         storage = attributes.setdefault('?', {}).setdefault(
             consts.DASHBOARD_ATTRS_KEY, {})
         storage['name'] = app_name
+        attributes['?']['resourceUsages'] = self.aggregate_usages(
+            self.init_usages()[1:])
 
         do_redirect = self.get_wizard_flag('do_redirect')
         wm_form_data = service.cleaned_data.get('workflowManagement')
@@ -440,6 +445,122 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
         value = self._get_wizard_param(key)
         return utils.ensure_python_obj(value)
 
+    def get_flavors(self):
+        try:
+            flavors = nova.flavor_list(self.request)
+        except nova_exceptions.ClientException:
+            message = _("Failed to get list of flavors.")
+            exceptions.handle(self.request, message)
+            LOG.exception(message)
+            flavors = []
+
+        def extract(flavor):
+            info = flavor._info
+            return {k: v for (k, v) in info.items() if k != 'links'}
+        flavors = [extract(f) for f in flavors]
+        self.storage.extra_data['flavors'] = flavors
+        return json.dumps(flavors)
+
+    def get_flavor_usages(self, form):
+        selected_flavor = form.cleaned_data['flavor']
+        for flavor in self.storage.extra_data['flavors']:
+            if flavor['name'] == selected_flavor:
+                return {'ram': flavor['ram'],
+                        'vcpus': flavor['vcpus'],
+                        'instances': 1}
+
+    def init_usages(self):
+        stored_data = self.storage.extra_data
+        step_usages = stored_data.get('step_usages')
+        if step_usages is None:
+            step_usages = [
+                collections.defaultdict(dict)
+                for step in self.steps.all
+            ]
+            stored_data['step_usages'] = step_usages
+
+            environment_id = self.kwargs.get('environment_id')
+            environment_id = utils.ensure_python_obj(environment_id)
+            if environment_id is not None:
+                session_id = env_api.Session.get(self.request, environment_id)
+                client = api.muranoclient(self.request)
+                all_services = client.environments.get(
+                    environment_id, session_id).services
+                env_usages = self.aggregate_usages(map(
+                    lambda svc: svc['?'].get('resourceUsages', {}),
+                    all_services))
+            else:
+                env_usages = collections.defaultdict(dict)
+            step_usages.insert(0, env_usages)
+
+        return step_usages
+
+    def process_step(self, form):
+        data = super(Wizard, self).process_step(form)
+        region = form.region or self.request.user.services_region
+        step_usages = self.init_usages()
+        if 'flavor' in form.cleaned_data:
+            usages = self.get_flavor_usages(form)
+            step_usages[self.steps.step0 + 1][region].update({
+                'ram': usages['ram'],
+                'vcpus': usages['vcpus'],
+                'instances': usages['instances']
+            })
+        else:
+            step_usages[self.steps.step0 + 1][region].update({
+                'ram': 0,
+                'vcpus': 0,
+                'instances': 0
+            })
+
+        return data
+
+    def update_usages(self, form, context):
+        data = self.init_usages()
+        usages = quotas.tenant_quota_usages(self.request).usages
+        region = self.request.user.services_region
+        inf = float('inf')
+
+        def get_usage(group, name, default):
+            return usages.get(group, {}).get(name, default)
+
+        context.update({
+            'usages': {
+                'maxTotalInstances': get_usage('instances', 'quota', inf),
+                'totalInstancesUsed': get_usage('instances', 'used', 0),
+                'maxTotalCores': get_usage('cores', 'quota', inf),
+                'totalCoresUsed': get_usage('cores', 'used', 0),
+                'maxTotalRAMSize': get_usage('ram', 'quota', inf),
+                'totalRAMUsed': get_usage('ram', 'used', 0),
+            },
+            'other_usages': {},
+            'flavors': self.get_flavors(),
+            'contexts': ['', 'info', 'success']
+        })
+        for step in range(self.steps.step0 + 1):
+
+            def sum_usage(context_key, data_key):
+                if context_key not in context['other_usages']:
+                    context['other_usages'][context_key] = 0
+                context['other_usages'][context_key] += \
+                    data[step][region].get(data_key, 0)
+            sum_usage('totalInstancesUsed', 'instances')
+            sum_usage('totalCoresUsed', 'vcpus')
+            sum_usage('totalRAMUsed', 'ram')
+
+        return context
+
+    @staticmethod
+    def aggregate_usages(steps):
+        result = collections.defaultdict(dict)
+        for step in steps:
+            for region, region_usages in six.iteritems(step):
+                for metric, value in six.iteritems(region_usages):
+                    if metric not in result[region]:
+                        result[region][metric] = 0
+                    result[region][metric] += value
+        return result
+
     def get_context_data(self, form, **kwargs):
         context = super(Wizard, self).get_context_data(form=form, **kwargs)
         mc = api.muranoclient(self.request)
@@ -477,6 +598,8 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
                         'field_descriptions': field_descr,
                         'extended_descriptions': extended_descr,
                         })
+        with helpers.current_region(self.request, form.region):
+            context = self.update_usages(form, context)
         return context
 
 

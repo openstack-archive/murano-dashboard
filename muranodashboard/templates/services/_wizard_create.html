@@ -1,5 +1,5 @@
 {% extends "horizon/common/_modal_form.html" %}
-{% load i18n humanize %}
+{% load i18n horizon humanize bootstrap %}
 {% block form_action %}
     {% url 'horizon:app-catalog:catalog:add' app_id environment_id do_redirect drop_wm_form %}
 {% endblock %}
@@ -60,6 +60,63 @@
         </p>
     {% endfor %}
 </div>
+  {% if usages %}
+    <script type="text/html" id="quota_bars">
+      <div class="quota_title">
+        <strong class="pull-left">{% trans "Number of Instances" %}</strong>
+        <span class="pull-right">
+            {% blocktrans with used=usages.totalInstancesUsed|intcomma other_used=other_usages.totalInstancesUsed|intcomma quota=usages.maxTotalInstances|intcomma|quotainf %}
+              {{ used }} + {{ other_used }} of {{ quota }} used
+            {% endblocktrans %}
+        </span>
+      </div>
+      <div id="quota_instances"
+           class="quota_bar"
+           data-progress-indicator-flavor
+           data-quota-limit="{{ usages.maxTotalInstances }}"
+           data-quota-used="{{ usages.totalInstancesUsed }}">
+        {% widthratio usages.totalInstancesUsed usages.maxTotalInstances 100 as instance_percent %}
+        {% widthratio other_usages.totalInstancesUsed usages.maxTotalInstances 100 as instance_other_percent %}
+        {% bs_progress_bar instance_percent instance_other_percent 0 contexts=contexts %}
+      </div>
+
+      <div class="quota_title">
+        <strong class="pull-left">{% trans "Number of VCPUs" %}</strong>
+        <span class="pull-right">
+            {% blocktrans with used=usages.totalCoresUsed|intcomma other_used=other_usages.totalCoresUsed|intcomma quota=usages.maxTotalCores|intcomma|quotainf %}
+              {{ used }} + {{ other_used }} of {{ quota }} used
+            {% endblocktrans %}
+        </span>
+      </div>
+      <div id="quota_vcpus"
+           class="quota_bar"
+           data-progress-indicator-flavor
+           data-quota-limit="{{ usages.maxTotalCores }}"
+           data-quota-used="{{ usages.totalCoresUsed }}">
+        {% widthratio usages.totalCoresUsed usages.maxTotalCores 100 as vcpu_percent %}
+        {% widthratio other_usages.totalCoresUsed usages.maxTotalCores 100 as vcpu_other_percent %}
+        {% bs_progress_bar vcpu_percent vcpu_other_percent 0 contexts=contexts %}
+      </div>
+
+      <div class="quota_title">
+        <strong class="pull-left">{% trans "Total RAM" %}</strong>
+        <span class="pull-right">
+            {% blocktrans with used=usages.totalRAMUsed|intcomma other_used=other_usages.totalRAMUsed|intcomma quota=usages.maxTotalRAMSize|intcomma|quotainf %}
+              {{ used }} + {{ other_used }} of {{ quota }} MB used
+            {% endblocktrans %}
+        </span>
+      </div>
+      <div id="quota_ram"
+           class="quota_bar"
+           data-progress-indicator-flavor
+           data-quota-limit="{{ usages.maxTotalRAMSize }}"
+           data-quota-used="{{ usages.totalRAMUsed }}">
+        {% widthratio usages.totalRAMUsed usages.maxTotalRAMSize 100 as ram_percent %}
+        {% widthratio other_usages.totalRAMUsed usages.maxTotalRAMSize 100 as ram_other_percent %}
+        {% bs_progress_bar ram_percent ram_other_percent 0 contexts=contexts %}
+      </div>
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block modal-footer %}
@@ -115,14 +172,14 @@
                   $button = elem.tagName == 'SELECT' && $elem.next().find('a'),
                   bindHandler = function($el) {
                     $el.blur(function() {
-                      $descEntry.children('i').remove()
-                      $descEntry.removeClass('selected-field')
+                      $descEntry.children('i').remove();
+                      $descEntry.removeClass('selected-field');
                     }).focus(function() {
                       // remove <i> if previous form  without submit
-                      $descEntry.children('i').remove()
-                      $descEntry.addClass('selected-field')
+                      $descEntry.children('i').remove();
+                      $descEntry.addClass('selected-field');
                       $descEntry.prepend(
-                              "<i class='fa fa-chevron-circle-right'></i>")
+                              "<i class='fa fa-chevron-circle-right'></i>");
                     })
                   };
               bindHandler($elem);
@@ -131,6 +188,56 @@
                 bindHandler($button);
               }
             }).filter(':first').trigger('focus');
+
+            // Update flavor specs in a description area
+            var $flavorElem = $modal.find('.form-group select.flavor');
+            if ($flavorElem.length) {
+              var name = $flavorElem.attr('name'),
+                  $flavorTitle = $modal.find('strong[data-field-name*="'+name+'"]').closest('p'),
+                  $flavorSpecs = $flavorTitle.find('.flavor-specs');
+
+              if ($flavorSpecs.length == 0) {
+                $flavorTitle.append('<div class="flavor-specs"></div>');
+                $flavorSpecs = $flavorTitle.find('.flavor-specs');
+              }
+              var flavors = {{ flavors|safe|default:"{}" }};
+              if (!$flavorSpecs.find('.progress').length && flavors.length) {
+                $flavorSpecs.append($('#quota_bars').html());
+                horizon.Quota.initWithFlavors(flavors);
+              }
+
+              // Update quota titles according to the selected flavor
+              var updateQuotaTitles = function() {
+                var appendVal = function(elem, value) {
+                  var origTitle = elem.data('orig-title');
+                  if (!origTitle) {
+                    elem.data('orig-title', origTitle = elem.text());
+                  }
+                  elem.text(value + ' + ' + origTitle);
+                };
+                var selFlavor = $.grep(flavors, function(flavor) {
+                  return flavor.id === $flavorElem.val();
+                })[0];
+                $flavorSpecs.find('.quota_title span').each(function(idx) {
+                  switch (idx) {
+                    // instance count title case
+                    case 0:
+                      appendVal($(this), 1);
+                      break;
+                    // VCPU count title case
+                    case 1:
+                      appendVal($(this), selFlavor.vcpus);
+                      break;
+                    // RAM amount title case
+                    case 2:
+                      appendVal($(this), selFlavor.ram);
+                      break;
+                  }
+                });
+              };
+              updateQuotaTitles();
+              $flavorElem.on('change', updateQuotaTitles);
+            }
           });
           // show full name on text overflow
           $('.modal-dialog h3').each(function () {

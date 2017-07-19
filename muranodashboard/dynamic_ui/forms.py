@@ -223,10 +223,11 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
                     field.compare(name, cleaned_data)
 
                 if hasattr(field, 'postclean'):
-                    value = field.postclean(self, cleaned_data)
+                    value = field.postclean(self, name, cleaned_data)
                     if value:
                         cleaned_data[name] = value
-                        LOG.debug("Update cleaned data in postclean method")
+                        LOG.debug("Update '%s' data in postclean method" %
+                                  name)
 
             self.service.update_cleaned_data(cleaned_data, form=self)
             return cleaned_data

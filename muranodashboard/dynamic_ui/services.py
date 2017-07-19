@@ -87,11 +87,12 @@ class Service(object):
             setattr(self, key, value)
 
         for form in forms:
-            name, field_specs, validators = self.extract_form_data(form)
+            (name, field_specs, validators,
+             region) = self.extract_form_data(form)
             # NOTE(kzaitsev) should be str (not unicode) under python2
             # however it also works as str under python3
             name = helpers.to_str(name)
-            self._add_form(name, field_specs, validators)
+            self._add_form(name, field_specs, validators, region)
 
         # Add ManageWorkflowForm
         workflow_form = catalog_forms.WorkflowManagementForm()
@@ -104,7 +105,8 @@ class Service(object):
                        workflow_form.field_specs,
                        workflow_form.validators)
 
-    def _add_form(self, _name, _specs, _validators, _verbose_name=None):
+    def _add_form(self, _name, _specs, _validators, _verbose_name=None,
+                  _region=None):
         import muranodashboard.dynamic_ui.forms as forms
 
         class Form(six.with_metaclass(forms.DynamicFormMetaclass,
@@ -114,14 +116,15 @@ class Service(object):
             verbose_name = _verbose_name
             field_specs = _specs
             validators = _validators
+            region = _region
 
         self.forms.append(Form)
 
     @staticmethod
     def extract_form_data(data):
         for form_name, form_data in six.iteritems(data):
-            return form_name, form_data['fields'], form_data.get('validators',
-                                                                 [])
+            return (form_name, form_data['fields'],
+                    form_data.get('validators', []), form_data.get('region'))
 
     def extract_attributes(self):
         context = self.context.create_child_context()

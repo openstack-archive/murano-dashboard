@@ -12,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import contextlib
 import re
 import string
 import types
@@ -159,3 +160,14 @@ def to_str(text):
         elif isinstance(text, six.binary_type):
             text = text.decode('utf-8')
     return text
+
+
+@contextlib.contextmanager
+def current_region(request, region):
+    orig_region = request.user.services_region
+    if region is not None:
+        request.user.services_region = region
+    try:
+        yield
+    finally:
+        request.user.services_region = orig_region

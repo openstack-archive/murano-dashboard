@@ -365,12 +365,30 @@ class TestWizard(testtools.TestCase):
         for key, val in expected.items():
             self.assertEqual(val, result[key])
 
+    @mock.patch.object(
+        views, 'nova',
+        mock.MagicMock(side_effect=views.nova_exceptions.ClientException))
+    def test_get_flavors(self):
+        result = self.wizard.get_flavors()
+
+        self.assertEqual('[]', result)
+        views.nova.flavor_list.assert_called_once_with(self.wizard.request)
+
+    @mock.patch.object(views, 'nova')
+    @mock.patch.object(views, 'quotas')
     @mock.patch.object(views, 'services')
     @mock.patch.object(views, 'api')
-    def test_get_context_data(self, mock_api, mock_services):
+    def test_get_context_data(self, mock_api, mock_services, mock_quotas,
+                              mock_nova):
         mock_api.muranoclient().environments.get().name = 'foo_env_name'
         mock_services.get_app_field_descriptions.return_value = [
             'foo_field_descr', 'foo_extended_descr'
+        ]
+        mock_nova.flavor_list.return_value = [
+            type('FakeFlavor%s' % k, (object, ),
+                 {'id': 'fake_id_%s' % k, 'name': 'fake_name_%s' % k,
+                  '_info': {'foo': 'bar'}})
+            for k in (1, 2)
         ]
 
         form = mock.Mock()
@@ -380,7 +398,7 @@ class TestWizard(testtools.TestCase):
         self.wizard.request.GET = {}
         self.wizard.request.POST = {}
         self.wizard.storage.extra_data.get.return_value = app
-        self.wizard.steps = mock.Mock(index='foo_step_index')
+        self.wizard.steps = mock.Mock(index='foo_step_index', step0=-1)
         self.wizard.prefix = 'foo_prefix'
         self.wizard.kwargs['do_redirect'] = 'foo_do_redirect'
         self.wizard.kwargs['drop_wm_form'] = 'foo_drop_wm_form'
@@ -407,13 +425,17 @@ class TestWizard(testtools.TestCase):
             'foo_env_id')
         mock_services.get_app_field_descriptions.assert_called_once_with(
             self.wizard.request, 'foo_app_id', 'foo_step_index')
+        mock_nova.flavor_list.assert_called_once_with(self.wizard.request)
 
+    @mock.patch.object(views, 'nova')
+    @mock.patch.object(views, 'quotas')
     @mock.patch.object(views, 'env_api')
     @mock.patch.object(views, 'utils')
     @mock.patch.object(views, 'services')
     @mock.patch.object(views, 'api')
     def test_get_context_data_alternate_control_flow(
-            self, mock_api, mock_services, mock_utils, mock_env_api):
+            self, mock_api, mock_services, mock_utils, mock_env_api,
+            mock_quatas, mock_nova):
         form = mock.Mock()
         app = mock.Mock(fully_qualified_name='foo_app_fqn')
         app.configure_mock(name='foo_app')
@@ -425,11 +447,18 @@ class TestWizard(testtools.TestCase):
         ]
         mock_utils.ensure_python_obj.return_value = None
         mock_env_api.environments_list.return_value = []
+        mock_nova.flavor_list.return_value = [
+            type('FakeFlavor%s' % k, (object, ),
+                 {'id': 'fake_id_%s' % k, 'name': 'fake_name_%s' % k,
+                  '_info': {'foo': 'bar'}})
+            for k in (1, 2)
+        ]
 
         self.wizard.request.GET = {}
         self.wizard.request.POST = {'wizard_id': 'foo_wizard_id'}
         self.wizard.storage.extra_data = {}
-        self.wizard.steps = mock.Mock(index='foo_step_index')
+        self.wizard.steps = mock.Mock(index='foo_step_index', step0=0)
+        self.wizard.steps.all = []
         self.wizard.prefix = 'foo_prefix'
         context = self.wizard.get_context_data(form)
 
@@ -456,6 +485,7 @@ class TestWizard(testtools.TestCase):
         mock_api.muranoclient().environments.get.assert_called_once_with()
         mock_services.get_app_field_descriptions.assert_called_once_with(
             self.wizard.request, 'foo_app_id', 'foo_step_index')
+        mock_nova.flavor_list.assert_called_once_with(self.wizard.request)
 
 
 class TestIndexView(testtools.TestCase):

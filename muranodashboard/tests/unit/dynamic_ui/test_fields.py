@@ -27,7 +27,9 @@ class TestFields(testtools.TestCase):
 
     def setUp(self):
         super(TestFields, self).setUp()
-        self.request = {'request': mock.Mock()}
+        self.request = mock.Mock()
+        self.request.user.service_region = None
+        self.request.is_ajax = mock.Mock(side_effect=False)
         self.addCleanup(mock.patch.stopall)
 
     @mock.patch.object(fields, 'LOG')
@@ -220,7 +222,7 @@ class TestFields(testtools.TestCase):
         self.assertEqual('DynamicSelect', dynamic_select_cls.__name__)
 
         dynamic_select = dynamic_select_cls(empty_value_message='Foo')
-        dynamic_select.update(self.request, environment_id='foo_env_id')
+        dynamic_select.update({}, self.request, environment_id='foo_env_id')
 
         self.assertTrue(
             hasattr(dynamic_select.widget.add_item_link, '__call__'))
@@ -228,9 +230,9 @@ class TestFields(testtools.TestCase):
         self.assertIsNone(dynamic_select.initial)
 
         mock_pkg_api.app_by_fqn.assert_called_once_with(
-            self.request['request'], 'foo_class_fqn')
+            self.request, 'foo_class_fqn')
         mock_env_api.service_list_by_fqns.assert_called_once_with(
-            self.request['request'], 'foo_env_id',
+            self.request, 'foo_env_id',
             ['foo_class_fqn', 'bar_class_fqn']
         )
 
@@ -252,15 +254,15 @@ class TestFields(testtools.TestCase):
 
         dynamic_select_cls = fields.make_select_cls('foo_class_fqn')
         dynamic_select = dynamic_select_cls(empty_value_message='Foo')
-        dynamic_select.update(self.request, environment_id='foo_env_id')
+        dynamic_select.update({}, self.request, environment_id='foo_env_id')
 
         self.assertEqual(expected_choices, dynamic_select.choices)
         self.assertEqual('foo_app_id', dynamic_select.initial)
 
         mock_pkg_api.app_by_fqn.assert_called_once_with(
-            self.request['request'], 'foo_class_fqn')
+            self.request, 'foo_class_fqn')
         mock_env_api.service_list_by_fqns.assert_called_once_with(
-            self.request['request'], 'foo_env_id', ['foo_class_fqn']
+            self.request, 'foo_env_id', ['foo_class_fqn']
         )
 
     @mock.patch.object(fields, 'env_api')
@@ -274,15 +276,15 @@ class TestFields(testtools.TestCase):
 
         dynamic_select_cls = fields.make_select_cls('foo_class_fqn')
         dynamic_select = dynamic_select_cls(empty_value_message='Foo')
-        dynamic_select.update(self.request, environment_id='foo_env_id')
+        dynamic_select.update({}, self.request, environment_id='foo_env_id')
 
         self.assertEqual(expected_choices, dynamic_select.choices)
         self.assertIsNone(dynamic_select.initial)
 
         mock_pkg_api.app_by_fqn.assert_called_once_with(
-            self.request['request'], 'foo_class_fqn')
+            self.request, 'foo_class_fqn')
         mock_env_api.service_list_by_fqns.assert_called_once_with(
-            self.request['request'], 'foo_env_id', [])
+            self.request, 'foo_env_id', [])
 
     @mock.patch.object(fields, 'reverse')
     @mock.patch.object(fields, 'env_api')
@@ -296,7 +298,7 @@ class TestFields(testtools.TestCase):
 
         dynamic_select_cls = fields.make_select_cls('foo_class_fqn')
         dynamic_select = dynamic_select_cls(empty_value_message='Foo')
-        dynamic_select.update(self.request, environment_id='foo_env_id')
+        dynamic_select.update({}, self.request, environment_id='foo_env_id')
 
         result = dynamic_select.widget.add_item_link()
         self.assertEqual('', result)
@@ -304,7 +306,7 @@ class TestFields(testtools.TestCase):
         mock_pkg = mock.Mock(fully_qualified_name='foo_class_fqn')
         mock_pkg.configure_mock(name='foo_class_name')
         mock_pkg_api.app_by_fqn.return_value = mock_pkg
-        dynamic_select.update(self.request, environment_id='foo_env_id')
+        dynamic_select.update({}, self.request, environment_id='foo_env_id')
 
         result = dynamic_select.widget.add_item_link()
         expected = '[["foo_class_name", "foo_url"]]'
@@ -492,11 +494,11 @@ class TestFlavorChoiceField(testtools.TestCase):
 
         self.request = {'request': mock.Mock()}
         self.tiny_flavor = mock.Mock()
-        self.tiny_flavor.configure_mock(name='m1.tiny')
+        self.tiny_flavor.configure_mock(id='id1', name='m1.tiny')
         self.small_flavor = mock.Mock()
-        self.small_flavor.configure_mock(name='m1.small')
+        self.small_flavor.configure_mock(id='id2', name='m1.small')
         self.medium_flavor = mock.Mock()
-        self.medium_flavor.configure_mock(name='m1.medium')
+        self.medium_flavor.configure_mock(id='id3', name='m1.medium')
 
         self.addCleanup(mock.patch.stopall)
 
@@ -507,7 +509,7 @@ class TestFlavorChoiceField(testtools.TestCase):
             self.tiny_flavor, self.small_flavor, self.medium_flavor
         ]
         expected_choices = [
-            ('m1.medium', 'm1.medium'), ('m1.small', 'm1.small')
+            ('id3', 'm1.medium'), ('id2', 'm1.small')
         ]
         valid_requirements = [
             ('vcpus', 2), ('disk', 101), ('ram', 501)
@@ -529,7 +531,7 @@ class TestFlavorChoiceField(testtools.TestCase):
             self.flavor_choice_field.update(self.request)
             self.assertEqual(expected_choices,
                              self.flavor_choice_field.choices)
-            self.assertEqual('m1.medium', self.flavor_choice_field.initial)
+            self.assertEqual('id3', self.flavor_choice_field.initial)
 
     @mock.patch.object(fields, 'nova')
     def test_update_without_requirements(self, mock_nova):
@@ -539,14 +541,14 @@ class TestFlavorChoiceField(testtools.TestCase):
         del self.flavor_choice_field.requirements
 
         expected_choices = [
-            ('m1.medium', 'm1.medium'),
-            ('m1.small', 'm1.small'),
-            ('m1.tiny', 'm1.tiny')
+            ('id3', 'm1.medium'),
+            ('id2', 'm1.small'),
+            ('id1', 'm1.tiny')
         ]
 
         self.flavor_choice_field.update(self.request)
         self.assertEqual(expected_choices, self.flavor_choice_field.choices)
-        self.assertEqual('m1.medium', self.flavor_choice_field.initial)
+        self.assertEqual('id3', self.flavor_choice_field.initial)
 
 
 class TestKeyPairChoiceField(testtools.TestCase):
