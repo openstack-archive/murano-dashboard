@@ -2,19 +2,20 @@
 # Eric Lei <1165970798@qq.com>, 2016. #zanata
 # Wu Han <wu.han@h3c.com>, 2016. #zanata
 # sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
+# Bin <liubin@glab.cn>, 2017. #zanata
 # Gaoxiao Zhu <zhu.gaoxiao@h3c.com>, 2017. #zanata
 # Wu Han <wu.han@h3c.com>, 2017. #zanata
 # liujunpeng <liujunpeng@inspur.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: murano-dashboard 4.0.0.0b3.dev4\n"
+"Project-Id-Version: murano-dashboard 4.0.0.0b3.dev60\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2017-06-10 02:57+0000\n"
+"POT-Creation-Date: 2017-07-23 21:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-02-10 02:51+0000\n"
-"Last-Translator: Wu Han <wu.han@h3c.com>\n"
+"PO-Revision-Date: 2017-07-24 04:21+0000\n"
+"Last-Translator: Bin <liubin@glab.cn>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.9.6\n"
@@ -112,6 +113,9 @@ msgstr "应用程序详情"
 msgid "Application Package"
 msgstr "应用软件包"
 
+msgid "Application default security group"
+msgstr "应用缺省安全组"
+
 msgid "Application&nbsp;Components"
 msgstr "应用程序组件"
 
@@ -150,6 +154,12 @@ msgstr "已成功导入 Bundle"
 
 msgid "Bundle's full name."
 msgstr "Bundle 全称。"
+
+msgid "Can not get logo for {0}."
+msgstr "不能获取{0}的标识。"
+
+msgid "Can not get supplier logo for {0}."
+msgstr "不能获取{0}的提供者标识。"
 
 msgid "Cancel"
 msgstr "取消"
@@ -247,6 +257,11 @@ msgstr "已创建"
 
 msgid "Custom Type"
 msgstr "定制类型"
+
+msgid ""
+"Default network is either not specified for this project, or specified "
+"incorrectly, please contact administrator."
+msgstr "缺省网络要么没有指定给这个项目，要么指定错误，请联系管理员。"
 
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
@@ -349,6 +364,10 @@ msgid ""
 "special character"
 msgstr "请输入复杂密码，必须包含至少一个字母、一个数字和一个特殊字符"
 
+#, python-format
+msgid "Enter a dict with choices and values. Got %(value)s."
+msgstr "输入有选项和值的字典。获取%(value)s。"
+
 msgid "Enter a password"
 msgstr "输入密码"
 
@@ -360,6 +379,9 @@ msgstr "环境"
 
 msgid "Environment Default Network"
 msgstr "环境默认网络"
+
+msgid "Environment Deployment History"
+msgstr "环境部署历史"
 
 msgid "Environment Name"
 msgstr "环境名称"
@@ -376,6 +398,12 @@ msgstr "已经存在相同名称的环境"
 
 msgid "Environments"
 msgstr "环境"
+
+#, python-format
+msgid ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+msgstr "获取环境时出错。页面被错误的渲染。原因：%s"
 
 msgid "Error test_error_message occurred while installing package bar"
 msgstr "当安装包bar时，出现错误测试错误信息"
@@ -534,6 +562,9 @@ msgstr "许可证"
 msgid "Logs"
 msgstr "日志"
 
+msgid "Logs (Created, Message)"
+msgstr "日志（创建、消息）"
+
 msgid "Manage"
 msgstr "管理"
 
@@ -603,6 +634,9 @@ msgstr "当前时间没有最近的活动报告"
 
 msgid "No requirements"
 msgstr "没有要求"
+
+msgid "No volumes available"
+msgstr "没有可用卷。"
 
 msgid "None"
 msgstr "无"
@@ -775,6 +809,10 @@ msgstr "选择应用"
 msgid "Select Image"
 msgstr "选择镜像"
 
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr "选择一个有效的选项。%(value)s不是可用选项之一。"
+
 msgid "Select an image registered in Glance Image Services."
 msgstr "在 Glance 镜像服务中选择一个已注册的镜像。"
 
@@ -785,6 +823,12 @@ msgstr "选择一个 Murano 支持的镜像类型。选择“自定义类型”�
 
 msgid "Select one or more categories for a package."
 msgstr "为软件包选择一个或多个分类。"
+
+msgid "Select volume"
+msgstr "选择卷"
+
+msgid "Services (Name, Type)"
+msgstr "服务（名称、类型）"
 
 msgid "Set up for identifying a package."
 msgstr "为软件包设置标示。"
@@ -1004,6 +1048,9 @@ msgstr "无法移除软件包"
 msgid "Unable to retrieve  availability zones."
 msgstr "无法获取可用区域"
 
+msgid "Unable to retrieve deployment history."
+msgstr "无法获取开发历史。"
+
 msgid "Unable to retrieve details for service"
 msgstr "无法获取服务详情"
 
@@ -1026,6 +1073,12 @@ msgstr "无法获取工程列表"
 
 msgid "Unable to retrieve public images."
 msgstr "无法获取公共镜像。"
+
+msgid "Unable to retrieve snapshot list."
+msgstr "无法获取快照列表。"
+
+msgid "Unable to retrieve volume list."
+msgstr "无法获取卷列表。"
 
 msgid "Unavailable"
 msgstr "不可用"
@@ -1076,6 +1129,9 @@ msgstr "您不被允许修改这个软件包的属性"
 
 msgid "You are not allowed to delete this package"
 msgstr "您不被允许删除这个软件包"
+
+msgid "You are not allowed to make packages public."
+msgstr "你无权公开包。"
 
 msgid "You are not allowed to perform this operation"
 msgstr "您不被允许执行这个操作"

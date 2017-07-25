@@ -1,5 +1,6 @@
 # Wu Han <wu.han@h3c.com>, 2016. #zanata
 # sunanchen <KF.sunanchen@h3c.com>, 2016. #zanata
+# Bin <liubin@glab.cn>, 2017. #zanata
 # Wu Han <wu.han@h3c.com>, 2017. #zanata
 # liujunpeng <liujunpeng@inspur.com>, 2017. #zanata
 # sunanchen <KF.sunanchen@h3c.com>, 2017. #zanata
@@ -9,12 +10,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 19:40+0000\n"
+"POT-Creation-Date: 2017-07-23 21:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-02-18 08:51+0000\n"
-"Last-Translator: sunanchen <KF.sunanchen@h3c.com>\n"
+"PO-Revision-Date: 2017-07-24 04:25+0000\n"
+"Last-Translator: Bin <liubin@glab.cn>\n"
 "Language-Team: Chinese (China)\n"
 "Language: zh-CN\n"
 "X-Generator: Zanata 3.9.6\n"
@@ -35,8 +36,20 @@ msgstr "2.0.2"
 msgid "3.0.0"
 msgstr "3.0.0"
 
+msgid "3.0.0-12"
+msgstr "3.0.0-12"
+
 msgid "3.1.0"
 msgstr "3.1.0"
+
+msgid "4.0.0.0b1"
+msgstr "4.0.0.0b1"
+
+msgid "4.0.0.0b2"
+msgstr "4.0.0.0b2"
+
+msgid "4.0.0.0b2-37"
+msgstr "4.0.0.0b2-37"
 
 msgid ""
 "Add details page for packages, The details page will show more info to user, "
@@ -55,6 +68,10 @@ msgid ""
 msgstr ""
 "添加了 ``DISPLAY_MURANO_REPO_URL`` 设置，提供了到 ``apps.openstack.org``或其"
 "他Murano应用库的用户可见链接 。"
+
+msgid ""
+"Added a widget to display and select available volumes and volume snapshots."
+msgstr "添加一个组件去显示和选择可用卷和卷快照。"
 
 msgid ""
 "Added the capability to execute actions (delete, abandon or deploy) on "
@@ -272,6 +289,9 @@ msgstr ""
 "通过下拉列表将已部署的组件添加到环境的问题是通过应用新类型格式的更改来修复"
 "的。"
 
+msgid "This behavior is disabled by default and could be enabled by adding:"
+msgstr "这个行为默认不可用，可以通过添加来开启："
+
 msgid ""
 "To upgrade to Newton version of app catalog you need to remove old "
 "``_50_murano.py`` config file, that defined in murano dashboard. Be sure to "
@@ -294,6 +314,9 @@ msgid ""
 msgstr ""
 "UI定义版本提升到了“2.4”。如果应用要使用参数，需要通过设置UI文件中的版本来指"
 "定。"
+
+msgid "USE_FIXED_NETWORK = yes FIXED_MURANO_NETWORK = murano_network"
+msgstr "USE_FIXED_NETWORK = yes FIXED_MURANO_NETWORK = murano_network"
 
 msgid "Upgrade Notes"
 msgstr "升级说明"
@@ -376,3 +399,6 @@ msgstr ""
 "Murano使用了直接继承自yaml.Loader的加载器. 这是不安全的，因为此加载器可以由特"
 "别构造的yaml文件创建自定义的python对象。此修改将所有yaml加载操作都由安全的加"
 "载器代替完成。"
+
+msgid "to the Horizon configuration."
+msgstr "给Horizon配置。"
