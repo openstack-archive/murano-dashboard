@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Adds a new yaql function 'encryptData' which encrypts values passed from
+    MuranoPL UI definitions. Requires Barbican to be configured, see
+    https://docs.openstack.org/murano/latest/admin/appdev-guide/encrypting_properties.html
+    for more info.
