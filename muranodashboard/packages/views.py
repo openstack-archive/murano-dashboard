@@ -436,7 +436,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             LOG.info('Adding {0} application to the'
                      ' latest apps list'.format(app_id))
 
-        step_data = self.get_form_step_data(form)
+        step_data = self.get_form_step_data(form).copy()
         if self.steps.current == 'upload':
             import_type = form.cleaned_data['import_type']
             data = {}
