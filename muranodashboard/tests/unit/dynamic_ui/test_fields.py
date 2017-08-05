@@ -648,7 +648,6 @@ class TestNetworkChoiceField(testtools.TestCase):
     def setUp(self):
         super(TestNetworkChoiceField, self).setUp()
         self.network_choice_field = fields.NetworkChoiceField(
-            include_subnets=True,
             filter=None,
             murano_networks='exclude',
             allow_auto=True)
@@ -667,7 +666,7 @@ class TestNetworkChoiceField(testtools.TestCase):
         self.network_choice_field.update(self.request)
         self.assertEqual(expected_choices, self.network_choice_field.choices)
         mock_net.get_available_networks.assert_called_once_with(
-            self.request['request'], True, None, 'exclude')
+            self.request['request'], None, 'exclude')
 
     def test_to_python(self):
         self.assertEqual({'foo': 'bar'},
