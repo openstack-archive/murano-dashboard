@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-09 14:54+0000\n"
+"POT-Creation-Date: 2017-08-10 13:09+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,9 +44,6 @@ msgstr "4.0.0.0b2"
 
 msgid "4.0.0.0b3"
 msgstr "4.0.0.0b3"
-
-msgid "4.0.0.0b3-8"
-msgstr "4.0.0.0b3-8"
 
 msgid ""
 "A new button, called \"Deployment History\", has been added to the "

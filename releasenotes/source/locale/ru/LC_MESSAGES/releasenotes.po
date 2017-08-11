@@ -1,0 +1,53 @@
+# Artem <amikhalev90@gmail.com>, 2016. #zanata
+# Artem <amikhalev90@gmail.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: Murano Dashboard Release Notes 4.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-10 13:09+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-02-09 07:02+0000\n"
+"Last-Translator: Artem <amikhalev90@gmail.com>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"X-Generator: Zanata 3.9.6\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+msgid "1.0.3"
+msgstr "1.0.3"
+
+msgid "2.0.0"
+msgstr "2.0.0"
+
+msgid "2.0.1"
+msgstr "2.0.1"
+
+msgid "2.0.2"
+msgstr "2.0.2"
+
+msgid "3.0.0"
+msgstr "3.0.0"
+
+msgid "3.1.0"
+msgstr "3.1.0"
+
+msgid "Bug Fixes"
+msgstr "Исправленные ошибки"
+
+msgid "Current Series Release Notes"
+msgstr "Примечания к текущему релизу"
+
+msgid "Liberty Series Release Notes"
+msgstr "Примечания к релизу Liberty "
+
+msgid "Mitaka Series Release Notes"
+msgstr "Примечания к релизу Mitaka"
+
+msgid "Newton Series Release Notes"
+msgstr "Примечания к релизу Newton"
+
+msgid "Other Notes"
+msgstr "Прочие изменения"
