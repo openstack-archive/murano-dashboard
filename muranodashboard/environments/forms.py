@@ -35,7 +35,7 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
                            help_text=ENV_NAME_HELP_TEXT,
                            max_length=255)
 
-    net_config = forms.ChoiceField(
+    net_config = horizon_forms.ThemableChoiceField(
         label=_("Environment Default Network"))
 
     def __init__(self, request, *args, **kwargs):
