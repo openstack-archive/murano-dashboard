@@ -2436,7 +2436,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_element_is_clickable(
             by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
         self.wait_element_is_clickable(
-            by.By.CSS_SELECTOR, c.ThemableOption.format('name')).click()
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('name')).click()
 
         for package_name in packages_by_name:
             self.fill_field(by.By.CSS_SELECTOR, c.PackageFilterInput,
@@ -2476,7 +2476,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_element_is_clickable(
             by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
         self.wait_element_is_clickable(
-            by.By.CSS_SELECTOR, c.ThemableOption.format('type')).click()
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('type')).click()
 
         for package_type, package_list in packages_by_type.items():
             self.fill_field(by.By.CSS_SELECTOR, c.PackageFilterInput,
@@ -2532,7 +2532,7 @@ class TestSuitePackages(base.PackageTestCase):
         self.wait_element_is_clickable(
             by.By.CSS_SELECTOR, c.PackageFilterDropdownBtn).click()
         self.wait_element_is_clickable(
-            by.By.CSS_SELECTOR, c.ThemableOption.format('search'))\
+            by.By.CSS_SELECTOR, c.PackageFilterTypeBtn.format('search'))\
             .click()
 
         for keyword, package_name in packages_by_keyword.items():
@@ -2834,7 +2834,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_url')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-url']")
@@ -2864,7 +2867,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -2901,8 +2907,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.ImportBundle).click()
-
-        self.select_from_list('import_type', 'by_url')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-url']")
@@ -2937,8 +2945,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.ImportBundle).click()
-
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-name']")
@@ -2971,8 +2981,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -2999,7 +3011,10 @@ class TestSuiteRepository(base.PackageTestCase):
 
         # Invalid folder
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_url')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-url']")
         el.send_keys("http://127.0.0.1:8099/None/{0}.zip".format(pkg_name))
@@ -3008,7 +3023,10 @@ class TestSuiteRepository(base.PackageTestCase):
 
         # HTTP connect error
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_url')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-url']")
         el.send_keys("http://127.0.0.2:12345/apps/{0}.zip".format(pkg_name))
@@ -3017,7 +3035,10 @@ class TestSuiteRepository(base.PackageTestCase):
 
         # Invalid app name
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_url')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_url")
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-url']")
         el.send_keys(
@@ -3037,7 +3058,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -3058,7 +3082,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -3082,7 +3109,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -3116,8 +3146,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -3153,7 +3185,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.UploadPackage).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-repo_name']")
@@ -3202,7 +3237,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.navigate_to('Manage')
         self.go_to_submenu('Packages')
         self.driver.find_element_by_id(c.ImportBundle).click()
-        self.select_from_list('import_type', 'by_name')
+        sel = self.driver.find_element_by_css_selector(
+            "select[name='upload-import_type']")
+        sel = ui.Select(sel)
+        sel.select_by_value("by_name")
 
         el = self.driver.find_element_by_css_selector(
             "input[name='upload-name']")
