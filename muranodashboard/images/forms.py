@@ -14,6 +14,7 @@
 
 import json
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -27,6 +28,14 @@ LOG = logging.getLogger(__name__)
 
 
 def filter_murano_images(images, request=None):
+    # filter images by project owner
+    filter_project = getattr(settings, 'MURANO_IMAGE_FILTER_PROJECT_ID', None)
+    if filter_project:
+        project_ids = [filter_project]
+        if request:
+            project_ids.append(request.user.tenant_id)
+        images = filter(
+            lambda x: getattr(x, 'owner', None) in project_ids, list(images))
     # filter out the snapshot image type
     images = filter(
         lambda x: getattr(x, 'image_type', None) != 'snapshot', list(images))
