@@ -1,16 +1,17 @@
 # Eunseop Shin <kairos9603@khu.ac.kr>, 2016. #zanata
 # Ian Y. Choi <ianyrchoi@gmail.com>, 2016. #zanata
 # SeongSoo Cho <nexusz99@gmail.com>, 2017. #zanata
+# minwook-shin <minwook0106@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 19:40+0000\n"
+"POT-Creation-Date: 2017-09-04 12:55+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-01-23 03:14+0000\n"
-"Last-Translator: SeongSoo Cho <nexusz99@gmail.com>\n"
+"PO-Revision-Date: 2017-09-20 05:27+0000\n"
+"Last-Translator: minwook-shin <minwook0106@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
 "X-Generator: Zanata 3.9.6\n"
@@ -30,6 +31,15 @@ msgstr "2.0.2"
 
 msgid "3.0.0"
 msgstr "3.0.0"
+
+msgid "3.0.0-12"
+msgstr "3.0.0-12"
+
+msgid "3.1.0"
+msgstr "3.1.0"
+
+msgid "4.0.0"
+msgstr "4.0.0"
 
 msgid ""
 "Add details page for packages, The details page will show more info to user, "
@@ -116,6 +126,9 @@ msgstr "새로운 기능"
 msgid "Newton Series Release Notes"
 msgstr "Newton 시리즈에 대한 릴리즈 노트"
 
+msgid "Ocata Series Release Notes"
+msgstr "Ocata 시리즈에 대한 릴리즈 노트"
+
 msgid "Other Notes"
 msgstr "기타 기능"
 
@@ -125,6 +138,9 @@ msgid ""
 msgstr ""
 "매개 변수 ``GLANCE_API_INSECURE`` 및 ``GLANCE_API_URL`` 를 "
 "``GLARE_API_INSECURE`` 및 ``GLARE_API_URL`` 로 이름을 변경하였습니다."
+
+msgid "Pike Series Release Notes"
+msgstr "Pike 시리즈에 대한 릴리즈 노트"
 
 msgid ""
 "Requirements for the flavor field accepts 'max_vcpus' 'max_disk' and "
