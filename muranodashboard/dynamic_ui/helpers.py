@@ -110,16 +110,15 @@ def insert_hidden_ids(application):
                 v.get('id'), ObjectID):
             v['id'] = str(uuid.uuid4())
             return k, v
-        elif isinstance(v, ObjectID):
-            return k, v.object_id
-        else:
-            return rec(k), rec(v)
+        return rec(k), rec(v)
 
     def rec(val):
         if isinstance(val, dict):
             return dict(wrap(k, v) for k, v in six.iteritems(val))
         elif isinstance(val, list):
             return [rec(v) for v in val]
+        elif isinstance(val, ObjectID):
+            return val.object_id
         else:
             return val
 
