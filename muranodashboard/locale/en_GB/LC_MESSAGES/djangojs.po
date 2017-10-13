@@ -1,0 +1,85 @@
+# Andi Chandler <andi@gowling.com>, 2016. #zanata
+# Andi Chandler <andi@gowling.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 4.0.0.0rc2.dev17\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2017-09-26 03:23+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-10-11 12:34+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"Language-Team: English (United Kingdom)\n"
+"Language: en-GB\n"
+"X-Generator: Zanata 3.9.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid " 1 capital letter"
+msgstr " 1 capital letter"
+
+msgid " 1 digit"
+msgstr " 1 digit"
+
+msgid " 1 non-capital letter"
+msgstr " 1 non-capital letter"
+
+msgid " 1 special character"
+msgstr " 1 special character"
+
+msgid " 7 characters"
+msgstr " 7 characters"
+
+msgid "An error occurred. Please try again later."
+msgstr "An error occurred. Please try again later."
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Loading"
+msgstr "Loading"
+
+msgid "New"
+msgstr "New"
+
+msgid "Passwords do not match"
+msgstr "Passwords do not match"
+
+msgid "Show less"
+msgstr "Show less"
+
+msgid "Show more"
+msgstr "Show more"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "There was an error submitting the form. Please try again."
+
+msgid "Unable to edit component metadata."
+msgstr "Unable to edit component metadata."
+
+msgid "Unable to edit environment metadata."
+msgstr "Unable to edit environment metadata."
+
+msgid "Unable to retrieve component metadata."
+msgstr "Unable to retrieve component metadata."
+
+msgid "Unable to retrieve environment metadata."
+msgstr "Unable to retrieve environment metadata."
+
+msgid "Unable to retrieve the packages."
+msgstr "Unable to retrieve the packages."
+
+msgid "Unable to run action."
+msgstr "Unable to run action."
+
+msgid "Waiting for a result"
+msgstr "Waiting for a result"
+
+msgid "Working"
+msgstr "Working"
+
+msgid "Your password should have at least"
+msgstr "Your password should have at least"
