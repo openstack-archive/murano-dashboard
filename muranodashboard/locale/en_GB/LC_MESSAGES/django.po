@@ -1,0 +1,1205 @@
+# Andi Chandler <andi@gowling.com>, 2016. #zanata
+# Andi Chandler <andi@gowling.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard 4.0.0.0rc2.dev20\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2017-10-14 00:26+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-10-13 09:17+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"Language-Team: English (United Kingdom)\n"
+"Language: en-GB\n"
+"X-Generator: Zanata 3.9.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#, python-format
+msgid "%s: random subnet"
+msgstr "%s: random subnet"
+
+msgid "-"
+msgstr "-"
+
+msgid "80 characters max."
+msgstr "80 characters max."
+
+msgid "A local zip file to upload"
+msgstr "A local zip file to upload"
+
+msgid "Abandon Environment"
+msgid_plural "Abandon Environments"
+msgstr[0] "Abandon Environment"
+msgstr[1] "Abandon Environments"
+
+msgid "Abandoned Environment"
+msgid_plural "Abandoned Environments"
+msgstr[0] "Abandoned Environment"
+msgstr[1] "Abandoned Environments"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "Add Application"
+msgstr "Add Application"
+
+msgid "Add Application Category"
+msgstr "Add Application Category"
+
+msgid "Add Category"
+msgstr "Add Category"
+
+msgid "Add Component"
+msgstr "Add Component"
+
+msgid "Add Murano Metadata"
+msgstr "Add Murano Metadata"
+
+msgid "Add New"
+msgstr "Add New"
+
+msgid "Add new category to the application catalog."
+msgstr "Add new category to the application catalogue."
+
+msgid "Add to Env"
+msgstr "Add to Env"
+
+msgid "Adding application to an environment failed."
+msgstr "Adding application to an environment failed."
+
+msgid "All"
+msgstr "All"
+
+msgid "Allows adding additional information about a package."
+msgstr "Allows adding additional information about a package."
+
+msgid ""
+"Allows to hide a package from the catalog. (Applies to package dependencies)"
+msgstr ""
+"Allows to hide a package from the catalogue. (Applies to package "
+"dependencies)"
+
+msgid ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+msgstr ""
+"An environment is a collection of applications that are meant to operate "
+"under similar conditions."
+
+msgid "An external http/https URL to load the bundle from."
+msgstr "An external http/https URL to load the bundle from."
+
+msgid "An external http/https URL to load the package from."
+msgstr "An external http/https URL to load the package from."
+
+msgid "App Catalog"
+msgstr "App Catalogue"
+
+msgid "App Category:"
+msgstr "App Category:"
+
+msgid "App category"
+msgstr "App category"
+
+msgid "Application Categories"
+msgstr "Application Categories"
+
+msgid "Application Category"
+msgstr "Application Category"
+
+msgid "Application Details"
+msgstr "Application Details"
+
+msgid "Application Package"
+msgstr "Application Package"
+
+msgid "Application default security group"
+msgstr "Application default security group"
+
+msgid "Application&nbsp;Components"
+msgstr "Application&nbsp;Components"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Author"
+msgstr "Author"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Browse"
+msgstr "Browse"
+
+msgid "Browse Local"
+msgstr "Browse Local"
+
+msgid "Bundle Name"
+msgstr "Bundle Name"
+
+msgid "Bundle URL"
+msgstr "Bundle URL"
+
+msgid "Bundle creation failed.Reason: Can't find Bundle name from repository."
+msgstr "Bundle creation failed.Reason: Can't find Bundle name from repository."
+
+msgid "Bundle creation failed.Reason: {0}"
+msgstr "Bundle creation failed.Reason: {0}"
+
+msgid "Bundle successfully imported."
+msgstr "Bundle successfully imported."
+
+msgid "Bundle's full name."
+msgstr "Bundle's full name."
+
+msgid "Can not get logo for {0}."
+msgstr "Can not get logo for {0}."
+
+msgid "Can not get supplier logo for {0}."
+msgstr "Can not get supplier logo for {0}."
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Category Name"
+msgstr "Category Name"
+
+msgid "Category {0} created."
+msgstr "Category {0} created."
+
+msgid "Check Keystone configuration of murano-api server."
+msgstr "Check Keystone configuration of murano-api server."
+
+msgid "Choose a Zip archive to upload into the catalog."
+msgstr "Choose a Zip archive to upload into the catalogue."
+
+msgid "Choose a name for the environment"
+msgstr "Choose a name for the environment"
+
+msgctxt "Package requirements"
+msgid "Classes definition folder"
+msgstr "Classes definition folder"
+
+msgid "Click to create new environment"
+msgstr "Click to create new environment"
+
+msgid "Completed with warnings"
+msgstr "Completed with warnings"
+
+msgid "Component"
+msgstr "Component"
+
+msgid "Component Details"
+msgstr "Component Details"
+
+msgid "Component List"
+msgstr "Component List"
+
+msgid "Component Logs"
+msgstr "Component Logs"
+
+msgid "Components"
+msgstr "Components"
+
+msgid "Configuration"
+msgstr "Configuration"
+
+msgid "Configure Application"
+msgstr "Configure Application"
+
+msgid "Confirm password"
+msgstr "Confirm password"
+
+msgid "Could not retrieve latest status for the {0} environment"
+msgstr "Could not retrieve latest status for the {0} environment"
+
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr "Couldn't update environment. Reason: This name is already taken."
+
+msgid "Couldn't update package {0} parameters. Error: {1}"
+msgstr "Couldn't update package {0} parameters. Error: {1}"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Create Env"
+msgstr "Create Env"
+
+msgid "Create Environment"
+msgstr "Create Environment"
+
+msgid "Create New"
+msgstr "Create New"
+
+msgid "Create a title for an image."
+msgstr "Create a title for an image."
+
+msgid "Created"
+msgstr "Created"
+
+msgid "Custom Type"
+msgstr "Custom Type"
+
+msgid ""
+"Default network is either not specified for this project, or specified "
+"incorrectly, please contact administrator."
+msgstr ""
+"Default network is either not specified for this project, or specified "
+"incorrectly, please contact administrator."
+
+msgid ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+msgstr ""
+"Defines whether or not a package can be used by other tenants. (Applies to "
+"package dependencies)"
+
+msgid "Delete Category"
+msgid_plural "Delete Categories"
+msgstr[0] "Delete Category"
+msgstr[1] "Delete Categories"
+
+msgid "Delete Component"
+msgid_plural "Delete Components"
+msgstr[0] "Delete Component"
+msgstr[1] "Delete Components"
+
+msgid "Delete Environment"
+msgid_plural "Delete Environments"
+msgstr[0] "Delete Environment"
+msgstr[1] "Delete Environments"
+
+msgid "Delete Metadata"
+msgid_plural "Delete Metadata"
+msgstr[0] "Delete Metadata"
+msgstr[1] "Delete Metadata"
+
+msgid "Delete Package"
+msgid_plural "Delete Packages"
+msgstr[0] "Delete Package"
+msgstr[1] "Delete Packages"
+
+msgid "Delete failure"
+msgstr "Delete failure"
+
+msgid "Deleted Category"
+msgid_plural "Deleted Categories"
+msgstr[0] "Deleted Category"
+msgstr[1] "Deleted Categories"
+
+msgid "Deleted Metadata"
+msgid_plural "Deleted Metadata"
+msgstr[0] "Deleted Metadata"
+msgstr[1] "Deleted Metadata"
+
+msgid "Deleted Package"
+msgid_plural "Deleted Packages"
+msgstr[0] "Deleted Package"
+msgstr[1] "Deleted Packages"
+
+msgid "Deleting"
+msgstr "Deleting"
+
+msgid "Deploy Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Deploy Environment"
+msgstr[1] "Deploy Environments"
+
+msgid "Deploy This Environment"
+msgstr "Deploy This Environment"
+
+msgid "Deploy failure"
+msgstr "Deploy failure"
+
+msgid "Deploy started"
+msgstr "Deploy started"
+
+msgid "Deployed Components"
+msgstr "Deployed Components"
+
+msgid "Deploying"
+msgstr "Deploying"
+
+msgid "Deployment Details"
+msgstr "Deployment Details"
+
+msgid "Deployment History"
+msgstr "Deployment History"
+
+msgid "Deployment Logs"
+msgstr "Deployment Logs"
+
+#, python-format
+msgid "Deployment with id %s doesn't exist anymore"
+msgstr "Deployment with id %s doesn't exist anymore"
+
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "Deployment with id foo_deployment_id doesn't exist any more"
+
+msgid "Deployments"
+msgstr "Deployments"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "Download Package"
+msgstr "Download Package"
+
+msgid "Drop Components here"
+msgstr "Drop Components here"
+
+msgid "Enabled"
+msgstr "Enabled"
+
+msgid ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+msgstr ""
+"Enter a complex password with at least one letter, one number and one "
+"special character"
+
+#, python-format
+msgid "Enter a dict with choices and values. Got %(value)s."
+msgstr "Enter a dict with choices and values. Got %(value)s."
+
+msgid "Enter a password"
+msgstr "Enter a password"
+
+msgid "Enter an image type supported by Murano."
+msgstr "Enter an image type supported by Murano."
+
+msgid "Environment"
+msgstr "Environment"
+
+msgid "Environment Default Network"
+msgstr "Environment Default Network"
+
+msgid "Environment Deployment History"
+msgstr "Environment Deployment History"
+
+msgid "Environment Name"
+msgstr "Environment Name"
+
+msgid "Environment name must contain at least one non-white space symbol."
+msgstr "Environment name must contain at least one non-white space symbol."
+
+#, python-format
+msgid "Environment with id %s doesn't exist anymore"
+msgstr "Environment with id %s doesn't exist any more"
+
+msgid "Environment with specified name already exists"
+msgstr "Environment with specified name already exists"
+
+msgid "Environments"
+msgstr "Environments"
+
+#, python-format
+msgid ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+msgstr ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "Error test_error_message occurred while installing package bar"
+
+msgid "Error {0} occurred while installing images for {1}"
+msgstr "Error {0} occurred while installing images for {1}"
+
+msgid "Error {0} occurred while installing package {1}"
+msgstr "Error {0} occurred while installing package {1}"
+
+msgid "Error {0} occurred while parsing package {1}"
+msgstr "Error {0} occurred while parsing package {1}"
+
+msgid "Error {0} occurred while setting image {1}, {2} public"
+msgstr "Error {0} occurred while setting image {1}, {2} public"
+
+msgctxt "Package requirements"
+msgid "Execution plans folder"
+msgstr "Execution plans folder"
+
+msgid "FQN"
+msgstr "FQN"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Failed to create environment"
+msgstr "Failed to create environment"
+
+msgid "Failed to modify the package. {0}"
+msgstr "Failed to modify the package. {0}"
+
+msgid "File"
+msgstr "File"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Find in a selected category"
+msgstr "Find in a selected category"
+
+msgid ""
+"First symbol should be latin letter or underscore. Subsequent symbols can be "
+"latin letter, numeric, underscore, at sign, number sign or dollar sign"
+msgstr ""
+"First symbol should be Latin letter or underscore. Subsequent symbols can be "
+"Latin letter, numeric, underscore, at sign, number sign or dollar sign"
+
+msgid "Foo"
+msgstr "Foo"
+
+msgid "Fully qualified package name."
+msgstr "Fully qualified package name."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+
+#, python-format
+msgid ""
+"Go to <b><a href=%(pkg_def_url)s>Packages</a></b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Go to <b><a href=%(pkg_def_url)s>Packages</a></b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+
+msgid "HTTP/HTTPS URL of the bundle file."
+msgstr "HTTP/HTTPS URL of the bundle file."
+
+msgid "HTTP/HTTPS URL of the package file."
+msgstr "HTTP/HTTPS URL of the package file."
+
+msgid "Heat Orchestration stack name"
+msgstr "Heat Orchestration stack name"
+
+msgid "Heat Orchestration stack%(forloop.counter)s name"
+msgstr "Heat Orchestration stack%(forloop.counter)s name"
+
+msgid "ID"
+msgstr "ID"
+
+msgid ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from murano repository."
+msgstr ""
+"If packages depend upon other packages and/or require specific glance "
+"images, those are going to be installed with them from Murano repository."
+
+msgid ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from murano repository."
+msgstr ""
+"If the package depends upon other packages and/or requires specific glance "
+"images, those are going to be installed with it from Murano repository."
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Image Title"
+msgstr "Image Title"
+
+msgid "Image Type"
+msgstr "Image Type"
+
+msgid "Image successfully marked"
+msgstr "Image successfully marked"
+
+msgid "Images"
+msgstr "Images"
+
+msgid "Import Bundle"
+msgstr "Import Bundle"
+
+msgid "Import Package"
+msgstr "Import Package"
+
+msgid "Importing package {0} failed. Reason: {1}"
+msgstr "Importing package {0} failed. Reason: {1}"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Instance name"
+msgstr "Instance name"
+
+msgid "Instance%(forloop.counter)s name"
+msgstr "Instance%(forloop.counter)s name"
+
+msgid "Invalid metadata for image: {0}"
+msgstr "Invalid metadata for image: {0}"
+
+msgid "Invalid murano image metadata"
+msgstr "Invalid murano image metadata"
+
+msgid "Invalid value of 'murano_nets' option"
+msgstr "Invalid value of 'murano_nets' option"
+
+msgid "It is forbidden to upload files larger than {0} MB."
+msgstr "It is forbidden to upload files larger than {0} MB."
+
+msgid "KeyWord"
+msgstr "KeyWord"
+
+msgid "Last operation"
+msgstr "Last operation"
+
+msgid "Latest Deployment Log"
+msgstr "Latest Deployment Log"
+
+msgid "License"
+msgstr "Licence"
+
+msgid "Logs"
+msgstr "Logs"
+
+msgid "Logs (Created, Message)"
+msgstr "Logs (Created, Message)"
+
+msgid "Manage"
+msgstr "Manage"
+
+msgid "Manage Components"
+msgstr "Manage Components"
+
+msgctxt "Package requirements"
+msgid "Manifest file"
+msgstr "Manifest file"
+
+msgid "Mark Image"
+msgstr "Mark Image"
+
+msgid ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+msgstr ""
+"Mark an image with Murano specific metadata to be added to the selected "
+"image."
+
+msgid "Marked Images"
+msgstr "Marked Images"
+
+msgid "Modify Package"
+msgstr "Modify Package"
+
+msgid "Modifying package failed"
+msgstr "Modifying package failed"
+
+msgid "NO ENVIRONMENTS"
+msgstr "NO ENVIRONMENTS"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Name of the bundle."
+msgstr "Name of the bundle."
+
+#, python-format
+msgid "Network of '%s'"
+msgstr "Network of '%s'"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Next Page"
+msgstr "Next Page"
+
+msgid "No availability zones available"
+msgstr "No availability zones available"
+
+msgid "No categories available"
+msgstr "No categories available"
+
+msgid "No components"
+msgstr "No components"
+
+msgid "No images available"
+msgstr "No images available"
+
+msgid "No keypair"
+msgstr "No keypair"
+
+msgid "No license"
+msgstr "No licence"
+
+msgid "No recent activity to report at this time."
+msgstr "No recent activity to report at this time."
+
+msgid "No requirements"
+msgstr "No requirements"
+
+msgid "No volumes available"
+msgstr "No volumes available"
+
+msgid "None"
+msgstr "None"
+
+msgid "Not in domain"
+msgstr "Not in domain"
+
+msgid "Note"
+msgstr "Note"
+
+msgid ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+msgstr ""
+"OpenStack Networking (Neutron) is not available in current environment. "
+"Custom Network Settings cannot be applied"
+
+msgid "Operation is forbidden by murano-api server."
+msgstr "Operation is forbidden by murano-api server."
+
+msgid "Optional"
+msgstr "Optional"
+
+msgid "Overview"
+msgstr "Overview"
+
+msgid "Package Bundle Source"
+msgstr "Package Bundle Source"
+
+msgid "Package Count"
+msgstr "Package Count"
+
+msgid "Package Details"
+msgstr "Package Details"
+
+msgid "Package Name"
+msgstr "Package Name"
+
+msgid "Package Source"
+msgstr "Package Source"
+
+msgid "Package Tags"
+msgstr "Package Tags"
+
+msgid "Package URL"
+msgstr "Package URL"
+
+msgid "Package Version"
+msgstr "Package Version"
+
+msgid ""
+"Package creation failed.Reason: Can't find Package name from repository."
+msgstr ""
+"Package creation failed.Reason: Can't find Package name from repository."
+
+msgid "Package creation failed.Reason: {0}"
+msgstr "Package creation failed.Reason: {0}"
+
+msgid "Package foo uploaded"
+msgstr "Package foo uploaded"
+
+msgid "Package modified."
+msgstr "Package modified."
+
+msgid "Package name in the repository, usually a fully qualified name"
+msgstr "Package name in the repository, usually a fully qualified name"
+
+msgid "Package or Class with the same name is already made public"
+msgstr "Package or Class with the same name is already made public"
+
+msgid "Package parameters successfully updated."
+msgstr "Package parameters successfully updated."
+
+msgid "Package version"
+msgstr "Package version"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "Package with id foo_package_id is not found"
+
+msgid "Package with id {0} is not found"
+msgstr "Package with id {0} is not found"
+
+msgid "Package with specified name already exists"
+msgstr "Package with specified name already exists"
+
+msgid "Package {0} already registered."
+msgstr "Package {0} already registered."
+
+msgid "Package {0} upload failed. {1}"
+msgstr "Package {0} upload failed. {1}"
+
+msgid "Package {0} uploaded"
+msgstr "Package {0} uploaded"
+
+msgid "Packages"
+msgstr "Packages"
+
+msgid "Packages should contain:"
+msgstr "Packages should contain:"
+
+msgid "Please confirm your password"
+msgstr "Please confirm your password"
+
+msgid "Please supply a bundle name"
+msgstr "Please supply a bundle name"
+
+msgid "Please supply a bundle url"
+msgstr "Please supply a bundle URL"
+
+msgid "Please supply a package file"
+msgstr "Please supply a package file"
+
+msgid "Please supply a package name"
+msgstr "Please supply a package name"
+
+msgid "Please supply a package url"
+msgstr "Please supply a package URL"
+
+msgid "Previous Page"
+msgstr "Previous Page"
+
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr "Provide comma-separated list of words, associated with the package"
+
+msgid "Provide desired name for a new category"
+msgstr "Provide desired name for a new category"
+
+msgid "Public"
+msgstr "Public"
+
+msgid "Quick Deploy"
+msgstr "Quick Deploy"
+
+msgid "Ready"
+msgstr "Ready"
+
+msgid "Ready to configure"
+msgstr "Ready to configure"
+
+msgid "Ready to deploy"
+msgstr "Ready to deploy"
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Repository"
+msgstr "Repository"
+
+msgid "Requested object is not found on murano server."
+msgstr "Requested object is not found on murano server."
+
+msgid "Requested operation conflicts with an existing object."
+msgstr "Requested operation conflicts with an existing object."
+
+msgid "Requirements"
+msgstr "Requirements"
+
+msgid "Retype your password"
+msgstr "Retype your password"
+
+msgid "Running"
+msgstr "Running"
+
+msgid "Running with errors"
+msgstr "Running with errors"
+
+msgid "Running with warnings"
+msgstr "Running with warnings"
+
+msgid "Select Application"
+msgstr "Select Application"
+
+msgid "Select Image"
+msgstr "Select Image"
+
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr "Select a valid choice. %(value)s is not one of the available choices."
+
+msgid "Select an image registered in Glance Image Services."
+msgstr "Select an image registered in Glance Image Services."
+
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+
+msgid "Select one or more categories for a package."
+msgstr "Select one or more categories for a package."
+
+msgid "Select volume"
+msgstr "Select volume"
+
+msgid "Services (Name, Type)"
+msgstr "Services (Name, Type)"
+
+msgid "Set up for identifying a package."
+msgstr "Set up for identifying a package."
+
+msgid "Show Details"
+msgstr "Show Details"
+
+msgid "Something went wrong during package downloading"
+msgstr "Something went wrong during package downloading"
+
+msgid "Sorry, this environment doesn't exist anymore"
+msgstr "Sorry, this environment doesn't exist any more"
+
+msgid ""
+"Sorry, you can't add application right now. The environment is deploying."
+msgstr ""
+"Sorry, you can't add application right now. The environment is deploying."
+
+msgid "Sorry, you can't delete service right now"
+msgstr "Sorry, you can't delete service right now"
+
+msgid "Specified title already in use. Please choose another one."
+msgstr "Specified title already in use. Please choose another one."
+
+msgid "Specifying a category helps to filter applications in the catalog"
+msgstr "Specifying a category helps to filter applications in the catalogue"
+
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Started Deleting Component"
+msgstr[1] "Started Deleting Components"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Started Deleting Environment"
+msgstr[1] "Started Deleting Environments"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Started deploying Environment"
+msgstr[1] "Started deploying Environments"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Step {0}"
+msgstr "Step {0}"
+
+msgid "Successful"
+msgstr "Successful"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Tenant Name"
+msgstr "Tenant Name"
+
+msgid "The '{0}' application successfully added to environment."
+msgstr "The '{0}' application successfully added to environment."
+
+msgid ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+msgstr ""
+"The VMs of the applications in this environment will join this net by "
+"default, unless configured individually. Choosing 'Create New' will generate "
+"a new Network with a Subnet having an IP range allocated among the ones "
+"available for the default Murano Router of this project"
+
+#, python-format
+msgid ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"The bundle is going to be installed from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+
+msgid "The environment name field cannot be empty."
+msgstr "The environment name field cannot be empty."
+
+#, python-format
+msgid ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+msgstr ""
+"The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
+"target=\"_blank\">%(murano_repo_url)s</a> repository."
+
+msgid ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+msgstr ""
+"The password must contain at least one letter, "
+"one                                  number and one special character"
+
+msgid "The request data is not acceptable by the server"
+msgstr "The request data is not acceptable by the server"
+
+msgid "There are no applications in the catalog. You can import apps from"
+msgstr "There are no applications in the catalogue. You can import apps from"
+
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"There are no applications in the catalogue. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+
+msgid "There are no applications matching your criteria."
+msgstr "There are no applications matching your criteria."
+
+msgid "There was an error communicating with server"
+msgstr "There was an error communicating with server"
+
+msgid "There was an error initialising this field."
+msgstr "There was an error initialising this field."
+
+msgid ""
+"This Application requires encryption, please contact your administrator to "
+"configure this."
+msgstr ""
+"This Application requires encryption, please contact your administrator to "
+"configure this."
+
+msgid ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+msgstr ""
+"This action cannot be undone. Any resources created by this environment will "
+"have to be released manually."
+
+msgid "Time Finished"
+msgstr "Time Finished"
+
+msgid "Time Started"
+msgstr "Time Started"
+
+msgid "Time updated"
+msgstr "Time updated"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Toggle Active"
+msgid_plural "Toggle Active"
+msgstr[0] "Toggle Active"
+msgstr[1] "Toggle Active"
+
+msgid "Toggle Enabled"
+msgstr "Toggle Enabled"
+
+msgid "Toggle Public"
+msgid_plural "Toggle Public"
+msgstr[0] "Toggle Public"
+msgstr[1] "Toggle Public"
+
+msgid "Toggled Active"
+msgid_plural "Toggled Active"
+msgstr[0] "Toggled Active"
+msgstr[1] "Toggled Active"
+
+msgid "Toggled Public"
+msgid_plural "Toggled Public"
+msgstr[0] "Toggled Public"
+msgstr[1] "Toggled Public"
+
+msgid "Topology"
+msgstr "Topology"
+
+msgid ""
+"Trying to add {0} image to glance. Image will be ready for deployment after "
+"successful upload"
+msgstr ""
+"Trying to add {0} image to Glance. Image will be ready for deployment after "
+"successful upload"
+
+msgid ""
+"Trying to add {0}, {1} image to glance. Image will be ready for deployment "
+"after successful upload"
+msgstr ""
+"Trying to add {0}, {1} image to Glance. Image will be ready for deployment "
+"after successful upload"
+
+msgid "Type"
+msgstr "Type"
+
+msgctxt "Package requirements"
+msgid "UI definition folder"
+msgstr "UI definition folder"
+
+msgid "UNKNOWN"
+msgstr "UNKNOWN"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Unable to abandon an environment {0} due to: {1}"
+msgstr "Unable to abandon an environment {0} due to: {1}"
+
+msgid "Unable to communicate to glare-api server."
+msgstr "Unable to communicate to glare-api server."
+
+msgid "Unable to communicate to murano-api server."
+msgstr "Unable to communicate to murano-api server."
+
+msgid "Unable to create environment {0} due to: {1}"
+msgstr "Unable to create environment {0} due to: {1}"
+
+msgid "Unable to delete category"
+msgstr "Unable to delete category"
+
+msgid "Unable to delete environment {0} due to: {1}"
+msgstr "Unable to delete environment {0} due to: {1}"
+
+msgid "Unable to delete package in murano-api server"
+msgstr "Unable to delete package in murano-api server"
+
+msgid "Unable to deploy. Try again later"
+msgstr "Unable to deploy. Try again later"
+
+msgid "Unable to download package."
+msgstr "Unable to download package."
+
+msgid "Unable to get list of categories"
+msgstr "Unable to get list of categories"
+
+msgid "Unable to mark image"
+msgstr "Unable to mark image"
+
+msgid "Unable to modify package"
+msgstr "Unable to modify package"
+
+msgid "Unable to remove metadata"
+msgstr "Unable to remove metadata"
+
+msgid "Unable to remove package."
+msgstr "Unable to remove package."
+
+msgid "Unable to retrieve  availability zones."
+msgstr "Unable to retrieve  availability zones."
+
+msgid "Unable to retrieve deployment history."
+msgstr "Unable to retrieve deployment history."
+
+msgid "Unable to retrieve details for service"
+msgstr "Unable to retrieve details for service"
+
+msgid "Unable to retrieve list of deployments"
+msgstr "Unable to retrieve list of deployments"
+
+msgid "Unable to retrieve list of images"
+msgstr "Unable to retrieve list of images"
+
+msgid ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+msgstr ""
+"Unable to retrieve list of services. This environment is deploying or "
+"already deployed by other user."
+
+msgid "Unable to retrieve package details."
+msgstr "Unable to retrieve package details."
+
+msgid "Unable to retrieve project list."
+msgstr "Unable to retrieve project list."
+
+msgid "Unable to retrieve public images."
+msgstr "Unable to retrieve public images."
+
+msgid "Unable to retrieve snapshot list."
+msgstr "Unable to retrieve snapshot list."
+
+msgid "Unable to retrieve volume list."
+msgstr "Unable to retrieve volume list."
+
+msgid "Unavailable"
+msgstr "Unavailable"
+
+msgid "Unknown"
+msgstr "Unknown"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Update Environment"
+msgstr[1] "Deploy Environments"
+
+msgid "Update Image"
+msgstr "Update Image"
+
+msgid "Update Metadata"
+msgstr "Update Metadata"
+
+msgid "Update This Environment"
+msgstr "Update This Environment"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Updated Environment"
+msgstr[1] "Deployed Environments"
+
+msgid "Uploading package failed. {0}"
+msgstr "Uploading package failed. {0}"
+
+msgid "Used for identifying and filtering packages."
+msgstr "Used for identifying and filtering packages."
+
+msgid "Validation Error occurred"
+msgstr "Validation Error occurred"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Version of the package (optional)."
+msgstr "Version of the package (optional)."
+
+msgid "You are not allowed to change this properties of the package"
+msgstr "You are not allowed to change this properties of the package"
+
+msgid "You are not allowed to delete this package"
+msgstr "You are not allowed to delete this package"
+
+msgid "You are not allowed to make packages public."
+msgstr "You are not allowed to make packages public."
+
+msgid "You are not allowed to perform this operation"
+msgstr "You are not allowed to perform this operation"
+
+msgid ""
+"You'll have to configure each package installed from this bundle separately."
+msgstr ""
+"You'll have to configure each package installed from this bundle separately."
+
+msgid "{0}{1} don't match"
+msgstr "{0}{1} don't match"
