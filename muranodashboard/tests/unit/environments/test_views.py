@@ -343,7 +343,7 @@ class TestDeploymentDetailsView(testtools.TestCase):
             'deployment_start_time': 'foo_deployment_start',
             'custom_breadcrumb': [
                 ('foo_env_name', 'foo_reverse_url'),
-                (_('Deployments'),),
+                (_('Deployments'), None)
             ]
         }
 

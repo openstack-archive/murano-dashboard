@@ -230,7 +230,7 @@ class DeploymentDetailsView(tabs.TabbedTableView):
             (context["environment_name"],
              reverse("horizon:app-catalog:environments:services",
                      args=[self.environment_id])),
-            (_('Deployments'),), ]
+            (_('Deployments'), None)]
         context["custom_breadcrumb"] = breadcrumb
         return context
 
