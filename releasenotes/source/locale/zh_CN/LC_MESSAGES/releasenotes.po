@@ -8,9 +8,9 @@
 # zzxwill <zzxwill@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: Murano Dashboard Release Notes 4.0.0\n"
+"Project-Id-Version: Murano Dashboard Release Notes 5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0000\n"
+"POT-Creation-Date: 2017-11-21 23:43+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,6 +27,15 @@ msgstr "1.0.3"
 msgid "2.0.0"
 msgstr "2.0.0"
 
+msgid "2.0.0.0b2"
+msgstr "2.0.0.0b2"
+
+msgid "2.0.0.0b3"
+msgstr "2.0.0.0b3"
+
+msgid "2.0.0.0rc1"
+msgstr "2.0.0.0rc1"
+
 msgid "2.0.1"
 msgstr "2.0.1"
 
@@ -38,6 +47,18 @@ msgstr "3.0.0"
 
 msgid "3.0.0-12"
 msgstr "3.0.0-12"
+
+msgid "3.0.0.0b1"
+msgstr "3.0.0.0b1"
+
+msgid "3.0.0.0b2"
+msgstr "3.0.0.0b2"
+
+msgid "3.0.0.0b3"
+msgstr "3.0.0.0b3版本"
+
+msgid "3.0.0.0rc1"
+msgstr "3.0.0.0rc1"
 
 msgid "3.1.0"
 msgstr "3.1.0"
