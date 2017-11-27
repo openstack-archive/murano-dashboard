@@ -548,9 +548,11 @@ class AZoneChoiceField(ChoiceField):
 
 class VolumeChoiceField(ChoiceField):
     def __init__(self,
+                 include_volumes=True,
                  include_snapshots=True,
                  *args,
                  **kwargs):
+        self.include_volumes = include_volumes
         self.include_snapshots = include_snapshots
         super(VolumeChoiceField, self).__init__(*args, **kwargs)
 
@@ -558,14 +560,16 @@ class VolumeChoiceField(ChoiceField):
     def update(self, request, **kwargs):
         """This widget allows selection of Volumes and Volume Snapshots"""
         available = {'status': cinder.VOLUME_STATE_AVAILABLE}
-        try:
-            choices = [(volume.id, volume.name)
-                       for volume in cinder.volume_list(request,
-                       search_opts=available)]
-        except Exception:
-            choices = []
-            exceptions.handle(request,
-                              _("Unable to retrieve volume list."))
+        choices = []
+
+        if self.include_volumes:
+            try:
+                choices.extend((volume.id, volume.name)
+                               for volume in cinder.volume_list(request,
+                               search_opts=available))
+            except Exception:
+                exceptions.handle(request,
+                                  _("Unable to retrieve volume list."))
 
         if self.include_snapshots:
             try:
