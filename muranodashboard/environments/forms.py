@@ -67,12 +67,12 @@ class CreateEnvironmentForm(horizon_forms.SelfHandlingForm):
         self.fields['net_config'].choices = net_choices
         self.fields['net_config'].help_text = help_text
 
-    def clean_name(self):
+    def clean(self):
         cleaned_data = super(CreateEnvironmentForm, self).clean()
         env_name = cleaned_data.get('name')
-        if not env_name.strip():
+        if not env_name or not env_name.strip():
             self._errors['name'] = self.error_class([ENV_NAME_HELP_TEXT])
-        return env_name
+        return cleaned_data
 
     def handle(self, request, data):
         try:
