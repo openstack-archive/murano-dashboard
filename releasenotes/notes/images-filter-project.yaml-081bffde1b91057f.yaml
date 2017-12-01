@@ -1,0 +1,5 @@
+---
+features:
+  - A new parameter MURANO_IMAGE_FILTER_PROJECT_ID has been added which, when
+    given, will filter the list of public Murano images to the given project
+    ID

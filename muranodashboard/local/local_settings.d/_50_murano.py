@@ -15,6 +15,10 @@ DISPLAY_MURANO_REPO_URL = 'http://apps.openstack.org/#tab=murano-apps'
 # in the main accordion navigation
 # MURANO_DASHBOARD_NAME = "App Catalog"
 
+# Filter the list of Murano images displayed to be only those owned by this
+# project ID
+# MURANO_IMAGE_FILTER_PROJECT_ID =
+
 # Specify a maximum number of limit packages.
 # PACKAGES_LIMIT = 100
 
