@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-10 18:43+0000\n"
+"POT-Creation-Date: 2017-12-14 15:37+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,6 +21,15 @@ msgstr "1.0.3"
 msgid "2.0.0"
 msgstr "2.0.0"
 
+msgid "2.0.0.0b2"
+msgstr "2.0.0.0b2"
+
+msgid "2.0.0.0b3"
+msgstr "2.0.0.0b3"
+
+msgid "2.0.0.0rc1"
+msgstr "2.0.0.0rc1"
+
 msgid "2.0.1"
 msgstr "2.0.1"
 
@@ -32,6 +41,18 @@ msgstr "3.0.0"
 
 msgid "3.0.0-12"
 msgstr "3.0.0-12"
+
+msgid "3.0.0.0b1"
+msgstr "3.0.0.0b1"
+
+msgid "3.0.0.0b2"
+msgstr "3.0.0.0b2"
+
+msgid "3.0.0.0b3"
+msgstr "3.0.0.0b3"
+
+msgid "3.0.0.0rc1"
+msgstr "3.0.0.0rc1"
 
 msgid "3.1.0"
 msgstr "3.1.0"
@@ -483,6 +504,19 @@ msgstr ""
 
 msgid ""
 "cve-2016-4972 has been addressed. In ceveral places Murano used loaders "
+"inherited directly from yaml.Loader when parsing MuranoPL and UI files from "
+"packages. This is unsafe, because this loader is capable of creating custom "
+"python objects from specifically constructed yaml files. With this change "
+"all yaml loading operations are done using safe loaders instead."
+msgstr ""
+"cve-2016-4972 wurde adressiert. Murano verwendete an zahlreichen Stellen "
+"Lader, die beim parsen von MuranoPL und UI-Dateien aus Paketen Daten direkt "
+"aus yaml.Loader erbten. Dies ist unsicher, denn der Lader kann angepasste "
+"Python-Objekte aus speziell aufbereiteten yaml-Dateien erstellen. Durch "
+"diese Änderung werden alle yaml-Ladevorgänge mit sicheren Ladern ausgeführt."
+
+msgid ""
+"cve-2016-4972 has been addressed. In several places Murano used loaders "
 "inherited directly from yaml.Loader when parsing MuranoPL and UI files from "
 "packages. This is unsafe, because this loader is capable of creating custom "
 "python objects from specifically constructed yaml files. With this change "
