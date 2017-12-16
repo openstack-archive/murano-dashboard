@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-14 15:37+0000\n"
+"POT-Creation-Date: 2017-12-16 05:23+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,15 +16,6 @@ msgstr ""
 
 msgid "2.0.0"
 msgstr "2.0.0"
-
-msgid "2.0.0.0b2"
-msgstr "2.0.0.0b2"
-
-msgid "2.0.0.0b3"
-msgstr "2.0.0.0b3"
-
-msgid "2.0.0.0rc1"
-msgstr "2.0.0.0rc1"
 
 msgid ""
 "Add details page for packages, The details page will show more info to user, "
