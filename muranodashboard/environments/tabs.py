@@ -18,9 +18,12 @@ import json
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+
+from heat_dashboard.api import heat as heat_api
+
 from horizon import exceptions
 from horizon import tabs
-from openstack_dashboard.api import heat as heat_api
+
 from openstack_dashboard.api import nova as nova_api
 from openstack_dashboard import policy
 
