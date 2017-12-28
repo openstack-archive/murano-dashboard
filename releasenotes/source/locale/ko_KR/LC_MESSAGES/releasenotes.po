@@ -1,17 +1,18 @@
 # Eunseop Shin <kairos9603@khu.ac.kr>, 2016. #zanata
 # Ian Y. Choi <ianyrchoi@gmail.com>, 2016. #zanata
+# ByungYeol Woo <wby1089@gmail.com>, 2017. #zanata
 # SeongSoo Cho <nexusz99@gmail.com>, 2017. #zanata
 # minwook-shin <minwook0106@gmail.com>, 2017. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: Murano Dashboard Release Notes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-16 05:23+0000\n"
+"POT-Creation-Date: 2017-12-20 04:16+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-09-20 05:27+0000\n"
-"Last-Translator: minwook-shin <minwook0106@gmail.com>\n"
+"PO-Revision-Date: 2017-12-27 02:52+0000\n"
+"Last-Translator: ByungYeol Woo <wby1089@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
 "Language: ko-KR\n"
 "X-Generator: Zanata 3.9.6\n"
@@ -41,6 +42,26 @@ msgstr "3.1.0"
 msgid "4.0.0"
 msgstr "4.0.0"
 
+msgid "5.0.0.0b2"
+msgstr "5.0.0.0b2"
+
+msgid ""
+"A new button, called \"Deployment History\", has been added to the "
+"Environments > Applications view. When clicked, the deployment history view "
+"is loaded, which shows deployments for all environments for the current "
+"project (tenant)."
+msgstr ""
+"\"배포 이력\"이라는 새 버튼은 환경>어플리케이션 보기에 추가되었습니다. 클릭하"
+"면 배포 이력 보기를 불러오고, 현재 프로젝트(테넌트)의 모든 환경에 대한 배포"
+"를 보여줍니다."
+
+msgid ""
+"A new parameter MURANO_IMAGE_FILTER_PROJECT_ID has been added which, when "
+"given, will filter the list of public Murano images to the given project ID"
+msgstr ""
+"새로운 매개변수인 MURANO_IMAGE_FILTER_PROJECT_ID가 추가되었고, 이 매개변수가 "
+"주어지면 주어진 프로젝트 ID로 공용 Murano 이미지의 리스트를 필터합니다."
+
 msgid ""
 "Add details page for packages, The details page will show more info to user, "
 "such as FQN, Description, etc."
@@ -61,6 +82,11 @@ msgid ""
 msgstr ""
 "``apps.openstack.org`` 또는 다른 murano 응용프로그램 저장소에 사용자가 볼 수 "
 "있는 링크로 사용되는 ``DISPLAY_MURANO_REPO_URL`` 설정을 추가하였습니다."
+
+msgid ""
+"Added a widget to display and select available volumes and volume snapshots."
+msgstr ""
+"가용 볼륨과 볼륨 스냅샷을 표기하고 선택하기 위한 위젯이 추가되었습니다."
 
 msgid ""
 "Added the capability to execute actions (delete, abandon or deploy) on "
