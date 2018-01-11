@@ -1,0 +1,22 @@
+- project:
+    name: openstack/murano-dashboard
+    check:
+      jobs:
+        - murano-dashboard-sanity-check
+
+- job:
+    name: murano-dashboard-sanity-check
+    parent: legacy-dsvm-base
+    run: playbooks/legacy/murano-dashboard-sanity-check/run.yaml
+    post-run: playbooks/legacy/murano-dashboard-sanity-check/post.yaml
+    voting: false
+    timeout: 10800
+    required-projects:
+      - openstack-infra/devstack-gate
+      - openstack/heat
+      - openstack/murano
+      - openstack/murano-dashboard
+      - openstack/python-heatclient
+      - openstack/python-muranoclient
+      - openstack/horizon
+      - openstack/heat-dashboard

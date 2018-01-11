@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<head>
+    <title>Test Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <style type="text/css" media="screen">
+        body { font-family: sans-serif; font-size: 10pt; }
+        a { text-decoration: none; }
+        tfoot, thead { background-color: #ccc; font-weight: bold; }
+        tbody td { padding-left: 5px !important; }
+        .number { text-align: center; }
+        .info_header { font-weight: bold; margin-left: 2em; margin-top: 1em;
+            color: black; }
+        .info_content { white-space: pre-wrap; color: black;
+            margin-left: 2em; margin-top: 0.5em; font-family: monospace; }
+        .test_class_status_success  { background-color: #6c6 !important; }
+        .test_class_status_failure  { background-color: #c60 !important; }
+        .test_class_status_error    { background-color: #c00 !important; }
+        .test_class_status_skip     { background-color: #59f !important; }
+        .test_status_success       { color: #6c6 !important; }
+        .test_status_failure       { color: #c60 !important; }
+        .test_status_error         { color: #c00 !important; }
+        .test_status_skip          { color: #006 !important; }
+        .parent_success   { display: none; }
+        .parent_skip      { display: none; }
+        .parent_error     { display: inline; }
+        .parent_failure   { display: inline; }
+        .test_class_row   { cursor: pointer; }
+        .test_name        { margin-left: 2em; }
+    </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <link rel=stylesheet type=text/css href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".expand_button").click(function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                $("#info_" + this.id).toggle();
+            });
+            $(".test_class_row").click(function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                $("." + this.id + "_child").toggle();
+            });
+            $("#report").dataTable({
+                "autoWidth": false,
+                "paging":   false,
+                "ordering": false,
+                "info":     false,
+                "columnDefs": [
+                    { className: "number", "targets": [2, 3, 4, 5, 6] }
+                ]
+            });
+        });
+    </script>
+</head>
+<body>
+
+<h1>Test Report</h1>
+
+<div>
+    Summary:
+        success &mdash; {{ stats.success }},
+        skip &mdash; {{ stats.skip }},
+        error &mdash; {{ stats.error }},
+        failure &mdash; {{ stats.failure }}
+</div>
+
+<a href="logs/">View Artifacts</a> | <a href="job-output.txt.gz">View Full Log</a>
+
+<table id="report" class="display compact">
+    <thead>
+        <tr id='header_row'>
+            <td>Test Group/Test case</td>
+            <td>Status</td>
+            <td>Count</td>
+            <td>Success</td>
+            <td>Failure</td>
+            <td>Error</td>
+            <td>Skip</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class, group in report.items() %}
+        <tr class="test_class_status_{{ group.result }} test_class_row" id="{{ group.uuid }}">
+            <td class="test_class">{{ class }}</td>
+            <td>{{ group.result }}</td>
+            <td>{{ group.stats.total }}</td>
+            <td>{{ group.stats.success }}</td>
+            <td>{{ group.stats.failure }}</td>
+            <td>{{ group.stats.error }}</td>
+            <td>{{ group.stats.skip }}</td>
+        </tr>
+        {% for test in group.tests %}
+        <tr class="test_status_{{ test.result }} {{ group.uuid }}_child parent_{{ group_result }}">
+            <td>
+                <div class="test_name">
+                    <a href="#" class="expand_button" id="{{ test.uuid }}">{{ test.name }}</a>
+                    {% if test.screenshot %}
+                    (<a href="{{ test.screenshot }}">screenshot</a>)
+                    {% endif %}
+                </div>
+                <div id="info_{{ test.uuid }}" style="display: none;">
+                    {% if test.output %}
+                    <div class="info_header">
+                        Output:
+                    </div>
+                    <div class="info_content">
+                        {{ test.output }}
+                    </div>
+                    {% endif %}{% if test.exc_type %}
+                    <div class="info_header">
+                        {{ test.exc_type }}:
+                    </div>
+                    <div class="info_content">
+                        {{ test.exc_message }}
+                    </div>
+                    {% endif %}{% if test.traceback %}
+                    <div class="info_header">
+                        Traceback:
+                    </div>
+                    <div class="info_content">
+                        {{ test.tb }}
+                    </div>
+                    {% endif %}
+                </div>
+           </td>
+           <td>{{ test.result }}</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr id='total_row'>
+            <td>Total</td>
+            <td>{% if stats.failure + stats.error > 0 %}failure{% else %}success{% endif %}</td>
+            <td>{{ stats.total }}</td>
+            <td>{{ stats.success }}</td>
+            <td>{{ stats.failure }}</td>
+            <td>{{ stats.error }}</td>
+            <td>{{ stats.skip }}</td>
+        </tr>
+    </tfoot>
+</table>
+</body>
+</html>
