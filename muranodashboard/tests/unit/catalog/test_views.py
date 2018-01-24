@@ -650,7 +650,7 @@ class TestIndexView(testtools.TestCase):
             'MURANO_USE_GLARE': True,
             'categories': ['foo_category', 'bar_category'],
             'current_category': 'foo_category',
-            'display_repo_url': 'http://apps.openstack.org/#tab=murano-apps',
+            'display_repo_url': 'https://github.com/openstack/murano-apps',
             'is_paginated': None,
             'latest_list': ['foo_app', 'bar_app'],
             'no_apps': False,
