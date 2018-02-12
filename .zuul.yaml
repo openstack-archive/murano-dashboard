@@ -8,6 +8,14 @@
     parent: legacy-dsvm-base
     run: playbooks/legacy/murano-dashboard-sanity-check/run.yaml
     post-run: playbooks/legacy/murano-dashboard-sanity-check/post.yaml
+    irrelevant-files:
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^doc/.*$
+      - ^.*\.rst$
+      - ^releasenotes/.*$
+      - ^muranodashboard/locale/.*$
+      - ^muranodashboard/tests/unit/.*$
     voting: false
     timeout: 10800
     required-projects:
