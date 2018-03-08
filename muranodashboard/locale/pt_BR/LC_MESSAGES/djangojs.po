@@ -1,0 +1,85 @@
+# Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
+# André Franciosi <andre@franciosi.org>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: murano-dashboard VERSION\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
+"POT-Creation-Date: 2018-03-06 01:45+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-02-15 01:55+0000\n"
+"Last-Translator: André Franciosi <andre@franciosi.org>\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"X-Generator: Zanata 4.3.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid " 1 capital letter"
+msgstr "1 letra maiúscula"
+
+msgid " 1 digit"
+msgstr "1 dígito"
+
+msgid " 1 non-capital letter"
+msgstr "1 letra minúscula"
+
+msgid " 1 special character"
+msgstr "1 caracter especial"
+
+msgid " 7 characters"
+msgstr "7 caracteres"
+
+msgid "An error occurred. Please try again later."
+msgstr "Um erro ocorreu. Por favor tente novamente mais tarde."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Create"
+msgstr "Criar"
+
+msgid "Loading"
+msgstr "Carregando"
+
+msgid "New"
+msgstr "Novo"
+
+msgid "Passwords do not match"
+msgstr "As senhas não conferem"
+
+msgid "Show less"
+msgstr "Mostre menos"
+
+msgid "Show more"
+msgstr "Mostre mais"
+
+msgid "There was an error submitting the form. Please try again."
+msgstr "Ocorreu um erro enviando o formulário. Por favor tente novamente."
+
+msgid "Unable to edit component metadata."
+msgstr "Não é possível editar os metadados do componente."
+
+msgid "Unable to edit environment metadata."
+msgstr "Não é possível editar os metadados do ambiente."
+
+msgid "Unable to retrieve component metadata."
+msgstr "Não é possível recuperar os metadados do componente."
+
+msgid "Unable to retrieve environment metadata."
+msgstr "Não é possível recuperar os metadados do ambiente."
+
+msgid "Unable to retrieve the packages."
+msgstr "Não é possível recuperar os pacotes."
+
+msgid "Unable to run action."
+msgstr "Não foi possível executar a ação."
+
+msgid "Waiting for a result"
+msgstr "Aguardando um resultado"
+
+msgid "Working"
+msgstr "Trabalhando"
+
+msgid "Your password should have at least"
+msgstr "Sua senha deve ter no mínimo"
