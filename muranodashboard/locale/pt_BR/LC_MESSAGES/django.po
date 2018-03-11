@@ -1,19 +1,44 @@
 # Andreas Jaeger <jaegerandi@gmail.com>, 2016. #zanata
 # André Franciosi <andre@franciosi.org>, 2018. #zanata
+# Fernando Pimenta <fernando.c.pimenta@gmail.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2018-02-19 13:24+0000\n"
+"POT-Creation-Date: 2018-03-06 01:43+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-02-15 01:57+0000\n"
-"Last-Translator: André Franciosi <andre@franciosi.org>\n"
+"PO-Revision-Date: 2018-03-09 06:46+0000\n"
+"Last-Translator: Fernando Pimenta <fernando.c.pimenta@gmail.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt_BR\n"
 "X-Generator: Zanata 4.3.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#, python-format
+msgid ""
+"\n"
+"              %(used)s + %(other_used)s of %(quota)s MB used\n"
+"            "
+msgstr ""
+"\n"
+"              %(used)s + %(other_used)s de %(quota)s MB utilizado\n"
+"            "
+
+#, python-format
+msgid ""
+"\n"
+"              %(used)s + %(other_used)s of %(quota)s used\n"
+"            "
+msgstr ""
+"\n"
+"              %(used)s + %(other_used)s de %(quota)s utilizado\n"
+"            "
+
+#, python-format
+msgid "%s: random subnet"
+msgstr "%s: sub-rede randômica"
 
 msgid "-"
 msgstr "- "
@@ -91,6 +116,9 @@ msgstr "Uma URL http/https externa de onde o conjunto será carregado."
 msgid "An external http/https URL to load the package from."
 msgstr "Uma URL http/https externa de onde o pacote será carregado."
 
+msgid "App Catalog"
+msgstr "Catálogo de App"
+
 msgid "App Category:"
 msgstr "Categoria de Aplicativos:"
 
@@ -109,6 +137,9 @@ msgstr "Detalhes da aplicação"
 msgid "Application Package"
 msgstr "Pacote da aplicação"
 
+msgid "Application default security group"
+msgstr "Grupo de segurança padrão da Aplicação"
+
 msgid "Application&nbsp;Components"
 msgstr "Aplicação&nbsp;Componentes"
 
@@ -126,6 +157,9 @@ msgstr "Voltar"
 
 msgid "Browse"
 msgstr "Procurar"
+
+msgid "Browse Local"
+msgstr "Navegar local"
 
 msgid "Bundle Name"
 msgstr "Nome do Conjunto"
@@ -146,6 +180,12 @@ msgstr "Conjunto importado com sucesso."
 
 msgid "Bundle's full name."
 msgstr "Nome completo do conjunto."
+
+msgid "Can not get logo for {0}."
+msgstr "Não consigo obter logo para {0}."
+
+msgid "Can not get supplier logo for {0}."
+msgstr "Não consigo obter logo do fornecedor para {0}"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -175,6 +215,9 @@ msgstr "Pasta de definições de classes"
 msgid "Click to create new environment"
 msgstr "Clique para criar um novo ambiente"
 
+msgid "Completed with warnings"
+msgstr "Concluído com avisos"
+
 msgid "Component"
 msgstr "Componente"
 
@@ -202,6 +245,24 @@ msgstr "Confirmar Senha"
 msgid "Could not retrieve latest status for the {0} environment"
 msgstr "Não foi possível obter o último estado para o ambiente {0}"
 
+msgid ""
+"Couldn't find any apps, required for this field.\n"
+"Tried: {fqns}"
+msgstr ""
+"Não foi possível encontrar nenhum aplicativo, necessário para este campo.\n"
+"Tentado: {fqns}"
+
+msgid ""
+"Couldn't initialise glance v1 client, therefore could not make the following "
+"images public: {0}"
+msgstr ""
+"Não foi possível inicializar o cliente glance v1, portanto, não foram "
+"publicadas as seguintes imagens: {0}"
+
+msgid "Couldn't update environment. Reason: This name is already taken."
+msgstr ""
+"Não foi possível atualizar o ambiente. Motivo: Este nome já foi utilizado."
+
 msgid "Couldn't update package {0} parameters. Error: {1}"
 msgstr "Não foi possível atualizar os parâmetros do pacote {0}. Erro: {1}"
 
@@ -222,6 +283,16 @@ msgstr "Criar um título para a imagem"
 
 msgid "Created"
 msgstr "Criado"
+
+msgid "Custom Type"
+msgstr "Tipo Personalizado"
+
+msgid ""
+"Default network is either not specified for this project, or specified "
+"incorrectly, please contact administrator."
+msgstr ""
+"A rede padrão ou não foi especificada para esse projeto, ou foi especificada "
+"incorretamente. Por favor, contate o administrador."
 
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
@@ -255,6 +326,9 @@ msgid_plural "Delete Packages"
 msgstr[0] "Remover Pacote"
 msgstr[1] "Remover Pacotes"
 
+msgid "Delete failure"
+msgstr "Falha de exclusão"
+
 msgid "Deleted Category"
 msgid_plural "Deleted Categories"
 msgstr[0] "Categoria Deletada"
@@ -270,6 +344,9 @@ msgid_plural "Deleted Packages"
 msgstr[0] "Pacote Removido"
 msgstr[1] "Pacotes Removidos"
 
+msgid "Deleting"
+msgstr "Excluindo"
+
 msgid "Deploy Environment"
 msgid_plural "Deploy Environments"
 msgstr[0] "Implantar Ambiente"
@@ -278,11 +355,17 @@ msgstr[1] "Implantar Ambientes"
 msgid "Deploy This Environment"
 msgstr "Implantar Este Ambiente"
 
+msgid "Deploy failure"
+msgstr "Falha de implantação"
+
 msgid "Deploy started"
 msgstr "Implatação iniciada"
 
 msgid "Deployed Components"
 msgstr "Componentes Implantados"
+
+msgid "Deploying"
+msgstr "Impantando"
 
 msgid "Deployment Details"
 msgstr "Detalhes da Implantação"
@@ -296,6 +379,9 @@ msgstr "Registros de Implantação"
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
 msgstr "A implantação com id %s não existe mais"
+
+msgid "Deployment with id foo_deployment_id doesn't exist anymore"
+msgstr "A implantação com id  foo_deployment_id já não existe mais"
 
 msgid "Deployments"
 msgstr "Implantações"
@@ -322,14 +408,24 @@ msgstr ""
 "Insira uma senha complexa, com pelo menos uma letra, um número e um carácter "
 "especial"
 
+#, python-format
+msgid "Enter a dict with choices and values. Got %(value)s."
+msgstr "Insira um dicionário com escolhas e valores. Obtidos %(value)s"
+
 msgid "Enter a password"
 msgstr "Insira uma senha"
+
+msgid "Enter an image type supported by Murano."
+msgstr "Insira um tipo de imagem suportada pelo Murano."
 
 msgid "Environment"
 msgstr "Ambiente"
 
 msgid "Environment Default Network"
 msgstr "Rede padrão do ambiente"
+
+msgid "Environment Deployment History"
+msgstr "Histórico de Implantação do Ambiente"
 
 msgid "Environment Name"
 msgstr "Nome do Ambiente"
@@ -348,6 +444,17 @@ msgstr "Um ambiente com o nome especificado já existe"
 
 msgid "Environments"
 msgstr "Ambientes"
+
+#, python-format
+msgid ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+msgstr ""
+"Erro ao buscar o ambiente. A página pode ter sido renderizada "
+"incorretamente. Motivo: %s"
+
+msgid "Error test_error_message occurred while installing package bar"
+msgstr "O erro test_error_message ocorreu ao instalar a barra de pacotes"
 
 msgid "Error {0} occurred while installing images for {1}"
 msgstr "O erro {0} ocorreu durante a instalação das imagens para {1}"
@@ -368,8 +475,14 @@ msgstr "Pasta de planos de execução"
 msgid "FQN"
 msgstr "NTQ"
 
+msgid "Failed"
+msgstr "Falhou"
+
 msgid "Failed to create environment"
 msgstr "Falha ao criar ambiente"
+
+msgid "Failed to get list of flavors."
+msgstr "Falha ao obter a lista de flavors."
 
 msgid "Failed to modify the package. {0}"
 msgstr "Falha ao modificar o pacote. {0}"
@@ -391,8 +504,27 @@ msgstr ""
 "subsequentes podem ser letras latinas, números, sublinhados, arroba, jogo da "
 "velha ou cifrão"
 
+msgid "Foo"
+msgstr "Foo"
+
 msgid "Fully qualified package name."
 msgstr "Nome totalmente qualificado do pacote."
+
+#, python-format
+msgid ""
+"Go to <b> <a href=%(pkg_def_url)s>Packages</a> </b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Vá para <b> <a href=%(pkg_def_url)s>Pacotes</a> </b>, clique em 'Importar "
+"Pacote' e selecione <i>Repositório</i> como <i>Fonte do Pacote</i>."
+
+#, python-format
+msgid ""
+"Go to <b><a href=%(pkg_def_url)s>Packages</a></b>, click 'Import Package' "
+"and select <i>Repository</i> as <i>Package Source</i>."
+msgstr ""
+"Vá para <b><a href=%(pkg_def_url)s>Pacotes</a></b>, clique em 'Importar "
+"Pacote' e selecione <i>Repositório</i> como <i>Fonte do Pacote</i>."
 
 msgid "HTTP/HTTPS URL of the bundle file."
 msgstr "URL HTTP/HTTPS do arquivo do conjunto."
@@ -484,6 +616,9 @@ msgstr "Licença"
 msgid "Logs"
 msgstr "Registros"
 
+msgid "Logs (Created, Message)"
+msgstr "Logs (Criado, Mensagem)"
+
 msgid "Manage"
 msgstr "Gerenciar"
 
@@ -556,6 +691,9 @@ msgstr "Não há atividades recentes para relatar neste momento."
 msgid "No requirements"
 msgstr "Nenhum requisito"
 
+msgid "No volumes available"
+msgstr "Nenhum volume disponível"
+
 msgid "None"
 msgstr "Nenhum"
 
@@ -564,6 +702,12 @@ msgstr "Fora do domínio"
 
 msgid "Note"
 msgstr "Nota"
+
+msgid "Number of Instances"
+msgstr "Número de Instâncias"
+
+msgid "Number of VCPUs"
+msgstr "Número de VCPUs"
 
 msgid ""
 "OpenStack Networking (Neutron) is not available in current environment. "
@@ -614,6 +758,9 @@ msgstr ""
 msgid "Package creation failed.Reason: {0}"
 msgstr "Falha ao criar o pacote. Motivo: {0}"
 
+msgid "Package foo uploaded"
+msgstr "Pacote foo carregado"
+
 msgid "Package modified."
 msgstr "Pacote modificado."
 
@@ -629,6 +776,9 @@ msgstr "Parâmetros do pacote atualizados com sucesso."
 
 msgid "Package version"
 msgstr "Versão do Pacote"
+
+msgid "Package with id foo_package_id is not found"
+msgstr "O pacote com id  foo_deployment_id não foi encontrado"
 
 msgid "Package with id {0} is not found"
 msgstr "Pacote com id {0} não foi encontrado"
@@ -672,6 +822,10 @@ msgstr "Por favor forneça uma url para o pacote"
 msgid "Previous Page"
 msgstr "Página Anterior"
 
+msgid "Provide comma-separated list of words, associated with the package"
+msgstr ""
+"Forneça uma lista de palavras separadas por vírgula, associadas com o pacote"
+
 msgid "Provide desired name for a new category"
 msgstr "Forneça o nome desejado para uma nova categoria"
 
@@ -680,6 +834,15 @@ msgstr "Público"
 
 msgid "Quick Deploy"
 msgstr "Implantação Rápida"
+
+msgid "Ready"
+msgstr "Pronto"
+
+msgid "Ready to configure"
+msgstr "Pronto para configurar"
+
+msgid "Ready to deploy"
+msgstr "Pronto para implantar"
 
 msgid "Recent Activity"
 msgstr "Atividade Recente"
@@ -699,17 +862,44 @@ msgstr "Requisitos"
 msgid "Retype your password"
 msgstr "Digite sua senha novamente"
 
+msgid "Running"
+msgstr "Executando"
+
+msgid "Running with errors"
+msgstr "Executando com erros"
+
+msgid "Running with warnings"
+msgstr "Executando com avisos"
+
 msgid "Select Application"
 msgstr "Selecione um aplicação"
 
 msgid "Select Image"
 msgstr "Selecione a Imagem"
 
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+"Selecione uma escolha válida. %(value)s não é uma das escolhas disponíveis."
+
 msgid "Select an image registered in Glance Image Services."
 msgstr "Selecione uma imagem registrada no Serviço de Imagens Glance."
 
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Selecione um tipo de imagem suportado pelo Murano. Escolha 'Tipo "
+"Personalizado' para inserir manualmente o tipo."
+
 msgid "Select one or more categories for a package."
 msgstr "Selecione uma ou mais categorias para um pacote"
+
+msgid "Select volume"
+msgstr "Selecione o volume"
+
+msgid "Services (Name, Type)"
+msgstr "Serviços (Nome, Tipo)"
 
 msgid "Set up for identifying a package."
 msgstr "Configure para identificar um pacote"
@@ -738,11 +928,29 @@ msgstr "O título especificado já esta em uso. Por favor escolha outro."
 msgid "Specifying a category helps to filter applications in the catalog"
 msgstr "Especificar uma categoria ajuda a filtrar aplicações no catálogo"
 
+msgid "Started Deleting Component"
+msgid_plural "Started Deleting Components"
+msgstr[0] "Iniciada a Exclusão do Componente"
+msgstr[1] "Iniciada a Exclusão dos Componentes"
+
+msgid "Started Deleting Environment"
+msgid_plural "Started Deleting Environments"
+msgstr[0] "Iniciada a Exclusão do Ambiente"
+msgstr[1] "Iniciada a Exclusão dos Ambientes"
+
+msgid "Started deploying Environment"
+msgid_plural "Started deploying Environments"
+msgstr[0] "Iniciada a Implantação do Ambiente"
+msgstr[1] "Iniciada a Implantação dos Ambientes"
+
 msgid "Status"
 msgstr "Estado"
 
 msgid "Step {0}"
 msgstr "Passo {0}"
+
+msgid "Successful"
+msgstr "Com sucesso"
 
 msgid "Tags"
 msgstr "Etiquetas"
@@ -772,6 +980,9 @@ msgstr ""
 "O conjunto será instalado do repositório <a href=\"%(murano_repo_url)s\" "
 "target=\"_blank\">%(murano_repo_url)s</a>."
 
+msgid "The environment name field cannot be empty."
+msgstr "O campo de nome do ambiente não pode estar vazio"
+
 #, python-format
 msgid ""
 "The package is going to be imported from <a href=\"%(murano_repo_url)s\" "
@@ -793,11 +1004,29 @@ msgid "There are no applications in the catalog. You can import apps from"
 msgstr ""
 "Não existem aplicações neste catálogo. Você pode importas aplicações de"
 
+#, python-format
+msgid ""
+"There are no applications in the catalog. You can import apps from <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>."
+msgstr ""
+"Não existem aplicações no catálogo. Você pode importar apps de <a href="
+"\"%(display_repo_url)s\" target=\"_blank\"> %(display_repo_url)s</a>. "
+
 msgid "There are no applications matching your criteria."
 msgstr "Não há aplicações correspondentes aos seus critérios."
 
 msgid "There was an error communicating with server"
 msgstr "Ocorreu um erro ao se comunicar com o servidor"
+
+msgid "There was an error initialising this field."
+msgstr "Ocorreu um erro ao inicializar este campo."
+
+msgid ""
+"This Application requires encryption, please contact your administrator to "
+"configure this."
+msgstr ""
+"A Aplicação requer criptografia, por favor contate o seu administrador para "
+"configurar isto."
 
 msgid ""
 "This action cannot be undone. Any resources created by this environment will "
@@ -843,6 +1072,9 @@ msgstr[1] "Alternado Público"
 
 msgid "Topology"
 msgstr "Topologia"
+
+msgid "Total RAM"
+msgstr "Total de RAM"
 
 msgid ""
 "Trying to add {0} image to glance. Image will be ready for deployment after "
@@ -916,6 +1148,9 @@ msgstr "Não foi possível remover o pacote."
 msgid "Unable to retrieve  availability zones."
 msgstr "Não foi possível obter as zonas de disponibilidade"
 
+msgid "Unable to retrieve deployment history."
+msgstr "Não é possível obter o histórico de implantação."
+
 msgid "Unable to retrieve details for service"
 msgstr "Não foi possível obter detalhes do serviço"
 
@@ -941,17 +1176,42 @@ msgstr "Não foi possível obter a lista de projeto."
 msgid "Unable to retrieve public images."
 msgstr "Não foi possível obter as imagens públicas."
 
+msgid "Unable to retrieve snapshot list."
+msgstr "Não é possível obter a lista de snapshots."
+
+msgid "Unable to retrieve volume list."
+msgstr "Não é possível obter a lista de volumes."
+
 msgid "Unavailable"
 msgstr "Indisponível"
+
+msgid "Unknown"
+msgstr "Desconhecido"
 
 msgid "Update"
 msgstr "Atualizar"
 
+msgid "Update Environment"
+msgid_plural "Deploy Environments"
+msgstr[0] "Atualizar o Ambiente"
+msgstr[1] "Atualizar os Ambientes"
+
 msgid "Update Image"
 msgstr "Atualizar Imagem"
 
+msgid "Update Metadata"
+msgstr "Atualizar Metadado"
+
+msgid "Update This Environment"
+msgstr "Atualizar este Ambiente"
+
 msgid "Updated"
 msgstr "Atualizado"
+
+msgid "Updated Environment"
+msgid_plural "Deployed Environments"
+msgstr[0] "Ambiente Atualizado"
+msgstr[1] "Ambientes Atualizados"
 
 msgid "Uploading package failed. {0}"
 msgstr "Falha ao enviar o pacote. {0}"
@@ -973,6 +1233,9 @@ msgstr "Você não tem permissão para modificar as propriedades deste pacote."
 
 msgid "You are not allowed to delete this package"
 msgstr "Você não tem permissão para remover este pacote"
+
+msgid "You are not allowed to make packages public."
+msgstr "Você não está autorizado a tornar públicos os pacotes."
 
 msgid "You are not allowed to perform this operation"
 msgstr "Você não tem permissão para executar esta operação"
