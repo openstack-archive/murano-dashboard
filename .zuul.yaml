@@ -3,6 +3,10 @@
       jobs:
         - murano-dashboard-sanity-check
 
+        - openstack-tox-lower-constraints
+    gate:
+      jobs:
+        - openstack-tox-lower-constraints
 - job:
     name: murano-dashboard-sanity-check
     parent: legacy-dsvm-base
