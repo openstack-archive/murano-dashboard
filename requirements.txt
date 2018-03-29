@@ -4,7 +4,7 @@
 pbr!=2.1.0,>=2.0.0 # Apache-2.0
 
 beautifulsoup4>=4.6.0 # MIT
-Django<2.0,>=1.8 # BSD
+Django<2.0,>=1.11 # BSD
 django-formtools>=1.0 # BSD
 iso8601>=0.1.11 # MIT
 six>=1.10.0 # MIT
@@ -21,4 +21,4 @@ horizon>=13.0.0 # Apache-2.0
 
 # message extraction
 Babel!=2.4.0,>=2.3.4 # BSD
-django-babel>=0.5.1 # BSD
+django-babel>=0.6.2 # BSD
