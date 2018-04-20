@@ -31,7 +31,6 @@ from oslo_log import handlers
 from oslo_log import log
 from selenium.common import exceptions as exc
 from selenium import webdriver
-from selenium.webdriver.common import action_chains
 import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support import ui
@@ -307,33 +306,6 @@ class UITestCase(testtools.TestCase):
             self.select_action_for_environment(env_name, 'delete')
         self.driver.find_element_by_xpath(consts.ConfirmDeletion).click()
         self.wait_for_alert_message()
-
-    def edit_environment(self, old_name, new_name):
-        el_td = self.driver.find_element_by_css_selector(
-            'tr[data-display="{0}"] '.format(old_name) +
-            'td[data-cell-name="name"]')
-        el_pencil = el_td.find_element_by_css_selector(
-            'button.ajax-inline-edit')
-
-        # hover to make pencil visible
-        hover = action_chains.ActionChains(self.driver).move_to_element(el_td)
-        hover.perform()
-        el_pencil.click()
-
-        # fill in inline input
-        el_inline_input = self.driver.find_element_by_css_selector(
-            'tr[data-display="{0}"] '.format(old_name) +
-            'td[data-cell-name="name"] .inline-edit-form input')
-        el_inline_input.clear()
-        el_inline_input.send_keys(new_name)
-
-        # click submit
-        el_submit = self.driver.find_element_by_css_selector(
-            'tr[data-display="{0}"] '.format(old_name) +
-            'td[data-cell-name="name"] .inline-edit-actions' +
-            ' button[type="submit"]')
-        el_submit.click()
-        # there is no alert message
 
     def select_action_for_environment(self, env_name, action):
         element_id = self.get_element_id(env_name)

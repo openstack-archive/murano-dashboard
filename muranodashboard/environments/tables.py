@@ -421,39 +421,6 @@ class UpdateServiceRow(tables.Row):
         return api.service_get(request, environment_id, service_id)
 
 
-class UpdateName(tables.UpdateAction):
-    def allowed(self, request, environment, cell):
-        policy_rule = (("murano", "update_environment"),)
-        return policy.check(policy_rule, request)
-
-    def update_cell(self, request, datum, obj_id, cell_name, new_cell_value):
-        try:
-            if not new_cell_value or new_cell_value.isspace():
-                message = _("The environment name field cannot be empty.")
-                messages.warning(request, message)
-                raise ValueError(message)
-            mc = api_utils.muranoclient(request)
-            mc.environments.update(datum.id, name=new_cell_value)
-        except exc.HTTPConflict:
-            message = _("Couldn't update environment. Reason: This name is "
-                        "already taken.")
-            messages.warning(request, message)
-            LOG.warning(message)
-
-            # FIXME(kzaitsev): There is a bug in horizon and inline error
-            # icons are missing. This means, that if we return 400 here, by
-            # raising django.core.exceptions.ValidationError(message) the UI
-            # will break a little. Until the bug is fixed this will raise 500
-            # bug link: https://bugs.launchpad.net/horizon/+bug/1359399
-            # Alternatively this could somehow raise 409, which would result
-            # in the same behaviour.
-            raise ValueError(message)
-        except Exception:
-            exceptions.handle(request, ignore=True)
-            return False
-        return True
-
-
 class UpdateEnvMetadata(tables.LinkAction):
     name = "update_env_metadata"
     verbose_name = _("Update Metadata")
@@ -490,8 +457,7 @@ class EnvironmentsTable(tables.DataTable):
         'name',
         link='horizon:app-catalog:environments:services',
         verbose_name=_('Name'),
-        form_field=forms.CharField(required=False),
-        update_action=UpdateName)
+        form_field=forms.CharField(required=False))
 
     status = tables.Column('status',
                            verbose_name=_('Status'),
