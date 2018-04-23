@@ -39,8 +39,8 @@ class TestImportBundleForm(helpers.APITestCase):
                 'import_type': 'by_{0}'.format(attr), attr: None}
             expected_error_msg = 'Please supply a bundle {0}'.format(attr)
 
-            with self.assertRaisesRegexp(django_forms.ValidationError,
-                                         expected_error_msg):
+            with self.assertRaisesRegex(django_forms.ValidationError,
+                                        expected_error_msg):
                 import_bundle_form.clean()
 
 
@@ -74,8 +74,8 @@ class TestImportPackageForm(helpers.APITestCase):
 
         expected_error_msg = 'It is forbidden to upload files larger than {0} '\
                              'MB.'.format(consts.MAX_FILE_SIZE_MB)
-        with self.assertRaisesRegexp(django_forms.ValidationError,
-                                     expected_error_msg):
+        with self.assertRaisesRegex(django_forms.ValidationError,
+                                    expected_error_msg):
             self.import_pkg_form.clean_package()
 
     def test_clean_form(self):
@@ -100,8 +100,8 @@ class TestImportPackageForm(helpers.APITestCase):
             expected_error_msg = 'Please supply a package {0}'.\
                                  format(_tuple[2])
 
-            with self.assertRaisesRegexp(django_forms.ValidationError,
-                                         expected_error_msg):
+            with self.assertRaisesRegex(django_forms.ValidationError,
+                                        expected_error_msg):
                 self.import_pkg_form.clean()
 
 

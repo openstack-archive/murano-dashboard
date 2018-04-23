@@ -100,8 +100,8 @@ class TestService(helpers.APITestCase):
             self.assertEqual(val, getattr(service.forms[0].service, key))
 
     def test_init_service_except_value_error(self):
-        with self.assertRaisesRegexp(ValueError,
-                                     'Application section is required'):
+        with self.assertRaisesRegex(ValueError,
+                                    'Application section is required'):
             services.Service(cleaned_data={},
                              version=2,
                              fqn='io.murano.Test',
