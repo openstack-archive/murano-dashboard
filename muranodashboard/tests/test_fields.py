@@ -17,34 +17,29 @@ from django.core import exceptions
 from muranodashboard.dynamic_ui import fields
 from openstack_dashboard.test import helpers
 
+import mock
 
-class TestFlavorField(helpers.APITestCase):
-    def setUp(self):
-        """Set up the Flavor Class and novaclient."""
-        super(TestFlavorField, self).setUp()
 
-        class FlavorFlave(object):
-            def __init__(self, id, name, vcpus, disk, ram):
-                self.name = name
-                self.vcpus = vcpus
-                self.disk = disk
-                self.ram = ram
-                self.id = id
+class FlavorFlave(object):
+    def __init__(self, id, name, vcpus, disk, ram):
+        self.name = name
+        self.vcpus = vcpus
+        self.disk = disk
+        self.ram = ram
+        self.id = id
 
-        novaclient = self.stub_novaclient()
-        novaclient.flavors = self.mox.CreateMockAnything()
-        # Set up the Flavor list
-        novaclient.flavors.list().MultipleTimes().AndReturn(
-            [FlavorFlave('id1', 'small', vcpus=1, disk=50, ram=1000),
-             FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
-             FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)])
 
-    def test_no_filter(self):
-        """Check that all flavors are returned."""
+class TestFlavorField(helpers.APIMockTestCase):
 
-        self.mox.ReplayAll()
+    @mock.patch('muranodashboard.dynamic_ui.fields.nova')
+    def test_no_filter(self, mock_nova):
 
         # No requirements, should return all flavors
+        mock_nova.novaclient().flavors.list.return_value = [
+            FlavorFlave('id1', 'small', vcpus=1, disk=50, ram=1000),
+            FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
+            FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)]
+
         f = fields.FlavorChoiceField()
         initial_request = {}
         f.update(initial_request, self.request)
@@ -54,30 +49,35 @@ class TestFlavorField(helpers.APITestCase):
             ('id1', 'small')
         ], f.choices)
 
-    def test_multiple_filter(self):
-        """Check that 2 flavors are returned."""
+    @mock.patch('muranodashboard.dynamic_ui.fields.nova')
+    def test_multiple_filter(self, mock_nova):
 
-        self.mox.ReplayAll()
+        mock_nova.novaclient().flavors.list.return_value = [
+            FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
+            FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)]
 
-        # Fake a requirement for 2 CPUs, should return medium and large
         f = fields.FlavorChoiceField(requirements={'min_vcpus': 2})
         f.update({}, self.request)
         self.assertEqual([('id3', 'large'), ('id2', 'medium')], f.choices)
 
-    def test_single_filter(self):
-        """Check that one flavor is returned."""
-        self.mox.ReplayAll()
+    @mock.patch('muranodashboard.dynamic_ui.fields.nova')
+    def test_single_filter(self, mock_nova):
 
-        # Fake a requirement for 2 CPUs and 200 GB disk, should return medium
+        """Check that one flavor is returned."""
+        mock_nova.novaclient().flavors.list.return_value = [
+            FlavorFlave('id3', 'large', vcpus=3, disk=750, ram=4000)]
+
+        # Fake a requirement for 2 CPUs and 200 GB disk, should return large
         f = fields.FlavorChoiceField(
             requirements={'min_vcpus': 2, 'min_disk': 200})
         initial_request = {}
         f.update(initial_request, self.request)
         self.assertEqual([('id3', 'large')], f.choices)
 
-    def test_no_matches_filter(self):
-        """Check that no flavors are returned."""
-        self.mox.ReplayAll()
+    @mock.patch('muranodashboard.dynamic_ui.fields.nova')
+    def test_no_matches_filter(self, mock_nova):
+
+        mock_nova.novaclient().flavors.list.return_value = []
 
         # Fake a requirement for 4 CPUs, should return no flavors
         f = fields.FlavorChoiceField(requirements={'min_vcpus': 4})

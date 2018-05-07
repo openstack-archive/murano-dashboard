@@ -29,7 +29,7 @@ from muranodashboard.packages import views
 from openstack_dashboard.test import helpers
 
 
-class TestPackageView(helpers.APITestCase):
+class TestPackageView(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestPackageView, self).setUp()
@@ -87,7 +87,7 @@ class TestPackageView(helpers.APITestCase):
         self.assertFalse(views.is_app(mock_wizard))
 
 
-class TestDetailView(helpers.APITestCase):
+class TestDetailView(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestDetailView, self).setUp()
@@ -129,7 +129,7 @@ class TestDetailView(helpers.APITestCase):
             redirect='test_redirect')
 
 
-class TestModifyPackageView(helpers.APITestCase):
+class TestModifyPackageView(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestModifyPackageView, self).setUp()
@@ -188,7 +188,7 @@ class TestModifyPackageView(helpers.APITestCase):
         self.modify_pkg_view.get_form.assert_called_once_with()
 
 
-class TestImportPackageWizard(helpers.APITestCase):
+class TestImportPackageWizard(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestImportPackageWizard, self).setUp()
@@ -276,10 +276,10 @@ class TestImportPackageWizard(helpers.APITestCase):
                 self.assertEqual(val, result[key])
 
     @mock.patch.object(views, 'exceptions')
-    @mock.patch.object(views, 'glance')
     @mock.patch.object(views, 'reverse')
+    @mock.patch.object(views, 'glance')
     @mock.patch.object(views, 'api')
-    def test_done(self, mock_api, mock_reverse, mock_glance, mock_exc):
+    def test_done(self, mock_api, mock_glance, mock_reverse, mock_exc):
         mock_storage = mock.MagicMock()
         mock_storage.get_step_data().__getitem__.return_value =\
             mock.Mock(id='test_package_id')
@@ -580,9 +580,10 @@ class TestImportPackageWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_package_create_exception(
-            self, mock_murano_utils, mock_api, mock_log, mock_reverse,
-            mock_messages, mock_exc):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_reverse, mock_messages, mock_exc):
         mock_murano_utils.Package.from_file.side_effect = None
         mock_reverse.return_value = 'test_redirect'
         mock_package = mock.Mock()
@@ -637,9 +638,10 @@ class TestImportPackageWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_http_conflict(
-            self, mock_murano_utils, mock_api, mock_log, mock_reverse,
-            mock_messages, mock_exc):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_reverse, mock_messages, mock_exc):
         mock_murano_utils.Package.from_file.side_effect = None
         mock_reverse.return_value = 'test_redirect'
 
@@ -690,9 +692,10 @@ class TestImportPackageWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_http_internal_server_error(
-            self, mock_murano_utils, mock_api, mock_log, mock_reverse,
-            mock_exc):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_reverse, mock_exc):
         mock_murano_utils.Package.from_file.side_effect = None
         mock_reverse.return_value = 'test_redirect'
         mock_package = mock.Mock()
@@ -732,9 +735,10 @@ class TestImportPackageWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_http_exception(
-            self, mock_murano_utils, mock_api, mock_log, mock_dashboard_utils,
-            mock_reverse, mock_exc):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_dashboard_utils, mock_reverse, mock_exc):
         mock_murano_utils.Package.from_file.side_effect = None
         mock_reverse.return_value = 'test_redirect'
         mock_package = mock.Mock()
@@ -778,7 +782,7 @@ class TestImportPackageWizard(helpers.APITestCase):
                           'package': 'test_package'}, kwargs)
 
 
-class TestImportBundleWizard(helpers.APITestCase):
+class TestImportBundleWizard(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestImportBundleWizard, self).setUp()
@@ -848,7 +852,8 @@ class TestImportBundleWizard(helpers.APITestCase):
 
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
-    def test_process_step(self, mock_murano_utils, mock_api):
+    @mock.patch.object(views, 'glance')
+    def test_process_step(self, mock_glance, mock_murano_utils, mock_api):
         mock_bundle = mock.Mock()
         mock_bundle.package_specs.return_value = [
             {'Name': 'foo_spec', 'Version': '1.0.0', 'Url': 'www.foo.com'},
@@ -956,8 +961,10 @@ class TestImportBundleWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_http_conflict(
-            self, mock_murano_utils, mock_api, mock_log, mock_messages):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_messages):
         mock_form = mock.Mock(
             cleaned_data={'import_type': 'by_url', 'url': 'foo_url'})
         mock_bundle = mock.Mock()
@@ -991,9 +998,10 @@ class TestImportBundleWizard(helpers.APITestCase):
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranodashboard_utils')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_http_exception(
-            self, mock_murano_utils, mock_dashboard_utils, mock_api, mock_log,
-            mock_messages):
+            self, mock_glance, mock_murano_utils, mock_dashboard_utils,
+            mock_api, mock_log, mock_messages):
         mock_form = mock.Mock(
             cleaned_data={'import_type': 'by_url', 'url': 'foo_url'})
         mock_bundle = mock.Mock()
@@ -1028,8 +1036,10 @@ class TestImportBundleWizard(helpers.APITestCase):
     @mock.patch.object(views, 'LOG')
     @mock.patch.object(views, 'api')
     @mock.patch.object(views, 'muranoclient_utils')
+    @mock.patch.object(views, 'glance')
     def test_process_step_except_package_create_exception(
-            self, mock_murano_utils, mock_api, mock_log, mock_messages):
+            self, mock_glance, mock_murano_utils, mock_api, mock_log,
+            mock_messages):
         mock_form = mock.Mock(
             cleaned_data={'import_type': 'by_url', 'url': 'foo_url'})
         mock_bundle = mock.Mock()
@@ -1076,7 +1086,7 @@ class TestImportBundleWizard(helpers.APITestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestPackageDefinitionsView(helpers.APITestCase):
+class TestPackageDefinitionsView(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestPackageDefinitionsView, self).setUp()

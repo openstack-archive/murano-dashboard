@@ -18,7 +18,7 @@ from muranodashboard.catalog import tabs
 from openstack_dashboard.test import helpers
 
 
-class TestLicenseTab(helpers.APITestCase):
+class TestLicenseTab(helpers.APIMockTestCase):
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_license(self, mock_services):
         """Check that a license is returned."""
@@ -66,7 +66,7 @@ class TestLicenseTab(helpers.APITestCase):
         self.assertEqual('', l.app.license)
 
 
-class TestRequirementsTab(helpers.APITestCase):
+class TestRequirementsTab(helpers.APIMockTestCase):
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_requirements(self, mock_services):
         """Check that requirements are returned."""
