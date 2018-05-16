@@ -403,7 +403,7 @@ class TestUpdateEnvironmentRow(testtools.TestCase):
 
         data_table = tables.UpdateEnvironmentRow(self.mock_data_table)
 
-        with self.assertRaisesRegexp(django_http.Http404, None):
+        with self.assertRaisesRegex(django_http.Http404, None):
             data_table.get_data(None, 'foo_environment_id')
 
     @mock.patch.object(tables, 'api')
@@ -412,7 +412,7 @@ class TestUpdateEnvironmentRow(testtools.TestCase):
 
         data_table = tables.UpdateEnvironmentRow(self.mock_data_table)
 
-        with self.assertRaisesRegexp(Exception, 'foo_error'):
+        with self.assertRaisesRegex(Exception, 'foo_error'):
             data_table.get_data(None, 'foo_environment_id')
 
 

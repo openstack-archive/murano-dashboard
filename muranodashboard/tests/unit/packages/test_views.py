@@ -485,7 +485,7 @@ class TestImportPackageWizard(helpers.APIMockTestCase):
         mock_json.loads.side_effect = ValueError('test_error_message')
         original_e = ValueError('original_error_message')
         setattr(original_e, 'details', 'error_details')
-        with self.assertRaisesRegexp(ValueError, 'original_error_message'):
+        with self.assertRaisesRegex(ValueError, 'original_error_message'):
             self.import_pkg_wizard._handle_exception(original_e)
 
     @mock.patch.object(views, 'glance')
@@ -564,8 +564,8 @@ class TestImportPackageWizard(helpers.APIMockTestCase):
             exception.message = error_message
             mock_murano_utils.Package.from_file.side_effect = exception
 
-            with self.assertRaisesRegexp(horizon_exceptions.Http302,
-                                         None):
+            with self.assertRaisesRegex(horizon_exceptions.Http302,
+                                        None):
                 self.import_pkg_wizard.process_step(mock_form)
 
             mock_log.exception.assert_called_once_with(expected_error_message)
@@ -920,7 +920,7 @@ class TestImportBundleWizard(helpers.APIMockTestCase):
         for exception, expected_error_message in errors:
             mock_murano_utils.Bundle.from_file.side_effect = exception
 
-            with self.assertRaisesRegexp(horizon_exceptions.Http302, None):
+            with self.assertRaisesRegex(horizon_exceptions.Http302, None):
                 self.import_bundle_wizard.process_step(mock_form)
 
             mock_log.exception.assert_called_once_with(expected_error_message)

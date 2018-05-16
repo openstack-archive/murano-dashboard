@@ -194,8 +194,8 @@ class TestServiceConfigurationForm(testtools.TestCase):
         test_validator = {'expr': mock_expr, 'message': 'Foo Error'}
 
         self.form.validators = [test_validator]
-        with self.assertRaisesRegexp(django_forms.ValidationError,
-                                     'Foo Error'):
+        with self.assertRaisesRegex(django_forms.ValidationError,
+                                    'Foo Error'):
             self.form.clean()
 
         self.form.service.update_cleaned_data.assert_called_once_with(

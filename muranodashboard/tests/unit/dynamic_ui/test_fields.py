@@ -62,8 +62,8 @@ class TestFields(testtools.TestCase):
 
     @mock.patch.object(fields, 'LOG')
     def test_fields_except_validation_error(self, mock_log):
-        with self.assertRaisesRegexp(forms.ValidationError,
-                                     "Can't get a request information"):
+        with self.assertRaisesRegex(forms.ValidationError,
+                                    "Can't get a request information"):
             self._test_fields_decorator_with_validation_error({}, request=None)
         mock_log.error.assert_called_once_with(
             "No 'request' value passed neither via initial dictionary, nor "
@@ -124,7 +124,7 @@ class TestFields(testtools.TestCase):
         def _validator(value):
             raise forms.ValidationError(None)
 
-        with self.assertRaisesRegexp(forms.ValidationError, 'foo'):
+        with self.assertRaisesRegex(forms.ValidationError, 'foo'):
             func = fields.wrap_regex_validator(_validator, 'foo')
             func(None)
 
