@@ -2,11 +2,17 @@
     check:
       jobs:
         - murano-dashboard-sanity-check
-
         - openstack-tox-lower-constraints
+        - horizon-openstack-tox-py35dj20:
+            required-projects:
+              openstack/horizon
     gate:
       jobs:
         - openstack-tox-lower-constraints
+        - horizon-openstack-tox-py35dj20:
+            required-projects:
+              openstack/horizon
+
 - job:
     name: murano-dashboard-sanity-check
     parent: legacy-dsvm-base

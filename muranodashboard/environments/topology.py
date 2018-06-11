@@ -15,8 +15,8 @@
 import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.core.urlresolvers import reverse
 from django.template import loader
+from django.urls import reverse
 
 import six
 

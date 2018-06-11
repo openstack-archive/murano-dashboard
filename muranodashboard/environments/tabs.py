@@ -16,7 +16,7 @@ import collections
 import json
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from heat_dashboard.api import heat as heat_api

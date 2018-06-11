@@ -17,11 +17,11 @@ import copy
 import json
 import re
 
-from django.core.urlresolvers import reverse
 from django.core import validators as django_validator
 from django import forms
 from django.forms import widgets
 from django.template import defaultfilters
+from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils import html
 from django.utils.translation import ugettext_lazy as _

@@ -16,9 +16,9 @@ import json
 import sys
 
 from django.core.files import storage
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import reverse_lazy
 from django import http
+from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 # django.contrib.formtools migration to django 1.8
 # https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/
@@ -309,7 +309,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         msg = _('Bundle successfully imported.')
         LOG.info(msg)
         messages.success(self.request, msg)
-        return http.HttpResponseRedirect(redirect)
+        return http.HttpResponseRedirect(bytes(redirect))
 
 
 class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
@@ -408,7 +408,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             msg = _('Package parameters successfully updated.')
             LOG.info(msg)
             messages.success(self.request, msg)
-            return http.HttpResponseRedirect(redirect)
+            return http.HttpResponseRedirect(bytes(redirect))
 
     def _handle_exception(self, original_e):
         exc_info = sys.exc_info()

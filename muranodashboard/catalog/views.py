@@ -25,7 +25,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 # django.contrib.formtools migration to django 1.8
 # https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/
 try:
@@ -407,7 +407,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             messages.success(self.request, message)
 
             if do_redirect:
-                return http.HttpResponseRedirect(env_url)
+                return http.HttpResponseRedirect(bytes(env_url))
             else:
                 srv_id = getattr(srv, '?')['id']
                 return self.create_hacked_response(

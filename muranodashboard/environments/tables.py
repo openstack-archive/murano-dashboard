@@ -14,11 +14,10 @@
 
 import json
 
-from django.core.urlresolvers import reverse
 from django import http as django_http
-from django import shortcuts
 from django import template
 from django.template import defaultfilters
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
@@ -378,9 +377,9 @@ class DeployThisEnvironment(tables.Action):
             exceptions.handle(
                 request, msg,
                 redirect=reverse('horizon:app-catalog:environments:index'))
-        return shortcuts.redirect(
-            reverse('horizon:app-catalog:environments:services',
-                    args=(environment_id,)))
+        redirect_to = reverse('horizon:app-catalog:environments:services',
+                              args=(environment_id,))
+        return django_http.HttpResponseRedirect(bytes(redirect_to))
 
 
 class ShowEnvironmentServices(tables.LinkAction):

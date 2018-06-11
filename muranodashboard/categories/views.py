@@ -14,7 +14,7 @@
 
 import itertools
 
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from horizon.forms import views
 from horizon import tables as horizon_tables
