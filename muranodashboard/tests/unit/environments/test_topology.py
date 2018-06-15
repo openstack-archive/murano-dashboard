@@ -21,7 +21,7 @@ from muranodashboard.environments import topology
 from openstack_dashboard.test import helpers
 
 
-class TestTopology(helpers.APITestCase):
+class TestTopology(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestTopology, self).setUp()

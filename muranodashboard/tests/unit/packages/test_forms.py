@@ -22,7 +22,7 @@ from muranodashboard.packages import forms
 from openstack_dashboard.test import helpers
 
 
-class TestImportBundleForm(helpers.APITestCase):
+class TestImportBundleForm(helpers.APIMockTestCase):
 
     def test_clean_form(self):
         import_bundle_form = forms.ImportBundleForm()
@@ -44,7 +44,7 @@ class TestImportBundleForm(helpers.APITestCase):
                 import_bundle_form.clean()
 
 
-class TestImportPackageForm(helpers.APITestCase):
+class TestImportPackageForm(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestImportPackageForm, self).setUp()
@@ -105,7 +105,7 @@ class TestImportPackageForm(helpers.APITestCase):
                 self.import_pkg_form.clean()
 
 
-class TestUpdatePackageForm(helpers.APITestCase):
+class TestUpdatePackageForm(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestUpdatePackageForm, self).setUp()
@@ -131,7 +131,7 @@ class TestUpdatePackageForm(helpers.APITestCase):
                          self.update_pkg_form.fields['description'].initial)
 
 
-class TestModifyPackageForm(helpers.APITestCase):
+class TestModifyPackageForm(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestModifyPackageForm, self).setUp()
@@ -256,7 +256,7 @@ class TestModifyPackageForm(helpers.APITestCase):
             redirect='test_redirect')
 
 
-class TestSelectCategories(helpers.APITestCase):
+class TestSelectCategories(helpers.APIMockTestCase):
 
     def setUp(self):
         super(TestSelectCategories, self).setUp()
