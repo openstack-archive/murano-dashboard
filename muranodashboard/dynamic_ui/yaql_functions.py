@@ -142,6 +142,8 @@ def _encrypt_data(context, data):
         auth_token=auth.get_token(sess), tenant=auth.get_project_id(sess))
     options.set_defaults(cfg.CONF,
                          auth_endpoint=settings.KEY_MANAGER['auth_url'])
+    options.set_defaults(cfg.CONF,
+                         barbican_endpoint_type='internal')
 
     manager = key_manager.API()
     try:
