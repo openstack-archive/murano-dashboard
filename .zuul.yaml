@@ -3,15 +3,11 @@
       jobs:
         - murano-dashboard-sanity-check
         - openstack-tox-lower-constraints
-        - horizon-openstack-tox-py35dj20:
-            required-projects:
-              openstack/horizon
+        - horizon-openstack-tox-python3-django111
     gate:
       jobs:
         - openstack-tox-lower-constraints
-        - horizon-openstack-tox-py35dj20:
-            required-projects:
-              openstack/horizon
+        - horizon-openstack-tox-python3-django111
 
 - job:
     name: murano-dashboard-sanity-check
