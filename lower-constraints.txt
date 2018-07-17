@@ -3,7 +3,7 @@ appdirs==1.4.3
 asn1crypto==0.24.0
 Babel==2.3.4
 beautifulsoup4==4.6.0
-castellan==0.16.0
+castellan==0.18.0
 certifi==2018.1.18
 cffi==1.11.5
 chardet==3.0.4
@@ -20,7 +20,7 @@ Django==1.11
 django-appconf==1.0.2
 django-babel==0.6.2
 django-compressor==2.0
-django-formtools==1.0
+django-formtools==2.0
 django-nose==1.4.4
 django-pyscss==2.0.2
 docutils==0.14
