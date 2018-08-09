@@ -32,7 +32,7 @@ fixtures==3.0.0
 flake8==2.5.5
 futurist==1.6.0
 hacking==0.12.0
-horizon==14.0.0.0b1
+horizon==14.0.0.0b3
 idna==2.6
 imagesize==1.0.0
 iso8601==0.1.11
@@ -47,7 +47,6 @@ MarkupSafe==1.0
 mccabe==0.2.1
 mock==2.0.0
 monotonic==1.4
-mox3==0.20.0
 msgpack==0.5.6
 munch==2.2.0
 murano-pkg-check==0.3.0
