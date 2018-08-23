@@ -1,8 +1,26 @@
 - project:
+    templates:
+      - check-requirements
+      - release-notes-jobs
+      - openstack-python-jobs-horizon
+      - openstack-python35-jobs-horizon
+      - nodejs4-jobs
     check:
       jobs:
         - murano-dashboard-sanity-check
 
+        - openstack-tox-cover:
+            voting: false
+            required-projects:
+              - openstack/horizon
+    post:
+      jobs:
+        - openstack-tox-cover:
+            required-projects:
+              - openstack/horizon
+    experimental:
+      jobs:
+        - legacy-dashboard-dsvm-selenium-package
 - job:
     name: murano-dashboard-sanity-check
     parent: legacy-dsvm-base
