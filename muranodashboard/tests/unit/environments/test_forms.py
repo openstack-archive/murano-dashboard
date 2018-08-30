@@ -13,7 +13,7 @@
 # under the License.
 
 import mock
-import testtools
+import unittest
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,7 +21,7 @@ from muranoclient.common import exceptions as exc
 from muranodashboard.environments import forms as env_forms
 
 
-class TestCreateEnvForm(testtools.TestCase):
+class TestCreateEnvForm(unittest.TestCase):
     def setUp(self):
         super(TestCreateEnvForm, self).setUp()
         self.mock_request = mock.MagicMock()

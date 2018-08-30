@@ -18,12 +18,12 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 import mock
-import testtools
+import unittest
 
 from muranodashboard.dynamic_ui import fields
 
 
-class TestFields(testtools.TestCase):
+class TestFields(unittest.TestCase):
 
     def setUp(self):
         super(TestFields, self).setUp()
@@ -62,9 +62,10 @@ class TestFields(testtools.TestCase):
 
     @mock.patch.object(fields, 'LOG')
     def test_fields_except_validation_error(self, mock_log):
-        with self.assertRaisesRegex(forms.ValidationError,
-                                    "Can't get a request information"):
+        with self.assertRaises(forms.ValidationError) as cm:
             self._test_fields_decorator_with_validation_error({}, request=None)
+        e = cm.exception
+        self.assertEqual("Can't get a request information", e.message)
         mock_log.error.assert_called_once_with(
             "No 'request' value passed neither via initial dictionary, nor "
             "directly")
@@ -92,7 +93,9 @@ class TestFields(testtools.TestCase):
 
         validator_func = fields.make_yaql_validator(mock_validator_property)
         self.assertTrue(hasattr(validator_func, '__call__'))
-        e = self.assertRaises(forms.ValidationError, validator_func, 'bar')
+        with self.assertRaises(forms.ValidationError) as cm:
+            validator_func('bar')
+        e = cm.exception
         self.assertEqual('foo_message', e.message)
 
     def test_get_regex_validator(self):
@@ -124,9 +127,11 @@ class TestFields(testtools.TestCase):
         def _validator(value):
             raise forms.ValidationError(None)
 
-        with self.assertRaisesRegex(forms.ValidationError, 'foo'):
+        with self.assertRaises(forms.ValidationError) as cm:
             func = fields.wrap_regex_validator(_validator, 'foo')
             func(None)
+        e = cm.exception
+        self.assertEqual('foo', e.message)
 
     @mock.patch.object(fields, 'glance')
     def test_get_murano_images(self, mock_glance):
@@ -328,7 +333,7 @@ class TestFields(testtools.TestCase):
         self.assertEqual('value', dynamic_select.clean('value'))
 
 
-class TestRawProperty(testtools.TestCase):
+class TestRawProperty(unittest.TestCase):
 
     def test_finalize(self):
         class Control(object):
@@ -366,7 +371,7 @@ class TestRawProperty(testtools.TestCase):
         self.assertNotIn('prop', ctl.__dict__)
 
 
-class TestCustomPropertiesField(testtools.TestCase):
+class TestCustomPropertiesField(unittest.TestCase):
 
     def setUp(self):
         super(TestCustomPropertiesField, self).setUp()
@@ -421,7 +426,7 @@ class TestCustomPropertiesField(testtools.TestCase):
         self.assertIsNotNone(result)
 
 
-class TestPasswordField(testtools.TestCase):
+class TestPasswordField(unittest.TestCase):
 
     def setUp(self):
         super(TestPasswordField, self).setUp()
@@ -470,7 +475,7 @@ class TestPasswordField(testtools.TestCase):
         self.assertEqual('Retype your password', result.help_text)
 
 
-class TestFlavorChoiceField(testtools.TestCase):
+class TestFlavorChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestFlavorChoiceField, self).setUp()
@@ -551,7 +556,7 @@ class TestFlavorChoiceField(testtools.TestCase):
         self.assertEqual('id3', self.flavor_choice_field.initial)
 
 
-class TestKeyPairChoiceField(testtools.TestCase):
+class TestKeyPairChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestKeyPairChoiceField, self).setUp()
@@ -578,7 +583,7 @@ class TestKeyPairChoiceField(testtools.TestCase):
                          sorted(key_pair_choice_field.choices))
 
 
-class TestSecurityGroupChoiceField(testtools.TestCase):
+class TestSecurityGroupChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestSecurityGroupChoiceField, self).setUp()
@@ -603,7 +608,7 @@ class TestSecurityGroupChoiceField(testtools.TestCase):
                          sorted(security_group_choice_field.choices))
 
 
-class TestImageChoiceField(testtools.TestCase):
+class TestImageChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestImageChoiceField, self).setUp()
@@ -645,7 +650,7 @@ class TestImageChoiceField(testtools.TestCase):
         self.assertEqual(expected_choices, image_choice_field.choices)
 
 
-class TestNetworkChoiceField(testtools.TestCase):
+class TestNetworkChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestNetworkChoiceField, self).setUp()
@@ -677,7 +682,7 @@ class TestNetworkChoiceField(testtools.TestCase):
                          self.network_choice_field.to_python(None))
 
 
-class TestVolumeChoiceField(testtools.TestCase):
+class TestVolumeChoiceField(unittest.TestCase):
 
     def setUp(self):
         super(TestVolumeChoiceField, self).setUp()
@@ -818,7 +823,7 @@ class TestVolumeChoiceField(testtools.TestCase):
         mock_exceptions.handle.assert_has_calls(expected_calls)
 
 
-class TestAZoneChoiceField(testtools.TestCase):
+class TestAZoneChoiceField(unittest.TestCase):
 
     @mock.patch.object(fields, 'nova')
     def test_update(self, mock_nova):
@@ -852,7 +857,7 @@ class TestAZoneChoiceField(testtools.TestCase):
         mock_exc.handle.assert_called_once_with(request['request'], mock.ANY)
 
 
-class TestBooleanField(testtools.TestCase):
+class TestBooleanField(unittest.TestCase):
 
     def test_boolean_field(self):
         class Widget(object):
@@ -870,7 +875,7 @@ class TestBooleanField(testtools.TestCase):
         self.assertFalse(boolean_field.required)
 
 
-class TestDatabaseListField(testtools.TestCase):
+class TestDatabaseListField(unittest.TestCase):
 
     def setUp(self):
         super(TestDatabaseListField, self).setUp()
@@ -893,12 +898,13 @@ class TestDatabaseListField(testtools.TestCase):
         expected_error = "First symbol should be latin letter or underscore. "\
                          "Subsequent symbols can be latin letter, numeric, "\
                          "underscore, at sign, number sign or dollar sign"
-        e = self.assertRaises(exceptions.ValidationError,
-                              self.database_list_field.validate, invalid_value)
+        with self.assertRaises(exceptions.ValidationError) as cm:
+            self.database_list_field.validate(invalid_value)
+        e = cm.exception
         self.assertEqual(expected_error, e.message)
 
 
-class TestErrorWidget(testtools.TestCase):
+class TestErrorWidget(unittest.TestCase):
 
     def test_render(self):
         error_widget = fields.ErrorWidget()

@@ -15,7 +15,7 @@
 import ast
 from django import http as django_http
 import mock
-import testtools
+import unittest
 
 from horizon import tables as hz_tables
 
@@ -25,7 +25,7 @@ from muranodashboard.environments import tables
 from muranodashboard.packages import consts as pkg_consts
 
 
-class TestEnvironmentTables(testtools.TestCase):
+class TestEnvironmentTables(unittest.TestCase):
     def test_check_row_actions_allowed(self):
         actions = mock.Mock()
         actions.table.data = None
@@ -359,7 +359,7 @@ class TestEnvironmentTables(testtools.TestCase):
         self.assertEqual('foo_name', tables.get_service_type(test_datum))
 
 
-class TestUpdateEnvironmentRow(testtools.TestCase):
+class TestUpdateEnvironmentRow(unittest.TestCase):
     def setUp(self):
         super(TestUpdateEnvironmentRow, self).setUp()
 
@@ -403,8 +403,10 @@ class TestUpdateEnvironmentRow(testtools.TestCase):
 
         data_table = tables.UpdateEnvironmentRow(self.mock_data_table)
 
-        with self.assertRaisesRegex(django_http.Http404, None):
+        with self.assertRaises(django_http.Http404) as cm:
             data_table.get_data(None, 'foo_environment_id')
+        e = cm.exception
+        self.assertEqual('', str(e))
 
     @mock.patch.object(tables, 'api')
     def test_get_data_except_exception(self, mock_api):
@@ -412,11 +414,13 @@ class TestUpdateEnvironmentRow(testtools.TestCase):
 
         data_table = tables.UpdateEnvironmentRow(self.mock_data_table)
 
-        with self.assertRaisesRegex(Exception, 'foo_error'):
+        with self.assertRaises(Exception) as cm:
             data_table.get_data(None, 'foo_environment_id')
+        e = cm.exception
+        self.assertEqual('foo_error', str(e))
 
 
-class TestUpdateServiceRow(testtools.TestCase):
+class TestUpdateServiceRow(unittest.TestCase):
 
     def setUp(self):
         super(TestUpdateServiceRow, self).setUp()
@@ -437,7 +441,7 @@ class TestUpdateServiceRow(testtools.TestCase):
             None, 'foo_env_id', 'foo_service_id')
 
 
-class TestUpdateEnvMetadata(testtools.TestCase):
+class TestUpdateEnvMetadata(unittest.TestCase):
 
     def test_update_env_meta_data(self):
         kwargs = {'datum': 'foo_datum'}
@@ -508,7 +512,7 @@ class TestUpdateEnvMetadata(testtools.TestCase):
             None, 'foo_env_id')
 
 
-class TestEnvironmentsTable(testtools.TestCase):
+class TestEnvironmentsTable(unittest.TestCase):
 
     @mock.patch.object(tables, 'reverse')
     @mock.patch.object(tables, 'policy')
@@ -531,7 +535,7 @@ class TestEnvironmentsTable(testtools.TestCase):
             "horizon:app-catalog:environments:services", args=('foo_env_id',))
 
 
-class TestUpdateMetadata(testtools.TestCase):
+class TestUpdateMetadata(unittest.TestCase):
 
     def setUp(self):
         super(TestUpdateMetadata, self).setUp()
@@ -610,7 +614,7 @@ class TestUpdateMetadata(testtools.TestCase):
             None, 'foo_env_id')
 
 
-class TestServicesTable(testtools.TestCase):
+class TestServicesTable(unittest.TestCase):
 
     def test_get_object_id(self):
         test_datum = {'?': {'id': 'foo'}}
@@ -728,7 +732,7 @@ class TestServicesTable(testtools.TestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestShowDeploymentDetails(testtools.TestCase):
+class TestShowDeploymentDetails(unittest.TestCase):
 
     @mock.patch.object(tables, 'reverse')
     def test_get_link_url(self, mock_reverse):
@@ -750,7 +754,7 @@ class TestShowDeploymentDetails(testtools.TestCase):
         self.assertTrue(show_deployment_details.allowed(None, None))
 
 
-class TestEnvConfigTable(testtools.TestCase):
+class TestEnvConfigTable(unittest.TestCase):
 
     def test_get_object_id(self):
         env_config_table = tables.EnvConfigTable(None)
@@ -758,7 +762,7 @@ class TestEnvConfigTable(testtools.TestCase):
             '?': {'id': 'foo'}}))
 
 
-class TestDeploymentHistoryTable(testtools.TestCase):
+class TestDeploymentHistoryTable(unittest.TestCase):
 
     def setUp(self):
         super(TestDeploymentHistoryTable, self).setUp()

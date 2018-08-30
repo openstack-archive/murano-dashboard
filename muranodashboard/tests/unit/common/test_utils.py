@@ -18,14 +18,14 @@ except ImportError:
     import pickle
 
 import mock
-import testtools
+import unittest
 import yaql
 
 from muranodashboard.common import utils
 from muranodashboard.dynamic_ui import yaql_expression
 
 
-class TestUtils(testtools.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_parse_api_error(self):
         test_html = '<html><body><h1>Foo Header</h1>Foo Error </body></html>'
@@ -36,7 +36,7 @@ class TestUtils(testtools.TestCase):
         self.assertIsNone(utils.parse_api_error(test_html))
 
 
-class TestCustomPickler(testtools.TestCase):
+class TestCustomPickler(unittest.TestCase):
 
     def setUp(self):
         super(TestCustomPickler, self).setUp()
@@ -53,7 +53,7 @@ class TestCustomPickler(testtools.TestCase):
         self.assertIsNone(self.custom_pickler.persistent_id(None))
 
 
-class TestCustomUnpickler(testtools.TestCase):
+class TestCustomUnpickler(unittest.TestCase):
 
     def setUp(self):
         super(TestCustomUnpickler, self).setUp()
@@ -67,6 +67,7 @@ class TestCustomUnpickler(testtools.TestCase):
         self.assertEqual(yaql_expression.YAQL, result)
 
     def test_persistent_load_with_wrong_obj_type(self):
-        e = self.assertRaises(pickle.UnpicklingError,
-                              self.custom_unpickler.persistent_load, None)
+        with self.assertRaises(pickle.UnpicklingError) as cm:
+            self.custom_unpickler.persistent_load(None)
+        e = cm.exception
         self.assertEqual('Invalid persistent id', str(e))

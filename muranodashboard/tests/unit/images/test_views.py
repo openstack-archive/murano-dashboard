@@ -14,7 +14,7 @@
 
 import json
 import mock
-import testtools
+import unittest
 
 from horizon import exceptions
 
@@ -22,7 +22,7 @@ from muranodashboard.images import tables
 from muranodashboard.images import views
 
 
-class TestMarkedImagesView(testtools.TestCase):
+class TestMarkedImagesView(unittest.TestCase):
 
     def setUp(self):
         super(TestMarkedImagesView, self).setUp()
@@ -170,7 +170,9 @@ class TestMarkedImagesView(testtools.TestCase):
         mock_reverse.return_value = 'foo_reverse_url'
         self.images_view.request.GET.get.return_value = None
 
-        e = self.assertRaises(exceptions.Http302, self.images_view.get_data)
+        with self.assertRaises(exceptions.Http302) as cm:
+            self.images_view.get_data()
+        e = cm.exception
         self.assertEqual('foo_reverse_url', e.location)
 
         mock_glance.glanceclient.assert_called_once_with(

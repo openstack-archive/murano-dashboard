@@ -18,7 +18,7 @@ from django import http
 from django.utils.translation import ugettext_lazy as _
 import mock
 import sys
-import testtools
+import unittest
 
 from horizon import conf
 
@@ -31,7 +31,7 @@ from muranodashboard.environments import views
 
 @mock.patch.object(views, 'exceptions')
 @mock.patch.object(views, 'api')
-class TestIndexView(testtools.TestCase):
+class TestIndexView(unittest.TestCase):
 
     def setUp(self):
         super(TestIndexView, self).setUp()
@@ -72,7 +72,7 @@ class TestIndexView(testtools.TestCase):
             self.index_view.request, ignore=True, escalate=True)
 
 
-class TestEnvironmentDetails(testtools.TestCase):
+class TestEnvironmentDetails(unittest.TestCase):
 
     def setUp(self):
         super(TestEnvironmentDetails, self).setUp()
@@ -159,7 +159,7 @@ class TestEnvironmentDetails(testtools.TestCase):
 
 
 @mock.patch.object(views, 'api')
-class TestDetailServiceView(testtools.TestCase):
+class TestDetailServiceView(unittest.TestCase):
 
     def setUp(self):
         super(TestDetailServiceView, self).setUp()
@@ -240,7 +240,7 @@ class TestDetailServiceView(testtools.TestCase):
         self.assertIsInstance(result, env_tabs.ServicesTabs)
 
 
-class TestCreateEnvironmentView(testtools.TestCase):
+class TestCreateEnvironmentView(unittest.TestCase):
 
     def setUp(self):
         super(TestCreateEnvironmentView, self).setUp()
@@ -303,7 +303,7 @@ class TestCreateEnvironmentView(testtools.TestCase):
 
 @mock.patch.object(views, 'reverse')
 @mock.patch.object(views, 'api')
-class TestDeploymentDetailsView(testtools.TestCase):
+class TestDeploymentDetailsView(unittest.TestCase):
 
     def setUp(self):
         super(TestDeploymentDetailsView, self).setUp()
@@ -422,7 +422,7 @@ class TestDeploymentDetailsView(testtools.TestCase):
         self.assertIsInstance(result, env_tabs.DeploymentDetailsTabs)
 
 
-class TestJSONView(testtools.TestCase):
+class TestJSONView(unittest.TestCase):
 
     @mock.patch.object(views, 'api')
     def test_get(self, mock_api):
@@ -438,7 +438,7 @@ class TestJSONView(testtools.TestCase):
                                                                'foo_env_id')
 
 
-class TestJSONResponse(testtools.TestCase):
+class TestJSONResponse(unittest.TestCase):
 
     def test_init(self):
         kwargs = {'content_type': 'json'}
@@ -451,7 +451,7 @@ class TestJSONResponse(testtools.TestCase):
         self.assertEqual(b'"foo"', json_response.content)
 
 
-class TestStartActionView(testtools.TestCase):
+class TestStartActionView(unittest.TestCase):
 
     @mock.patch.object(views, 'reverse')
     @mock.patch.object(views, 'api')
@@ -475,7 +475,7 @@ class TestStartActionView(testtools.TestCase):
         mock_api.action_allowed.assert_called_with(mock_request, 'foo_env_id')
 
 
-class TestActionResultView(testtools.TestCase):
+class TestActionResultView(unittest.TestCase):
 
     def test_is_file_returned(self):
         test_result = {'result': {'?': {'type': 'io.murano.File'}}}
@@ -568,7 +568,7 @@ class TestActionResultView(testtools.TestCase):
             assert_called_once_with('foo_env_id', 'foo_task_id')
 
 
-class TestDeploymentHistoryView(testtools.TestCase):
+class TestDeploymentHistoryView(unittest.TestCase):
 
     def setUp(self):
         super(TestDeploymentHistoryView, self).setUp()

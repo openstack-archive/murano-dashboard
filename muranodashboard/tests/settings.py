@@ -29,11 +29,6 @@ TESTSERVER = 'http://testserver'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--nocapture',
-             '--nologcapture',
-             '--cover-package=muranodashboard']
-
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
@@ -74,9 +69,5 @@ LOGGING = {
             'handlers': ['null'],
             'propagate': False,
         },
-        'nose.plugins.manager': {
-            'handlers': ['null'],
-            'propagate': False,
-        }
     }
 }

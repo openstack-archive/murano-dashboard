@@ -13,7 +13,7 @@
 # under the License.
 
 import mock
-import testtools
+import unittest
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,7 +21,7 @@ from muranoclient.common import exceptions as exc
 from muranodashboard.packages import tables
 
 
-class TestImportPackage(testtools.TestCase):
+class TestImportPackage(unittest.TestCase):
 
     def setUp(self):
         super(TestImportPackage, self).setUp()
@@ -47,7 +47,7 @@ class TestImportPackage(testtools.TestCase):
         self.assertFalse(self.import_package.allowed(None, None))
 
 
-class TestDownloadPackage(testtools.TestCase):
+class TestDownloadPackage(unittest.TestCase):
 
     def setUp(self):
         super(TestDownloadPackage, self).setUp()
@@ -79,7 +79,7 @@ class TestDownloadPackage(testtools.TestCase):
             args=('foo-app', 'foo_app_id'))
 
 
-class TestToggleEnabled(testtools.TestCase):
+class TestToggleEnabled(unittest.TestCase):
 
     def setUp(self):
         super(TestToggleEnabled, self).setUp()
@@ -142,7 +142,7 @@ class TestToggleEnabled(testtools.TestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestTogglePublicEnabled(testtools.TestCase):
+class TestTogglePublicEnabled(unittest.TestCase):
 
     def setUp(self):
         super(TestTogglePublicEnabled, self).setUp()
@@ -231,7 +231,7 @@ class TestTogglePublicEnabled(testtools.TestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestDeletePackage(testtools.TestCase):
+class TestDeletePackage(unittest.TestCase):
 
     def setUp(self):
         super(TestDeletePackage, self).setUp()
@@ -330,7 +330,7 @@ class TestDeletePackage(testtools.TestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestModifyPackage(testtools.TestCase):
+class TestModifyPackage(unittest.TestCase):
 
     def setUp(self):
         super(TestModifyPackage, self).setUp()

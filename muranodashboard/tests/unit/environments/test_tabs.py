@@ -14,7 +14,7 @@
 
 import collections
 import mock
-import testtools
+import unittest
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -24,7 +24,7 @@ from muranodashboard.environments import tables
 from muranodashboard.environments import tabs
 
 
-class TestOverviewTab(testtools.TestCase):
+class TestOverviewTab(unittest.TestCase):
 
     def setUp(self):
         super(TestOverviewTab, self).setUp()
@@ -223,7 +223,7 @@ class TestOverviewTab(testtools.TestCase):
                          mock_heat_api.stacks_list.mock_calls)
 
 
-class TestServiceLogsTab(testtools.TestCase):
+class TestServiceLogsTab(unittest.TestCase):
 
     def setUp(self):
         super(TestServiceLogsTab, self).setUp()
@@ -253,7 +253,7 @@ class TestServiceLogsTab(testtools.TestCase):
             mock_request, 'foo_service_id', 'foo_environment_id')
 
 
-class TestEnvLogsTab(testtools.TestCase):
+class TestEnvLogsTab(unittest.TestCase):
 
     def setUp(self):
         super(TestEnvLogsTab, self).setUp()
@@ -280,7 +280,7 @@ class TestEnvLogsTab(testtools.TestCase):
         self.assertEqual({'reports': [mock_report]}, reports)
 
 
-class TestLatestLogTab(testtools.TestCase):
+class TestLatestLogTab(unittest.TestCase):
 
     def test_allowed(self):
         mock_request = mock.MagicMock()
@@ -295,7 +295,7 @@ class TestLatestLogTab(testtools.TestCase):
         self.assertEqual([mock_report], latest_logs_tab.allowed(mock_request))
 
 
-class TestEnvConfigTab(testtools.TestCase):
+class TestEnvConfigTab(unittest.TestCase):
 
     def setUp(self):
         super(TestEnvConfigTab, self).setUp()
@@ -322,7 +322,7 @@ class TestEnvConfigTab(testtools.TestCase):
         self.assertEqual(['foo_service'], result)
 
 
-class TestEnvironmentTopologyTab(testtools.TestCase):
+class TestEnvironmentTopologyTab(unittest.TestCase):
 
     def setUp(self):
         super(TestEnvironmentTopologyTab, self).setUp()
@@ -360,7 +360,7 @@ class TestEnvironmentTopologyTab(testtools.TestCase):
 
 
 @mock.patch.object(tabs, 'api')
-class TestEnvironmentServicesTab(testtools.TestCase):
+class TestEnvironmentServicesTab(unittest.TestCase):
 
     def setUp(self):
         super(TestEnvironmentServicesTab, self).setUp()
@@ -446,7 +446,7 @@ class TestEnvironmentServicesTab(testtools.TestCase):
 
 
 @mock.patch.object(tabs, 'api')
-class TestDeploymentTab(testtools.TestCase):
+class TestDeploymentTab(unittest.TestCase):
 
     def setUp(self):
         super(TestDeploymentTab, self).setUp()
@@ -511,7 +511,7 @@ class TestDeploymentTab(testtools.TestCase):
             "horizon:app-catalog:environments:index")
 
 
-class TestEnvironmentDetailsTabs(testtools.TestCase):
+class TestEnvironmentDetailsTabs(unittest.TestCase):
 
     @mock.patch.object(tabs, 'api')
     def test_init(self, mock_api):
@@ -533,7 +533,7 @@ class TestEnvironmentDetailsTabs(testtools.TestCase):
         self.assertTrue(env_details_tabs.sticky)
 
 
-class TestServicesTabs(testtools.TestCase):
+class TestServicesTabs(unittest.TestCase):
 
     def test_init(self):
         mock_request = mock.Mock(GET={})
@@ -546,7 +546,7 @@ class TestServicesTabs(testtools.TestCase):
         self.assertTrue(services_tabs.sticky)
 
 
-class TestDeploymentDetailsTabs(testtools.TestCase):
+class TestDeploymentDetailsTabs(unittest.TestCase):
 
     def test_init(self):
         mock_request = mock.Mock(GET={})

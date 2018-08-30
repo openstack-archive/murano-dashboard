@@ -14,7 +14,7 @@
 
 import collections
 import mock
-import testtools
+import unittest
 from yaql.language import contexts as yaql_contexts
 
 from django import forms as django_forms
@@ -24,7 +24,7 @@ from muranodashboard.dynamic_ui import forms
 from muranodashboard.dynamic_ui import yaql_expression
 
 
-class TestAnyFieldDict(testtools.TestCase):
+class TestAnyFieldDict(unittest.TestCase):
 
     def test_missing(self):
         any_field_dict = forms.AnyFieldDict()
@@ -32,7 +32,7 @@ class TestAnyFieldDict(testtools.TestCase):
         self.assertEqual('DynamicSelect', result.__name__)
 
 
-class TestDynamicUiForm(testtools.TestCase):
+class TestDynamicUiForm(unittest.TestCase):
 
     def test_collect_fields_process_widget(self):
         test_spec = {
@@ -84,7 +84,7 @@ class TestDynamicUiForm(testtools.TestCase):
         self.assertEqual(mock_yaql, field.validators[0]['expr'].spec)
 
 
-class TestDynamicFormMetaclass(testtools.TestCase):
+class TestDynamicFormMetaclass(unittest.TestCase):
 
     def test_new(self):
         test_dict = {
@@ -102,7 +102,7 @@ class TestDynamicFormMetaclass(testtools.TestCase):
                               fields.CharField)
 
 
-class TestUpdatableFieldsForm(testtools.TestCase):
+class TestUpdatableFieldsForm(unittest.TestCase):
 
     def setUp(self):
         super(TestUpdatableFieldsForm, self).setUp()
@@ -141,7 +141,7 @@ class TestUpdatableFieldsForm(testtools.TestCase):
         self.assertTrue(mock_password_field.update.called)
 
 
-class TestServiceConfigurationForm(testtools.TestCase):
+class TestServiceConfigurationForm(unittest.TestCase):
 
     def setUp(self):
         super(TestServiceConfigurationForm, self).setUp()
@@ -194,9 +194,10 @@ class TestServiceConfigurationForm(testtools.TestCase):
         test_validator = {'expr': mock_expr, 'message': 'Foo Error'}
 
         self.form.validators = [test_validator]
-        with self.assertRaisesRegex(django_forms.ValidationError,
-                                    'Foo Error'):
+        with self.assertRaises(django_forms.ValidationError) as cm:
             self.form.clean()
+        e = cm.exception
+        self.assertIn('Foo Error', e.messages)
 
         self.form.service.update_cleaned_data.assert_called_once_with(
             {'foo': 'bar', 'baz': 'qux'}, form=self.form)

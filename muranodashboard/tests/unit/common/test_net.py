@@ -13,14 +13,14 @@
 # under the License.
 
 import mock
-import testtools
+import unittest
 
 from horizon import exceptions
 
 from muranodashboard.common import net
 
 
-class TestNet(testtools.TestCase):
+class TestNet(unittest.TestCase):
 
     def setUp(self):
         super(TestNet, self).setUp()

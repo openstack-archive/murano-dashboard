@@ -12,12 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import testtools
+import unittest
 
 from muranodashboard.dynamic_ui import helpers
 
 
-class TestHelper(testtools.TestCase):
+class TestHelper(unittest.TestCase):
     def test_to_str(self):
         names = ['string', b'ascii', u'ascii',
                  u'\u043d\u0435 \u0430\u0441\u043a\u0438']

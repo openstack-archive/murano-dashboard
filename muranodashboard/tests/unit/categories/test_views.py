@@ -13,13 +13,13 @@
 # under the License.
 
 import mock
-import testtools
+import unittest
 
 from muranodashboard.categories import tables
 from muranodashboard.categories import views
 
 
-class TestCategoriesView(testtools.TestCase):
+class TestCategoriesView(unittest.TestCase):
 
     def setUp(self):
         super(TestCategoriesView, self).setUp()

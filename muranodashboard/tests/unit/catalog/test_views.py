@@ -14,7 +14,7 @@
 
 import collections
 import mock
-import testtools
+import unittest
 
 from django.conf import settings
 from django.forms import formsets
@@ -34,7 +34,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 
-class TestCatalogViews(testtools.TestCase):
+class TestCatalogViews(unittest.TestCase):
     def setUp(self):
         super(TestCatalogViews, self).setUp()
         self.mock_request = mock.MagicMock(session={})
@@ -177,7 +177,7 @@ class TestCatalogViews(testtools.TestCase):
             **expected_params)
 
 
-class TestLazyWizard(testtools.TestCase):
+class TestLazyWizard(unittest.TestCase):
 
     @mock.patch.object(views.LazyWizard, 'http_method_names',
                        new_callable=mock.PropertyMock)
@@ -189,16 +189,20 @@ class TestLazyWizard(testtools.TestCase):
         expected_error_msg = "You tried to pass in the {0} method name as a "\
                              "keyword argument to LazyWizard(). "\
                              "Don't do that.".format("patch")
-        e = self.assertRaises(TypeError, views.LazyWizard.as_view,
-                              None, **kwargs)
+
+        with self.assertRaises(TypeError) as cm:
+            views.LazyWizard.as_view(None, **kwargs)
+        e = cm.exception
         self.assertEqual(expected_error_msg, str(e))
 
         # Test that second occurrence of type error is thrown.
         kwargs = {'foobar': ''}
         expected_error_msg = "LazyWizard() received an invalid keyword "\
                              "'foobar'"
-        e = self.assertRaises(TypeError, views.LazyWizard.as_view,
-                              None, **kwargs)
+
+        with self.assertRaises(TypeError) as cm:
+            views.LazyWizard.as_view(None, **kwargs)
+        e = cm.exception
         self.assertEqual(expected_error_msg, str(e))
 
     @mock.patch.object(views.LazyWizard, 'dispatch')
@@ -220,7 +224,7 @@ class TestLazyWizard(testtools.TestCase):
         mock_dispatch.assert_called_once_with(mock_request, **kwargs)
 
 
-class TestWizard(testtools.TestCase):
+class TestWizard(unittest.TestCase):
 
     def setUp(self):
         super(TestWizard, self).setUp()
@@ -488,7 +492,7 @@ class TestWizard(testtools.TestCase):
         mock_nova.flavor_list.assert_called_once_with(self.wizard.request)
 
 
-class TestIndexView(testtools.TestCase):
+class TestIndexView(unittest.TestCase):
 
     def setUp(self):
         super(TestIndexView, self).setUp()
@@ -669,7 +673,7 @@ class TestIndexView(testtools.TestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestAppDetailsView(testtools.TestCase):
+class TestAppDetailsView(unittest.TestCase):
 
     def setUp(self):
         super(TestAppDetailsView, self).setUp()

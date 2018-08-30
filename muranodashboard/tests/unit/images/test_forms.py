@@ -13,14 +13,14 @@
 # under the License.
 
 import mock
-import testtools
+import unittest
 
 from django.utils.translation import ugettext_lazy as _
 
 from muranodashboard.images import forms
 
 
-class TestImagesForms(testtools.TestCase):
+class TestImagesForms(unittest.TestCase):
     def setUp(self):
         super(TestImagesForms, self).setUp()
         metadata = '{"title": "title", "type": "type"}'
@@ -49,7 +49,7 @@ class TestImagesForms(testtools.TestCase):
                          forms.filter_murano_images(images, self.mock_request))
 
 
-class TestMarkImageForm(testtools.TestCase):
+class TestMarkImageForm(unittest.TestCase):
     def setUp(self):
         super(TestMarkImageForm, self).setUp()
         self.mock_request = mock.MagicMock()

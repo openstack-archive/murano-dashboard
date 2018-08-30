@@ -14,7 +14,7 @@
 
 import mock
 import re
-import testtools
+import unittest
 
 from castellan.common import exception as castellan_exception
 from castellan.common.objects import opaque_data
@@ -23,7 +23,7 @@ from muranodashboard.dynamic_ui import helpers
 from muranodashboard.dynamic_ui import yaql_functions
 
 
-class TestYAQLFunctions(testtools.TestCase):
+class TestYAQLFunctions(unittest.TestCase):
 
     def test_generate_hostname(self):
         self.assertEqual(

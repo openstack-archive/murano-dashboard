@@ -12,12 +12,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import testtools
+import unittest
 
 from muranodashboard.dynamic_ui import version
 
 
-class TestVersions(testtools.TestCase):
+class TestVersions(unittest.TestCase):
     def setUp(self):
         super(TestVersions, self).setUp()
         self.original = version.LATEST_FORMAT_VERSION

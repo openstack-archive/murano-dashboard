@@ -12,12 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import testtools
+import unittest
 
 from muranodashboard.dynamic_ui import yaql_expression
 
 
-class TestYaqlExpression(testtools.TestCase):
+class TestYaqlExpression(unittest.TestCase):
     def setUp(self):
         super(TestYaqlExpression, self).setUp()
 
