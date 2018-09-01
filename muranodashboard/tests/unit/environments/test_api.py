@@ -273,7 +273,7 @@ class TestEnvironmentsAPI(helpers.APIMockTestCase):
         mock_client = mock_api.muranoclient(mock.Mock())
         mock_client.environments.get.return_value = mock_env
         mock_client.environments.last_status.return_value = {
-            'foo_service': mock.Mock(text='foo'*100,
+            'foo_service': mock.Mock(text='foo' * 100,
                                      updated='foo_time'),
             'bar_service': None
         }

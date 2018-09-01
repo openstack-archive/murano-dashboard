@@ -38,7 +38,7 @@ class TestFlavorField(helpers.APIMockTestCase):
         mock_nova.novaclient().flavors.list.return_value = [
             FlavorFlave('id1', 'small', vcpus=1, disk=50, ram=1000),
             FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
-            FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)]
+            FlavorFlave('id3', 'large', vcpus=3, disk=750, ram=4000)]
 
         f = fields.FlavorChoiceField()
         initial_request = {}
@@ -54,7 +54,7 @@ class TestFlavorField(helpers.APIMockTestCase):
 
         mock_nova.novaclient().flavors.list.return_value = [
             FlavorFlave('id2', 'medium', vcpus=2, disk=100, ram=2000),
-            FlavorFlave('id3', 'large',  vcpus=3, disk=750, ram=4000)]
+            FlavorFlave('id3', 'large', vcpus=3, disk=750, ram=4000)]
 
         f = fields.FlavorChoiceField(requirements={'min_vcpus': 2})
         f.update({}, self.request)

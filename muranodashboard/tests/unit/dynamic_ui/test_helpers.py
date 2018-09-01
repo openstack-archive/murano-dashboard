@@ -47,8 +47,7 @@ class TestHelper(testtools.TestCase):
     def test_insert_hidden_ids(self):
         app_dict = {'?': {
             'type': 'test.App',
-            'id': '123'
-            }
+            'id': '123'}
         }
         app_list = [1, 2, 3, 4]
 
