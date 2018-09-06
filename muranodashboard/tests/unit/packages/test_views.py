@@ -31,8 +31,6 @@ from openstack_dashboard.test import helpers
 
 class TestPackageView(helpers.APIMockTestCase):
 
-    use_mox = True
-
     def setUp(self):
         super(TestPackageView, self).setUp()
 
@@ -91,8 +89,6 @@ class TestPackageView(helpers.APIMockTestCase):
 
 class TestDetailView(helpers.APIMockTestCase):
 
-    use_mox = True
-
     def setUp(self):
         super(TestDetailView, self).setUp()
 
@@ -134,8 +130,6 @@ class TestDetailView(helpers.APIMockTestCase):
 
 
 class TestModifyPackageView(helpers.APIMockTestCase):
-
-    use_mox = True
 
     def setUp(self):
         super(TestModifyPackageView, self).setUp()
@@ -195,8 +189,6 @@ class TestModifyPackageView(helpers.APIMockTestCase):
 
 
 class TestImportPackageWizard(helpers.APIMockTestCase):
-
-    use_mox = True
 
     def setUp(self):
         super(TestImportPackageWizard, self).setUp()
@@ -791,8 +783,6 @@ class TestImportPackageWizard(helpers.APIMockTestCase):
 
 
 class TestImportBundleWizard(helpers.APIMockTestCase):
-
-    use_mox = True
 
     def setUp(self):
         super(TestImportBundleWizard, self).setUp()
