@@ -18,4 +18,16 @@
               - openstack/horizon
     experimental:
       jobs:
-        - legacy-dashboard-dsvm-selenium-package
+        - murano-dashboard-selenium-package
+
+- job:
+    name: murano-dashboard-selenium-package
+    parent: legacy-dsvm-base
+    run: playbooks/dashboard-dsvm-selenium-package/run.yaml
+    post-run: playbooks/dashboard-dsvm-selenium-package/post.yaml
+    timeout: 7800
+    required-projects:
+      - openstack-infra/devstack-gate
+      - openstack/murano
+      - openstack/murano-dashboard
+      - openstack/python-muranoclient
