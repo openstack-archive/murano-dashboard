@@ -35,7 +35,7 @@ import selenium.webdriver.common.by as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support import ui
 
-import config.config as cfg
+from muranodashboard.tests.functional.config import config as cfg
 from muranodashboard.tests.functional import consts
 from muranodashboard.tests.functional import utils
 

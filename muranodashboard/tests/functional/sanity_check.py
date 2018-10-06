@@ -10,12 +10,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from http.server import BaseHTTPRequestHandler
 import multiprocessing
 import os
 import re
 import shutil
-import SimpleHTTPServer
-import SocketServer
+import socketserver
 import tempfile
 import time
 import unittest
@@ -2765,10 +2765,10 @@ class TestSuiteRepository(base.PackageTestCase):
         self.serve_dir = tempfile.mkdtemp(suffix="repo")
 
         def serve_function():
-            class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+            class Handler(BaseHTTPRequestHandler):
                 pass
             os.chdir(self.serve_dir)
-            httpd = SocketServer.TCPServer(
+            httpd = socketserver.TCPServer(
                 ("0.0.0.0", 8099),
                 Handler, bind_and_activate=False)
             httpd.allow_reuse_address = True

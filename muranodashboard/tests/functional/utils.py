@@ -19,7 +19,7 @@ import zipfile
 from oslo_log import log
 from selenium.webdriver.support import wait
 
-import config.config as cfg
+from muranodashboard.tests.functional.config import config as cfg
 from muranodashboard.tests.functional import consts
 
 log = log.getLogger(__name__).logger
