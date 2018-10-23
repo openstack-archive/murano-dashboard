@@ -10,17 +10,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from http.server import BaseHTTPRequestHandler
 import multiprocessing
 import os
 import re
 import shutil
-import socketserver
 import tempfile
 import time
 import unittest
 import uuid
 import zipfile
+
+from six.moves import SimpleHTTPServer
+from six.moves import socketserver
 
 from selenium.common import exceptions
 from selenium.webdriver.common import by
@@ -2765,7 +2766,7 @@ class TestSuiteRepository(base.PackageTestCase):
         self.serve_dir = tempfile.mkdtemp(suffix="repo")
 
         def serve_function():
-            class Handler(BaseHTTPRequestHandler):
+            class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 pass
             os.chdir(self.serve_dir)
             httpd = socketserver.TCPServer(
