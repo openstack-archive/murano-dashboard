@@ -24,7 +24,7 @@ Project Hosting Details
     * https://launchpad.net/python-muranoclient
 
 * Mailing list (prefix subjects with ``[Murano]`` for faster responses)
-    http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-dev
+    http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-discuss
 
 * Wiki
     https://wiki.openstack.org/wiki/Murano
