@@ -51,7 +51,8 @@ TYPES.update({
     'choice': fields.ChoiceField,
     'floatingip': fields.FloatingIpBooleanField,
     'securitygroup': fields.SecurityGroupChoiceField,
-    'volume': fields.VolumeChoiceField
+    'volume': fields.VolumeChoiceField,
+    'zone': fields.ZoneChoiceField,
 })
 
 
