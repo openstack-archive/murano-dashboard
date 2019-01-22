@@ -1,15 +1,16 @@
 # suhartono <cloudsuhartono@gmail.com>, 2016. #zanata
 # suhartono <cloudsuhartono@gmail.com>, 2017. #zanata
 # suhartono <cloudsuhartono@gmail.com>, 2018. #zanata
+# suhartono <cloudsuhartono@gmail.com>, 2019. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-15 15:52+0000\n"
+"POT-Creation-Date: 2019-01-05 08:21+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-05-09 04:49+0000\n"
+"PO-Revision-Date: 2019-01-21 04:53+0000\n"
 "Last-Translator: suhartono <cloudsuhartono@gmail.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
@@ -355,6 +356,9 @@ msgstr ""
 "Persyaratan untuk flavor field menerima 'max_vcpus', 'max_disk' dan "
 "'max_memory_mb'. Sebelumnya hanya nilai minimum dapat ditentukan dalam "
 "persyaratan flavor."
+
+msgid "Rocky Series Release Notes"
+msgstr "Rocky Series Release Notes"
 
 msgid "Security Issues"
 msgstr "Isu keamanan"
