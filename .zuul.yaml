@@ -15,9 +15,6 @@
     gate:
       jobs:
         - horizon-openstack-tox-python3-django111
-    experimental:
-      jobs:
-        - murano-dashboard-selenium-package
 
 - job:
     name: murano-dashboard-sanity-check
@@ -43,15 +40,3 @@
       - openstack/python-muranoclient
       - openstack/horizon
       - openstack/heat-dashboard
-
-- job:
-    name: murano-dashboard-selenium-package
-    parent: legacy-dsvm-base
-    run: playbooks/dashboard-dsvm-selenium-package/run.yaml
-    post-run: playbooks/dashboard-dsvm-selenium-package/post.yaml
-    timeout: 7800
-    required-projects:
-      - openstack-infra/devstack-gate
-      - openstack/murano
-      - openstack/murano-dashboard
-      - openstack/python-muranoclient
