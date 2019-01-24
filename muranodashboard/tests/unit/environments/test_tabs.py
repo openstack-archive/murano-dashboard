@@ -300,7 +300,8 @@ class TestEnvConfigTab(unittest.TestCase):
     def setUp(self):
         super(TestEnvConfigTab, self).setUp()
         mock_tab_group = mock.Mock(kwargs={})
-        self.env_config_tab = tabs.EnvConfigTab(mock_tab_group, None)
+        mock_request = mock.Mock()
+        self.env_config_tab = tabs.EnvConfigTab(mock_tab_group, mock_request)
 
         self.assertEqual(_('Configuration'), self.env_config_tab.name)
         self.assertEqual('env_config', self.env_config_tab.slug)
