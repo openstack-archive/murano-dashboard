@@ -29,7 +29,7 @@ class FlavorFlave(object):
         self.id = id
 
 
-class TestFlavorField(helpers.APIMockTestCase):
+class TestFlavorField(helpers.APITestCase):
 
     @mock.patch('muranodashboard.dynamic_ui.fields.nova')
     def test_no_filter(self, mock_nova):

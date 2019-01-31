@@ -22,7 +22,7 @@ from muranodashboard.environments import consts
 from openstack_dashboard.test import helpers
 
 
-class TestEnvironmentsAPI(helpers.APIMockTestCase):
+class TestEnvironmentsAPI(helpers.APITestCase):
     def setUp(self):
         super(TestEnvironmentsAPI, self).setUp()
 
@@ -349,7 +349,7 @@ class TestEnvironmentsAPI(helpers.APIMockTestCase):
         self.assertEqual([{'?': {'type': 'foo/bar'}}], result)
 
 
-class TestEnvironmentsSessionAPI(helpers.APIMockTestCase):
+class TestEnvironmentsSessionAPI(helpers.APITestCase):
     def setUp(self):
         super(TestEnvironmentsSessionAPI, self).setUp()
 

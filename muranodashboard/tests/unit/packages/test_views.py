@@ -29,7 +29,7 @@ from muranodashboard.packages import views
 from openstack_dashboard.test import helpers
 
 
-class TestPackageView(helpers.APIMockTestCase):
+class TestPackageView(helpers.APITestCase):
 
     def setUp(self):
         super(TestPackageView, self).setUp()
@@ -87,7 +87,7 @@ class TestPackageView(helpers.APIMockTestCase):
         self.assertFalse(views.is_app(mock_wizard))
 
 
-class TestDetailView(helpers.APIMockTestCase):
+class TestDetailView(helpers.APITestCase):
 
     def setUp(self):
         super(TestDetailView, self).setUp()
@@ -129,7 +129,7 @@ class TestDetailView(helpers.APIMockTestCase):
             redirect='test_redirect')
 
 
-class TestModifyPackageView(helpers.APIMockTestCase):
+class TestModifyPackageView(helpers.APITestCase):
 
     def setUp(self):
         super(TestModifyPackageView, self).setUp()
@@ -188,7 +188,7 @@ class TestModifyPackageView(helpers.APIMockTestCase):
         self.modify_pkg_view.get_form.assert_called_once_with()
 
 
-class TestImportPackageWizard(helpers.APIMockTestCase):
+class TestImportPackageWizard(helpers.APITestCase):
 
     def setUp(self):
         super(TestImportPackageWizard, self).setUp()
@@ -782,7 +782,7 @@ class TestImportPackageWizard(helpers.APIMockTestCase):
                           'package': 'test_package'}, kwargs)
 
 
-class TestImportBundleWizard(helpers.APIMockTestCase):
+class TestImportBundleWizard(helpers.APITestCase):
 
     def setUp(self):
         super(TestImportBundleWizard, self).setUp()
@@ -1086,7 +1086,7 @@ class TestImportBundleWizard(helpers.APIMockTestCase):
             'horizon:app-catalog:packages:index')
 
 
-class TestPackageDefinitionsView(helpers.APIMockTestCase):
+class TestPackageDefinitionsView(helpers.APITestCase):
 
     def setUp(self):
         super(TestPackageDefinitionsView, self).setUp()

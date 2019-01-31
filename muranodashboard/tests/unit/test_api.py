@@ -23,7 +23,7 @@ from muranodashboard import api
 from openstack_dashboard.test import helpers
 
 
-class TestApi(helpers.APIMockTestCase):
+class TestApi(helpers.APITestCase):
 
     def setUp(self):
         super(TestApi, self).setUp()
