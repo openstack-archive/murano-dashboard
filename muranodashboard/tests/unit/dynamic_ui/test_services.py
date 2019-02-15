@@ -27,7 +27,7 @@ from muranodashboard.dynamic_ui import services
 from openstack_dashboard.test import helpers
 
 
-class TestService(helpers.APIMockTestCase):
+class TestService(helpers.APITestCase):
     def setUp(self):
         super(TestService, self).setUp()
 

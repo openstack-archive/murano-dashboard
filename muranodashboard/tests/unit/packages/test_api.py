@@ -34,7 +34,7 @@ class MagicIterMock(mock.MagicMock):
         next = mock.Mock(return_value=None)
 
 
-class TestPackagesAPI(helpers.APIMockTestCase):
+class TestPackagesAPI(helpers.APITestCase):
     def setUp(self):
         super(TestPackagesAPI, self).setUp()
 

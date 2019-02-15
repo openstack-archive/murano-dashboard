@@ -28,7 +28,7 @@ PARAM_MAPPING = {
 
 @mock.patch.object(environments, 'api')
 @mock.patch.object(environments, 'env_api')
-class TestComponentsMetadataAPI(helpers.APIMockTestCase):
+class TestComponentsMetadataAPI(helpers.APITestCase):
 
     def setUp(self):
         super(TestComponentsMetadataAPI, self).setUp()
@@ -86,7 +86,7 @@ class TestComponentsMetadataAPI(helpers.APIMockTestCase):
 
 @mock.patch.object(environments, 'api')
 @mock.patch.object(environments, 'env_api')
-class TestEnvironmentsMetadataApi(helpers.APIMockTestCase):
+class TestEnvironmentsMetadataApi(helpers.APITestCase):
 
     def setUp(self):
         super(TestEnvironmentsMetadataApi, self).setUp()
