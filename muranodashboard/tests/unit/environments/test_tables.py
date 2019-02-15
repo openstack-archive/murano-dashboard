@@ -519,7 +519,8 @@ class TestEnvironmentsTable(unittest.TestCase):
     def test_environments_table(self, mock_policy, mock_reverse):
         mock_reverse.return_value = 'test_url'
         mock_env = mock.Mock(id='foo_env_id')
-        envs_table = tables.EnvironmentsTable(None)
+        mock_request = mock.Mock()
+        envs_table = tables.EnvironmentsTable(mock_request)
         self.assertEqual(tables.EnvironmentsTable.get_env_detail_link.__name__,
                          envs_table.columns['name'].get_link_url.__name__)
 
@@ -618,7 +619,8 @@ class TestServicesTable(unittest.TestCase):
 
     def test_get_object_id(self):
         test_datum = {'?': {'id': 'foo'}}
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         self.assertEqual('foo', services_table.get_object_id(test_datum))
 
     @mock.patch.object(tables, 'pkg_api')
@@ -630,7 +632,8 @@ class TestServicesTable(unittest.TestCase):
         mock_pkg_api.package_list.return_value = (
             [foo_app, baz_app], True
         )
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         services_table.request = None
         services_table._more = False
         expected = [{'foo': 'bar'}, {'baz': 'qux'}]
@@ -643,7 +646,8 @@ class TestServicesTable(unittest.TestCase):
 
     @mock.patch.object(tables, 'api')
     def test_actions_allowed(self, mock_api):
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         mock_api.environment_get.return_value = mock.Mock(
             status=consts.STATUS_ID_READY)
         services_table.kwargs = {'environment_id': 'foo_env_id'}
@@ -652,12 +656,13 @@ class TestServicesTable(unittest.TestCase):
         mock_api.environment_get.return_value = mock.Mock(
             status=consts.STATUS_ID_DEPLOYING)
         self.assertFalse(services_table.actions_allowed())
-        mock_api.environment_get.assert_called_with(None, 'foo_env_id')
+        mock_api.environment_get.assert_called_with(mock_request, 'foo_env_id')
 
     @mock.patch.object(tables, 'catalog_views')
     def test_categories_list(self, mock_catalog_views):
         mock_catalog_views.get_categories_list.return_value = []
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         services_table.request = None
         self.assertEqual([], services_table.get_categories_list())
         mock_catalog_views.get_categories_list.assert_called_once_with(None)
@@ -676,7 +681,8 @@ class TestServicesTable(unittest.TestCase):
 
         mock_get_env_attrs.return_value = (consts.STATUS_ID_READY, None)
         mock_api.Session.get_if_available.return_value = 'session_id'
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         services_table.kwargs = {'environment_id': 'foo_env_id'}
 
         mock_datum = mock.MagicMock()
@@ -710,7 +716,8 @@ class TestServicesTable(unittest.TestCase):
         mock_reverse.return_value = 'test_url'
 
         mock_get_env_attrs.return_value = (consts.STATUS_ID_DEPLOYING, None)
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         services_table.kwargs = {'environment_id': 'foo_env_id'}
 
         mock_datum = mock.MagicMock()
@@ -718,14 +725,16 @@ class TestServicesTable(unittest.TestCase):
         self.assertEqual([], actions)
 
     def test_get_repo_url(self):
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         self.assertEqual(pkg_consts.DISPLAY_MURANO_REPO_URL,
                          services_table.get_repo_url())
 
     @mock.patch.object(tables, 'reverse')
     def test_get_pkg_def_url(self, mock_reverse):
         mock_reverse.return_value = 'test_url'
-        services_table = tables.ServicesTable(None)
+        mock_request = mock.Mock()
+        services_table = tables.ServicesTable(mock_request)
         self.assertEqual('test_url',
                          services_table.get_pkg_def_url())
         mock_reverse.assert_called_once_with(
@@ -757,7 +766,8 @@ class TestShowDeploymentDetails(unittest.TestCase):
 class TestEnvConfigTable(unittest.TestCase):
 
     def test_get_object_id(self):
-        env_config_table = tables.EnvConfigTable(None)
+        mock_request = mock.Mock()
+        env_config_table = tables.EnvConfigTable(mock_request)
         self.assertEqual('foo', env_config_table.get_object_id({
             '?': {'id': 'foo'}}))
 
