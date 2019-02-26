@@ -25,6 +25,8 @@ import pytz
 import six
 import yaql
 
+from django.template import Context
+
 from horizon.utils import functions as utils
 
 # WrappingColumn is only available in N-horizon
@@ -33,6 +35,18 @@ try:
     from horizon.tables import WrappingColumn as Column
 except ImportError:
     from horizon.tables import Column as Column  # noqa
+
+
+REQUIRED_CONTEXT_ATTRIBTUES = (
+    '_form_config',
+    '_form_render',
+)
+
+
+# We need a custom subclass of dict here in order to allow setting attributes
+# on it like _form_config and _form_render.
+class DictContext(dict):
+    pass
 
 
 def parse_api_error(api_error_html):
@@ -131,3 +145,24 @@ class CustomUnpickler(object):
             return yaql_expression.YAQL
         else:
             raise pickle.UnpicklingError('Invalid persistent id')
+
+
+def flatten_context(context):
+    if isinstance(context, Context):
+        flat = {}
+        for d in context.dicts:
+            flat.update(d)
+        return flat
+    else:
+        return context
+
+
+def flatten_contexts(*contexts):
+    new_context = DictContext()
+    for context in contexts:
+        if context is not None:
+            new_context.update(flatten_context(context))
+            for attr in REQUIRED_CONTEXT_ATTRIBTUES:
+                if hasattr(context, attr):
+                    setattr(new_context, attr, getattr(context, attr))
+    return new_context
