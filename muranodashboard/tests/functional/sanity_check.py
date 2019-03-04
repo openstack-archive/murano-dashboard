@@ -1142,10 +1142,11 @@ class TestSuiteApplications(base.ApplicationTestCase):
         all_apps = ['DeployingApp', 'HotExample', 'MockApp', 'PostgreSQL']
 
         for tag, name_list in apps_by_tag.items():
-            self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', tag)
-            with self.wait_for_page_reload():
-                self.driver.find_element_by_id('apps__action_filter').click()
             for name in name_list:
+                self.fill_field(by.By.CSS_SELECTOR, 'input.form-control', name)
+                with self.wait_for_page_reload():
+                    self.driver.find_element_by_id(
+                        'apps__action_filter').click()
                 self.check_element_on_page(by.By.XPATH,
                                            c.App.format(name))
             for name in set(all_apps) - set(name_list):
