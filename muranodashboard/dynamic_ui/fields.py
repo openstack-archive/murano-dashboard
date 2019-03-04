@@ -28,10 +28,13 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import forms as hz_forms
 from horizon import messages
+try:
+    from openstack_dashboard.api import _nova as nova
+except ImportError:
+    from openstack_dashboard.api import nova
 from openstack_dashboard.api import cinder
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import neutron
-from openstack_dashboard.api import nova
 from oslo_log import log as logging
 from oslo_log import versionutils
 import six
