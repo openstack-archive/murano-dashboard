@@ -123,7 +123,8 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         self.driver.find_element_by_css_selector(c.CreateEnvironment).click()
 
         self.driver.find_element_by_id(c.ConfirmCreateEnvironment).click()
-        error_message = 'This field is required.'
+        error_message = ('Environment name must contain at least one '
+                         'non-white space symbol.')
         self.driver.find_element_by_xpath(
             c.ErrorMessage.format(error_message))
 
