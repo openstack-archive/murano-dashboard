@@ -628,10 +628,10 @@ class TestSuiteEnvironment(base.ApplicationTestCase):
         field_name = '#envAppsFilter > input.form-control'
 
         for tag, name_list in apps_by_tag.items():
-            self.fill_field(by.By.CSS_SELECTOR, field_name, tag)
-            self.driver.find_element_by_css_selector(field_name).send_keys(
-                Keys.ENTER)
             for name in name_list:
+                self.fill_field(by.By.CSS_SELECTOR, field_name, name)
+                self.driver.find_element_by_css_selector(field_name).send_keys(
+                    Keys.ENTER)
                 self.check_element_on_page(by.By.XPATH,
                                            c.Component.format(name))
             for name in set(all_apps) - set(name_list):
