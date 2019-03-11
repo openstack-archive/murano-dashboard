@@ -407,7 +407,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             messages.success(self.request, message)
 
             if do_redirect:
-                return http.HttpResponseRedirect(bytes(env_url))
+                return http.HttpResponseRedirect(six.text_type(env_url))
             else:
                 srv_id = getattr(srv, '?')['id']
                 return self.create_hacked_response(

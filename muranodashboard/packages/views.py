@@ -309,7 +309,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         msg = _('Bundle successfully imported.')
         LOG.info(msg)
         messages.success(self.request, msg)
-        return http.HttpResponseRedirect(bytes(redirect))
+        return http.HttpResponseRedirect(six.text_type(redirect))
 
 
 class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
@@ -408,7 +408,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             msg = _('Package parameters successfully updated.')
             LOG.info(msg)
             messages.success(self.request, msg)
-            return http.HttpResponseRedirect(bytes(redirect))
+            return http.HttpResponseRedirect(six.text_type(redirect))
 
     def _handle_exception(self, original_e):
         exc_info = sys.exc_info()
