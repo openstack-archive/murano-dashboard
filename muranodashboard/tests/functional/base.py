@@ -140,7 +140,7 @@ class UITestCase(testtools.TestCase):
                                              project=tenant_id,
                                              enabled=True)
         roles = cls.keystone_client.roles.list()
-        role_id = [role.id for role in roles if role.name == 'Member'][0]
+        role_id = [role.id for role in roles if role.name == 'member'][0]
         users = cls.keystone_client.users.list()
         user_id = [user.id for user in users if user.name == name][0]
         cls.keystone_client.roles.grant(role_id, user=user_id,
