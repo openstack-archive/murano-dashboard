@@ -3625,13 +3625,19 @@ class TestSuiteMultipleEnvironments(base.ApplicationTestCase):
         self.add_app_to_env(self.deployingapp_id)
         self.navigate_to('Applications')
         self.go_to_submenu('Environments')
+        self.check_element_on_page(
+            by.By.CSS_SELECTOR, "label[for=ui-id-1]")
         self.driver.find_element_by_css_selector(
             "label[for=ui-id-1]").click()
         self.driver.find_element_by_css_selector(
             c.DeployEnvironments).click()
         self.go_to_submenu('Environments')
+        self.check_element_on_page(
+            by.By.CSS_SELECTOR, "label[for=ui-id-1]")
         self.driver.find_element_by_css_selector(
             "label[for=ui-id-1]").click()
+        self.driver.find_element_by_css_selector(
+            c.MoreActions).click()
         self.driver.find_element_by_css_selector(
             c.AbandonEnvironments).click()
         self.driver.find_element_by_xpath(c.ConfirmAbandon).click()

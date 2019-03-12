@@ -75,6 +75,7 @@ AbandonEnvironment = "//button[contains(text(), 'Abandon Environment')]"
 AbandonEnvironments = ".btn#environments__action_abandon"
 AbandonEnvironmentsDisabled = ".btn#environments__action_abandon[disabled]"
 ConfirmCreateEnvironment = 'confirm_create_env'
+MoreActions = ".table_actions_menu > .btn"
 AddComponent = "services__action_AddApplication"
 AddCategory = "categories__action_add_category"
 DeleteCategory = "//tr[td[contains(text(), '{0}')]]//button[contains(@id, 'action_delete')]"  # noqa
