@@ -160,7 +160,7 @@ class UITestCase(testtools.TestCase):
     def add_user_to_project(self, project_id, user_id, user_role=None):
         if not user_role:
             roles = self.keystone_client.roles.list()
-            role_id = [role.id for role in roles if role.name == 'Member'][0]
+            role_id = [role.id for role in roles if role.name == 'member'][0]
         if not user_id:
             user_name = cfg.common.user
             users = self.keystone_client.users.list()
