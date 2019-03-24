@@ -17,7 +17,7 @@
               dest: devstack-gate
           EOF
           /usr/zuul-env/bin/zuul-cloner -m clonemap.yaml --cache-dir /opt/git \
-              git://git.openstack.org \
+              https://git.openstack.org \
               openstack-infra/devstack-gate
         executable: /bin/bash
         chdir: '{{ ansible_user_dir }}/workspace'
@@ -38,9 +38,9 @@
           export PROJECTS="openstack/horizon $PROJECTS"
           export ENABLED_SERVICES=horizon
           export PROJECTS="openstack/heat-dashboard $PROJECTS"
-          export DEVSTACK_LOCAL_CONFIG="enable_plugin heat git://git.openstack.org/openstack/heat"
-          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin murano git://git.openstack.org/openstack/murano"
-          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin heat-dashboard git://git.openstack.org/openstack/heat-dashboard"
+          export DEVSTACK_LOCAL_CONFIG="enable_plugin heat https://git.openstack.org/openstack/heat"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin murano https://git.openstack.org/openstack/murano"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin heat-dashboard https://git.openstack.org/openstack/heat-dashboard"
           export BRANCH_OVERRIDE=default
           if [ "$BRANCH_OVERRIDE" != "default" ] ; then
               export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
