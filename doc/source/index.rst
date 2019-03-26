@@ -34,7 +34,7 @@ Install
 -------
 1. Check out sources to some directory (*<home>/murano-dashboard*)::
 
-    user@work:~/$ git clone git://git.openstack.org/openstack/murano-dashboard
+    user@work:~/$ git clone https://git.openstack.org/openstack/murano-dashboard
 
 2. Install virtualenv::
 
