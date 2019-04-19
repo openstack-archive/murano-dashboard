@@ -31,7 +31,7 @@
     voting: false
     timeout: 10800
     required-projects:
-      - openstack-infra/devstack-gate
+      - openstack/devstack-gate
       - openstack/heat
       - openstack/murano
       - openstack/murano-dashboard
