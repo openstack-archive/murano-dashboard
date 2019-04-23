@@ -40,6 +40,6 @@ Project Resources
 
 * `Murano at Launchpad <https://launchpad.net/murano>`_
 * `Wiki <https://wiki.openstack.org/wiki/Murano>`_
-* `Code Review <https://review.openstack.org/>`_
+* `Code Review <https://review.opendev.org/>`_
 * `Sources <https://wiki.openstack.org/wiki/Murano/SourceCode>`_
 * `Documentation <https://docs.openstack.org/developer/murano/>`_

@@ -6,7 +6,7 @@
 # included in the installed horizon packages
 if [ ! -f test-shim.js ];
 then
-  wget -nv -t 3 http://git.openstack.org/cgit/openstack/horizon/plain/test-shim.js
+  wget -nv -t 3 https://opendev.org/openstack/horizon/raw/branch/master/test-shim.js
 fi
 
 echo "Creating a tox env which will contain xStatic libraries, horizon, and openstack_dashboard"
