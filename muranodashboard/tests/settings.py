@@ -19,6 +19,11 @@ DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
 
 from horizon.test.settings import *  # noqa
 
+try:
+    from openstack_dashboard.defaults import *  # noqa
+except ImportError:
+    pass
+
 socket.setdefaulttimeout(1)
 
 DEBUG = False
