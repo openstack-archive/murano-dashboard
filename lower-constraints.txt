@@ -52,7 +52,7 @@ murano-pkg-check==0.3.0
 netaddr==0.7.19
 netifaces==0.10.6
 nodeenv==0.9.4
-openstackdocstheme==1.18.1
+openstackdocstheme==1.20.0
 openstacksdk==0.17.0
 os-client-config==1.29.0
 os-service-types==1.2.0
