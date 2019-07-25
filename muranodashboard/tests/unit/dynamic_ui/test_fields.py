@@ -828,8 +828,9 @@ class TestAZoneChoiceField(unittest.TestCase):
     @mock.patch.object(fields, 'nova')
     def test_update(self, mock_nova):
         mock_nova.novaclient().availability_zones.list.return_value = [
-            mock.Mock(zoneName='foo_zone', zoneState='foo_state'),
-            mock.Mock(zoneName='bar_zone', zoneState='bar_state')
+            mock.Mock(zoneName='foo_zone', zoneState={'available': True}),
+            mock.Mock(zoneName='bar_zone', zoneState={'available': True}),
+            mock.Mock(zoneName='baz_zone', zoneState={'available': False})
         ]
         request = {'request': mock.Mock()}
         a_zone_choice_field = fields.AZoneChoiceField()
