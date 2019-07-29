@@ -80,6 +80,7 @@ class TestEnvironmentDetails(unittest.TestCase):
         mock_request = mock.Mock()
         mock_request.user.service_catalog = None
         mock_token = mock.MagicMock()
+        mock_request.user.authorized_tenants = [mock.Mock()]
         mock_token.tenant.__getitem__.return_value = 'foo_tenant_id'
         mock_request.session = {'token': mock_token}
         mock_tab_group = mock.Mock()
