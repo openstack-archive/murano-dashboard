@@ -564,7 +564,8 @@ class AZoneChoiceField(ChoiceField):
                               _("Unable to retrieve  availability zones."))
 
         az_choices = [(az.zoneName, az.zoneName)
-                      for az in availability_zones if az.zoneState]
+                      for az in availability_zones
+                      if az.zoneState['available']]
         if not az_choices:
             az_choices.insert(0, ("", _("No availability zones available")))
 
