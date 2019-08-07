@@ -419,9 +419,9 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
         # that way until we move here from django Wizard to horizon workflow
         if views.ADD_TO_FIELD_HEADER in self.request.META:
             field_id = self.request.META[views.ADD_TO_FIELD_HEADER]
-            response = http.HttpResponse(json.dumps(
-                [obj_id, html.escape(obj_name)]
-            ))
+            response = http.HttpResponse(
+                json.dumps([obj_id, html.escape(obj_name)]),
+                content_type='text/plain')
             response["X-Horizon-Add-To-Field"] = field_id
             return response
         else:
