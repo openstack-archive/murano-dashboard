@@ -4,21 +4,46 @@
 # Irina Kochetova <ikochetova@hystax.com>, 2016. #zanata
 # Yulia Ryndenkova <yryndenkova@hystax.com>, 2016. #zanata
 # Artem <amikhalev90@gmail.com>, 2017. #zanata
+# Roman Gorshunov <roman.gorshunov@att.com>, 2019. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2018-05-15 15:53+0000\n"
+"POT-Creation-Date: 2019-08-01 01:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-02-06 09:03+0000\n"
-"Last-Translator: Artem <amikhalev90@gmail.com>\n"
+"PO-Revision-Date: 2019-08-08 03:23+0000\n"
+"Last-Translator: Roman Gorshunov <roman.gorshunov@att.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "X-Generator: Zanata 4.3.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+#, python-format
+msgid ""
+"\n"
+"              %(used)s + %(other_used)s of %(quota)s MB used\n"
+"            "
+msgstr ""
+"\n"
+"              %(used)s + %(other_used)s из %(quota)s MB\n"
+"            "
+
+#, python-format
+msgid ""
+"\n"
+"              %(used)s + %(other_used)s of %(quota)s used\n"
+"            "
+msgstr ""
+"\n"
+"              %(used)s + %(other_used)s из %(quota)s\n"
+"            "
+
+#, python-format
+msgid "%s: random subnet"
+msgstr "%s: случайная подсеть"
 
 msgid "-"
 msgstr "-"
@@ -119,6 +144,9 @@ msgstr "Детали Приложения"
 msgid "Application Package"
 msgstr "Пакет Приложения"
 
+msgid "Application default security group"
+msgstr "Группа защиты приложения по умолчанию"
+
 msgid "Application&nbsp;Components"
 msgstr " Компоненты"
 
@@ -136,6 +164,9 @@ msgstr "Назад"
 
 msgid "Browse"
 msgstr "Просмотр"
+
+msgid "Browse Local"
+msgstr "Выбрать локальный"
 
 msgid "Bundle Name"
 msgstr "Имя bundle"
@@ -156,6 +187,12 @@ msgstr "Bundle успешно импортирован."
 
 msgid "Bundle's full name."
 msgstr "Полное имя Bundle."
+
+msgid "Can not get logo for {0}."
+msgstr "Не удаётся получить лого для {0}."
+
+msgid "Can not get supplier logo for {0}."
+msgstr "Не удаётся получить лого поставщика для {0}."
 
 msgid "Cancel"
 msgstr "Отменить"
@@ -245,13 +282,20 @@ msgid "Create New"
 msgstr "Создать новую"
 
 msgid "Create a title for an image."
-msgstr "Выберите имя для образа"
+msgstr "Выберите название для образа."
 
 msgid "Created"
 msgstr "Создан"
 
 msgid "Custom Type"
 msgstr "Пользовательский тип"
+
+msgid ""
+"Default network is either not specified for this project, or specified "
+"incorrectly, please contact administrator."
+msgstr ""
+"Сеть по-умолчанию либо не задана для этого проекта, либо задана не "
+"корректно. Пожалуйста, свяжитесь со своим администратором."
 
 msgid ""
 "Defines whether or not a package can be used by other tenants. (Applies to "
@@ -336,13 +380,13 @@ msgid "Deploying"
 msgstr "Развёртывание"
 
 msgid "Deployment Details"
-msgstr "Детали Развертывания"
+msgstr "Детали развёртывания"
 
 msgid "Deployment History"
 msgstr "История Развертываний"
 
 msgid "Deployment Logs"
-msgstr "Журнал Развертывания"
+msgstr "Журнал развёртывания"
 
 #, python-format
 msgid "Deployment with id %s doesn't exist anymore"
@@ -376,6 +420,10 @@ msgstr ""
 "Введите сложный пароль, содержащий как минимум одну букву, одно число, и "
 "один специальный символ."
 
+#, python-format
+msgid "Enter a dict with choices and values. Got %(value)s."
+msgstr "Введите словарь с ключами и значениями. Введено %(value)s."
+
 msgid "Enter a password"
 msgstr "Введите пароль"
 
@@ -387,6 +435,9 @@ msgstr "Окружение"
 
 msgid "Environment Default Network"
 msgstr "Сеть по умолчанию для Окружения "
+
+msgid "Environment Deployment History"
+msgstr "История развёртываний окружения"
 
 msgid "Environment Name"
 msgstr "Имя Окружения"
@@ -403,6 +454,14 @@ msgstr "Окружение с указанным именем уже сущес�
 
 msgid "Environments"
 msgstr "Окружения"
+
+#, python-format
+msgid ""
+"Error fetching the environment. The page may be rendered incorrectly. "
+"Reason: %s"
+msgstr ""
+"Не удалось загрузить конфигурацию среды. Эта страница может отображаться "
+"некорректно по следующей причине: %s"
 
 msgid "Error test_error_message occurred while installing package bar"
 msgstr "Произошла ошибка test_error_message во время установки пакета bar"
@@ -431,6 +490,9 @@ msgstr "Не удалось"
 
 msgid "Failed to create environment"
 msgstr "Ну удалось создать окружение"
+
+msgid "Failed to get list of flavors."
+msgstr "Не удалось получить список типов инстансов."
 
 msgid "Failed to modify the package. {0}"
 msgstr "Не удалось модифицировать пакет. {0}"
@@ -562,6 +624,9 @@ msgstr "Лицензия"
 msgid "Logs"
 msgstr "Журнал событий"
 
+msgid "Logs (Created, Message)"
+msgstr "Журнал событий (создан, сообщение)"
+
 msgid "Manage"
 msgstr "Управление"
 
@@ -632,6 +697,9 @@ msgstr "Вы еще не использовали приложений."
 msgid "No requirements"
 msgstr "Нет зависимостей"
 
+msgid "No volumes available"
+msgstr "Нет доступных дисков"
+
 msgid "None"
 msgstr "Нет"
 
@@ -640,6 +708,12 @@ msgstr "Не принадлежит домену"
 
 msgid "Note"
 msgstr "Внимание"
+
+msgid "Number of Instances"
+msgstr "Количество инстансов"
+
+msgid "Number of VCPUs"
+msgstr "Количество VCPU"
 
 msgid ""
 "OpenStack Networking (Neutron) is not available in current environment. "
@@ -762,7 +836,7 @@ msgid "Public"
 msgstr "Публичный"
 
 msgid "Quick Deploy"
-msgstr "Быстрое развертывание"
+msgstr "Быстрое развёртывание"
 
 msgid "Ready"
 msgstr "Готов"
@@ -806,11 +880,31 @@ msgstr "Выбрать Приолжение"
 msgid "Select Image"
 msgstr "Выберите образ"
 
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+"Выберите допустимое значение. %(value)s не является одним из допустимых "
+"значений."
+
 msgid "Select an image registered in Glance Image Services."
-msgstr "Выберите образ, зарегистрированный в Glance"
+msgstr ""
+"Выберите образ, зарегистрированный в сервисе управления образами Glance."
+
+msgid ""
+"Select an image type supported by Murano. Choose 'Custom type' to enter type "
+"manually."
+msgstr ""
+"Выберите тип образа, поддерживаемый Murano, или выберите \"Свой тип\", чтобы "
+"иметь возможность выбрать тип образа вручную."
 
 msgid "Select one or more categories for a package."
 msgstr "Выберите одну или более категорий для пакета."
+
+msgid "Select volume"
+msgstr "Выберите диск"
+
+msgid "Services (Name, Type)"
+msgstr "Службы (имя, тип)"
 
 msgid "Set up for identifying a package."
 msgstr "Установите, чтобы идентифицировать пакет."
@@ -931,6 +1025,13 @@ msgid "There was an error initialising this field."
 msgstr "При инициализации этого поля возникла ошибка."
 
 msgid ""
+"This Application requires encryption, please contact your administrator to "
+"configure this."
+msgstr ""
+"Приложение требует наличия шифрования. Пожалуйста, обратитесь к вашему "
+"администратору, чтобы его сконфигурировать."
+
+msgid ""
 "This action cannot be undone. Any resources created by this environment will "
 "have to be released manually."
 msgstr ""
@@ -978,6 +1079,9 @@ msgstr[2] "Публичность Изменена"
 
 msgid "Topology"
 msgstr "Топология"
+
+msgid "Total RAM"
+msgstr "Всего RAM"
 
 msgid ""
 "Trying to add {0} image to glance. Image will be ready for deployment after "
@@ -1051,6 +1155,9 @@ msgstr "Не удалось удалить пакет."
 msgid "Unable to retrieve  availability zones."
 msgstr "Не удалось получить список зон доступности"
 
+msgid "Unable to retrieve deployment history."
+msgstr "Не удалось получить историю развёртываний."
+
 msgid "Unable to retrieve details for service"
 msgstr "Не удалось получить детали сервиса"
 
@@ -1075,6 +1182,12 @@ msgstr "Не удалось получить список проектов"
 
 msgid "Unable to retrieve public images."
 msgstr "Не удалось получить публичные образы."
+
+msgid "Unable to retrieve snapshot list."
+msgstr "Не удалось получить список снимков."
+
+msgid "Unable to retrieve volume list."
+msgstr "Не удалось получить список дисков."
 
 msgid "Unavailable"
 msgstr "Недоступно"
@@ -1129,6 +1242,9 @@ msgstr "Вам не разрешено менять свойства этого 
 
 msgid "You are not allowed to delete this package"
 msgstr "Вам не разрешено удалить этот пакет"
+
+msgid "You are not allowed to make packages public."
+msgstr "Вам не разрешено делать пакеты общедоступными."
 
 msgid "You are not allowed to perform this operation"
 msgstr "Вам не разрешено выполнять эту операцию"
