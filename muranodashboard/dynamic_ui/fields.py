@@ -440,6 +440,9 @@ class KeyPairChoiceField(DynamicChoiceField):
         for keypair in sorted(keypairs, key=lambda e: e.name):
             self.choices.append((keypair.name, keypair.name))
 
+        if len(keypairs) == 1:
+            self.initial = keypairs[0].name
+
 
 class SecurityGroupChoiceField(DynamicChoiceField):
     """This widget allows to select a security group for VMs"""
@@ -501,8 +504,11 @@ class ImageChoiceField(ChoiceField):
         for id_, title in sorted(six.iteritems(image_map),
                                  key=lambda e: e[1].title):
             image_choices.append((id_, title))
+
         if image_choices:
-            image_choices.insert(0, ("", _("Select Image")))
+            # If only one choice, select it as only option
+            if len(image_choices) != 1:
+                image_choices.insert(0, ("", _("Select Image")))
         else:
             image_choices.insert(0, ("", _("No images available")))
 

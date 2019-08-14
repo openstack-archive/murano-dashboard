@@ -624,7 +624,10 @@ class TestImageChoiceField(unittest.TestCase):
                       status='active'),
             # Test whether second continue statement works.
             mock.Mock(id='bar_image_id', murano_property={
-                      'title': 'foo_image_title', 'type': 'jpg'},
+                      'title': 'bar_image_title', 'type': 'png'},
+                      status='active'),
+            mock.Mock(id='baz_image_id', murano_property={
+                      'title': 'baz_image_title', 'type': 'jpg'},
                       status='active')
         ]
         image_choice_field = fields.ImageChoiceField()
@@ -634,8 +637,16 @@ class TestImageChoiceField(unittest.TestCase):
 
         self.assertEqual(("", _("Select Image")),
                          image_choice_field.choices[0])
-        self.assertEqual("foo_image_id", image_choice_field.choices[1][0])
+        self.assertEqual("bar_image_id", image_choice_field.choices[1][0])
         self.assertIsInstance(image_choice_field.choices[1][1], fields.Choice)
+
+        # Test that 'Select Image' is dropped if only one result
+        image_choice_field.image_type = 'jpg'
+        image_choice_field.choices = []
+        image_choice_field.update(self.request)
+
+        self.assertEqual('baz_image_id', image_choice_field.choices[0][0])
+        self.assertIsInstance(image_choice_field.choices[0][1], fields.Choice)
 
         # Test whether first continue statement works.
         mock_get_murano_images.return_value = [
