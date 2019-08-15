@@ -55,11 +55,6 @@ TYPES.update({
     'volume': fields.VolumeChoiceField
 })
 
-KEYPAIR_IMPORT_URL = "horizon:project:key_pairs:import"
-TYPES_KWARGS = {
-    'keypair': {'add_item_link': KEYPAIR_IMPORT_URL}
-}
-
 
 def _collect_fields(field_specs, form_name, service):
     def process_widget(cls, kwargs):
@@ -121,7 +116,6 @@ def _collect_fields(field_specs, form_name, service):
         if isinstance(_type, list):  # make list keys hashable for TYPES dict
             _type = tuple(_type)
         _ignorable, kwargs = parse_spec(field_spec)
-        kwargs.update(TYPES_KWARGS.get(_type, {}))
         cls, kwargs['widget'] = process_widget(TYPES[_type], kwargs)
         cls = cls.finalize_properties(kwargs, form_name, service)
 
