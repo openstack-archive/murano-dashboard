@@ -21,7 +21,7 @@ def check_version(version):
     latest = get_latest_version()
     supported = semantic_version.Version(str(latest.major), partial=True)
     requested = semantic_version.Version.coerce(str(version))
-    if supported != requested:
+    if supported.major != requested.major:
         msg = 'Unsupported Dynamic UI format version: ' \
               'requested format version {0} is not compatible with the ' \
               'supported family {1}'
