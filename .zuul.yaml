@@ -1,6 +1,7 @@
 - project:
     templates:
       - check-requirements
+      - horizon-non-primary-django-jobs
       - nodejs4-jobs
       - openstack-cover-jobs-horizon
       - openstack-lower-constraints-jobs
@@ -10,10 +11,6 @@
     check:
       jobs:
         - murano-dashboard-sanity-check
-        - horizon-openstack-tox-python3-django111
-    gate:
-      jobs:
-        - horizon-openstack-tox-python3-django111
 
 - job:
     name: murano-dashboard-sanity-check
