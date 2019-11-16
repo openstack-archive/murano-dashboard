@@ -30,6 +30,7 @@
           export PYTHONUNBUFFERED=true
           export DEVSTACK_GATE_TEMPEST=0
           export DEVSTACK_GATE_NEUTRON=1
+          export DEVSTACK_GATE_USE_PYTHON3=True
           export PROJECTS="openstack/heat $PROJECTS"
           export PROJECTS="openstack/python-heatclient $PROJECTS"
           export PROJECTS="openstack/murano $PROJECTS"
