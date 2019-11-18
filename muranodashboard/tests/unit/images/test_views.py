@@ -88,7 +88,7 @@ class TestMarkedImagesView(unittest.TestCase):
         self.images_view.request.GET.get.assert_called_once_with(
             tables.MarkedImagesTable._meta.prev_pagination_param, None)
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "2")
+            self.images_view.request)
 
     @mock.patch.object(views, 'glance', autospec=True)
     def test_get_data_with_desc_sort_dir(self, mock_glance):
@@ -121,7 +121,7 @@ class TestMarkedImagesView(unittest.TestCase):
             mock.call(tables.MarkedImagesTable._meta.pagination_param, None)
         ])
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "2")
+            self.images_view.request)
 
     @mock.patch.object(views, 'glance', autospec=True)
     def test_get_data_with_more_results(self, mock_glance):
@@ -157,7 +157,7 @@ class TestMarkedImagesView(unittest.TestCase):
         self.images_view.request.GET.get.assert_called_once_with(
             tables.MarkedImagesTable._meta.prev_pagination_param, None)
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "2")
+            self.images_view.request)
 
     @mock.patch.object(views, 'reverse', autospec=True)
     @mock.patch.object(views, 'glance', autospec=True)
@@ -176,6 +176,6 @@ class TestMarkedImagesView(unittest.TestCase):
         self.assertEqual('foo_reverse_url', e.location)
 
         mock_glance.glanceclient.assert_called_once_with(
-            self.images_view.request, "2")
+            self.images_view.request)
         mock_reverse.assert_called_once_with(
             'horizon:app-catalog:catalog:index')
