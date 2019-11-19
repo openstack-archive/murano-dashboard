@@ -62,7 +62,7 @@ class MarkedImagesView(horizon_tables.DataTableView):
         self._prev = False
         self._more = False
 
-        glance_v2_client = glance.glanceclient(self.request, "2")
+        glance_v2_client = glance.glanceclient(self.request)
 
         try:
             images_iter = glance_v2_client.images.list(
