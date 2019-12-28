@@ -5,7 +5,6 @@
       - horizon-nodejs10-jobs
       - openstack-cover-jobs-horizon
       - openstack-lower-constraints-jobs
-      - openstack-python-jobs-horizon
       - openstack-python3-ussuri-jobs-horizon
       - release-notes-jobs-python3
     check:
