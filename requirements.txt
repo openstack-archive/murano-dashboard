@@ -4,7 +4,7 @@
 pbr!=2.1.0,>=2.0.0 # Apache-2.0
 
 beautifulsoup4>=4.6.0 # MIT
-django-formtools>=2.0 # BSD
+django-formtools>=2.2 # BSD
 iso8601>=0.1.11 # MIT
 six>=1.10.0 # MIT
 python-muranoclient>=0.8.2 # Apache-2.0
@@ -16,4 +16,4 @@ castellan>=0.18.0 # Apache-2.0
 oslo.log>=3.36.0 # Apache-2.0
 semantic-version>=2.3.1 # BSD
 
-horizon>=15.0.0.0b1 # Apache-2.0
+horizon>=17.1.0 # Apache-2.0
