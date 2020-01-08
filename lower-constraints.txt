@@ -18,13 +18,13 @@ decorator==4.2.1
 deprecation==2.0
 Django==1.11
 django-appconf==1.0.2
-django-babel==0.6.2
 django-compressor==2.0
 django-formtools==2.0
 django-pyscss==2.0.2
 docutils==0.14
 dogpile.cache==0.6.5
 dulwich==0.19.0
+enmerkar==0.7.1
 extras==1.0.0
 fasteners==0.14.1
 fixtures==3.0.0
