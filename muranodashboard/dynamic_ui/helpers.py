@@ -18,8 +18,6 @@ import string
 import types
 import uuid
 
-import six
-
 from django.core import validators
 
 _LOCALIZABLE_KEYS = set(['label', 'help_text', 'error_messages'])
@@ -55,7 +53,7 @@ def decamelize(name):
 
 def explode(_string):
     """Explodes a string into a list of one-character strings."""
-    if not _string or not isinstance(_string, six.string_types):
+    if not _string or not isinstance(_string, str):
         return _string
     else:
         return list(_string)
@@ -85,7 +83,7 @@ def recursive_apply(predicate, transformer, value, *args):
         if predicate(val, *args):
             return rec(transformer(val, *args))
         elif isinstance(val, dict):
-            return dict((rec(k), rec(v)) for (k, v) in six.iteritems(val))
+            return dict((rec(k), rec(v)) for (k, v) in val.items())
         elif isinstance(val, list):
             return [rec(v) for v in val]
         elif isinstance(val, tuple):
@@ -115,7 +113,7 @@ def insert_hidden_ids(application):
 
     def rec(val):
         if isinstance(val, dict):
-            return dict(wrap(k, v) for k, v in six.iteritems(val))
+            return dict(wrap(k, v) for k, v in val.items())
         elif isinstance(val, list):
             return [rec(v) for v in val]
         elif isinstance(val, ObjectID):
@@ -154,10 +152,10 @@ def int2base(x, base):
 def to_str(text):
     if not isinstance(text, str):
         # unicode in python2
-        if isinstance(text, six.text_type):
+        if isinstance(text, str):
             text = text.encode('utf-8')
         # bytes in python3
-        elif isinstance(text, six.binary_type):
+        elif isinstance(text, bytes):
             text = text.decode('utf-8')
     return text
 

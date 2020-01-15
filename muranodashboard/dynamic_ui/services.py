@@ -19,7 +19,6 @@ import semantic_version
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from oslo_log import log as logging
-import six
 from yaql import legacy
 
 from muranodashboard import api
@@ -75,7 +74,7 @@ class Service(object):
 
         params = parameters or {}
         self.parameters = {}
-        for k, v in six.iteritems(params):
+        for k, v in params.items():
             if not k or not k[0].isalpha():
                 continue
             v = helpers.evaluate(v, self.context)
@@ -83,7 +82,7 @@ class Service(object):
             self.context[k] = v
 
         self.forms = []
-        for key, value in six.iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
         for form in forms:
@@ -109,8 +108,8 @@ class Service(object):
                   _region=None):
         import muranodashboard.dynamic_ui.forms as forms
 
-        class Form(six.with_metaclass(forms.DynamicFormMetaclass,
-                   forms.ServiceConfigurationForm)):
+        class Form(forms.ServiceConfigurationForm,
+                   metaclass=forms.DynamicFormMetaclass):
             service = self
             name = _name
             verbose_name = _verbose_name
@@ -122,7 +121,7 @@ class Service(object):
 
     @staticmethod
     def extract_form_data(data):
-        for form_name, form_data in six.iteritems(data):
+        for form_name, form_data in data.items():
             return (form_name, form_data['fields'],
                     form_data.get('validators', []), form_data.get('region'))
 
@@ -131,7 +130,7 @@ class Service(object):
         context['$'] = self.cleaned_data
         context['$forms'] = self.cleaned_data
 
-        for name, template in six.iteritems(self.templates):
+        for name, template in self.templates.items():
             context[name] = template
         if semantic_version.Version.coerce(self.spec_version) \
                 >= semantic_version.Version.coerce('2.2'):
@@ -171,7 +170,7 @@ def import_app(request, app_id):
     app_version = ui_desc.pop('Version', version.LATEST_FORMAT_VERSION)
     version.check_version(app_version)
     service = dict(
-        (helpers.decamelize(k), v) for (k, v) in six.iteritems(ui_desc))
+        (helpers.decamelize(k), v) for (k, v) in ui_desc.items())
     parameters = service.pop('parameters', {})
     parameters_source = service.pop('parameters_source', None)
     if parameters_source is not None:
@@ -277,7 +276,7 @@ def get_app_field_descriptions(request, app_id, index):
     form_cls = app.forms[index]
     descriptions = []
     no_field_descriptions = []
-    for name, field in six.iteritems(form_cls.base_fields):
+    for name, field in form_cls.base_fields.items():
         title = field.description_title
         description = field.description
         if description:

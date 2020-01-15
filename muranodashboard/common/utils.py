@@ -22,7 +22,6 @@ import string
 import iso8601
 from muranodashboard.dynamic_ui import yaql_expression
 import pytz
-import six
 import yaql
 
 from django.template import Context
@@ -78,7 +77,7 @@ class Bunch(object):
     object-like attribute access.
     """
     def __init__(self, **kwargs):
-        for key, value in six.iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def __getitem__(self, item):
@@ -94,7 +93,7 @@ class Bunch(object):
         return hasattr(self, item)
 
     def __iter__(self):
-        return iter(six.itervalues(self.__dict__))
+        return iter(self.__dict__.values())
 
 
 class BlankFormatter(string.Formatter):

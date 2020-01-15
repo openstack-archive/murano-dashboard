@@ -10,10 +10,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from urllib import parse
+
 from django import forms
 from django import template
 from django.template import defaultfilters
-from six.moves.urllib import parse as urlparse
 
 register = template.Library()
 
@@ -38,4 +39,4 @@ def last_half(seq):
 @register.filter(name='unquote')
 @defaultfilters.stringfilter
 def unquote_raw(value):
-    return urlparse.unquote(value)
+    return parse.unquote(value)

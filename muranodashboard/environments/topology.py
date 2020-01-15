@@ -18,8 +18,6 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template import loader
 from django.urls import reverse
 
-import six
-
 from muranodashboard.api import packages as pkg_cli
 from muranodashboard.environments import consts
 
@@ -151,7 +149,7 @@ def _create_ext_network_node(name):
 
 
 def _convert_lists(node_data):
-    for key, value in six.iteritems(node_data):
+    for key, value in node_data.items():
         if isinstance(value, list) and all(
                 map(lambda s: not isinstance(s, (dict, list)), value)):
             new_value = ', '.join(str(v) for v in value)
@@ -214,7 +212,7 @@ def render_d3_data(request, environment):
         node_type = node_data.get('?', {}).get('type')
         node_id = node_data.get('?', {}).get('id')
         atomics, containers = _split_seq_by_predicate(
-            six.iteritems(node_data), _is_atomic)
+            node_data.items(), _is_atomic)
         if node_type and node_data is not parent_node:
             node = _create_empty_node()
             node_refs[node_id] = node
@@ -249,7 +247,7 @@ def render_d3_data(request, environment):
         node = node_refs[node_id]
 
         atomics, containers = _split_seq_by_predicate(
-            six.iteritems(node_data), _is_atomic)
+            node_data.items(), _is_atomic)
 
         # the actual second pass of node linking
         if parent_node is not None:

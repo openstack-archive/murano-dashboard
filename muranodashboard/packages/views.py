@@ -13,7 +13,7 @@
 #    under the License.
 
 import json
-import sys
+import urllib.parse as urlparse
 
 from django.core.files import storage
 from django import http
@@ -37,8 +37,6 @@ from muranoclient.common import utils as muranoclient_utils
 from openstack_dashboard.api import glance
 from openstack_dashboard.api import keystone
 from oslo_log import log as logging
-import six
-import six.moves.urllib.parse as urlparse
 
 from muranodashboard import api
 from muranodashboard.api import packages as pkg_api
@@ -267,7 +265,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                     continue
 
                 reqs = package.requirements(base_url=base_url)
-                for dep_name, dep_package in six.iteritems(reqs):
+                for dep_name, dep_package in reqs.items():
                     _ensure_images(dep_name, dep_package,
                                    self.request)
 
@@ -309,7 +307,7 @@ class ImportBundleWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
         msg = _('Bundle successfully imported.')
         LOG.info(msg)
         messages.success(self.request, msg)
-        return http.HttpResponseRedirect(six.text_type(redirect))
+        return http.HttpResponseRedirect(str(redirect))
 
 
 class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
@@ -408,10 +406,9 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             msg = _('Package parameters successfully updated.')
             LOG.info(msg)
             messages.success(self.request, msg)
-            return http.HttpResponseRedirect(six.text_type(redirect))
+            return http.HttpResponseRedirect(str(redirect))
 
     def _handle_exception(self, original_e):
-        exc_info = sys.exc_info()
         reason = ''
         if hasattr(original_e, 'details'):
             try:
@@ -419,10 +416,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 if error:
                     reason = error.get('message')
             except ValueError:
-                # Let horizon operate with original exception
-                six.reraise(original_e.__class__,
-                            original_e.__class__(original_e),
-                            exc_info[2])
+                raise
         msg = _('Uploading package failed. {0}').format(reason)
         LOG.exception(msg)
         exceptions.handle(
@@ -477,7 +471,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
             original_package = reqs.pop(name)
             step_data['dependencies'] = []
             step_data['images'] = []
-            for dep_name, dep_package in six.iteritems(reqs):
+            for dep_name, dep_package in reqs.items():
                 _ensure_images(dep_name, dep_package, self.request, step_data)
 
                 try:

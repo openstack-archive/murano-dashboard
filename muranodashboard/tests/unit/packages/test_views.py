@@ -485,7 +485,7 @@ class TestImportPackageWizard(helpers.APITestCase):
         mock_json.loads.side_effect = ValueError('test_error_message')
         original_e = ValueError('original_error_message')
         setattr(original_e, 'details', 'error_details')
-        with self.assertRaisesRegex(ValueError, 'original_error_message'):
+        with self.assertRaisesRegex(ValueError, 'test_error_message'):
             self.import_pkg_wizard._handle_exception(original_e)
 
     @mock.patch.object(views, 'glance')

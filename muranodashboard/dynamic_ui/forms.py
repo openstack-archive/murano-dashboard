@@ -17,7 +17,6 @@ from collections import defaultdict
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from oslo_log import log as logging
-import six
 from yaql import legacy
 
 import muranodashboard.dynamic_ui.fields as fields
@@ -88,7 +87,7 @@ def _collect_fields(field_specs, form_name, service):
             return key, fields.RawProperty(key, spec)
         elif isinstance(spec, dict):
             items = []
-            for k, v in six.iteritems(spec):
+            for k, v in spec.items():
                 k = helpers.decamelize(k)
                 new_key, v = parse_spec(v, keys + [k])
                 if new_key:
@@ -97,8 +96,7 @@ def _collect_fields(field_specs, form_name, service):
             return key, dict(items)
         elif isinstance(spec, list):
             return key, [parse_spec(_spec, keys)[1] for _spec in spec]
-        elif isinstance(spec,
-                        six.string_types) and helpers.is_localizable(keys):
+        elif isinstance(spec, str) and helpers.is_localizable(keys):
             return key, spec
         else:
             if key == 'hidden':
@@ -154,7 +152,7 @@ class UpdatableFieldsForm(forms.Form):
         # collections.OrderedDict for Django >= 1.7
         updated_fields = self.fields.__class__()
 
-        for name, field in six.iteritems(self.fields):
+        for name, field in self.fields.items():
             updated_fields[name] = field
             if isinstance(field, fields.PasswordField) and field.confirm_input:
                 if not field.has_clone and field.original:
@@ -163,7 +161,7 @@ class UpdatableFieldsForm(forms.Form):
 
         self.fields = updated_fields
 
-        for name, field in six.iteritems(self.fields):
+        for name, field in self.fields.items():
             if hasattr(field, 'update'):
                 field.update(self.initial, form=self, request=request)
             if not field.required:
@@ -183,7 +181,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
         self.update_fields()
 
     def finalize_fields(self):
-        for field_name, field in six.iteritems(self.fields):
+        for field_name, field in self.fields.items():
             field.form = self
 
             validators = []
@@ -210,7 +208,7 @@ class ServiceConfigurationForm(UpdatableFieldsForm):
             if error_messages:
                 raise forms.ValidationError(error_messages)
 
-            for name, field in six.iteritems(self.fields):
+            for name, field in self.fields.items():
                 if (isinstance(field, fields.PasswordField) and
                         getattr(field, 'enabled', True) and
                         field.confirm_input):
