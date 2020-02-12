@@ -416,7 +416,7 @@ class ImportPackageWizard(horizon_views.PageTitleMixin, views.ModalFormMixin,
                 if error:
                     reason = error.get('message')
             except ValueError:
-                raise
+                raise original_e
         msg = _('Uploading package failed. {0}').format(reason)
         LOG.exception(msg)
         exceptions.handle(
