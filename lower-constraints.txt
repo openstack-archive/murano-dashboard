@@ -40,7 +40,7 @@ jmespath==0.9.3
 jsonpatch==1.21
 jsonpointer==2.0
 jsonschema==2.6.0
-keystoneauth1==3.8.0
+keystoneauth1==3.16.0
 linecache2==1.0.0
 MarkupSafe==1.0
 mccabe==0.2.1
@@ -53,10 +53,10 @@ netaddr==0.7.19
 netifaces==0.10.6
 nodeenv==0.9.4
 openstackdocstheme==1.20.0
-openstacksdk==0.17.0
+openstacksdk==0.36.0
 os-client-config==1.29.0
-os-service-types==1.2.0
-osc-lib==1.14.0
+os-service-types==1.7.0
+osc-lib==2.0.0
 oslo.concurrency==3.26.0
 oslo.config==5.2.0
 oslo.context==2.20.0
@@ -89,7 +89,7 @@ python-keystoneclient==3.22.0
 python-mimeparse==1.6.0
 python-muranoclient==0.8.2
 python-neutronclient==6.7.0
-python-novaclient==15.0.0
+python-novaclient==15.1.0
 python-swiftclient==3.5.0
 pytz==2013.6
 PyYAML==3.12
