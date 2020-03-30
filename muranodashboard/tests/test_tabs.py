@@ -37,13 +37,13 @@ class TestLicenseTab(helpers.APITestCase):
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
-        l = group.get_tabs()[2]
+        li = group.get_tabs()[2]
 
         # Should return the license description
-        l._get_license()
+        li._get_license()
         self.assertEqual(
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            l.app.license)
+            li.app.license)
 
     @mock.patch('muranodashboard.catalog.tabs.services')
     def test_no_license(self, mock_services):
@@ -59,11 +59,11 @@ class TestLicenseTab(helpers.APITestCase):
         app.id = 1
 
         group = tabs.ApplicationTabs(self.request, application=app)
-        l = group.get_tabs()[2]
+        li = group.get_tabs()[2]
 
         # Should return the license description
-        l._get_license()
-        self.assertEqual('', l.app.license)
+        li._get_license()
+        self.assertEqual('', li.app.license)
 
 
 class TestRequirementsTab(helpers.APITestCase):

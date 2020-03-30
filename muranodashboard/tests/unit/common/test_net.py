@@ -49,7 +49,7 @@ class TestNet(unittest.TestCase):
             foo_mock_network, bar_mock_network
         ]
 
-        test_filter = '^foo\-[\w]+'
+        test_filter = r'^foo\-[\w]+'
         result = net.get_available_networks(self.mock_request,
                                             filter=test_filter,
                                             murano_networks='include')
@@ -82,7 +82,7 @@ class TestNet(unittest.TestCase):
             foo_mock_network, bar_mock_network
         ]
 
-        test_filter = '^[\w]+\-[\w]+'
+        test_filter = r'^[\w]+\-[\w]+'
         result = net.get_available_networks(self.mock_request,
                                             filter=test_filter,
                                             murano_networks='include')

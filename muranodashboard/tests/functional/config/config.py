@@ -48,6 +48,7 @@ def register_config(config, config_group, config_opts):
     config.register_group(config_group)
     config.register_opts(config_opts, config_group)
 
+
 path = os.path.join(os.path.dirname(__file__), "config.conf")
 
 if os.path.exists(path):

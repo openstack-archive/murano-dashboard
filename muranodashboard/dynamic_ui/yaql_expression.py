@@ -25,6 +25,7 @@ def _set_up_yaql():
     }
     return yaql.YaqlFactory().create(options=legacy_engine_options)
 
+
 YAQL = _set_up_yaql()
 
 
@@ -46,7 +47,7 @@ class YaqlExpression(object):
     def match(expr):
         if not isinstance(expr, str):
             return False
-        if re.match('^[\s\w\d.:]*$', expr):
+        if re.match(r'^[\s\w\d.:]*$', expr):
             return False
         try:
             YAQL(expr)

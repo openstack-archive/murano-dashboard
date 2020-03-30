@@ -37,6 +37,6 @@ class WorkflowManagementForm(object):
                                'Just A-Z, a-z, 0-9, dash and underline'
                                ' are allowed',
                 'label': 'Application Name',
-                'regexpValidator': '^[-\w]+$',
+                'regexpValidator': r'^[-\w]+$',
                 'initial': fqn.split('.')[-1]
                 }

@@ -72,8 +72,8 @@ class TestImportPackageForm(helpers.APITestCase):
             'package': mock_package
         }
 
-        expected_error_msg = 'It is forbidden to upload files larger than {0} '\
-                             'MB.'.format(consts.MAX_FILE_SIZE_MB)
+        expected_error_msg = 'It is forbidden to upload files larger than '\
+                             '{0} MB.'.format(consts.MAX_FILE_SIZE_MB)
         with self.assertRaisesRegex(django_forms.ValidationError,
                                     expected_error_msg):
             self.import_pkg_form.clean_package()

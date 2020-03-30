@@ -108,26 +108,26 @@ class OverviewTab(tabs.Tab):
         # after it would be possible
         if hasattr(service_data,
                    'instance') and service_data['instance'] is not None:
-                instance, stack = get_instance_and_stack(
-                    service_data['instance'], request)
-                if instance:
-                    detail_info['Instance'] = instance
-                if stack:
-                    detail_info['Stack'] = stack
+            instance, stack = get_instance_and_stack(
+                service_data['instance'], request)
+            if instance:
+                detail_info['Instance'] = instance
+            if stack:
+                detail_info['Stack'] = stack
 
         if hasattr(service_data,
                    'instances') and service_data['instances'] is not None:
-                instances_for_template = []
-                stacks_for_template = []
-                for instance in service_data['instances']:
-                    instance, stack = get_instance_and_stack(instance, request)
-                    instances_for_template.append(instance)
-                    if stack:
-                        stacks_for_template.append(stack)
-                if instances_for_template:
-                    detail_info['Instances'] = instances_for_template
-                if stacks_for_template:
-                    detail_info['Stacks'] = stacks_for_template
+            instances_for_template = []
+            stacks_for_template = []
+            for instance in service_data['instances']:
+                instance, stack = get_instance_and_stack(instance, request)
+                instances_for_template.append(instance)
+                if stack:
+                    stacks_for_template.append(stack)
+            if instances_for_template:
+                detail_info['Instances'] = instances_for_template
+            if stacks_for_template:
+                detail_info['Stacks'] = stacks_for_template
 
         return {'service': detail_info}
 

@@ -26,6 +26,7 @@ class AppCatalog(horizon.Dashboard):
     default_panel = "environments"
     supports_tenants = True
 
+
 try:
     horizon.base.Horizon.registered('app-catalog')
 except horizon.base.NotRegistered:

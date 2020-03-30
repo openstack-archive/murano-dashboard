@@ -139,7 +139,7 @@ def switch(request, environment_id,
 
 def get_next_quick_environment_name(request):
     quick_env_prefix = 'quick-env-'
-    quick_env_re = re.compile('^' + quick_env_prefix + '([\d]+)$')
+    quick_env_re = re.compile(r'^' + quick_env_prefix + r'([\d]+)$')
 
     def parse_number(env):
         match = re.match(quick_env_re, env.name)

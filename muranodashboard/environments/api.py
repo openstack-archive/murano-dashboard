@@ -44,8 +44,8 @@ def get_status_messages_for_service(request, service_id, environment_id):
                 environment_id, deployment.id, service_id)
 
             for report in reports:
-                result += utils.adjust_datestr(request, report.created) + ' - ' + \
-                    report.text + '\n'
+                result += (utils.adjust_datestr(request, report.created) +
+                           ' - ' + report.text + '\n')
     return result
 
 
