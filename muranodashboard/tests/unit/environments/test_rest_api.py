@@ -13,7 +13,7 @@
 # under the License.
 
 from django import http
-import mock
+from unittest import mock
 
 from muranodashboard.api.rest import environments
 

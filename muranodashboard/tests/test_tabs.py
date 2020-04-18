@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import mock
+from unittest import mock
 
 from muranodashboard.catalog import tabs
 from openstack_dashboard.test import helpers

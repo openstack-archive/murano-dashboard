@@ -16,8 +16,8 @@ from django.core import exceptions
 from django.core import validators as django_validator
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from unittest import mock
 
-import mock
 import unittest
 
 from muranodashboard.dynamic_ui import fields

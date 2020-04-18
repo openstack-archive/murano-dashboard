@@ -13,7 +13,7 @@
 # under the License.
 
 import json
-import mock
+from unittest import mock
 
 from muranodashboard.environments import consts
 from muranodashboard.environments import topology

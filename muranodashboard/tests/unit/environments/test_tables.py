@@ -14,8 +14,8 @@
 
 import ast
 from django import http as django_http
-import mock
 import unittest
+from unittest import mock
 
 from horizon import tables as hz_tables
 

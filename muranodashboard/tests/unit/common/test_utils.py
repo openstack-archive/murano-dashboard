@@ -16,8 +16,8 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+from unittest import mock
 
-import mock
 import unittest
 import yaql
 

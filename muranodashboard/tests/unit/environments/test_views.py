@@ -16,9 +16,9 @@ import base64
 from django.conf import settings
 from django import http
 from django.utils.translation import ugettext_lazy as _
-import mock
 import sys
 import unittest
+from unittest import mock
 
 from horizon import conf
 

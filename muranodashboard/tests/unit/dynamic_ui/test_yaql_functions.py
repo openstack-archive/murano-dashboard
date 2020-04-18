@@ -12,9 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import mock
 import re
 import unittest
+from unittest import mock
 
 from castellan.common import exception as castellan_exception
 from castellan.common.objects import opaque_data

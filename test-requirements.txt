@@ -9,7 +9,6 @@ coverage!=4.4,>=4.0 # Apache-2.0
 oslo.config>=5.2.0 # Apache-2.0
 selenium>=2.50.1 # Apache-2.0
 
-mock>=2.0.0 # BSD
 
 # Docs Requirements
 openstackdocstheme>=1.20.0 # Apache-2.0

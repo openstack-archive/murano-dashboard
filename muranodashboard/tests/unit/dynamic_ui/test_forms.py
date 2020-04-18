@@ -13,8 +13,8 @@
 # under the License.
 
 import collections
-import mock
 import unittest
+from unittest import mock
 from yaql.language import contexts as yaql_contexts
 
 from django import forms as django_forms

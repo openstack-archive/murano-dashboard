@@ -15,8 +15,8 @@
 from django.core.files import storage
 from django import http
 from django.utils.translation import ugettext_lazy as _
+from unittest import mock
 
-import mock
 
 from horizon import exceptions as horizon_exceptions
 from muranoclient.common import exceptions as exc

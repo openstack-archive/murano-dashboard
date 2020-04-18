@@ -15,8 +15,8 @@
 
 import collections
 from django import forms
-import mock
 import semantic_version
+from unittest import mock
 from yaql.language import factory
 
 from muranodashboard.catalog import forms as catalog_forms

@@ -12,8 +12,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import mock
 import unittest
+from unittest import mock
 
 from muranodashboard.categories import tables
 from muranodashboard.categories import views

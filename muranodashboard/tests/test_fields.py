@@ -13,11 +13,10 @@
 #    under the License.
 
 from django.core import exceptions
+from unittest import mock
 
 from muranodashboard.dynamic_ui import fields
 from openstack_dashboard.test import helpers
-
-import mock
 
 
 class FlavorFlave(object):

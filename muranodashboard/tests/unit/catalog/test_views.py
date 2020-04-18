@@ -13,8 +13,8 @@
 # under the License.
 
 import collections
-import mock
 import unittest
+from unittest import mock
 
 from django.conf import settings
 from django.forms import formsets

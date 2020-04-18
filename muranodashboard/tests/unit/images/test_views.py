@@ -13,8 +13,8 @@
 # under the License.
 
 import json
-import mock
 import unittest
+from unittest import mock
 
 from horizon import exceptions
 
