@@ -29,7 +29,6 @@ from horizon.utils import filters
 from muranoclient.common import exceptions as exc
 from openstack_dashboard import policy
 from oslo_log import log as logging
-import six
 
 from muranodashboard import api as api_utils
 from muranodashboard.api import packages as pkg_api
@@ -380,7 +379,7 @@ class DeployThisEnvironment(tables.Action):
                 redirect=reverse('horizon:app-catalog:environments:index'))
         redirect_to = reverse('horizon:app-catalog:environments:services',
                               args=(environment_id,))
-        return django_http.HttpResponseRedirect(six.text_type(redirect_to))
+        return django_http.HttpResponseRedirect(str(redirect_to))
 
 
 class ShowEnvironmentServices(tables.LinkAction):

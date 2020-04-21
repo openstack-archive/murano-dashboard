@@ -11,13 +11,13 @@
 #    under the License.
 
 import contextlib
+from io import BytesIO
 import json
 import logging
 import os
-import six
-import six.moves.urllib.parse as urlparse
 import testtools
 import time
+import urllib.parse as urlparse
 import uuid
 
 from glanceclient import client as gclient
@@ -418,7 +418,7 @@ class ImageTestCase(PackageBase):
                                              container_format='bare',
                                              is_public='True',
                                              murano_image_info=murano_property)
-            image_data = six.BytesIO(None)
+            image_data = BytesIO(None)
             cls.glance.images.upload(image['id'], image_data)
         except Exception:
             logger.error("Unable to create or update image in Glance")

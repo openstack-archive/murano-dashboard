@@ -14,25 +14,17 @@
 
 from unittest import mock
 
-from six import PY3
-
 from muranoclient.v1 import client
 from muranodashboard.api import packages
 from openstack_dashboard.test import helpers
 
 
 def mock_next(obj, attr, value):
-    if PY3:
-        setattr(obj.__next__, attr, value)
-    else:
-        setattr(obj.next, attr, value)
+    setattr(obj.__next__, attr, value)
 
 
 class MagicIterMock(mock.MagicMock):
-    if PY3:
-        __next__ = mock.Mock(return_value=None)
-    else:
-        next = mock.Mock(return_value=None)
+    __next__ = mock.Mock(return_value=None)
 
 
 class TestPackagesAPI(helpers.APITestCase):

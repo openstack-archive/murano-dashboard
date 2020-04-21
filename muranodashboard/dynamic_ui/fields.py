@@ -37,7 +37,6 @@ from openstack_dashboard.api import glance
 from openstack_dashboard.api import neutron
 from oslo_log import log as logging
 from oslo_log import versionutils
-import six
 from yaql import legacy
 
 from muranodashboard.api import packages as pkg_api
@@ -57,7 +56,7 @@ def with_request(func):
     """
     def update(self, initial, request=None, **kwargs):
         initial_request = initial.get('request')
-        for key, value in six.iteritems(initial):
+        for key, value in iter(initial.items()):
             if key != 'request' and key not in kwargs:
                 kwargs[key] = value
 
@@ -501,7 +500,7 @@ class ImageChoiceField(ChoiceField):
                     continue
             image_map[image.id] = title
 
-        for id_, title in sorted(six.iteritems(image_map),
+        for id_, title in sorted(iter(image_map.items()),
                                  key=lambda e: e[1].title):
             image_choices.append((id_, title))
 

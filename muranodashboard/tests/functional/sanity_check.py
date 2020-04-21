@@ -10,18 +10,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from http import server as SimpleHTTPServer
 import multiprocessing
 import os
 import re
 import shutil
+import socketserver
 import tempfile
 import time
 import unittest
 import uuid
 import zipfile
-
-from six.moves import SimpleHTTPServer
-from six.moves import socketserver
 
 from selenium.common import exceptions
 from selenium.webdriver.common import by

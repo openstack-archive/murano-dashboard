@@ -48,7 +48,6 @@ from novaclient import exceptions as nova_exceptions
 from openstack_dashboard.api import nova
 from openstack_dashboard.usage import quotas
 from oslo_log import log as logging
-import six
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
@@ -68,7 +67,7 @@ LATEST_APPS_QUEUE_LIMIT = 3
 
 class DictToObj(object):
     def __init__(self, **kwargs):
-        for key, value in six.iteritems(kwargs):
+        for key, value in iter(kwargs.items()):
             setattr(self, key, value)
 
 
@@ -407,7 +406,7 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
             messages.success(self.request, message)
 
             if do_redirect:
-                return http.HttpResponseRedirect(six.text_type(env_url))
+                return http.HttpResponseRedirect(str(env_url))
             else:
                 srv_id = getattr(srv, '?')['id']
                 return self.create_hacked_response(
@@ -554,8 +553,8 @@ class Wizard(generic_views.PageTitleMixin, views.ModalFormMixin, LazyWizard):
     def aggregate_usages(steps):
         result = collections.defaultdict(dict)
         for step in steps:
-            for region, region_usages in six.iteritems(step):
-                for metric, value in six.iteritems(region_usages):
+            for region, region_usages in iter(step.items()):
+                for metric, value in iter(region_usages.items()):
                     if metric not in result[region]:
                         result[region][metric] = 0
                     result[region][metric] += value

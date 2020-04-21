@@ -15,7 +15,6 @@
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from oslo_log import log as logging
-import six
 
 from muranoclient.common import exceptions as exc
 from muranodashboard import api
@@ -406,7 +405,7 @@ def extract_actions_list(service):
         return dict(_action.items() + [('id', action_id)])
 
     return [make_action_datum(_id, action) for (_id, action) in
-            six.iteritems(actions_data) if action.get('enabled')]
+            iter(actions_data.items()) if action.get('enabled')]
 
 
 def run_action(request, environment_id, action_id):
