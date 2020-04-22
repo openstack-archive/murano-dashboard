@@ -6,6 +6,7 @@
    :maxdepth: 2
 
    unreleased
+   ussuri
    train
    stein
    rocky
