@@ -19,7 +19,7 @@ function generate_html_report() {
     local html_report="${WORKSPACE}/logs/test_report.html"
 
     if [[ -f "${WORKSPACE}/logs/test_report.xml" ]]; then
-        $(which python) "$DASHBOARD_DIR/functional_tests/generate_html_report.py" "${xml_report}" "${html_report}"
+        $(which python3) "$DASHBOARD_DIR/functional_tests/generate_html_report.py" "${xml_report}" "${html_report}"
         cp "${html_report}" "${WORKSPACE}/index.html"
     fi
 }

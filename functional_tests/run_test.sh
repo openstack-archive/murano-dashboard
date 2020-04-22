@@ -30,6 +30,9 @@ function run_nosetests() {
 function run_tests() {
     sudo rm -f /tmp/parser_table.py
     sudo pip install "selenium<3.0.0,>=2.50.1"
+    sudo pip install "nose"
+    sudo pip install "lxml"
+    sudo pip install "jinja2"
 
     cd $DASHBOARD_DIR/muranodashboard/tests/functional
 
