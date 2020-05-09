@@ -52,7 +52,7 @@ murano-pkg-check==0.3.0
 netaddr==0.7.19
 netifaces==0.10.6
 nodeenv==0.9.4
-openstackdocstheme==1.20.0
+openstackdocstheme==2.0.0
 openstacksdk==0.36.0
 os-client-config==1.29.0
 os-service-types==1.7.0
@@ -104,7 +104,7 @@ selenium==2.50.1
 semantic-version==2.3.1
 simplejson==3.13.2
 snowballstemmer==1.2.1
-Sphinx==1.6.2
+Sphinx==2.0.0
 sphinxcontrib-websupport==1.0.1
 stevedore==1.28.0
 termcolor==1.1.0
