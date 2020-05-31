@@ -52,7 +52,7 @@ murano-pkg-check==0.3.0
 netaddr==0.7.19
 netifaces==0.10.6
 nodeenv==0.9.4
-openstackdocstheme==2.0.0
+openstackdocstheme==2.2.1
 openstacksdk==0.36.0
 os-client-config==1.29.0
 os-service-types==1.7.0
@@ -95,7 +95,7 @@ python-swiftclient==3.5.0
 pytz==2013.6
 PyYAML==3.12
 rcssmin==1.0.6
-reno==2.5.0
+reno==3.1.0
 requests==2.18.4
 requestsexceptions==1.4.0
 rfc3986==1.1.0
