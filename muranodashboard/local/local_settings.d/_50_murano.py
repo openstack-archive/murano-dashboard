@@ -26,7 +26,7 @@ DISPLAY_MURANO_REPO_URL = 'http://apps.openstack.org/#tab=murano-apps'
 # DATABASES, if not, set it by murano.
 try:
     from openstack_dashboard.settings import DATABASES
-    DATABASES_CONFIG = DATABASES.has_key('default')
+    DATABASES_CONFIG = 'default' in DATABASES
 except ImportError:
     DATABASES_CONFIG = False
 
