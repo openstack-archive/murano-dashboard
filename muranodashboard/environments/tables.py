@@ -100,9 +100,8 @@ class CreateEnvironment(tables.LinkAction):
     def action(self, request, environment):
         try:
             api.environment_create(request, environment)
-        except Exception as e:
-            msg = (_('Unable to create environment {0}'
-                     ' due to: {1}').format(environment, e))
+        except Exception:
+            msg = _('Unable to create environment "%s".') % environment
             LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)
@@ -153,9 +152,8 @@ class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
     def action(self, request, environment_id):
         try:
             api.environment_delete(request, environment_id)
-        except Exception as e:
-            msg = (_('Unable to delete environment {0}'
-                     ' due to: {1}').format(environment_id, e))
+        except Exception:
+            msg = _('Unable to delete environment "%s".') % environment_id
             LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)
@@ -209,9 +207,8 @@ class AbandonEnvironment(tables.DeleteAction):
     def action(self, request, environment_id):
         try:
             api.environment_delete(request, environment_id, True)
-        except Exception as e:
-            msg = (_('Unable to abandon an environment {0}'
-                     ' due to: {1}').format(environment_id, e))
+        except Exception:
+            msg = _('Unable to abandon the environment "%s".') % environment_id
             LOG.error(msg)
             redirect = reverse(self.redirect_url)
             exceptions.handle(request, msg, redirect=redirect)

@@ -12,9 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
-import sys
-
 from django.core import validators
 from django import forms
 from django.urls import reverse
@@ -252,20 +249,8 @@ class ModifyPackageForm(PackageParamsMixin, horizon_forms.SelfHandlingForm):
                 request,
                 msg,
                 redirect=reverse('horizon:app-catalog:packages:index'))
-        except Exception as original_e:
-            reason = ''
-
-            exc_info = sys.exc_info()
-            if hasattr(original_e, 'details'):
-                try:
-                    error = json.loads(original_e.details).get('error')
-                    if error:
-                        reason = error.get('message')
-                except ValueError:
-                    # Let horizon operate with original exception
-                    raise (exc_info[0], exc_info[1], exc_info[2])
-
-            msg = _('Failed to modify the package. {0}').format(reason)
+        except Exception:
+            msg = _('Failed to modify the package.')
             LOG.exception(msg)
             redirect = reverse('horizon:app-catalog:packages:index')
             exceptions.handle(request,
