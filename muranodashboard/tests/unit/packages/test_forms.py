@@ -252,7 +252,7 @@ class TestModifyPackageForm(helpers.APITestCase):
             'horizon:app-catalog:packages:index')
         mock_exceptions.handle.assert_called_once_with(
             self.mock_request,
-            'Failed to modify the package. {0}'.format('test_error_message'),
+            'Failed to modify the package.',
             redirect='test_redirect')
 
 
