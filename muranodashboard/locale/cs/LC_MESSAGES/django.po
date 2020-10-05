@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2018-05-15 15:53+0000\n"
+"POT-Creation-Date: 2020-09-25 06:33+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -427,9 +427,6 @@ msgstr "Selhalo"
 
 msgid "Failed to create environment"
 msgstr "Nelze vytvořit prostředí"
-
-msgid "Failed to modify the package. {0}"
-msgstr "Nelze změnit balíček. {0}"
 
 msgid "File"
 msgstr "Soubor"
@@ -1003,23 +1000,14 @@ msgstr "NEZNÁMÉ"
 msgid "URL"
 msgstr "URL"
 
-msgid "Unable to abandon an environment {0} due to: {1}"
-msgstr "Prostředí {0} nelze opustit kvůli: {1}"
-
 msgid "Unable to communicate to glare-api server."
 msgstr "Nelze komunikovat s glare-api serverem."
 
 msgid "Unable to communicate to murano-api server."
 msgstr "Nelze komunikovat s murano-api serverem."
 
-msgid "Unable to create environment {0} due to: {1}"
-msgstr "Nelze vytvořit prostředí {0} kvůli: {1}"
-
 msgid "Unable to delete category"
 msgstr "Nelze smazat kategorii"
-
-msgid "Unable to delete environment {0} due to: {1}"
-msgstr "Prostředí {0} nelze smazat kvůli: {1}"
 
 msgid "Unable to delete package in murano-api server"
 msgstr "Nelze smazat balíček na serveru murano-api"

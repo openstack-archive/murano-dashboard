@@ -2,16 +2,17 @@
 # Robert Simai <robert.simai@suse.com>, 2017. #zanata
 # Reik Keutterling <spielkind@gmail.com>, 2018. #zanata
 # Robert Simai <robert.simai@suse.com>, 2018. #zanata
+# Andreas Jaeger <jaegerandi@gmail.com>, 2020. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2018-05-15 15:53+0000\n"
+"POT-Creation-Date: 2020-09-25 06:33+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-02-13 12:26+0000\n"
-"Last-Translator: Reik Keutterling <spielkind@gmail.com>\n"
+"PO-Revision-Date: 2020-10-05 06:31+0000\n"
+"Last-Translator: Andreas Jaeger <jaegerandi@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "X-Generator: Zanata 4.3.3\n"
@@ -482,8 +483,8 @@ msgstr "Erstellen der Umgebung fehlgeschlagen"
 msgid "Failed to get list of flavors."
 msgstr "Fehler beim Abruf der Variantenliste."
 
-msgid "Failed to modify the package. {0}"
-msgstr "Konnte das Paket nicht modifizieren. {0}"
+msgid "Failed to modify the package."
+msgstr "Konnte das Paket nicht modifizieren."
 
 msgid "File"
 msgstr "Datei"
@@ -1100,8 +1101,9 @@ msgstr "UNBEKANNT"
 msgid "URL"
 msgstr "URL"
 
-msgid "Unable to abandon an environment {0} due to: {1}"
-msgstr "Konnte Umgebung {0} nicht verlassen wegen: {1}"
+#, python-format
+msgid "Unable to abandon the environment \"%s\"."
+msgstr "Konnte Umgebung \"%s\" nicht verlassen."
 
 msgid "Unable to communicate to glare-api server."
 msgstr "Kann nicht mit dem Glare-API-Server kommunizieren."
@@ -1109,14 +1111,16 @@ msgstr "Kann nicht mit dem Glare-API-Server kommunizieren."
 msgid "Unable to communicate to murano-api server."
 msgstr "Mit dem Murano-API-Server kann nicht kommuniziert werden."
 
-msgid "Unable to create environment {0} due to: {1}"
-msgstr "Konnte Umgebung {0} nicht erstellen wegen: {1}"
+#, python-format
+msgid "Unable to create environment \"%s\"."
+msgstr "Erstellen der Umgebung \"%s\" fehlgeschlagen."
 
 msgid "Unable to delete category"
 msgstr "Kategorie kann nicht gelöscht werden"
 
-msgid "Unable to delete environment {0} due to: {1}"
-msgstr "Konnte Umgebung {0} nicht löschen wegen: {1}"
+#, python-format
+msgid "Unable to delete environment \"%s\"."
+msgstr "Konnte Umgebung \"%s\" nicht löschen."
 
 msgid "Unable to delete package in murano-api server"
 msgstr "Konnte Paket im Murano-API-Server nicht löschen"
