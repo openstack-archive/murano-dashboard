@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: murano-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/openstack-i18n/\n"
-"POT-Creation-Date: 2018-05-15 15:53+0000\n"
+"POT-Creation-Date: 2020-09-25 06:33+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -729,23 +729,14 @@ msgstr "INCONNU"
 msgid "URL"
 msgstr "URL"
 
-msgid "Unable to abandon an environment {0} due to: {1}"
-msgstr "Impossible d'abandonner un environnement {0} à cause de : {1}"
-
 msgid "Unable to communicate to glare-api server."
 msgstr "Impossible de communiquer avec le serveur glare-api. "
 
 msgid "Unable to communicate to murano-api server."
 msgstr "Impossible de communiquer avec le serveur murano-api. "
 
-msgid "Unable to create environment {0} due to: {1}"
-msgstr "Impossible de créer l'environnement {0} à cause de : {1}"
-
 msgid "Unable to delete category"
 msgstr "Impossible de supprimer la catégorie"
-
-msgid "Unable to delete environment {0} due to: {1}"
-msgstr "Impossible de supprimer l'environnement {0} à cause de : {1}"
 
 msgid "Unable to delete package in murano-api server"
 msgstr "Impossible de supprimer le paquet dans le serveur murano-api"
