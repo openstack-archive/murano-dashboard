@@ -14,7 +14,7 @@ contextlib2==0.5.5
 coverage==4.0
 cryptography==2.1.4
 debtcollector==1.19.0
-decorator==4.2.1
+decorator==4.4.1
 deprecation==2.0
 Django==2.2
 django-appconf==1.0.2
@@ -28,10 +28,9 @@ enmerkar==0.7.1
 extras==1.0.0
 fasteners==0.14.1
 fixtures==3.0.0
-flake8==2.5.5
 futurist==1.6.0
-hacking==0.12.0
-horizon==18.3.0
+hacking==3.0.1
+horizon==18.3.1
 idna==2.6
 imagesize==1.0.0
 iso8601==0.1.11
@@ -40,10 +39,10 @@ jmespath==0.9.3
 jsonpatch==1.21
 jsonpointer==2.0
 jsonschema==2.6.0
-keystoneauth1==3.16.0
+keystoneauth1==3.18.0
 linecache2==1.0.0
 MarkupSafe==1.0
-mccabe==0.2.1
+mccabe==0.6.0
 monotonic==1.4
 msgpack==0.5.6
 munch==2.2.0
@@ -72,7 +71,7 @@ Pint==0.8.1
 ply==3.11
 prettytable==0.7.2
 pycparser==2.18
-pyflakes==0.8.1
+pyflakes==2.1.0
 Pygments==2.2.0
 pyinotify==0.9.6
 pymongo==3.6.1
