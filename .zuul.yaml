@@ -2,7 +2,6 @@
     templates:
       - check-requirements
       - horizon-non-primary-django-jobs
-      - horizon-nodejs10-jobs
       - horizon-nodejs14-jobs
       - openstack-cover-jobs-horizon
       - openstack-lower-constraints-jobs
