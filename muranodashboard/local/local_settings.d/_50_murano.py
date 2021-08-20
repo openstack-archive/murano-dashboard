@@ -47,10 +47,18 @@ try:
 except ImportError:
     LEGACY_STATIC_SETTINGS = False
 
-HORIZON_CONFIG['legacy_static_settings'] = LEGACY_STATIC_SETTINGS
+try:
+    from openstack_dashboard.settings import HORIZON_CONFIG
+    HORIZON_CONFIG['legacy_static_settings'] = LEGACY_STATIC_SETTINGS
+except ImportError:
+    HORIZON_CONFIG = {}
+    HORIZON_CONFIG['legacy_static_settings'] = LEGACY_STATIC_SETTINGS
 
-# from openstack_dashboard.settings import POLICY_FILES
-POLICY_FILES.update({'murano': 'murano_policy.json',})
+try:
+    from openstack_dashboard.settings import POLICY_FILES
+    POLICY_FILES.update({'murano': 'murano_policy.json',})
+except ImportError:
+    POLICY_FILES = {'murano': 'murano_policy.json',}
 
 # Applications using the encryptData/decryptData yaql functions will require
 # the below to be configured
