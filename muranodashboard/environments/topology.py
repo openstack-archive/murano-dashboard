@@ -14,8 +14,8 @@
 
 import json
 
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template import loader
+from django.templatetags.static import static
 from django.urls import reverse
 
 from muranodashboard.api import packages as pkg_cli

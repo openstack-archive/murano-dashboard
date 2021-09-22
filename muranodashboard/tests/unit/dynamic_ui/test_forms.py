@@ -96,7 +96,7 @@ class TestDynamicFormMetaclass(unittest.TestCase):
         form = forms.DynamicFormMetaclass('foo_form', (), test_dict)
         self.assertEqual('foo_form', form.__name__)
         self.assertEqual('foo_service', form.service)
-        self.assertIsInstance(form.declared_fields, collections.OrderedDict)
+        self.assertIsInstance(form.declared_fields, dict)
         self.assertIn('foo_spec', form.declared_fields)
         self.assertIsInstance(form.declared_fields['foo_spec'],
                               fields.CharField)

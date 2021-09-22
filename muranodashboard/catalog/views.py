@@ -24,7 +24,7 @@ from castellan.common import exception as castellan_exception
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth import decorators as auth_dec
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.urls import reverse
 # django.contrib.formtools migration to django 1.8
 # https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/

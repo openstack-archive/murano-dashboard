@@ -52,8 +52,9 @@ class TestPackageView(helpers.APITestCase):
 
         self.assertIsInstance(response, http.HttpResponse)
         for key, val in expected_response.items():
-            self.assertIn(key.lower(), response._headers)
-            self.assertEqual((key, val), response._headers[key.lower()])
+            key = key.lower()
+            self.assertTrue(response.has_header(key))
+            self.assertEqual(val, response[key])
 
     @mock.patch.object(views, 'exceptions')
     @mock.patch.object(views, 'reverse')

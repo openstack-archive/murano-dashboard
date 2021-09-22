@@ -450,7 +450,7 @@ class TestPasswordField(unittest.TestCase):
                           'name', test_form_data)
 
     def test_deepcopy(self):
-        self.password_field.error_messages = None
+        self.password_field.error_messages = {}
         test_memo = {}
         result = self.password_field.__deepcopy__(test_memo)
         self.assertIsInstance(result, fields.PasswordField)
