@@ -22,6 +22,7 @@
       - ^doc/.*$
       - ^.*\.rst$
       - ^releasenotes/.*$
+      - ^tools/.*$
       - ^muranodashboard/locale/.*$
       - ^muranodashboard/tests/unit/.*$
     voting: false
