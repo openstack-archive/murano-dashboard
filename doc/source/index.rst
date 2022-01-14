@@ -38,7 +38,7 @@ Install
 
 2. Install virtualenv::
 
-    user@work:~/$ cd murano-dashboard && sudo python ./tools/install_venv.py
+    user@work:~/$ cd murano-dashboard && tox -evenv
 
 Configure
 ---------
@@ -62,4 +62,4 @@ Run
 ----
 Run Dashboard in virtualenv::
 
-    user@work:~/$ cd murano-dashboard && sudo ./tools/with_venv.sh python manage.py runserver 0.0.0.0:8080
+    user@work:~/$ cd murano-dashboard && source .tox/bin/activate && python manage.py runserver 0.0.0.0:8080
