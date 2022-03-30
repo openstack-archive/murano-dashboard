@@ -130,7 +130,7 @@ class TestDetailView(helpers.APITestCase):
             redirect='test_redirect')
 
 
-class TestModifyPackageView(helpers.APITestCase):
+class TestModifyPackageView(helpers.RestAPITestCase):
 
     def setUp(self):
         super(TestModifyPackageView, self).setUp()
@@ -783,7 +783,7 @@ class TestImportPackageWizard(helpers.APITestCase):
                           'package': 'test_package'}, kwargs)
 
 
-class TestImportBundleWizard(helpers.APITestCase):
+class TestImportBundleWizard(helpers.RestAPITestCase):
 
     def setUp(self):
         super(TestImportBundleWizard, self).setUp()

@@ -16,6 +16,7 @@ import json
 import unittest
 from unittest import mock
 
+import horizon
 from horizon import exceptions
 
 from muranodashboard.images import tables
@@ -161,9 +162,12 @@ class TestMarkedImagesView(unittest.TestCase):
 
     @mock.patch.object(views, 'reverse', autospec=True)
     @mock.patch.object(views, 'glance', autospec=True)
-    def test_get_data_except_glance_image_list_exception(self, mock_glance,
+    @mock.patch.object(horizon.messages, 'horizon_message_already_queued')
+    def test_get_data_except_glance_image_list_exception(self, mock_messages,
+                                                         mock_glance,
                                                          mock_reverse):
         """Test that glance_v1_client.images.list exception is handled."""
+        mock_messages.return_value = True
         mock_glance_client = mock.Mock()
         mock_glance_client.images.list.side_effect = Exception()
         mock_glance.glanceclient.return_value = mock_glance_client
