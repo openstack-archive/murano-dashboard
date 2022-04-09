@@ -4,7 +4,7 @@
       - horizon-non-primary-django-jobs
       - horizon-nodejs14-jobs
       - openstack-cover-jobs-horizon
-      - openstack-python3-yoga-jobs-horizon
+      - openstack-python3-zed-jobs-horizon
       - release-notes-jobs-python3
     check:
       jobs:
