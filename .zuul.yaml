@@ -2,7 +2,7 @@
     templates:
       - check-requirements
       - horizon-non-primary-django-jobs
-      - horizon-nodejs14-jobs
+      - horizon-nodejs-jobs
       - openstack-cover-jobs-horizon
       - openstack-python3-zed-jobs-horizon
       - release-notes-jobs-python3
