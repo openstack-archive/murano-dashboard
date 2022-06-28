@@ -70,7 +70,7 @@
     function getPackages(params) {
       var config = params ? { "params" : params} : {};
       return apiService.get('/api/app-catalog/packages/', config)
-        .error(function () {
+        .catch(function onError() {
           toastService.add('error', gettext('Unable to retrieve the packages.'));
         });
     }
@@ -100,7 +100,7 @@
       var url = '/api/app-catalog/environments/' + target.environment +
           '/components/' + target.component + '/metadata/';
       return apiService.get(url, params)
-          .error(function () {
+          .catch(function onError() {
             toastService.add('error', gettext('Unable to retrieve component metadata.'));
           });
     }
@@ -135,7 +135,7 @@
           '/components/' + target.component + '/metadata/';
       return apiService.post(
           url, { updated: updated, removed: removed}, params)
-          .error(function () {
+          .catch(function onError() {
             toastService.add('error', gettext('Unable to edit component metadata.'));
           });
     }
@@ -162,7 +162,7 @@
       var url = '/api/app-catalog/environments/' + target.environment +
           '/metadata/';
       return apiService.get(url, params)
-          .error(function () {
+          .catch(function onError() {
             toastService.add('error', gettext('Unable to retrieve environment metadata.'));
           });
     }
@@ -194,7 +194,7 @@
           '/metadata/';
       return apiService.post(
           url, { updated: updated, removed: removed}, params)
-          .error(function () {
+          .catch(function onError() {
             toastService.add('error', gettext('Unable to edit environment metadata.'));
           });
     }
