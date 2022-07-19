@@ -17,7 +17,7 @@ import json
 from django.conf import settings
 from django import forms
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from horizon import exceptions
 from horizon import forms as horizon_forms
 from horizon import messages

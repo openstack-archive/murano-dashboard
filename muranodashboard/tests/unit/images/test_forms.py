@@ -15,7 +15,7 @@
 import unittest
 from unittest import mock
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from muranodashboard.images import forms
 

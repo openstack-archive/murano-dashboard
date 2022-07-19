@@ -22,9 +22,9 @@ from django import forms
 from django.forms import widgets
 from django.template import defaultfilters
 from django.urls import reverse
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils import html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from horizon import exceptions
 from horizon import forms as hz_forms
 from horizon import messages
@@ -175,11 +175,11 @@ class CustomPropertiesField(forms.Field):
                  *args, **kwargs):
         self.description = description
         self.description_title = (description_title or
-                                  force_text(kwargs.get('label', '')))
+                                  force_str(kwargs.get('label', '')))
 
         for arg in FIELD_ARGS_TO_ESCAPE:
             if kwargs.get(arg):
-                kwargs[arg] = html.escape(force_text(kwargs[arg]))
+                kwargs[arg] = html.escape(force_str(kwargs[arg]))
 
         validators = []
         validators_js = []
@@ -191,11 +191,11 @@ class CustomPropertiesField(forms.Field):
                     error_messages = kwargs.get('error_messages', {})
                     if hasattr(validator, 'code') and \
                        validator.code in error_messages:
-                        regex_message = force_text(
+                        regex_message = force_str(
                             error_messages[validator.code]
                         )
                     validators_js. \
-                        append({'regex': force_text(validator.regex.pattern),
+                        append({'regex': force_str(validator.regex.pattern),
                                 'message': regex_message})
             else:  # mixed list of regexpValidator and YAQL validators
                 expr = validator.get('expr')

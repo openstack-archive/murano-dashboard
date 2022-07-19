@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # The name of the panel group to be added to HORIZON_CONFIG. Required.
 PANEL_GROUP = 'app-catalog_manage_group'

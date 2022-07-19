@@ -18,8 +18,8 @@ from django import http as django_http
 from django import template
 from django.template import defaultfilters
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from horizon import exceptions
 from horizon import forms
@@ -126,7 +126,7 @@ class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Environment",
             u"Delete Environments",
             count
@@ -134,7 +134,7 @@ class DeleteEnvironment(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Started Deleting Environment",
             u"Started Deleting Environments",
             count
@@ -172,7 +172,7 @@ class AbandonEnvironment(tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Abandon Environment",
             u"Abandon Environments",
             count
@@ -180,7 +180,7 @@ class AbandonEnvironment(tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Abandoned Environment",
             u"Abandoned Environments",
             count
@@ -218,7 +218,7 @@ class DeleteService(tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Component",
             u"Delete Components",
             count
@@ -226,7 +226,7 @@ class DeleteService(tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Started Deleting Component",
             u"Started Deleting Components",
             count
@@ -258,7 +258,7 @@ class DeployEnvironment(tables.BatchAction):
 
     @staticmethod
     def action_present_deploy(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Deploy Environment",
             u"Deploy Environments",
             count
@@ -266,7 +266,7 @@ class DeployEnvironment(tables.BatchAction):
 
     @staticmethod
     def action_past_deploy(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Started deploying Environment",
             u"Started deploying Environments",
             count
@@ -274,7 +274,7 @@ class DeployEnvironment(tables.BatchAction):
 
     @staticmethod
     def action_present_update(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Update Environment",
             # there can be cases when some of the envs are new and some are not
             # so it is better to just leave "Deploy" for multiple envs
@@ -284,7 +284,7 @@ class DeployEnvironment(tables.BatchAction):
 
     @staticmethod
     def action_past_update(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Updated Environment",
             u"Deployed Environments",
             count

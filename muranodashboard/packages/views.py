@@ -19,7 +19,7 @@ from django.core.files import storage
 from django import http
 from django.urls import reverse
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 # django.contrib.formtools migration to django 1.8
 # https://docs.djangoproject.com/en/1.8/ref/contrib/formtools/
 try:

@@ -15,7 +15,7 @@
 import base64
 from django.conf import settings
 from django import http
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 import sys
 import unittest
 from unittest import mock
@@ -171,10 +171,10 @@ class TestDetailServiceView(unittest.TestCase):
         }
         self.mock_request = mock.Mock(GET={})
         self.mock_request.user.service_catalog = None
-        self.mock_request.is_ajax.return_value = True
         self.mock_request.horizon = {
             'async_messages': [('tag', 'msg', 'extra')]
         }
+        mock.patch('horizon.utils.http.is_ajax', return_value=True).start()
         self.detail_service_view.request = self.mock_request
 
         self.assertEqual(env_tabs.ServicesTabs,

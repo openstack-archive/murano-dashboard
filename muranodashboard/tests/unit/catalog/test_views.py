@@ -19,7 +19,7 @@ from unittest import mock
 from django.conf import settings
 from django.forms import formsets
 from django import http
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from horizon.forms import views as horizon_views
 
@@ -125,7 +125,7 @@ class TestCatalogViews(unittest.TestCase):
         mock_shortcuts.redirect.assert_called_once_with('redirect_to_foo')
         mock_shortcuts.redirect.reset_mock()
 
-        mock_http_utls.is_safe_url.return_value = False
+        mock_http_utls.url_has_allowed_host_and_scheme.return_value = False
         result = views.switch(self.mock_request, 'foo_env_id',
                               redirect_field_name='redirect')
         self.assertEqual('foo_redirect', result)

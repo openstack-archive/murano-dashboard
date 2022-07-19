@@ -14,8 +14,8 @@
 
 from django.template import defaultfilters
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 from horizon import exceptions
 from horizon import messages
 from horizon import tables
@@ -86,7 +86,7 @@ class ToggleEnabled(tables.BatchAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Toggle Active",
             u"Toggle Active",
             count
@@ -94,7 +94,7 @@ class ToggleEnabled(tables.BatchAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Toggled Active",
             u"Toggled Active",
             count
@@ -122,7 +122,7 @@ class TogglePublicEnabled(tables.BatchAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Toggle Public",
             u"Toggle Public",
             count
@@ -130,7 +130,7 @@ class TogglePublicEnabled(tables.BatchAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Toggled Public",
             u"Toggled Public",
             count
@@ -165,7 +165,7 @@ class DeletePackage(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Package",
             u"Delete Packages",
             count
@@ -173,7 +173,7 @@ class DeletePackage(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Deleted Package",
             u"Deleted Packages",
             count

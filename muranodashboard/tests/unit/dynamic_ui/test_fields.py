@@ -15,7 +15,7 @@
 from django.core import exceptions
 from django.core import validators as django_validator
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from unittest import mock
 
 import unittest
@@ -29,8 +29,8 @@ class TestFields(unittest.TestCase):
         super(TestFields, self).setUp()
         self.request = mock.Mock()
         self.request.user.service_region = None
-        self.request.is_ajax = mock.Mock(side_effect=False)
         self.addCleanup(mock.patch.stopall)
+        mock.patch('horizon.utils.http.is_ajax', return_value=True).start()
 
     @mock.patch.object(fields, 'LOG')
     def test_fields_with_initial_request(self, mock_log):
