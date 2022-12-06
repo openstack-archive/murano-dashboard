@@ -21,7 +21,16 @@ var path = require('path');
 
 module.exports = function (config) {
   // This tox venv is setup in the post-install npm step
-  var toxPath = '.tox/py38/lib/python3.8/site-packages/';
+  var toxPath = path.resolve('./.tox/npm');
+  if (!toxPath) {
+      console.error('xStatic libraries not found, please run `tox -e npm`');
+      process.exit(1);
+    }
+    toxPath += '/lib/';
+    toxPath += fs.readdirSync(toxPath).find(function(directory) {
+      return directory.indexOf('python') === 0;
+    });
+    toxPath += '/site-packages/';
   var xstaticPath = toxPath + 'xstatic/pkg/';
 
   config.set({

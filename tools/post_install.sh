@@ -10,4 +10,4 @@ then
 fi
 
 echo "Creating a tox env which will contain xStatic libraries, horizon, and openstack_dashboard"
-tox -epy38 --notest
+tox -enpm --notest
