@@ -16,7 +16,7 @@ import itertools as it
 
 from django import forms
 from django.template import loader
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils import formats
 
 from muranodashboard.common import utils
@@ -64,7 +64,7 @@ class Input(Widget):
     def _format_value(self, value):
         if self.is_localized:
             value = formats.localize_input(value)
-        return force_text(value)
+        return force_str(value)
 
     def get_context(self, name, value, attrs=None):
         context = {

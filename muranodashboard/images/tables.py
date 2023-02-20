@@ -13,8 +13,8 @@
 #    under the License.
 
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 from horizon import exceptions
 from horizon import tables
 from openstack_dashboard.api import glance
@@ -37,7 +37,7 @@ class RemoveImageMetadata(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Metadata",
             u"Delete Metadata",
             count
@@ -45,7 +45,7 @@ class RemoveImageMetadata(policy.PolicyTargetMixin, tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Deleted Metadata",
             u"Deleted Metadata",
             count

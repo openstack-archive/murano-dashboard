@@ -16,8 +16,8 @@ import os
 import re
 import semantic_version
 
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 from oslo_log import log as logging
 from yaql import legacy
 
@@ -242,7 +242,7 @@ def condition_getter(request, kwargs):
         return True
 
     app = import_app(request, kwargs['app_id'])
-    key = force_text(_get_form_name(len(app.forms) - 1, app.forms[-1]()))
+    key = force_str(_get_form_name(len(app.forms) - 1, app.forms[-1]()))
 
     return {key: _func}
 

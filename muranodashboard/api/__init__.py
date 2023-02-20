@@ -16,10 +16,11 @@ import contextlib
 
 from django.conf import settings
 from django.contrib.messages import api as msg_api
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 from glanceclient.common import exceptions as glance_exc
 from horizon import exceptions
+from horizon.utils import http as http_utils
 import muranoclient.client as client
 from muranoclient.common import exceptions as exc
 from muranoclient.glance import client as art_client
@@ -34,8 +35,8 @@ LOG = logging.getLogger(__name__)
 
 def _handle_message(request, message):
     def horizon_message_already_queued(_message):
-        _message = force_text(_message)
-        if request.is_ajax():
+        _message = force_str(_message)
+        if http_utils.is_ajax(request):
             for tag, msg, extra in request.horizon['async_messages']:
                 if _message == msg:
                     return True

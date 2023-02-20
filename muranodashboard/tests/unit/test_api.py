@@ -107,8 +107,9 @@ class TestApi(helpers.APITestCase):
                            'Unable to communicate to murano-api server.',
                            'test_extra')]
         mock_request = mock.MagicMock()
-        mock_request.is_ajax.return_value = True
         mock_request.horizon.__getitem__.return_value = async_messages
+        mock_is_ajax = mock.patch(
+            'horizon.utils.http.is_ajax', return_value=True).start()
         try:
             with api.handled_exceptions(mock_request):
                 raise api.exc.CommunicationError()
@@ -116,7 +117,7 @@ class TestApi(helpers.APITestCase):
             pass
 
         mock_exc.handle.assert_called_once_with(mock_request, ignore=True)
-        self.assertTrue(mock_request.is_ajax.called)
+        self.assertTrue(mock_is_ajax.called)
         self.assertTrue(mock_request.horizon.__getitem__.called)
 
     def test_muranoclient(self):

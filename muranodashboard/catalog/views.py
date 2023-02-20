@@ -17,6 +17,7 @@ import copy
 import functools
 import json
 import re
+from urllib import parse
 import uuid
 
 from castellan.common import exception as castellan_exception
@@ -37,7 +38,7 @@ from django import shortcuts
 from django.utils import decorators as django_dec
 from django.utils import html
 from django.utils import http as http_utils
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import list as list_view
 from horizon import exceptions
 from horizon.forms import views
@@ -126,7 +127,9 @@ def get_categories_list(request):
 def switch(request, environment_id,
            redirect_field_name=auth.REDIRECT_FIELD_NAME):
     redirect_to = request.GET.get(redirect_field_name, '')
-    if not http_utils.is_safe_url(url=redirect_to, host=request.get_host()):
+    if (not http_utils.url_has_allowed_host_and_scheme(
+            url=redirect_to,
+            host=request.get_host())):
         redirect_to = settings.LOGIN_REDIRECT_URL
 
     for env in get_available_environments(request):
@@ -622,7 +625,7 @@ class IndexView(generic_views.PageTitleMixin, list_view.ListView):
         """
         data = self.object_list
         if data:
-            return http_utils.urlquote_plus(self.get_object_id(data[index]))
+            return parse.quote_plus(self.get_object_id(data[index]))
         else:
             return ''
 

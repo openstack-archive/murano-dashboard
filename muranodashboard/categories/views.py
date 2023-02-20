@@ -15,7 +15,7 @@
 import itertools
 
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from horizon.forms import views
 from horizon import tables as horizon_tables
 from horizon.utils import functions as utils
