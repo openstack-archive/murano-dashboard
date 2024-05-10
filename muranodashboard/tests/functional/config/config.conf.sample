@@ -1,7 +1,0 @@
-[murano]
-horizon_url = http://127.0.0.1/horizon
-murano_url = http://127.0.0.1:8082
-user = WebTestUser
-password = swordfish
-tenant = WebTestProject
-keystone_url = http://127.0.0.1:5000/v2.0/

@@ -1,7 +1,0 @@
----
-fixes:
-  - Fixed the issue that reset all environment changes from the
-    previous session (adding or removing components without deployment) after consequent login.
-    Also, the :guilabel:`Ready to deploy` status now only displays if there are changes pending in the current session.
-
-

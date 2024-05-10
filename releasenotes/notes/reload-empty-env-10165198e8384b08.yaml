@@ -1,4 +1,0 @@
----
-fixes:
-  - The :guilabel:`Environment components` page now reloads after an empty environment deployment.
-    This allows adding new components to the empty environment without having to reload the page manually.

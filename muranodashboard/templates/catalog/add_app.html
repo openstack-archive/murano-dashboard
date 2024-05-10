@@ -1,7 +1,0 @@
-{% load i18n %}
-
-{% if environment %}
-    <a href="{% url 'horizon:app-catalog:catalog:deploy' app.id environment.id %}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {% trans "Add to Env" %}</a>
-{% else %}
-    <a href="{% url 'horizon:app-catalog:environments:create_environment' %}?next={{ view.current_page_url|urlencode }}" class="{{ class }}"><i class="fa fa-plus-circle"></i> {% trans "Create Env" %}</a>
-{% endif %}
